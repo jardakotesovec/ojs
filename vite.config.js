@@ -3,6 +3,7 @@ import Vue from '@vitejs/plugin-vue';
 import path from 'path';
 import copy from 'rollup-plugin-copy';
 import i18nExtractKeys from './lib/pkp/tools/i18nExtractKeys.vite.js';
+import iDivEnhancement from './lib/pkp/tools/iDivEnhancement.vite.js';
 
 export default defineConfig(({mode}) => {
 	// its very unclear how the plugin-vue is handling inProduction option
@@ -23,6 +24,7 @@ export default defineConfig(({mode}) => {
 					'form.dataHasChanged',
 				],
 			}),
+			iDivEnhancement(),
 			Vue({
 				isProduction: mode === 'production',
 				template: {
