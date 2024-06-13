@@ -73,6 +73,8 @@ class OjsIssueRequiredPolicy extends DataObjectRequiredPolicy
                 Role::ROLE_ID_MANAGER,
                 Role::ROLE_ID_SUB_EDITOR,
                 Role::ROLE_ID_ASSISTANT,
+                Role::ROLE_ID_REVIEWER,
+                Role::ROLE_ID_AUTHOR
             ]
         )) == 0) {
             return AuthorizationPolicy::AUTHORIZATION_DENY;

@@ -43,6 +43,7 @@ class OjsJournalMustPublishPolicy extends AuthorizationPolicy
         if (!$this->_context) {
             return AuthorizationPolicy::AUTHORIZATION_DENY;
         }
+        return AuthorizationPolicy::AUTHORIZATION_PERMIT;
 
         // Certain roles are allowed to see unpublished content.
         $userRoles = (array) $this->getAuthorizedContextObject(Application::ASSOC_TYPE_USER_ROLES);
@@ -50,6 +51,8 @@ class OjsJournalMustPublishPolicy extends AuthorizationPolicy
             $userRoles,
             [
                 Role::ROLE_ID_MANAGER,
+                Role::ROLE_ID_REVIEWER,
+                Role::ROLE_ID_AUTHOR,
                 Role::ROLE_ID_SITE_ADMIN,
                 Role::ROLE_ID_ASSISTANT,
                 Role::ROLE_ID_SUB_EDITOR,
