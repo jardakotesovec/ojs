@@ -95,28 +95,81 @@
 		</div>
 	{/if}
 
-	<h1
-		id="publication-title"
-		class="page_title"
-		data-pkp-switcher-text="title"
+	<div
+	 	x-data="{
+			value: {
+				id: 'en',
+				name: 'en',
+			},
+		}"
 	>
-		{$publicationTitles=$publication->getTitles('html')}
-		{$first=true}
-		{foreach from=$pubLocaleData.localeOrder item=$localeKey}
-			{if !isset($publicationTitles[$localeKey])}{continue}{/if}
-			<span
-				class="collapse-text{if $first} show-text{/if}"
-				lang="{$pubLocaleData.langTags[$localeKey]}"
-				data-pkp-locale="{$localeKey}"
-				data-pkp-locale-name="{$pubLocaleData.langTags[$localeKey]}"
+		<h1
+			id="publication-title"
+			class="page_title"
+		>
+			{$publicationTitles=$publication->getTitles('html')}
+			{$first=true}
+			{foreach from=$pubLocaleData.localeOrder item=$localeKey}
+				{if !isset($publicationTitles[$localeKey])}{continue}{/if}
+				<span
+					{if !$first} x-cloak {/if}
+					x-show="value.id == '{$localeKey}'"
+				>
+					{$publicationTitles[$localeKey]|strip_unsafe_html}
+				</span>
+				{if !isset($pubLocaleData.opts.title)}{break}{/if}
+				{$first=false}
+			{/foreach}
+		</h1>
+		<span
+			x-listbox
+			x-model="value"
+			class="lang-select"
+			x-data="{
+				locales: [
+					{
+						id: 'en',
+						name: 'en',
+					},
+					{
+						id: 'fr_CA',
+						name: 'fr-CA',
+					},
+					{
+						id: 'de',
+						name: 'de',
+					},
+				],
+			}"
+		>
+			<label x-listbox:label class="sr-only" x-text="'TODO TRANSLATION: Switch metadata language: ' + value.name"></label>
+			<button
+				x-listbox:button
+				class="pkpBadge pkpBadge--button"
 			>
-				{$publicationTitles[$localeKey]|strip_unsafe_html}
-			</span>
-			{if !isset($pubLocaleData.opts.title)}{break}{/if}
-			{$first=false}
-		{/foreach}
-	</h1>
-
+				<span x-text="value.name" class=""></span>
+			</button>
+			<ul
+				x-listbox:options
+				x-cloak
+			>
+				<template x-for="locale in locales" :key="locale.id">
+					<li
+						x-listbox:option
+						:value="locale"
+						x-show="locale.id !== value.id"
+						:class="{
+							'pkpBadge': true,
+							'todo-styling': $listboxOption.isActive,
+							'todo-styling': ! $listboxOption.isActive,
+						}"
+					>
+						<span x-text="locale.name"></span>
+					</li>
+				</template>
+			</ul>
+		</span>
+	</div>
 	{if $publication->getSubTitles('html')}
 		<h2
 			id="publication-subtitle"

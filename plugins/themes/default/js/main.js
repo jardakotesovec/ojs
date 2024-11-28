@@ -121,7 +121,7 @@
  * [data-pkp-switcher-text]: Texts for the switchers to control
  * [data-pkp-switcher-target]: Switchers' containers
  */
-(() => {
+/*(() => {
 	function createButtonSwitcher(textsObj, originalLocaleOrder, metadataFieldName, selectedLocale) {
 		// Get all locales for the switcher from the texts
 		const textsElsLocales = textsObj.els.reduce((locales, textEls) => {
@@ -184,12 +184,12 @@
 
 		return spanContainer;
 	}
-
+*/
 	/**
 	 * Show or hide switcher's target texts
 	 * If selected locale doesn't match any, all texts are hidden
 	 */
-	function showText(selectedLocale, textsEls) {
+/*	function showText(selectedLocale, textsEls) {
 		textsEls.forEach((textsEl) => {
 			textsEl.forEach((textEl) => {
 				const elLocale = textEl.getAttribute('data-pkp-locale');
@@ -201,11 +201,11 @@
 			});
 		});
 	}
-
+*/
 	/**
 	 * Change/update buttons' aria-attributes
 	 */
-	function switchButtonAria(btnTarget, buttons) {
+/*	function switchButtonAria(btnTarget, buttons) {
 		let btnTargetOldAriaControls = btnTarget.getAttribute('aria-controls');
 		let btnPrevSelectedLangAriaControls = null;
 		buttons.forEach((btn) => {
@@ -274,12 +274,12 @@
 		// Append and show switcher
 		switcherTargetEl.append(buttonSwitcherEl);
 		switcherTargetEl.classList.remove('collapse-switcher');
-	}
+	}*/
 
 	/**
 	 * Get all multilingual texts and ids for the switchers
 	 */
-	function getSwitcherTexts() {
+	/*function getSwitcherTexts() {
 		const textsObj = {};
 		document.querySelectorAll('[data-pkp-switcher-text]').forEach((textsEl) => {
 			const key = textsEl.getAttribute('data-pkp-switcher-text');
@@ -307,4 +307,4 @@
 			}
 		});
 	})();
-})();
+})();*/

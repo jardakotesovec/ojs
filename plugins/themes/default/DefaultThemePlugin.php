@@ -235,6 +235,13 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
         $this->addStyle('swiper', 'js/lib/swiper/swiper-bundle' . $min . '.css');
         $this->addScript('swiper-i18n', $this->getSwiperI18n(), ['inline' => true]);
 
+
+        $this->addScript('alpine-ui', 'js/lib/alpine/alpine-ui.min.js');
+        $this->addScript('alpine-focus', 'js/lib/alpine/alpine-focus.min.js');
+        $this->addScript('alpine-js', 'js/lib/alpine/alpine-js.min.js');
+
+
+
         // Load custom JavaScript for this theme
         $this->addScript('default', 'js/main.js');
 

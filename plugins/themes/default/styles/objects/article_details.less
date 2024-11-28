@@ -315,6 +315,22 @@
 		}
 	}	
 
+	/* lang select */
+	.metadata_with_lang_select {
+		display: flex;
+	}
+	.lang-select {
+		display: flex;
+		ul {
+			display: flex;
+			margin: 0;
+			padding: 0;
+		}
+		li {
+			list-style: none;
+		}
+	}
+
 	.pkpBadge {
 		display: inline-flex;
 		padding: 0.25em 1em;
@@ -354,17 +370,17 @@
 		}
 	}
 
-	.collapse-text {
+	/*.collapse-text {
 		&:not(.show-text) {
 			display: none;
 		}
-	}
+	}*/
 
 	.selected-button {
 		font-weight: @bold;
 	}
 
-	.show-button,
+	/*.show-button,
 	.show-text {
 		display: inline-flex;
 		animation: fadeIn 0.7s ease-in-out;
@@ -384,12 +400,12 @@
 				opacity: 1;
 			}
 		}
-	}
+	}*/
 
 	.page_title,
 	.subtitle {
 		// Keep the space if no metadata 
-		& .collapse-text:first-of-type:not(.show-text) {
+		/*& .collapse-text:first-of-type:not(.show-text) {
 			visibility: hidden;
 			display: inline-flex;
 			height: @line-lead;
@@ -399,7 +415,7 @@
 		// Remove the gap
 		& .show-text {
 			order: -1;
-		}
+		}*/
 	}
 
 	// Show inline instead of inline-flex
