@@ -1,4 +1,4 @@
-name: Deploy OJS on Push to Any Branch
+name: Deploy to testing environment
 
 on:
   push:
