@@ -5,7 +5,6 @@ on:
 
 jobs:
   deploy:
-    if: ${{ secrets.TEST_VPS_CI_SSH_PRIVATE_KEY != '' }}
     uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/deploy.yaml@main
     with:
       project: ojs
