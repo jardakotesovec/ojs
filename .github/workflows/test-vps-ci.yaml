@@ -1,0 +1,16 @@
+name: Deploy OJS on Push to Any Branch
+
+on:
+  push:
+
+jobs:
+  deploy:
+    if: ${{ secrets.TEST_VPS_CI_SSH_PRIVATE_KEY != '' }}
+    uses: yourusername/ojs-deployment/.github/workflows/deploy.yaml@main
+    with:
+      project: ojs
+      branch: ${{ github.ref_name }}
+    secrets:
+      SSH_PRIVATE_KEY: ${{ secrets.TEST_VPS_CI_SSH_PRIVATE_KEY }}
+      SSH_HOST: ${{ secrets.TEST_VPS_CI_SSH_HOST }}
+      SSH_USERNAME: ${{ secrets.TEST_VPS_CI_SSH_USERNAME }}
