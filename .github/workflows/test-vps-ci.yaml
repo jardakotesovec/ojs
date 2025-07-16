@@ -1,4 +1,4 @@
-name: Deploy to testing environment
+name: Deploy to testing environment.
 
 on:
   push:
