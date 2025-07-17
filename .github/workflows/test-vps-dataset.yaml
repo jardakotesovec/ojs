@@ -1,0 +1,25 @@
+name: Update OJS Dataset Manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: choice
+        description: 'Branch to update dataset for'
+        required: true
+        default: 'main'
+        options:
+          - main
+          - stable-3_5_0
+          - stable-3_4_0
+          - stable-3_3_0
+jobs:
+  update-dataset:
+    uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/update-dataset.yaml@main
+    with:
+      project: ojs
+      branch: main #${{ inputs.branch }}
+    secrets:
+      SSH_PRIVATE_KEY: ${{ secrets.TEST_VPS_CI_SSH_PRIVATE_KEY }}
+      SSH_HOST: ${{ secrets.TEST_VPS_CI_SSH_HOST }}
+      SSH_USERNAME: ${{ secrets.TEST_VPS_CI_SSH_USERNAME }}
