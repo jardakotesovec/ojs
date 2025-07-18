@@ -10,6 +10,9 @@ on:
 
 jobs:
   deploy:
+    concurrency:
+      group: deploy-pr-${{ inputs.pr_number }} # Group by PR number (e.g., "deploy-pr-123")
+      cancel-in-progress: true
     uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/deploy.yaml@main
     with:
       project: ojs
