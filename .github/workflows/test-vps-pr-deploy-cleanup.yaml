@@ -1,12 +1,12 @@
-name: Cleanup PR Deployment on Close 2
+name: Cleanup PR Deployment on Close
 
 on:
-  pull_request:
+  pull_request_target:
     types: [closed]
 
 jobs:
   cleanup:
-    uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/deploy-cleanup.yaml@main
+    uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/cleanup.yaml@main
     with:
       project: ojs
       pr_number: ${{ github.event.number }}
