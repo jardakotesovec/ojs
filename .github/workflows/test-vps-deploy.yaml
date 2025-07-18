@@ -1,17 +1,23 @@
-name: Deploy to testing environment
+name: Deploy Branch to Test Environments
 
 on:
-  push:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to Deploy'
+        required: true
+        type: string
 
 jobs:
   deploy:
     concurrency:
-      group: deploy-${{ github.ref_name }}
+      group: deploy-branch-${{ inputs.branch }} # Group by branch (e.g., "deploy-branch-main")
       cancel-in-progress: true
     uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/deploy.yaml@main
     with:
       project: ojs
-      branch: ${{ github.ref_name }}
+      branch: ${{ inputs.branch }}
+      copies: ${{ inputs.copies }}
     secrets:
       SSH_PRIVATE_KEY: ${{ secrets.TEST_VPS_CI_SSH_PRIVATE_KEY }}
       SSH_HOST: ${{ secrets.TEST_VPS_CI_SSH_HOST }}
