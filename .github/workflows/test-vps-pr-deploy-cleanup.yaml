@@ -6,7 +6,7 @@ on:
 
 jobs:
   cleanup:
-    uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/cleanup.yaml@main
+    uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/deploy-cleanup.yaml@main
     with:
       project: ojs
       pr_number: ${{ github.event.number }}
