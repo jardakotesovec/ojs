@@ -5,6 +5,15 @@ on:
     types: [created]
 
 jobs:
+  debug: # This job always runs for debugging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump event context
+        run: |
+          echo "Is this a PR? ${{ github.event.issue.pull_request && 'Yes' || 'No' }}"
+          echo "Comment body: ${{ github.event.comment.body }}"
+          echo "Author association: ${{ github.event.comment.author_association }}"
+          echo "Full event JSON: ${{ toJSON(github.event) }}"
   deploy:
     if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy') && github.event.comment.author_association == 'MEMBER' # Restrict to repo members/collaborators
     uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/deploy.yaml@main
