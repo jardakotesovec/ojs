@@ -1,23 +1,28 @@
-name: Deploy PR to Test Environment
+name: Deploy Branch to Test Environment
 
 on:
   workflow_dispatch:
     inputs:
-      pr_number:
-        description: 'PR Number to Deploy'
+      branch:
+        description: 'Branch to Deploy'
         required: true
-        type: number
+        type: string
+      copies:
+        description: 'Comma-separated suffixes for additional copies (e.g., qa,hosting)'
+        required: false
+        type: string
+        default: 'qa,hosting'
 
 jobs:
   deploy:
     concurrency:
-      group: deploy-pr-${{ inputs.pr_number }} # Group by PR number (e.g., "deploy-pr-123")
+      group: deploy-branch-${{ inputs.branch }} # Group by branch (e.g., "deploy-branch-main")
       cancel-in-progress: true
     uses: jardakotesovec/pkp-test-vps-ci/.github/workflows/deploy.yaml@main
     with:
       project: ojs
-      branch: main # Dummy value; overridden by pr_number logic
-      pr_number: ${{ inputs.pr_number }}
+      branch: ${{ inputs.branch }}
+      copies: ${{ inputs.copies }}
     secrets:
       SSH_PRIVATE_KEY: ${{ secrets.TEST_VPS_CI_SSH_PRIVATE_KEY }}
       SSH_HOST: ${{ secrets.TEST_VPS_CI_SSH_HOST }}
