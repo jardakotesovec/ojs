@@ -1,4 +1,4 @@
-name: Deploy Branch to Test Environment
+name: Deploy Branch to Test Environments
 
 on:
   workflow_dispatch:
