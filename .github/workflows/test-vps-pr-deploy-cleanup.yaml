@@ -1,4 +1,4 @@
-name: Test VPS Cleanup PR Deployment on Close
+name: Test VPS Cleanup PR Deployment on Closesd
 
 on:
   pull_request_target:
