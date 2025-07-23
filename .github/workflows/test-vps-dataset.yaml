@@ -1,13 +1,13 @@
-name: Update OJS Dataset Manually
+name: Update OXS Dataset Manually
 
 on:
   workflow_dispatch:
     inputs:
       branch:
         type: choice
-        description: 'Branch to update dataset for'
+        description: "Branch to update dataset for"
         required: true
-        default: 'main'
+        default: "main"
         options:
           - main
           - stable-3_5_0
@@ -15,15 +15,15 @@ on:
           - stable-3_3_0
       update_default:
         type: boolean
-        description: 'Update the default copy (no suffix)'
+        description: "Update the default copy (no suffix)"
         default: true
       update_qa:
         type: boolean
-        description: 'Update the QA copy'
+        description: "Update the QA copy"
         default: false
       update_hosting:
         type: boolean
-        description: 'Update the Hosting copy'
+        description: "Update the Hosting copy"
         default: false
 
 jobs:
