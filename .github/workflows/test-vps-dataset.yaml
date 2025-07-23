@@ -1,4 +1,4 @@
-name: Update OXS Dataset Manually
+name: Test VPS Update Dataset
 
 on:
   workflow_dispatch:

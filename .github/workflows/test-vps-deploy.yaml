@@ -1,4 +1,4 @@
-name: Deploy to testing environment
+name: Test VPS Deploy stable branches
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Deploy PR to Test Environment
+name: Test VPS Deploy PR
 
 on:
   issue_comment:
