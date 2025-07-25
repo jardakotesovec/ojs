@@ -1,4 +1,4 @@
-name: Test VPS Deploy stable branch
+name: Test VPS Deploy stable branch test
 
 on:
   push:
