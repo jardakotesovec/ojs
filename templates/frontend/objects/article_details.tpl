@@ -91,7 +91,9 @@
 			}
 		</div>
 	{/if}
-
+	<div data-vue-root>
+		<pkp-hello-world></pkp-hello-world>
+	</div>
 	<h1 class="page_title">
 		{$publication->getLocalizedTitle(null, 'html')|strip_unsafe_html}
 	</h1>
