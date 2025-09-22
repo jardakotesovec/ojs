@@ -1,0 +1,100 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-30T06:56:50-07:00\n"
+"PO-Revision-Date: 2019-09-30T06:56:50-07:00\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "plugins.themes.oreTheme.name"
+msgstr "ORE Theme"
+
+msgid "plugins.themes.oreTheme.description"
+msgstr "This theme implements the ore theme."
+
+msgid "plugins.themes.oreTheme.option.typography.label"
+msgstr "Typography"
+
+msgid "plugins.themes.oreTheme.option.typography.description"
+msgstr "Choose a font combination that suits this journal."
+
+msgid "plugins.themes.oreTheme.option.typography.notoSans"
+msgstr ""
+"Noto Sans: A digital-native font designed by Google for extensive language "
+"support."
+
+msgid "plugins.themes.oreTheme.option.typography.notoSerif"
+msgstr "Noto Serif: A serif variant of Google's digital-native font."
+
+msgid "plugins.themes.oreTheme.option.typography.notoSerif_notoSans"
+msgstr ""
+"Noto Serif/Noto Sans: A complementary pairing with serif headings and sans-"
+"serif body text."
+
+msgid "plugins.themes.oreTheme.option.typography.notoSans_notoSerif"
+msgstr ""
+"Noto Sans/Noto Serif: A complementary pairing with sans-serif headings and "
+"serif body text."
+
+msgid "plugins.themes.oreTheme.option.typography.lato"
+msgstr "Lato: A popular modern sans-serif font."
+
+msgid "plugins.themes.oreTheme.option.typography.lora"
+msgstr "Lora: A wide-set serif font good for reading online."
+
+msgid "plugins.themes.oreTheme.option.typography.lora_openSans"
+msgstr ""
+"Lora/Open Sans: A complimentary pairing with serif headings and sans-serif "
+"body text."
+
+msgid "plugins.themes.oreTheme.option.colour.label"
+msgstr "Colour"
+
+msgid "plugins.themes.oreTheme.option.colour.description"
+msgstr "Choose a colour for the header."
+
+msgid "plugins.themes.oreTheme.option.showDescriptionInJournalIndex.option"
+msgstr "Show the journal summary on the homepage."
+
+msgid "plugins.themes.oreTheme.option.useHomepageImageAsHeader.label"
+msgstr "Header Background Image"
+
+msgid "plugins.themes.oreTheme.option.useHomepageImageAsHeader.description"
+msgstr ""
+"When a homepage image has been uploaded, display it in the background of the "
+"header instead of it's usual position on the homepage."
+
+msgid "plugins.themes.oreTheme.option.useHomepageImageAsHeader.option"
+msgstr "Show the homepage image as the header background."
+
+msgid "plugins.themes.oreTheme.option.displayStats.label"
+msgstr "Usage statistics display options"
+
+msgid "plugins.themes.oreTheme.option.displayStats.none"
+msgstr "Do not display submission usage statistics chart for reader."
+
+msgid "plugins.themes.oreTheme.option.displayStats.bar"
+msgstr "Use bar type of the chart for usage statistics display."
+
+msgid "plugins.themes.oreTheme.option.displayStats.line"
+msgstr "Use line type of the chart for usage statistics display."
+
+msgid "plugins.themes.oreTheme.displayStats.monthInitials"
+msgstr "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec"
+
+msgid "plugins.themes.oreTheme.displayStats.downloads"
+msgstr "Downloads"
+
+msgid "plugins.themes.oreTheme.displayStats.noStats"
+msgstr "Download data is not yet available."
+
+msgid "plugins.themes.oreTheme.nextSlide"
+msgstr "Next slide"
+
+msgid "plugins.themes.oreTheme.prevSlide"
+msgstr "Previous slide"
