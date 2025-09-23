@@ -8,8 +8,92 @@
  * @brief Styles applying to a view of an article with all details
  * @link templates/frontend/objects/article_details.tpl
  */
-.obj_article_details {
 
+/* TAB STYLING */
+/* !!!! Automatically generated example for TAB styling, this needs to be done properly*/
+
+/* CSS Variables for Tab Styling */
+:root {
+	--tab-text-color: #333333;
+	--tab-text-color-inactive: #666666;
+	--tab-active-color: #0066cc;
+	--tab-border-color: #e0e0e0;
+	--tab-font-size: 16px;
+	--tab-padding: 12px 20px 12px 0;
+	--tab-gap: 30px;
+}
+
+/* Article Tabs Container */
+.article-tabs {
+	margin-top: 40px;
+
+	/* Root container - wraps everything */
+	.BaseTabRoot {
+		display: block;
+
+		/* Tab List (mislabeled as BaseTabRoot in BaseTabList.vue) */
+		.BaseTabRoot {
+			display: flex;
+			flex-direction: row;
+			gap: var(--tab-gap);
+			border-bottom: 1px solid var(--tab-border-color);
+			margin-bottom: 30px;
+			padding-bottom: 0;
+		}
+	}
+}
+
+/* Tab Trigger - the clickable tab buttons */
+.BaseTabTrigger {
+	background: none;
+	border: none;
+	color: var(--tab-text-color-inactive);
+	cursor: pointer;
+	font-size: var(--tab-font-size);
+	font-weight: 400;
+	padding: var(--tab-padding);
+	position: relative;
+	transition: color 0.2s ease;
+	display: inline-block;
+
+	&:hover {
+		color: var(--tab-text-color);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--tab-active-color);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+
+	/* Active tab state */
+	&[data-state='active'] {
+		color: var(--tab-text-color);
+		font-weight: 700;
+
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: -1px;
+			left: 0;
+			right: 20px;
+			height: 3px;
+			background-color: var(--tab-active-color);
+		}
+	}
+}
+
+/* Tab Content - the content panels */
+.BaseTabContent {
+	display: block;
+
+	&[data-state='inactive'] {
+		display: none;
+	}
+}
+/* END TAB STYLING */
+
+.obj_article_details {
 	> .page_title {
 		margin: 0;
 	}
@@ -51,9 +135,7 @@
 	}
 
 	.main_entry {
-
 		.item {
-
 			.label {
 				margin: 0 0 @double;
 				font-family: @font-heading;
@@ -69,13 +151,11 @@
 		}
 
 		.sub_item {
-
 			.label {
 				font-size: @font-base;
 			}
 		}
 	}
-
 
 	.authors {
 		&:extend(.pkp_unstyled_list);
@@ -114,8 +194,7 @@
 
 		.affiliation a,
 		.affiliation span,
-		.affiliation svg
-		{
+		.affiliation svg {
 			display: inline-block;
 			vertical-align: middle;
 		}
@@ -128,9 +207,7 @@
 	}
 
 	.author_bios {
-
 		.sub_item {
-
 			.label {
 				margin-bottom: 0;
 			}
@@ -166,7 +243,7 @@
 		font-size: @font-sml;
 		line-height: @line-sml;
 
-		a[rel="license"] + p {
+		a[rel='license'] + p {
 			margin-top: 0;
 		}
 	}
@@ -206,7 +283,6 @@
 	}
 
 	.citation_display {
-
 		.value {
 			font-size: @font-sml;
 		}
@@ -216,7 +292,7 @@
 			display: none;
 		}
 
-		[aria-hidden="true"] {
+		[aria-hidden='true'] {
 			display: none;
 		}
 
@@ -249,8 +325,7 @@
 				transform: translateY(-50%);
 			}
 
-			&[aria-expanded="true"] {
-
+			&[aria-expanded='true'] {
 				&:after {
 					content: @fa-var-caret-up;
 				}
@@ -295,17 +370,14 @@
 		}
 	}
 
-	@media(min-width: @screen-phone) {
-
+	@media (min-width: @screen-phone) {
 		.entry_details {
 			margin-left: -@triple;
 			margin-right: -@triple;
 		}
-
 	}
 
-	@media(min-width: @screen-tablet) {
-
+	@media (min-width: @screen-tablet) {
 		.row {
 			margin-left: -@double;
 			margin-right: -@double;
@@ -354,8 +426,7 @@
 		}
 	}
 
-	@media(min-width: @screen-desktop) {
-
+	@media (min-width: @screen-desktop) {
 		.row {
 			margin-left: -@triple;
 			margin-right: -@triple;
@@ -370,9 +441,7 @@
 		}
 	}
 
-
-	@media(min-width: @screen-lg-desktop) {
-
+	@media (min-width: @screen-lg-desktop) {
 		.main_entry {
 			width: @screen-lg-desktop-container - (@sidebar-width * 2);
 		}
