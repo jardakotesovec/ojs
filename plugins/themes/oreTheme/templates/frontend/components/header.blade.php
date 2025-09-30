@@ -74,7 +74,7 @@
 <div class="pkp_navigation_primary_wrapper">
 
 {{-- Primary navigation menu for current application --}}
-@loadMenu(['name' => 'primary', 'id' => 'navigationPrimary', 'ulClass' => 'pkp_navigation_primary'])
+@loadMenu(['path' => 'frontend.components.customNavigationMenu', 'name' => 'primary', 'id' => 'navigationPrimary', 'ulClass' => 'pkp_navigation_primary'])
 
 {{-- Search form --}}
 @if ($currentContext && $requestedPage !== 'search')

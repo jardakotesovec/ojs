@@ -1,0 +1,28 @@
+@if ($navigationMenu)
+CUSTOM MENU TEST
+    <ul id="{{ $id }}" class="{{ $ulClass }} pkp_nav_list">
+        @foreach ($navigationMenu->menuTree as $field => $navigationMenuItemAssignment)
+            @if (!$navigationMenuItemAssignment->navigationMenuItem->getIsDisplayed())
+                @continue
+            @endif
+            <li class="{{ $liClass }}">
+                <a href="{{ $navigationMenuItemAssignment->navigationMenuItem->getUrl() }}">
+                    {{ $navigationMenuItemAssignment->navigationMenuItem->getLocalizedTitle() }}
+                </a>
+                @if ($navigationMenuItemAssignment->navigationMenuItem->getIsChildVisible())
+                    <ul>
+                        @foreach ($navigationMenuItemAssignment->children as $childField => $childNavigationMenuItemAssignment)
+                            @if ($childNavigationMenuItemAssignment->navigationMenuItem->getIsDisplayed())
+                                <li class="{{ $liClass }}">
+                                    <a href="{{ $childNavigationMenuItemAssignment->navigationMenuItem->getUrl() }}">
+                                        {{ $childNavigationMenuItemAssignment->navigationMenuItem->getLocalizedTitle() }}
+                                    </a>
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                @endif
+            </li>
+        @endforeach
+    </ul>
+@endif
