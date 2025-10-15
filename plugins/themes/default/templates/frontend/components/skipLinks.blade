@@ -1,0 +1,26 @@
+{{--
+    templates/frontend/components/skipLinks.tpl
+
+    Copyright (c) 2014-2021 Simon Fraser University
+    Copyright (c) 2003-2021 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    Skip links to aid navigation when tabbing for screen reader accessibility
+--}}
+
+<nav class="cmp_skip_to_content" aria-label="{{ __('navigation.skip.description') }}">
+    <a href="#pkp_content_main">{{ __('navigation.skip.main') }}</a>
+    <a href="#siteNav">{{ __('navigation.skip.nav') }}</a>
+    @if (!($requestedPage ?? null) || $requestedPage === 'index')
+        @if ($activeTheme && $activeTheme->getOption('showDescriptionInJournalIndex'))
+            <a href="#homepageAbout">{{ __('navigation.skip.about') }}</a>
+        @endif
+        @if (($numAnnouncementsHomepage ?? 0) && count($announcements ?? []))
+            <a href="#homepageAnnouncements">{{ __('navigation.skip.announcements') }}</a>
+        @endif
+        @if ($issue ?? null)
+            <a href="#homepageIssue">{{ __('navigation.skip.issue') }}</a>
+        @endif
+    @endif
+    <a href="#pkp_content_footer">{{ __('navigation.skip.footer') }}</a>
+</nav>

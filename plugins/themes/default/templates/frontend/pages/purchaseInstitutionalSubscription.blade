@@ -1,0 +1,113 @@
+{{--
+    templates/payments/userInstitutionalSubscriptionForm.tpl
+
+    Copyright (c) 2014-2021 Simon Fraser University
+    Copyright (c) 2003-2021 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    User purchase institutional subscription form
+
+--}}
+@include('frontend.components.header', ['pageTitle' => 'user.subscriptions.purchaseInstitutionalSubscription'])
+
+<div class="pkp_page_content pkp_page_purchaseInstitutionalSubscription">
+    <h1 class="page_title">
+        {{ __('user.subscriptions.purchaseInstitutionalSubscription') }}
+    </h1>
+
+    @php
+        $formPath = ['institutional'];
+        if ($subscriptionId ?? null) {
+            $formPath[] = $subscriptionId;
+        }
+    @endphp
+    <form class="cmp_form purchase_subscription" method="post" id="subscriptionForm" action="@url(['op' => 'payPurchaseSubscription', 'path' => $formPath])">
+        @csrf
+
+        @include('common.formErrors')
+
+        <fieldset>
+            <legend>
+                {{ __('payment.subscription.purchase') }}
+            </legend>
+            <div class="fields">
+                <div class="subscription_type">
+                    <label>
+                        <span class="label">
+                            {{ __('user.subscriptions.form.typeId') }}
+                            <span class="required">*</span>
+                            <span class="pkp_screen_reader">
+                                {{ __('common.required') }}
+                            </span>
+                        </span>
+                        <select name="typeId" id="typeId" required>
+                            @foreach($subscriptionTypes ?? [] as $subscriptionType)
+                                <option value="{{ $subscriptionType->getId() }}"{{ ($typeId ?? null) == $subscriptionType->getId() ? ' selected' : '' }}>{{ $subscriptionType->getSummaryString() }}</option>
+                            @endforeach
+                        </select>
+                    </label>
+                </div>
+                <div class="subscription_membership">
+                    <label>
+                        <span class="label">
+                            {{ __('user.subscriptions.form.membership') }}
+                        </span>
+                        <input type="text" name="membership" id="membership" value="{{ $membership ?? '' }}" aria-describedby="subscriptionMembershipDescription">
+                    </label>
+                    <p class="description" id="subscriptionMembershipDescription">{{ __('user.subscriptions.form.membershipInstructions') }}</p>
+                </div>
+                <div class="subscription_institution">
+                    <label>
+                        <span class="label">
+                            {{ __('user.subscriptions.form.institutionName') }}
+                        </span>
+                        <input type="text" name="institutionName" id="institutionName" value="{{ $institutionName ?? '' }}">
+                    </label>
+                </div>
+                <div class="subscription_address">
+                    <label>
+                        <span class="label">
+                            {{ __('user.subscriptions.form.institutionMailingAddress') }}
+                        </span>
+                        <textarea name="institutionMailingAddress" id="institutionMailingAddress">{{ $institutionMailingAddress ?? '' }}</textarea>
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <div class="fields">
+                <div class="subscription_domain">
+                    <label>
+                        <span class="label">
+                            {{ __('user.subscriptions.form.domain') }}
+                        </span>
+                        <input type="text" name="domain" id="domain" value="{{ $domain ?? '' }}" aria-describedby="subscriptionDomainDescription">
+                    </label>
+                    <p class="description" id="subscriptionDomainDescription">{{ __('user.subscriptions.form.domainInstructions') }}</p>
+                </div>
+                <div class="subscription_ips">
+                    <label>
+                        <span class="label">
+                            {{ __('user.subscriptions.form.ipRange') }}
+                        </span>
+                        <textarea name="ipRanges" id="ipRanges">{{ $ipRanges ?? '' }}</textarea>
+                    </label>
+                    <p class="description" id="subscriptionIPDescription">{{ __('user.subscriptions.form.ipRangeInstructions') }}</p>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="buttons">
+            <button class="submit" type="submit">
+                {{ __('common.continue') }}
+            </button>
+            <a class="cmp_button_link" href="@url(['page' => 'user', 'op' => 'subscriptions'])">
+                {{ __('common.cancel') }}
+            </a>
+        </div>
+
+    </form>
+</div>
+
+@include('frontend.components.footer')

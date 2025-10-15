@@ -1,0 +1,82 @@
+{{--
+    templates/frontend/pages/indexSite.tpl
+
+    Copyright (c) 2014-2021 Simon Fraser University
+    Copyright (c) 2003-2021 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    Site index.
+
+--}}
+@include('frontend.components.header')
+
+<div class="page_index_site">
+
+    @if(($highlights ?? null) && $highlights->count())
+        @include('frontend.components.highlights', ['highlights' => $highlights])
+    @endif
+
+    @if($about ?? null)
+        <div class="about_site">
+            {!! $about !!}
+        </div>
+    @endif
+
+    @include('frontend.objects.announcements_list', ['numAnnouncements' => $numAnnouncementsHomepage ?? null])
+
+    <div class="journals">
+        <h2>
+            {{ __('context.contexts') }}
+        </h2>
+        @if(!count($journals ?? []))
+            {{ __('site.noJournals') }}
+        @else
+            <ul>
+                @foreach($journals as $journal)
+                    @php
+                        $url = Str::bladeUrl(['journal' => $journal->getPath()]);
+                        $thumb = $journal->getLocalizedData('journalThumbnail');
+                        $description = $journal->getLocalizedDescription();
+                    @endphp
+                    <li{{ $thumb ? ' class="has_thumb"' : '' }}>
+                        @if($thumb)
+                            <div class="thumb">
+                                <a href="{{ $url }}">
+                                    <img src="{{ $journalFilesPath }}{{ $journal->getId() }}/{{ rawurlencode($thumb['uploadName']) }}"{{ isset($thumb['altText']) ? ' alt="' . ($thumb['altText'] ?: '') . '"' : '' }}>
+                                </a>
+                            </div>
+                        @endif
+
+                        <div class="body">
+                            <h3>
+                                <a href="{{ $url }}" rel="bookmark">
+                                    {{ $journal->getLocalizedName() }}
+                                </a>
+                            </h3>
+                            @if($description)
+                                <div class="description">
+                                    {!! $description !!}
+                                </div>
+                            @endif
+                            <ul class="links">
+                                <li class="view">
+                                    <a href="{{ $url }}">
+                                        {{ __('site.journalView') }}
+                                    </a>
+                                </li>
+                                <li class="current">
+                                    <a href="@url(['journal' => $journal->getPath(), 'page' => 'issue', 'op' => 'current'])">
+                                        {{ __('site.journalCurrent') }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </div>
+
+</div>{{-- .page --}}
+
+@include('frontend.components.footer')

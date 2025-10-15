@@ -1,0 +1,83 @@
+{{--
+    templates/frontend/pages/issueArchive.tpl
+
+    Copyright (c) 2014-2021 Simon Fraser University
+    Copyright (c) 2003-2021 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    @brief Display a list of recent issues.
+
+    @uses $issues Array Collection of issues to display
+    @uses $prevPage int The previous page number
+    @uses $nextPage int The next page number
+    @uses $showingStart int The number of the first item on this page
+    @uses $showingEnd int The number of the last item on this page
+    @uses $total int Count of all published monographs
+--}}
+@php
+    if ($prevPage ?? null) {
+        $pageTitle = __('archive.archivesPageNumber', ['pageNumber' => $prevPage + 1]);
+    } else {
+        $pageTitle = __('archive.archives');
+    }
+@endphp
+@include('frontend.components.header', ['pageTitleTranslated' => $pageTitle])
+
+<div class="page page_issue_archive">
+    @include('frontend.components.breadcrumbs', ['currentTitle' => $pageTitle])
+    <h1>
+        {{ $pageTitle }}
+    </h1>
+
+    {{-- No issues have been published --}}
+    @if(empty($issues))
+        <p>{{ __('current.noCurrentIssueDesc') }}</p>
+
+    {{-- List issues --}}
+    @else
+        <ul class="issues_archive">
+            @foreach($issues as $issue)
+                <li>
+                    @include('frontend.objects.issue_summary')
+                </li>
+            @endforeach
+        </ul>
+
+        {{-- Pagination --}}
+        @php
+            $prevUrl = null;
+            $nextUrl = null;
+            if (($prevPage ?? null) > 1) {
+                $prevUrl = Str::bladeUrl([
+                    'router' => \PKP\core\PKPApplication::ROUTE_PAGE,
+                    'page' => 'issue',
+                    'op' => 'archive',
+                    'path' => $prevPage
+                ]);
+            } elseif (($prevPage ?? null) === 1) {
+                $prevUrl = Str::bladeUrl([
+                    'router' => \PKP\core\PKPApplication::ROUTE_PAGE,
+                    'page' => 'issue',
+                    'op' => 'archive'
+                ]);
+            }
+            if ($nextPage ?? null) {
+                $nextUrl = Str::bladeUrl([
+                    'router' => \PKP\core\PKPApplication::ROUTE_PAGE,
+                    'page' => 'issue',
+                    'op' => 'archive',
+                    'path' => $nextPage
+                ]);
+            }
+        @endphp
+        @include('frontend.components.pagination', [
+            'prevUrl' => $prevUrl,
+            'nextUrl' => $nextUrl,
+            'showingStart' => $showingStart ?? null,
+            'showingEnd' => $showingEnd ?? null,
+            'total' => $total ?? null
+        ])
+    @endif
+</div>
+
+@include('frontend.components.footer')

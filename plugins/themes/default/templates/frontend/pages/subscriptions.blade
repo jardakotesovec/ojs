@@ -1,0 +1,94 @@
+{{--
+    templates/frontend/pages/subscriptions.tpl
+
+    Copyright (c) 2013-2021 Simon Fraser University
+    Copyright (c) 2003-2021 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    About the Journal Subscriptions.
+
+--}}
+@include('frontend.components.header', ['pageTitle' => 'about.subscriptions'])
+
+<div class="page page_subscriptions">
+    @include('frontend.components.breadcrumbs', ['currentTitleKey' => 'about.subscriptions'])
+    <h1>
+        {{ __('about.subscriptions') }}
+    </h1>
+    @include('frontend.components.subscriptionContact')
+
+    <a name="subscriptionTypes"></a>
+    @if(count($individualSubscriptionTypes ?? []))
+        <div class="subscriptions_institutional">
+            <h3>{{ __('about.subscriptions.individual') }}</h3>
+            <p>{{ __('subscriptions.individualDescription') }}</p>
+            <table class="cmp_table">
+                <tr>
+                    <th>{{ __('about.subscriptionTypes.name') }}</th>
+                    <th>{{ __('about.subscriptionTypes.format') }}</th>
+                    <th>{{ __('about.subscriptionTypes.duration') }}</th>
+                    <th>{{ __('about.subscriptionTypes.cost') }}</th>
+                </tr>
+                @foreach($individualSubscriptionTypes as $subscriptionType)
+                    <tr>
+                        <td>
+                            <div class="subscription_name">
+                                {{ $subscriptionType->getLocalizedName() }}
+                            </div>
+                            <div class="subscription_description">
+                                {!! Str::sanitizeHtml($subscriptionType->getLocalizedDescription()) !!}
+                            </div>
+                        </td>
+                        <td>{{ __($subscriptionType->getFormatString()) }}</td>
+                        <td>{{ $subscriptionType->getDurationYearsMonths() }}</td>
+                        <td>{{ sprintf('%.2f', $subscriptionType->getCost()) }}&nbsp;({{ $subscriptionType->getCurrencyStringShort() }})</td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+        @if($isUserLoggedIn ?? false)
+            <div class="subscriptions_individual_purchase">
+                <a class="action" href="@url(['page' => 'user', 'op' => 'purchaseSubscription', 'path' => 'individual'])">
+                    {{ __('user.subscriptions.purchaseNewSubscription') }}
+                </a>
+            </div>
+        @endif
+    @endif
+
+    @if(count($institutionalSubscriptionTypes ?? []))
+        <h3>{{ __('about.subscriptions.institutional') }}</h3>
+        <p>{{ __('subscriptions.institutionalDescription') }}</p>
+        <table class="cmp_table">
+            <tr>
+                <th>{{ __('about.subscriptionTypes.name') }}</th>
+                <th>{{ __('about.subscriptionTypes.format') }}</th>
+                <th>{{ __('about.subscriptionTypes.duration') }}</th>
+                <th>{{ __('about.subscriptionTypes.cost') }}</th>
+            </tr>
+            @foreach($institutionalSubscriptionTypes as $subscriptionType)
+                <tr>
+                    <td>
+                        <div class="subscription_name">
+                            {{ $subscriptionType->getLocalizedName() }}
+                        </div>
+                        <div class="subscription_description">
+                            {!! Str::sanitizeHtml($subscriptionType->getLocalizedDescription()) !!}
+                        </div>
+                    </td>
+                    <td>{{ __($subscriptionType->getFormatString()) }}</td>
+                    <td>{{ $subscriptionType->getDurationYearsMonths() }}</td>
+                    <td>{{ sprintf('%.2f', $subscriptionType->getCost()) }}&nbsp;({{ $subscriptionType->getCurrencyStringShort() }})</td>
+                </tr>
+            @endforeach
+        </table>
+        @if($isUserLoggedIn ?? false)
+            <div class="subscriptions_institutional_purchase">
+                <a class="action" href="@url(['page' => 'user', 'op' => 'purchaseSubscription', 'path' => 'institutional'])">
+                    {{ __('user.subscriptions.purchaseNewSubscription') }}
+                </a>
+            </div>
+        @endif
+    @endif
+</div>
+
+@include('frontend.components.footer')

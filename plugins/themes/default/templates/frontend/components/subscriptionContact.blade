@@ -1,0 +1,62 @@
+{{--
+    templates/frontend/components/subscriptionContact.tpl
+
+    Copyright (c) 2014-2021 Simon Fraser University
+    Copyright (c) 2003-2021 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    @brief Display the contact details for a journal's subscriptions
+
+    @uses $subscriptionAdditionalInformation string HTML text description
+          subcription information
+    @uses $subscriptionMailingAddress string Contact address for subscriptions
+    @uses $subscriptionName string Contact name for subscriptions
+    @uses $subscriptionPhone string Contact phone number for subscriptions
+    @uses $subscriptionEmail string Contact email address for subscriptions
+--}}
+<div class="cmp_subscription_contact">
+    @if($subscriptionAdditionalInformation ?? null)
+        <div class="description">
+            {!! Str::sanitizeHtml($subscriptionAdditionalInformation) !!}
+        </div>
+    @endif
+
+    @if(($subscriptionName ?? null) || ($subscriptionPhone ?? null) || ($subscriptionEmail ?? null))
+        <div class="contact">
+            <h3>
+                {{ __('about.subscriptionsContact') }}
+            </h3>
+
+            @if($subscriptionName ?? null)
+                <div class="name">
+                    {{ $subscriptionName }}
+                </div>
+            @endif
+
+            @if($subscriptionMailingAddress ?? null)
+                <div class="address">
+                    {!! Str::sanitizeHtml(nl2br($subscriptionMailingAddress)) !!}
+                </div>
+            @endif
+
+            @if($subscriptionPhone ?? null)
+                <div class="phone">
+                    <span class="label">
+                        {{ __('about.contact.phone') }}
+                    </span>
+                    <span class="value">
+                        {{ $subscriptionPhone }}
+                    </span>
+                </div>
+            @endif
+
+            @if($subscriptionEmail ?? null)
+                <div class="email">
+                    <a href="mailto:{{ $subscriptionEmail }}">
+                        {{ $subscriptionEmail }}
+                    </a>
+                </div>
+            @endif
+        </div>
+    @endif
+</div>

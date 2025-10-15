@@ -1,0 +1,37 @@
+{{--
+    templates/frontend/pages/submissions.tpl
+
+    Copyright (c) 2014-2023 Simon Fraser University
+    Copyright (c) 2003-2023 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    @brief Display the page to view information about submissions.
+--}}
+@php
+    $submissionChecklistAfterContent = '';
+    ob_start();
+@endphp
+    @foreach($sections ?? [] as $section)
+        @if($section->getLocalizedPolicy())
+            <div class="section_policy">
+                <h2>{{ $section->getLocalizedTitle() }}</h2>
+                {!! $section->getLocalizedPolicy() !!}
+                @if($isUserLoggedIn ?? false)
+                    @php
+                        $sectionSubmissionUrl = Str::bladeUrl(['page' => 'submission', 'sectionId' => $section->getId()]);
+                    @endphp
+                    <p>
+                        {!! __('about.onlineSubmissions.submitToSection', [
+                            'name' => $section->getLocalizedTitle(),
+                            'url' => $sectionSubmissionUrl
+                        ]) !!}
+                    </p>
+                @endif
+            </div>
+        @endif
+    @endforeach
+@php
+    $submissionChecklistAfterContent = ob_get_clean();
+@endphp
+
+@include('frontend.pages.submissions_pkp')

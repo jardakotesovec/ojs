@@ -1,0 +1,88 @@
+{{--
+    templates/frontend/pages/submissions.tpl
+
+    Copyright (c) 2014-2021 Simon Fraser University
+    Copyright (c) 2003-2021 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    @brief Display the page to view information about submissions.
+
+    @uses $currentContext Journal|Press The current journal or press
+    @uses $submissionChecklist array List of requirements for submissions
+    @uses $submissionChecklistAfterContent string Optional data to include after the checklist
+--}}
+@include('frontend.components.header', ['pageTitle' => 'about.submissions'])
+
+<div class="page page_submissions">
+    @include('frontend.components.breadcrumbs', ['currentTitleKey' => 'about.submissions'])
+    <h1>
+        {{ __('about.submissions') }}
+    </h1>
+
+    <div class="cmp_notification">
+        @if(count($sections ?? []) == 0 || $currentContext->getData('disableSubmissions'))
+            {{ __('author.submit.notAccepting') }}
+        @else
+            @if($isUserLoggedIn ?? false)
+                @php
+                    $newSubmission = '<a href="' . Str::bladeUrl(['page' => 'submission']) . '">' . __('about.onlineSubmissions.newSubmission') . '</a>';
+                    $viewSubmissions = '<a href="' . Str::bladeUrl(['page' => 'submissions']) . '">' . __('about.onlineSubmissions.viewSubmissions') . '</a>';
+                @endphp
+                {!! __('about.onlineSubmissions.submissionActions', ['newSubmission' => $newSubmission, 'viewSubmissions' => $viewSubmissions]) !!}
+            @else
+                @php
+                    $login = '<a href="' . Str::bladeUrl(['page' => 'login']) . '">' . __('about.onlineSubmissions.login') . '</a>';
+                    $register = '<a href="' . Str::bladeUrl(['page' => 'user', 'op' => 'register']) . '">' . __('about.onlineSubmissions.register') . '</a>';
+                @endphp
+                {!! __('about.onlineSubmissions.registrationRequired', ['login' => $login, 'register' => $register]) !!}
+            @endif
+        @endif
+    </div>
+
+    @if($currentContext->getLocalizedData('authorGuidelines'))
+    <div class="author_guidelines" id="authorGuidelines">
+        <h2>
+            {{ __('about.authorGuidelines') }}
+            @include('frontend.components.editLink', ['page' => 'management', 'op' => 'settings', 'path' => 'workflow', 'anchor' => 'submission/instructions', 'sectionTitleKey' => 'about.authorGuidelines'])
+        </h2>
+        {!! $currentContext->getLocalizedData('authorGuidelines') !!}
+    </div>
+    @endif
+
+    @if($submissionChecklist ?? null)
+        <div class="submission_checklist">
+            <h2>
+                {{ __('about.submissionPreparationChecklist') }}
+                @include('frontend.components.editLink', ['page' => 'management', 'op' => 'settings', 'path' => 'workflow', 'anchor' => 'submission/instructions', 'sectionTitleKey' => 'about.submissionPreparationChecklist'])
+            </h2>
+            {!! $submissionChecklist !!}
+        </div>
+    @endif
+
+    @if(isset($submissionChecklistAfterContent))
+        {!! $submissionChecklistAfterContent !!}
+    @endif
+
+    @if($currentContext->getLocalizedData('copyrightNotice'))
+        <div class="copyright_notice">
+            <h2>
+                {{ __('about.copyrightNotice') }}
+                @include('frontend.components.editLink', ['page' => 'management', 'op' => 'settings', 'path' => 'workflow', 'anchor' => 'submission/instructions', 'sectionTitleKey' => 'about.copyrightNotice'])
+            </h2>
+            {!! $currentContext->getLocalizedData('copyrightNotice') !!}
+        </div>
+    @endif
+
+    @if($currentContext->getLocalizedData('privacyStatement'))
+    <div class="privacy_statement" id="privacyStatement">
+        <h2>
+            {{ __('about.privacyStatement') }}
+            @include('frontend.components.editLink', ['page' => 'management', 'op' => 'settings', 'path' => 'website', 'anchor' => 'setup/privacy', 'sectionTitleKey' => 'about.privacyStatement'])
+        </h2>
+        {!! $currentContext->getLocalizedData('privacyStatement') !!}
+    </div>
+    @endif
+
+</div>{{-- .page --}}
+
+@include('frontend.components.footer')

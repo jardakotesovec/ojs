@@ -1,0 +1,23 @@
+{{--
+    templates/frontend/objects/latest_article.tpl
+
+    @uses $heading string HTML heading element
+    @uses $articleHeading string HTML heading element for articles
+    @uses $articles array List of articles
+--}}
+<div class="sections latest_articles">
+    <{{ $heading ?? 'h2' }} class="highlight_first">
+        {{ __('submissions.published.latest') }}
+    </{{ $heading ?? 'h2' }}>
+
+    <ul class="cmp_article_list articles">
+        @foreach($articles ?? [] as $article)
+            <li>
+                @include('frontend.objects.article_summary', ['heading' => $articleHeading ?? 'h3'])
+            </li>
+        @endforeach
+        {{-- TODO: Need to implement page_info and page_links functionality --}}
+        {{-- {page_info iterator=$articles} --}}
+        {{-- {page_links iterator=$articles name="publishedPublications"} --}}
+    </ul>
+</div>

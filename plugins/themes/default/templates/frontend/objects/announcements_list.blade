@@ -1,0 +1,42 @@
+{{--
+    templates/frontend/objects/announcements_list.tpl
+
+    Copyright (c) 2014-2023 Simon Fraser University
+    Copyright (c) 2003-2023 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    @brief Display a list of announcements
+
+    @uses $numAnnouncements int The number of announcements to display in the list
+    @uses $announcements Announcement[] The list of announcements
+--}}
+
+@if(($numAnnouncements ?? null) && count($announcements ?? []))
+    <section class="cmp_announcements highlight_first">
+        <a id="homepageAnnouncements"></a>
+        <h2>
+            {{ __('announcement.announcements') }}
+        </h2>
+        @foreach($announcements as $iteration => $announcement)
+            @if($iteration + 1 > $numAnnouncements)
+                @break
+            @endif
+            @if($iteration == 0)
+                @include('frontend.objects.announcement_summary', ['heading' => 'h3'])
+                <div class="more">
+            @else
+                <article class="obj_announcement_summary">
+                    <h4>
+                        <a href="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'announcement', 'op' => 'view', 'path' => $announcement->id])">
+                            {{ $announcement->getLocalizedData('title') }}
+                        </a>
+                    </h4>
+                    <div class="date">
+                        {{ $announcement->datePosted->format($dateFormatShort) }}
+                    </div>
+                </article>
+            @endif
+        @endforeach
+        </div>{{-- .more --}}
+    </section>
+@endif

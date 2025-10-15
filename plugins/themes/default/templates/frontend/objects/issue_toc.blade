@@ -1,0 +1,163 @@
+{{--
+    templates/frontend/objects/issue_toc.tpl
+
+    Copyright (c) 2014-2021 Simon Fraser University
+    Copyright (c) 2003-2021 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    @brief View of an Issue which displays a full table of contents.
+
+    @uses $issue Issue The issue
+    @uses $issueTitle string Title of the issue. May be empty
+    @uses $issueSeries string Vol/No/Year string for the issue
+    @uses $issueGalleys array Galleys for the entire issue
+    @uses $hasAccess bool Can this user access galleys for this context?
+    @uses $publishedSubmissions array Lists of articles published in this issue
+      sorted by section.
+    @uses $primaryGenreIds array List of file genre ids for primary file types
+    @uses $heading string HTML heading element, default: h2
+--}}
+@php
+    $heading = $heading ?? 'h2';
+    $articleHeading = 'h3';
+    if ($heading == 'h3') {
+        $articleHeading = 'h4';
+    } elseif ($heading == 'h4') {
+        $articleHeading = 'h5';
+    } elseif ($heading == 'h5') {
+        $articleHeading = 'h6';
+    }
+@endphp
+<div class="obj_issue_toc">
+
+    {{-- Indicate if this is only a preview --}}
+    @if(!$issue->getPublished())
+        @include('frontend.components.notification', ['type' => 'warning', 'messageKey' => 'editor.issues.preview'])
+    @endif
+
+    {{-- Issue introduction area above articles --}}
+    <div class="heading">
+
+        {{-- Issue cover image --}}
+        @php
+            $issueCover = $issue->getLocalizedCoverImageUrl();
+        @endphp
+        @if($issueCover)
+            <div class="cover">
+                @php
+                    $defaultAltText = __('issue.viewIssueIdentification', ['identification' => $issue->getIssueIdentification()]);
+                @endphp
+                <img src="{{ $issueCover }}" alt="{{ $issue->getLocalizedCoverImageAltText() ?? $defaultAltText }}">
+            </div>
+        @endif
+
+        {{-- Description --}}
+        @if($issue->hasDescription())
+            <div class="description">
+                {!! Str::sanitizeHtml($issue->getLocalizedDescription()) !!}
+            </div>
+        @endif
+
+        {{-- PUb IDs (eg - URN) --}}
+        @foreach($pubIdPlugins ?? [] as $pubIdPlugin)
+            @php
+                $pubId = $issue->getStoredPubId($pubIdPlugin->getPubIdType());
+            @endphp
+            @if($pubId)
+                @php
+                    $resolvingUrl = $pubIdPlugin->getResolvingURL($currentJournal->getId(), $pubId);
+                @endphp
+                <div class="pub_id {{ $pubIdPlugin->getPubIdType() }}">
+                    <span class="type">
+                        {{ $pubIdPlugin->getPubIdDisplayType() }}:
+                    </span>
+                    <span class="id">
+                        @if($resolvingUrl)
+                            <a href="{{ $resolvingUrl }}">
+                                {{ $resolvingUrl }}
+                            </a>
+                        @else
+                            {{ $pubId }}
+                        @endif
+                    </span>
+                </div>
+            @endif
+        @endforeach
+
+        {{-- DOI --}}
+        @php
+            $doiObject = $issue->getData('doiObject');
+        @endphp
+        @if($doiObject)
+            @php
+                $doiUrl = $doiObject->getData('resolvingUrl');
+            @endphp
+            <div class="pub_id doi">
+                <span class="type">
+                    DOI:
+                </span>
+                <span class="id">
+                    <a href="{{ $doiUrl }}">
+                        {{ $doiUrl }}
+                    </a>
+                </span>
+            </div>
+        @endif
+
+        {{-- Published date --}}
+        @if(($includeIssuePublishDate ?? false) && $issue->getDatePublished())
+            <div class="published">
+                <span class="label">
+                    {{ __('submissions.published') }}:
+                </span>
+                <span class="value">
+                    {{ Str::bladeDateFormat($issue->getDatePublished(), $dateFormatShort) }}
+                </span>
+            </div>
+        @endif
+    </div>
+
+    {{-- Full-issue galleys --}}
+    @if($issueGalleys ?? null)
+        <div class="galleys">
+            <{{ $heading }} id="issueTocGalleyLabel">
+                {{ __('issue.fullIssue') }}
+            </{{ $heading }}>
+            <ul class="galleys_links">
+                @foreach($issueGalleys as $galley)
+                    <li>
+                        @include('frontend.objects.galley_link', [
+                            'parent' => $issue,
+                            'galley' => $galley,
+                            'labelledBy' => 'issueTocGalleyLabel',
+                            'purchaseFee' => $currentJournal->getData('purchaseIssueFee') ?? null,
+                            'purchaseCurrency' => $currentJournal->getData('currency') ?? null
+                        ])
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Articles --}}
+    <div class="sections">
+    @foreach($publishedSubmissions ?? [] as $section)
+        <div class="section">
+        @if($section['articles'] ?? null)
+            @if($section['title'] ?? null)
+                <{{ $heading }}>
+                    {{ $section['title'] }}
+                </{{ $heading }}>
+            @endif
+            <ul class="cmp_article_list articles">
+                @foreach($section['articles'] as $article)
+                    <li>
+                        @include('frontend.objects.article_summary', ['heading' => $articleHeading])
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+        </div>
+    @endforeach
+    </div>{{-- .sections --}}
+</div>

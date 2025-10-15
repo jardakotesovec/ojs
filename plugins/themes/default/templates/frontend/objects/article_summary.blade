@@ -1,0 +1,135 @@
+{{--
+    templates/frontend/objects/article_summary.tpl
+
+    Copyright (c) 2014-2021 Simon Fraser University
+    Copyright (c) 2003-2021 John Willinsky
+    Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+
+    @brief View of an Article summary which is shown within a list of articles.
+
+    @uses $article Article The article
+    @uses $authorUserGroups Traversible The set of author user groups
+    @uses $hasAccess bool Can this user access galleys for this context? The
+          context may be an issue or an article
+    @uses $showDatePublished bool Show the date this article was published?
+    @uses $hideGalleys bool Hide the article galleys for this article?
+    @uses $primaryGenreIds array List of file genre ids for primary file types
+    @uses $heading string HTML heading element, default: h2
+
+    @hook Templates::Issue::Issue::Article []
+--}}
+@php
+    $publication = $article->getCurrentPublication();
+    $articlePath = $publication->getData('urlPath') ?: $article->getId();
+    $heading = $heading ?? 'h2';
+
+    // Replicate Smarty: {if (!$section.hideAuthor && $publication->getData('hideAuthor') == AUTHOR_TOC_DEFAULT) || $publication->getData('hideAuthor') == AUTHOR_TOC_SHOW}
+    $showAuthor = false;
+    if ((!($section->hideAuthor ?? false) && $publication->getData('hideAuthor') == APP\submission\Submission::AUTHOR_TOC_DEFAULT) || $publication->getData('hideAuthor') == APP\submission\Submission::AUTHOR_TOC_SHOW) {
+        $showAuthor = true;
+    }
+@endphp
+
+<div class="obj_article_summary">
+    @if($publication->getLocalizedData('coverImage'))
+        <div class="cover">
+            @php
+                $coverImage = $publication->getLocalizedData('coverImage');
+                $articleUrl = isset($journal)
+                    ? Str::bladeUrl(['journal' => $journal->getPath(), 'page' => 'article', 'op' => 'view', 'path' => $articlePath])
+                    : Str::bladeUrl(['page' => 'article', 'op' => 'view', 'path' => $articlePath]);
+            @endphp
+            <a href="{{ $articleUrl }}" class="file">
+                <img
+                    src="{{ $publication->getLocalizedCoverImageUrl($article->getData('contextId')) }}"
+                    alt="{{ $coverImage['altText'] ?? '' }}"
+                >
+            </a>
+        </div>
+    @endif
+
+    <{{ $heading }} class="title">
+        @php
+            $articleUrl = isset($journal)
+                ? Str::bladeUrl(['journal' => $journal->getPath(), 'page' => 'article', 'op' => 'view', 'path' => $articlePath])
+                : Str::bladeUrl(['page' => 'article', 'op' => 'view', 'path' => $articlePath]);
+        @endphp
+        <a id="article-{{ $article->getId() }}" href="{{ $articleUrl }}">
+            @if($currentContext ?? null)
+                {!! Str::sanitizeHtml($publication->getLocalizedTitle(null, 'html')) !!}
+                @php
+                    $localizedSubtitle = Str::sanitizeHtml($publication->getLocalizedSubtitle(null, 'html'));
+                @endphp
+                @if($localizedSubtitle)
+                    <span class="subtitle">{!! $localizedSubtitle !!}</span>
+                @endif
+            @else
+                {!! Str::sanitizeHtml($publication->getLocalizedFullTitle(null, 'html')) !!}
+                <span class="subtitle">
+                    {{ $journal->getLocalizedName() }}
+                </span>
+            @endif
+        </a>
+    </{{ $heading }}>
+
+    @php
+        $submissionPages = $publication->getData('pages');
+        $submissionDatePublished = $publication->getData('datePublished');
+    @endphp
+    @if($showAuthor || $submissionPages || ($submissionDatePublished && ($showDatePublished ?? false)))
+    <div class="meta">
+        @if($showAuthor)
+        <div class="authors">
+            {{ $publication->getAuthorString($authorUserGroups ?? null) }}
+        </div>
+        @endif
+
+        {{-- Page numbers for this article --}}
+        @if($submissionPages)
+            <div class="pages">{{ $submissionPages }}</div>
+        @endif
+
+        @if(($showDatePublished ?? false) && $submissionDatePublished)
+            <div class="published">
+                {{ Str::bladeDateFormat($submissionDatePublished, $dateFormatShort) }}
+            </div>
+        @endif
+
+    </div>
+    @endif
+
+    @if(!($hideGalleys ?? false))
+        <ul class="galleys_links">
+            @foreach($publication->getData('galleys') as $galley)
+                @php
+                    if ($primaryGenreIds ?? null) {
+                        $file = $galley->getFile();
+                        if (!$galley->getData('urlRemote') && !($file && in_array($file->getGenreId(), $primaryGenreIds))) {
+                            continue;
+                        }
+                    }
+
+                    $hasArticleAccess = $hasAccess ?? false;
+                    if (($currentContext ?? null) && ($currentContext->getSetting('publishingMode') == APP\journal\Journal::PUBLISHING_MODE_OPEN || $publication->getData('accessStatus') == APP\submission\Submission::ARTICLE_ACCESS_OPEN)) {
+                        $hasArticleAccess = true;
+                    }
+                    $id = "article-{$article->getId()}-galley-{$galley->getId()}";
+                @endphp
+                <li>
+                    @include('frontend.objects.galley_link', [
+                        'parent' => $article,
+                        'publication' => $publication,
+                        'galley' => $galley,
+                        'id' => $id,
+                        'labelledBy' => "{$id} article-{$article->getId()}",
+                        'hasAccess' => $hasArticleAccess,
+                        'purchaseFee' => $currentJournal->getData('purchaseArticleFee') ?? null,
+                        'purchaseCurrency' => $currentJournal->getData('currency') ?? null
+                    ])
+                </li>
+            @endforeach
+        </ul>
+    @endif
+
+    @callHook(['name' => 'Templates::Issue::Issue::Article'])
+</div>
