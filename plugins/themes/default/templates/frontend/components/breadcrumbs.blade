@@ -17,7 +17,7 @@
 <nav class="cmp_breadcrumbs" role="navigation">
     <ol>
         <li>
-            <a href="@url(['page' => 'index', 'router' => \PKP\core\PKPApplication::ROUTE_PAGE])">
+            <a href="{{ ViewHelper::url(['page' => 'index', 'router' => \PKP\core\PKPApplication::ROUTE_PAGE]) }}">
                 {{ __('common.homepageNavigationLabel') }}
             </a>
             <span class="separator">{{ __('navigation.breadcrumbSeparator') }}</span>

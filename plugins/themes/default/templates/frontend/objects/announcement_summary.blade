@@ -24,7 +24,7 @@
     @endif
     <div class="obj_announcement_summary_details">
         <{{ $heading }}>
-            <a href="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'announcement', 'op' => 'view', 'path' => $announcement->id])">
+            <a href="{{ ViewHelper::url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'announcement', 'op' => 'view', 'path' => $announcement->id]) }}">
                 {{ $announcement->getLocalizedData('title') }}
             </a>
         </{{ $heading }}>
@@ -33,7 +33,7 @@
         </div>
         <div class="summary">
             {!! ViewHelper::sanitizeHtml($announcement->getLocalizedData('descriptionShort')) !!}
-            <a href="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'announcement', 'op' => 'view', 'path' => $announcement->id])" class="read_more">
+            <a href="{{ ViewHelper::url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'announcement', 'op' => 'view', 'path' => $announcement->id]) }}" class="read_more">
                 <span aria-hidden="true" role="presentation">
                     {{ __('common.readMore') }}
                 </span>

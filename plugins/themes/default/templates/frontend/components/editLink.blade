@@ -24,7 +24,7 @@
         }
     @endphp
 
-    <a href="@url(['page' => $page ?? null, 'op' => $op ?? null, 'path' => $path ?? null, 'anchor' => $anchor ?? null])" class="cmp_edit_link">
+    <a href="{{ ViewHelper::url(['page' => $page ?? null, 'op' => $op ?? null, 'path' => $path ?? null, 'anchor' => $anchor ?? null]) }}" class="cmp_edit_link">
         {{ __('common.edit') }}
 
         {{-- Screen readers need more context --}}

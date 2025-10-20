@@ -17,7 +17,7 @@
             $formPath[] = $subscriptionId;
         }
     @endphp
-    <form class="cmp_form purchase_subscription" method="post" id="subscriptionForm" action="@url(['op' => 'payPurchaseSubscription', 'path' => $formPath])">
+    <form class="cmp_form purchase_subscription" method="post" id="subscriptionForm" action="{{ ViewHelper::url(['op' => 'payPurchaseSubscription', 'path' => $formPath]) }}">
         @csrf
 
         <fieldset>

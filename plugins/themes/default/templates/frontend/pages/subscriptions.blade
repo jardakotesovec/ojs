@@ -48,7 +48,7 @@
         </div>
         @if($isUserLoggedIn ?? false)
             <div class="subscriptions_individual_purchase">
-                <a class="action" href="@url(['page' => 'user', 'op' => 'purchaseSubscription', 'path' => 'individual'])">
+                <a class="action" href="{{ ViewHelper::url(['page' => 'user', 'op' => 'purchaseSubscription', 'path' => 'individual']) }}">
                     {{ __('user.subscriptions.purchaseNewSubscription') }}
                 </a>
             </div>
@@ -83,7 +83,7 @@
         </table>
         @if($isUserLoggedIn ?? false)
             <div class="subscriptions_institutional_purchase">
-                <a class="action" href="@url(['page' => 'user', 'op' => 'purchaseSubscription', 'path' => 'institutional'])">
+                <a class="action" href="{{ ViewHelper::url(['page' => 'user', 'op' => 'purchaseSubscription', 'path' => 'institutional']) }}">
                     {{ __('user.subscriptions.purchaseNewSubscription') }}
                 </a>
             </div>

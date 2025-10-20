@@ -60,7 +60,7 @@
 
 {{-- Don't be frightened. This is just a link --}}
 <a class="{{ ($isSupplementary ?? false) ? 'obj_galley_link_supplementary' : 'obj_galley_link' }} {{ $type }}{{ $restricted ? ' restricted' : '' }}"
-   href="@url(['page' => $page, 'op' => 'view', 'path' => $path])"
+   href="{{ ViewHelper::url(['page' => $page, 'op' => 'view', 'path' => $path]) }}"
    {{ isset($id) ? 'id="' . $id . '"' : '' }}
    {{ isset($labelledBy) ? 'aria-labelledby="' . $labelledBy . '"' : '' }}>
 

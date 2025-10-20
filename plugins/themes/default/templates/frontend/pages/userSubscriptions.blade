@@ -103,16 +103,16 @@
 						@if($paymentsEnabled ?? null)
 							<td>
 								@if($subscriptionStatus == APP\subscription\Subscription::SUBSCRIPTION_STATUS_AWAITING_ONLINE_PAYMENT)
-									<a class="cmp_button" href="@url(['op' => 'completePurchaseSubscription', 'path' => ['individual', $userIndividualSubscription->getId()]])">
+									<a class="cmp_button" href="{{ ViewHelper::url(['op' => 'completePurchaseSubscription', 'path' => ['individual', $userIndividualSubscription->getId()]]) }}">
 										{{ __('user.subscriptions.purchase') }}
 									</a>
 								@elseif($subscriptionStatus == APP\subscription\Subscription::SUBSCRIPTION_STATUS_ACTIVE)
 									@if(!$isNonExpiring)
-										<a class="cmp_button" href="@url(['op' => 'payRenewSubscription', 'path' => ['individual', $userIndividualSubscription->getId()]])">
+										<a class="cmp_button" href="{{ ViewHelper::url(['op' => 'payRenewSubscription', 'path' => ['individual', $userIndividualSubscription->getId()]]) }}">
 											{{ __('user.subscriptions.renew') }}
 										</a>
 									@endif
-									<a class="cmp_button" href="@url(['op' => 'purchaseSubscription', 'path' => ['individual', $userIndividualSubscription->getId()]])">
+									<a class="cmp_button" href="{{ ViewHelper::url(['op' => 'purchaseSubscription', 'path' => ['individual', $userIndividualSubscription->getId()]]) }}">
 										{{ __('user.subscriptions.purchase') }}
 									</a>
 								@endif
@@ -122,13 +122,13 @@
 				</table>
 			@elseif($paymentsEnabled ?? null)
 				<p>
-					<a class="action" href="@url(['op' => 'purchaseSubscription', 'path' => 'individual'])">
+					<a class="action" href="{{ ViewHelper::url(['op' => 'purchaseSubscription', 'path' => 'individual']) }}">
 						{{ __('user.subscriptions.purchaseNewSubscription') }}
 					</a>
 				</p>
 			@else
 				<p>
-					<a href="@url(['page' => 'about', 'op' => 'subscriptions', 'anchor' => 'subscriptionTypes'])">
+					<a href="{{ ViewHelper::url(['page' => 'about', 'op' => 'subscriptions', 'anchor' => 'subscriptionTypes']) }}">
 						{{ __('user.subscriptions.viewSubscriptionTypes') }}
 					</a>
 				</p>
@@ -200,16 +200,16 @@
 							@if($paymentsEnabled ?? null)
 								<td>
 									@if($subscriptionStatus == APP\subscription\Subscription::SUBSCRIPTION_STATUS_AWAITING_ONLINE_PAYMENT)
-										<a class="cmp_button" href="@url(['op' => 'completePurchaseSubscription', 'path' => ['institutional', $userInstitutionalSubscription->getId()]])">
+										<a class="cmp_button" href="{{ ViewHelper::url(['op' => 'completePurchaseSubscription', 'path' => ['institutional', $userInstitutionalSubscription->getId()]]) }}">
 											{{ __('user.subscriptions.purchase') }}
 										</a>
 									@elseif($subscriptionStatus == APP\subscription\Subscription::SUBSCRIPTION_STATUS_ACTIVE)
 										@if(!$isNonExpiring)
-											<a class="cmp_button" href="@url(['op' => 'payRenewSubscription', 'path' => ['institutional', $userInstitutionalSubscription->getId()]])">
+											<a class="cmp_button" href="{{ ViewHelper::url(['op' => 'payRenewSubscription', 'path' => ['institutional', $userInstitutionalSubscription->getId()]]) }}">
 												{{ __('user.subscriptions.renew') }}
 											</a>
 										@endif
-										<a class="cmp_button" href="@url(['op' => 'purchaseSubscription', 'path' => ['institutional', $userInstitutionalSubscription->getId()]])">
+										<a class="cmp_button" href="{{ ViewHelper::url(['op' => 'purchaseSubscription', 'path' => ['institutional', $userInstitutionalSubscription->getId()]]) }}">
 											{{ __('user.subscriptions.purchase') }}
 										</a>
 									@endif
@@ -221,11 +221,11 @@
 			@endif
 			<p>
 				@if($paymentsEnabled ?? null)
-					<a class="action" href="@url(['page' => 'user', 'op' => 'purchaseSubscription', 'path' => 'institutional'])">
+					<a class="action" href="{{ ViewHelper::url(['page' => 'user', 'op' => 'purchaseSubscription', 'path' => 'institutional']) }}">
 						{{ __('user.subscriptions.purchaseNewSubscription') }}
 					</a>
 				@else
-					<a href="@url(['page' => 'about', 'op' => 'subscriptions', 'anchor' => 'subscriptionTypes'])">
+					<a href="{{ ViewHelper::url(['page' => 'about', 'op' => 'subscriptions', 'anchor' => 'subscriptionTypes']) }}">
 						{{ __('user.subscriptions.viewSubscriptionTypes') }}
 					</a>
 				@endif

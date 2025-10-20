@@ -65,7 +65,7 @@
                                     </a>
                                 </li>
                                 <li class="current">
-                                    <a href="@url(['journal' => $journal->getPath(), 'page' => 'issue', 'op' => 'current'])">
+                                    <a href="{{ ViewHelper::url(['journal' => $journal->getPath(), 'page' => 'issue', 'op' => 'current']) }}">
                                         {{ __('site.journalCurrent') }}
                                     </a>
                                 </li>

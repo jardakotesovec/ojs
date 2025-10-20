@@ -21,7 +21,7 @@
             $formPath[] = $subscriptionId;
         }
     @endphp
-    <form class="cmp_form purchase_subscription" method="post" id="subscriptionForm" action="@url(['op' => 'payPurchaseSubscription', 'path' => $formPath])">
+    <form class="cmp_form purchase_subscription" method="post" id="subscriptionForm" action="{{ ViewHelper::url(['op' => 'payPurchaseSubscription', 'path' => $formPath]) }}">
         @csrf
 
         @include('common.formErrors')
@@ -102,7 +102,7 @@
             <button class="submit" type="submit">
                 {{ __('common.continue') }}
             </button>
-            <a class="cmp_button_link" href="@url(['page' => 'user', 'op' => 'subscriptions'])">
+            <a class="cmp_button_link" href="{{ ViewHelper::url(['page' => 'user', 'op' => 'subscriptions']) }}">
                 {{ __('common.cancel') }}
             </a>
         </div>

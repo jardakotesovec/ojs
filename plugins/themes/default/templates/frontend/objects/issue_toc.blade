@@ -111,7 +111,7 @@
                     {{ __('submissions.published') }}:
                 </span>
                 <span class="value">
-                    @dateFormat($issue->getDatePublished(), $dateFormatShort)
+                    {{ ViewHelper::dateFormat($issue->getDatePublished(), $dateFormatShort) }}
                 </span>
             </div>
         @endif

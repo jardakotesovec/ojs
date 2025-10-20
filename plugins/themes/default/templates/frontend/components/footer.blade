@@ -44,7 +44,7 @@
         @endif
 
         <div class="pkp_brand_footer">
-            <a href="@url(['page' => 'about', 'op' => 'aboutThisPublishingSystem'])">
+            <a href="{{ ViewHelper::url(['page' => 'about', 'op' => 'aboutThisPublishingSystem']) }}">
                 <img alt="{{ __('about.aboutThisPublishingSystem') }}" src="{{ $baseUrl }}/{{ $brandImage }}">
             </a>
         </div>

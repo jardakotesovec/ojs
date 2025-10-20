@@ -14,7 +14,7 @@
             @foreach($categories ?? [] as $category)
                 @if(!$category->getParentId())
                     <li class="category_{{ $category->getPath() }}">
-                        <a href="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'catalog', 'op' => 'category', 'path' => $category->getPath()])">
+                        <a href="{{ ViewHelper::url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'catalog', 'op' => 'category', 'path' => $category->getPath()]) }}">
                             {{ $category->getLocalizedTitle() }}
                         </a>
                     </li>

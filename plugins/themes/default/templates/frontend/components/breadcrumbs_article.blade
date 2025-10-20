@@ -18,20 +18,20 @@
 <nav class="cmp_breadcrumbs" role="navigation" aria-label="{{ __('navigation.breadcrumbLabel') }}">
     <ol>
         <li>
-            <a href="@url(['page' => 'index', 'router' => \PKP\core\PKPApplication::ROUTE_PAGE])">
+            <a href="{{ ViewHelper::url(['page' => 'index', 'router' => \PKP\core\PKPApplication::ROUTE_PAGE]) }}">
                 {{ __('common.homepageNavigationLabel') }}
             </a>
             <span class="separator">{{ __('navigation.breadcrumbSeparator') }}</span>
         </li>
         <li>
-            <a href="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'issue', 'op' => 'archive'])">
+            <a href="{{ ViewHelper::url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'issue', 'op' => 'archive']) }}">
                 {{ __('navigation.archives') }}
             </a>
             <span class="separator">{{ __('navigation.breadcrumbSeparator') }}</span>
         </li>
         @if($issue ?? null)
             <li>
-                <a href="@url(['page' => 'issue', 'op' => 'view', 'path' => $issue->getBestIssueId()])">
+                <a href="{{ ViewHelper::url(['page' => 'issue', 'op' => 'view', 'path' => $issue->getBestIssueId()]) }}">
                     {{ $issue->getIssueIdentification() }}
                 </a>
                 <span class="separator">{{ __('navigation.breadcrumbSeparator') }}</span>

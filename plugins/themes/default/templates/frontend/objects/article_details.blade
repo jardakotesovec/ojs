@@ -286,7 +286,7 @@
                                 <p>{!! ViewHelper::sanitizeHtml($parsedCitation->getRawCitationWithLinks()) !!} @callHook(['name' => 'Templates::Article::Details::Reference', 'citation' => $parsedCitation])</p>
                             @endforeach
                         @else
-                            {!! nl2br($publication->getData('citationsRaw')) !!}
+                            {{ nl2br($publication->getData('citationsRaw')) }}
                         @endif
                     </div>
                 </section>
@@ -317,7 +317,7 @@
                                 alt="{{ $coverImage['altText'] ?? '' }}"
                             >
                         @else
-                            <a href="@url(['page' => 'issue', 'op' => 'view', 'path' => $issue->getBestIssueId()])">
+                            <a href="{{ ViewHelper::url(['page' => 'issue', 'op' => 'view', 'path' => $issue->getBestIssueId()]) }}">
                                 <img src="{{ $issue->getLocalizedCoverImageUrl() }}" alt="{{ $issue->getLocalizedCoverImageAltText() ?? '' }}">
                             </a>
                         @endif
@@ -375,7 +375,7 @@
                         <div class="value">
                             {{-- If this is the original version --}}
                             @if($firstPublication->getId() === $publication->getId())
-                                <span>@dateFormat($firstPublication->getData('datePublished'), $dateFormatShort)</span>
+                                <span>{{ ViewHelper::dateFormat($firstPublication->getData('datePublished'), $dateFormatShort) }}</span>
                             {{-- If this is an updated version --}}
                             @else
                                 <span>{{ __('submission.updatedOn', [
@@ -401,9 +401,9 @@
                                     @if($iPublication->getId() === $publication->getId())
                                         {{ $name }}
                                     @elseif($iPublication->getId() === $currentPublication->getId())
-                                        <a href="@url(['page' => 'article', 'op' => 'view', 'path' => [$article->getBestId()]])">{{ $name }}</a>
+                                        <a href="{{ ViewHelper::url(['page' => 'article', 'op' => 'view', 'path' => [$article->getBestId()]]) }}">{{ $name }}</a>
                                     @else
-                                        <a href="@url(['page' => 'article', 'op' => 'view', 'path' => array_merge([$article->getBestId()], ['version', $iPublication->getId()])])">{{ $name }}</a>
+                                        <a href="{{ ViewHelper::url(['page' => 'article', 'op' => 'view', 'path' => array_merge([$article->getBestId()], ['version', $iPublication->getId()])]) }}">{{ $name }}</a>
                                     @endif
                                 </li>
                             @endforeach
@@ -430,7 +430,7 @@
                                 {{ __('issue.issue') }}
                             </h2>
                             <div class="value">
-                                <a class="title" href="@url(['page' => 'issue', 'op' => 'view', 'path' => $issue->getBestIssueId()])">
+                                <a class="title" href="{{ ViewHelper::url(['page' => 'issue', 'op' => 'view', 'path' => $issue->getBestIssueId()]) }}">
                                     {{ $issue->getIssueIdentification() }}
                                 </a>
                             </div>
@@ -456,7 +456,7 @@
                             <div class="value">
                                 <ul class="categories">
                                     @foreach($categories as $category)
-                                        <li><a href="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'catalog', 'op' => 'category', 'path' => $category->getPath()])">{{ $category->getLocalizedTitle() }}</a></li>
+                                        <li><a href="{{ ViewHelper::url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'catalog', 'op' => 'category', 'path' => $category->getPath()]) }}">{{ $category->getLocalizedTitle() }}</a></li>
                                     @endforeach
                                 </ul>
                             </div>

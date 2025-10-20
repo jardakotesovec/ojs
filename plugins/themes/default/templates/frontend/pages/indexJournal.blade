@@ -65,7 +65,7 @@
                 {{ $issue->getIssueIdentification() }}
             </div>
             @include('frontend.objects.issue_toc', ['heading' => 'h3'])
-            <a href="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'issue', 'op' => 'archive'])" class="read_more">
+            <a href="{{ ViewHelper::url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'issue', 'op' => 'archive']) }}" class="read_more">
                 {{ __('journal.viewAllIssues') }}
             </a>
         </section>

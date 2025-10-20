@@ -91,7 +91,7 @@
 
         @if(($showDatePublished ?? false) && $submissionDatePublished)
             <div class="published">
-                @dateFormat($submissionDatePublished, $dateFormatShort)
+                {{ ViewHelper::dateFormat($submissionDatePublished, $dateFormatShort) }}
             </div>
         @endif
 

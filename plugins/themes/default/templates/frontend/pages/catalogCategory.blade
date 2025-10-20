@@ -43,8 +43,8 @@
     @endphp
     <div class="about_section{{ $image ? ' has_image' : '' }}{{ $description ? ' has_description' : '' }}">
         @if($image)
-            <div class="cover" href="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'catalog', 'op' => 'fullSize', 'type' => 'category', 'id' => $category->getId()])">
-                <img src="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'catalog', 'op' => 'thumbnail', 'type' => 'category', 'id' => $category->getId()])" alt="null" />
+            <div class="cover" href="{{ ViewHelper::url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'catalog', 'op' => 'fullSize', 'type' => 'category', 'id' => $category->getId()]) }}">
+                <img src="{{ ViewHelper::url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'catalog', 'op' => 'thumbnail', 'type' => 'category', 'id' => $category->getId()]) }}" alt="null" />
             </div>
         @endif
         <div class="description">
@@ -60,7 +60,7 @@
         <ul>
             @foreach($subcategories as $subcategory)
                 <li>
-                    <a href="@url(['op' => 'category', 'path' => $subcategory->getPath()])">
+                    <a href="{{ ViewHelper::url(['op' => 'category', 'path' => $subcategory->getPath()]) }}">
                         {{ $subcategory->getLocalizedTitle() }}
                     </a>
                 </li>
