@@ -39,7 +39,7 @@
     {{-- Image and description --}}
     @php
         $image = $category->getImage();
-        $description = Str::sanitizeHtml($category->getLocalizedDescription());
+        $description = ViewHelper::sanitizeHtml($category->getLocalizedDescription());
     @endphp
     <div class="about_section{{ $image ? ' has_image' : '' }}{{ $description ? ' has_description' : '' }}">
         @if($image)
@@ -48,7 +48,7 @@
             </div>
         @endif
         <div class="description">
-            {!! Str::sanitizeHtml($description) !!}
+            {!! ViewHelper::sanitizeHtml($description) !!}
         </div>
     </div>
 
@@ -94,14 +94,14 @@
             $prevUrl = null;
             $nextUrl = null;
             if (($prevPage ?? null) > 1) {
-                $prevUrl = Str::bladeUrl([
+                $prevUrl = ViewHelper::url([
                     'router' => \PKP\core\PKPApplication::ROUTE_PAGE,
                     'page' => 'catalog',
                     'op' => 'category',
                     'path' => array_merge((array)$category->getPath(), [$prevPage])
                 ]);
             } elseif (($prevPage ?? null) === 1) {
-                $prevUrl = Str::bladeUrl([
+                $prevUrl = ViewHelper::url([
                     'router' => \PKP\core\PKPApplication::ROUTE_PAGE,
                     'page' => 'catalog',
                     'op' => 'category',
@@ -109,7 +109,7 @@
                 ]);
             }
             if ($nextPage ?? null) {
-                $nextUrl = Str::bladeUrl([
+                $nextUrl = ViewHelper::url([
                     'router' => \PKP\core\PKPApplication::ROUTE_PAGE,
                     'page' => 'catalog',
                     'op' => 'category',

@@ -90,11 +90,11 @@
 									@php $isExpired = $userIndividualSubscription->isExpired(); @endphp
 									@if($isExpired)
 										<span class="subscription_disabled">
-											{{ __('user.subscriptions.expired', ['date' => Str::bladeDateFormat($userIndividualSubscription->getDateEnd(), $dateFormatShort)]) }}
+											{{ __('user.subscriptions.expired', ['date' => ViewHelper::dateFormat($userIndividualSubscription->getDateEnd(), $dateFormatShort)]) }}
 										</span>
 									@else
 										<span class="subscription_active">
-											{{ __('user.subscriptions.expires', ['date' => Str::bladeDateFormat($userIndividualSubscription->getDateEnd(), $dateFormatShort)]) }}
+											{{ __('user.subscriptions.expires', ['date' => ViewHelper::dateFormat($userIndividualSubscription->getDateEnd(), $dateFormatShort)]) }}
 										</span>
 									@endif
 								@endif
@@ -187,11 +187,11 @@
 										@php $isExpired = $userInstitutionalSubscription->isExpired(); @endphp
 										@if($isExpired)
 											<span class="subscription_disabled">
-												{{ __('user.subscriptions.expired', ['date' => Str::bladeDateFormat($userInstitutionalSubscription->getDateEnd(), $dateFormatShort)]) }}
+												{{ __('user.subscriptions.expired', ['date' => ViewHelper::dateFormat($userInstitutionalSubscription->getDateEnd(), $dateFormatShort)]) }}
 											</span>
 										@else
 											<span class="subscription_enabled">
-												{{ __('user.subscriptions.expires', ['date' => Str::bladeDateFormat($userInstitutionalSubscription->getDateEnd(), $dateFormatShort)]) }}
+												{{ __('user.subscriptions.expires', ['date' => ViewHelper::dateFormat($userInstitutionalSubscription->getDateEnd(), $dateFormatShort)]) }}
 											</span>
 										@endif
 									@endif

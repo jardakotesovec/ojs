@@ -38,7 +38,9 @@
         @endif
     </h2>
 
-    <div class="description">
-        {!! Str::sanitizeHtml($issue->getLocalizedDescription()) !!}
-    </div>
+    @if($issue->hasDescription())
+        <div class="description">
+            {!! ViewHelper::sanitizeHtml($issue->getLocalizedDescription()) !!}
+        </div>
+    @endif
 </div>{{-- .obj_issue_summary --}}

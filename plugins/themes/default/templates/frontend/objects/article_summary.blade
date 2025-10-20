@@ -36,8 +36,8 @@
             @php
                 $coverImage = $publication->getLocalizedData('coverImage');
                 $articleUrl = isset($journal)
-                    ? Str::bladeUrl(['journal' => $journal->getPath(), 'page' => 'article', 'op' => 'view', 'path' => $articlePath])
-                    : Str::bladeUrl(['page' => 'article', 'op' => 'view', 'path' => $articlePath]);
+                    ? ViewHelper::url(['journal' => $journal->getPath(), 'page' => 'article', 'op' => 'view', 'path' => $articlePath])
+                    : ViewHelper::url(['page' => 'article', 'op' => 'view', 'path' => $articlePath]);
             @endphp
             <a href="{{ $articleUrl }}" class="file">
                 <img
@@ -51,20 +51,20 @@
     <{{ $heading }} class="title">
         @php
             $articleUrl = isset($journal)
-                ? Str::bladeUrl(['journal' => $journal->getPath(), 'page' => 'article', 'op' => 'view', 'path' => $articlePath])
-                : Str::bladeUrl(['page' => 'article', 'op' => 'view', 'path' => $articlePath]);
+                ? ViewHelper::url(['journal' => $journal->getPath(), 'page' => 'article', 'op' => 'view', 'path' => $articlePath])
+                : ViewHelper::url(['page' => 'article', 'op' => 'view', 'path' => $articlePath]);
         @endphp
         <a id="article-{{ $article->getId() }}" href="{{ $articleUrl }}">
             @if($currentContext ?? null)
-                {!! Str::sanitizeHtml($publication->getLocalizedTitle(null, 'html')) !!}
+                {!! ViewHelper::sanitizeHtml($publication->getLocalizedTitle(null, 'html')) !!}
                 @php
-                    $localizedSubtitle = Str::sanitizeHtml($publication->getLocalizedSubtitle(null, 'html'));
+                    $localizedSubtitle = ViewHelper::sanitizeHtml($publication->getLocalizedSubtitle(null, 'html'));
                 @endphp
                 @if($localizedSubtitle)
                     <span class="subtitle">{!! $localizedSubtitle !!}</span>
                 @endif
             @else
-                {!! Str::sanitizeHtml($publication->getLocalizedFullTitle(null, 'html')) !!}
+                {!! ViewHelper::sanitizeHtml($publication->getLocalizedFullTitle(null, 'html')) !!}
                 <span class="subtitle">
                     {{ $journal->getLocalizedName() }}
                 </span>
@@ -91,7 +91,7 @@
 
         @if(($showDatePublished ?? false) && $submissionDatePublished)
             <div class="published">
-                {{ Str::bladeDateFormat($submissionDatePublished, $dateFormatShort) }}
+                @dateFormat($submissionDatePublished, $dateFormatShort)
             </div>
         @endif
 

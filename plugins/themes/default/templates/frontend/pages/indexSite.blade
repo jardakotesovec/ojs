@@ -34,7 +34,7 @@
             <ul>
                 @foreach($journals as $journal)
                     @php
-                        $url = Str::bladeUrl(['journal' => $journal->getPath()]);
+                        $url = ViewHelper::url(['journal' => $journal->getPath()]);
                         $thumb = $journal->getLocalizedData('journalThumbnail');
                         $description = $journal->getLocalizedDescription();
                     @endphp

@@ -17,7 +17,7 @@
 <div class="cmp_subscription_contact">
     @if($subscriptionAdditionalInformation ?? null)
         <div class="description">
-            {!! Str::sanitizeHtml($subscriptionAdditionalInformation) !!}
+            {!! ViewHelper::sanitizeHtml($subscriptionAdditionalInformation) !!}
         </div>
     @endif
 
@@ -35,7 +35,7 @@
 
             @if($subscriptionMailingAddress ?? null)
                 <div class="address">
-                    {!! Str::sanitizeHtml(nl2br($subscriptionMailingAddress)) !!}
+                    {!! ViewHelper::sanitizeHtml(nl2br($subscriptionMailingAddress)) !!}
                 </div>
             @endif
 

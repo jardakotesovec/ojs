@@ -33,7 +33,7 @@
 
     @php
         // Get current URL and parse parameters
-        $searchFormUrl = Str::bladeUrl([]);
+        $searchFormUrl = ViewHelper::url([]);
         $formUrlParameters = [];
         $queryString = parse_url($searchFormUrl, PHP_URL_QUERY);
         if ($queryString) {

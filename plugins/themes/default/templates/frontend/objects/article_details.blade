@@ -75,31 +75,30 @@
 @endphp
 
 <article class="obj_article_details">
-
     {{-- Indicate if this is only a preview --}}
     @if($publication->getData('status') !== \PKP\publication\PKPPublication::STATUS_PUBLISHED)
         <div class="cmp_notification notice">
             {!! __('submission.viewingPreview', [
-                'url' => Str::bladeUrl(['page' => 'dashboard', 'op' => 'editorial', 'workflowSubmissionId' => $article->getId()])
+                'url' => ViewHelper::url(['page' => 'dashboard', 'op' => 'editorial', 'workflowSubmissionId' => $article->getId()])
             ]) !!}
         </div>
     {{-- Notification that this is an old version --}}
     @elseif($currentPublication->getId() !== $publication->getId())
         <div class="cmp_notification notice">
             {!! __('submission.outdatedVersion', [
-                'datePublished' => Str::bladeDateFormat($publication->getData('datePublished'), $dateFormatShort),
-                'urlRecentVersion' => Str::bladeUrl(['page' => 'article', 'op' => 'view', 'path' => [$article->getBestId()]])
+                'datePublished' => ViewHelper::dateFormat($publication->getData('datePublished'), $dateFormatShort),
+                'urlRecentVersion' => ViewHelper::url(['page' => 'article', 'op' => 'view', 'path' => [$article->getBestId()]])
             ]) !!}
         </div>
     @endif
 
     <h1 class="page_title">
-        {{ Str::sanitizeHtml($publication->getLocalizedTitle(null, 'html')) }}
+        {{ ViewHelper::sanitizeHtml($publication->getLocalizedTitle(null, 'html')) }}
     </h1>
 
     @if($publication->getLocalizedData('subtitle'))
         <h2 class="subtitle">
-            {{ Str::sanitizeHtml($publication->getLocalizedSubTitle(null, 'html')) }}
+            {{ ViewHelper::sanitizeHtml($publication->getLocalizedSubTitle(null, 'html')) }}
         </h2>
     @endif
     <div class="row">
@@ -202,7 +201,7 @@
             @if($publication->getLocalizedData('abstract'))
                 <section class="item abstract">
                     <h2 class="label">{{ __('article.abstract') }}</h2>
-                    {!! Str::sanitizeHtml($publication->getLocalizedData('abstract')) !!}
+                    {!! ViewHelper::sanitizeHtml($publication->getLocalizedData('abstract')) !!}
                 </section>
             @endif
 
@@ -210,7 +209,7 @@
             @if($publication->getLocalizedData('plainLanguageSummary'))
                 <section class="item abstract">
                     <h2 class="label">{{ __('submission.plainLanguageSummary') }}</h2>
-                    {!! Str::sanitizeHtml($publication->getLocalizedData('plainLanguageSummary')) !!}
+                    {!! ViewHelper::sanitizeHtml($publication->getLocalizedData('plainLanguageSummary')) !!}
                 </section>
             @endif
 
@@ -266,7 +265,7 @@
                                         @endif
                                     </div>
                                     <div class="value">
-                                        {!! Str::sanitizeHtml($author->getLocalizedData('biography')) !!}
+                                        {!! ViewHelper::sanitizeHtml($author->getLocalizedData('biography')) !!}
                                     </div>
                                 </li>
                             @endif
@@ -284,7 +283,7 @@
                     <div class="value">
                         @if($parsedCitations ?? null)
                             @foreach($parsedCitations as $parsedCitation)
-                                <p>{!! Str::sanitizeHtml($parsedCitation->getRawCitationWithLinks()) !!} @callHook(['name' => 'Templates::Article::Details::Reference', 'citation' => $parsedCitation])</p>
+                                <p>{!! ViewHelper::sanitizeHtml($parsedCitation->getRawCitationWithLinks()) !!} @callHook(['name' => 'Templates::Article::Details::Reference', 'citation' => $parsedCitation])</p>
                             @endforeach
                         @else
                             {!! nl2br($publication->getData('citationsRaw')) !!}
@@ -376,12 +375,12 @@
                         <div class="value">
                             {{-- If this is the original version --}}
                             @if($firstPublication->getId() === $publication->getId())
-                                <span>{{ Str::bladeDateFormat($firstPublication->getData('datePublished'), $dateFormatShort) }}</span>
+                                <span>@dateFormat($firstPublication->getData('datePublished'), $dateFormatShort)</span>
                             {{-- If this is an updated version --}}
                             @else
                                 <span>{{ __('submission.updatedOn', [
-                                    'datePublished' => Str::bladeDateFormat($firstPublication->getData('datePublished'), $dateFormatShort),
-                                    'dateUpdated' => Str::bladeDateFormat($publication->getData('datePublished'), $dateFormatShort)
+                                    'datePublished' => ViewHelper::dateFormat($firstPublication->getData('datePublished'), $dateFormatShort),
+                                    'dateUpdated' => ViewHelper::dateFormat($publication->getData('datePublished'), $dateFormatShort)
                                 ]) }}</span>
                             @endif
                         </div>
@@ -394,7 +393,7 @@
                             @foreach(array_reverse($article->getPublishedPublications()) as $iPublication)
                                 @php
                                     $name = __('submission.versionIdentity', [
-                                        'datePublished' => Str::bladeDateFormat($iPublication->getData('datePublished'), $dateFormatShort),
+                                        'datePublished' => ViewHelper::dateFormat($iPublication->getData('datePublished'), $dateFormatShort),
                                         'version' => $iPublication->getData('versionString')
                                     ]);
                                 @endphp
@@ -417,7 +416,7 @@
             @if($publication->getLocalizedData('dataAvailability'))
                 <section class="item dataAvailability" id="data-availability-statement">
                     <h2 class="label">{{ __('submission.dataAvailability') }}</h2>
-                    {!! Str::sanitizeHtml($publication->getLocalizedData('dataAvailability')) !!}
+                    {!! ViewHelper::sanitizeHtml($publication->getLocalizedData('dataAvailability')) !!}
                 </section>
             @endif
 

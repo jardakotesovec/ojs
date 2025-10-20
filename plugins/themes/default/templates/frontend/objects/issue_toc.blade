@@ -54,7 +54,7 @@
         {{-- Description --}}
         @if($issue->hasDescription())
             <div class="description">
-                {!! Str::sanitizeHtml($issue->getLocalizedDescription()) !!}
+                {!! ViewHelper::sanitizeHtml($issue->getLocalizedDescription()) !!}
             </div>
         @endif
 
@@ -111,7 +111,7 @@
                     {{ __('submissions.published') }}:
                 </span>
                 <span class="value">
-                    {{ Str::bladeDateFormat($issue->getDatePublished(), $dateFormatShort) }}
+                    @dateFormat($issue->getDatePublished(), $dateFormatShort)
                 </span>
             </div>
         @endif

@@ -32,7 +32,7 @@
             {{ $announcement->datePosted->format($dateFormatShort) }}
         </div>
         <div class="summary">
-            {!! Str::sanitizeHtml($announcement->getLocalizedData('descriptionShort')) !!}
+            {!! ViewHelper::sanitizeHtml($announcement->getLocalizedData('descriptionShort')) !!}
             <a href="@url(['router' => \PKP\core\PKPApplication::ROUTE_PAGE, 'page' => 'announcement', 'op' => 'view', 'path' => $announcement->id])" class="read_more">
                 <span aria-hidden="true" role="presentation">
                     {{ __('common.readMore') }}

@@ -18,7 +18,7 @@
                 {!! $section->getLocalizedPolicy() !!}
                 @if($isUserLoggedIn ?? false)
                     @php
-                        $sectionSubmissionUrl = Str::bladeUrl(['page' => 'submission', 'sectionId' => $section->getId()]);
+                        $sectionSubmissionUrl = ViewHelper::url(['page' => 'submission', 'sectionId' => $section->getId()]);
                     @endphp
                     <p>
                         {!! __('about.onlineSubmissions.submitToSection', [

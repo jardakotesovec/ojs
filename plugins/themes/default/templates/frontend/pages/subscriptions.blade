@@ -36,7 +36,7 @@
                                 {{ $subscriptionType->getLocalizedName() }}
                             </div>
                             <div class="subscription_description">
-                                {!! Str::sanitizeHtml($subscriptionType->getLocalizedDescription()) !!}
+                                {!! ViewHelper::sanitizeHtml($subscriptionType->getLocalizedDescription()) !!}
                             </div>
                         </td>
                         <td>{{ __($subscriptionType->getFormatString()) }}</td>
@@ -72,7 +72,7 @@
                             {{ $subscriptionType->getLocalizedName() }}
                         </div>
                         <div class="subscription_description">
-                            {!! Str::sanitizeHtml($subscriptionType->getLocalizedDescription()) !!}
+                            {!! ViewHelper::sanitizeHtml($subscriptionType->getLocalizedDescription()) !!}
                         </div>
                     </td>
                     <td>{{ __($subscriptionType->getFormatString()) }}</td>

@@ -48,21 +48,21 @@
             $prevUrl = null;
             $nextUrl = null;
             if (($prevPage ?? null) > 1) {
-                $prevUrl = Str::bladeUrl([
+                $prevUrl = ViewHelper::url([
                     'router' => \PKP\core\PKPApplication::ROUTE_PAGE,
                     'page' => 'issue',
                     'op' => 'archive',
                     'path' => $prevPage
                 ]);
             } elseif (($prevPage ?? null) === 1) {
-                $prevUrl = Str::bladeUrl([
+                $prevUrl = ViewHelper::url([
                     'router' => \PKP\core\PKPApplication::ROUTE_PAGE,
                     'page' => 'issue',
                     'op' => 'archive'
                 ]);
             }
             if ($nextPage ?? null) {
-                $nextUrl = Str::bladeUrl([
+                $nextUrl = ViewHelper::url([
                     'router' => \PKP\core\PKPApplication::ROUTE_PAGE,
                     'page' => 'issue',
                     'op' => 'archive',

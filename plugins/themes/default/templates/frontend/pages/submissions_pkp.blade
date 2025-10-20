@@ -25,14 +25,14 @@
         @else
             @if($isUserLoggedIn ?? false)
                 @php
-                    $newSubmission = '<a href="' . Str::bladeUrl(['page' => 'submission']) . '">' . __('about.onlineSubmissions.newSubmission') . '</a>';
-                    $viewSubmissions = '<a href="' . Str::bladeUrl(['page' => 'submissions']) . '">' . __('about.onlineSubmissions.viewSubmissions') . '</a>';
+                    $newSubmission = '<a href="' . ViewHelper::url(['page' => 'submission']) . '">' . __('about.onlineSubmissions.newSubmission') . '</a>';
+                    $viewSubmissions = '<a href="' . ViewHelper::url(['page' => 'submissions']) . '">' . __('about.onlineSubmissions.viewSubmissions') . '</a>';
                 @endphp
                 {!! __('about.onlineSubmissions.submissionActions', ['newSubmission' => $newSubmission, 'viewSubmissions' => $viewSubmissions]) !!}
             @else
                 @php
-                    $login = '<a href="' . Str::bladeUrl(['page' => 'login']) . '">' . __('about.onlineSubmissions.login') . '</a>';
-                    $register = '<a href="' . Str::bladeUrl(['page' => 'user', 'op' => 'register']) . '">' . __('about.onlineSubmissions.register') . '</a>';
+                    $login = '<a href="' . ViewHelper::url(['page' => 'login']) . '">' . __('about.onlineSubmissions.login') . '</a>';
+                    $register = '<a href="' . ViewHelper::url(['page' => 'user', 'op' => 'register']) . '">' . __('about.onlineSubmissions.register') . '</a>';
                 @endphp
                 {!! __('about.onlineSubmissions.registrationRequired', ['login' => $login, 'register' => $register]) !!}
             @endif

@@ -20,7 +20,7 @@
     @hook Templates::Article::Footer::PageFooter []
 --}}
 @include('frontend.components.header', [
-    'pageTitleTranslated' => Str::sanitizeHtml($article->getCurrentPublication()->getLocalizedFullTitle(null, 'html'))
+    'pageTitleTranslated' => ViewHelper::sanitizeHtml($article->getCurrentPublication()->getLocalizedFullTitle(null, 'html'))
 ])
 
 <div class="page page_article">
