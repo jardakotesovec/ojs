@@ -66,15 +66,13 @@
                     @php
                         $dateFromLegend = __('search.dateFrom');
                     @endphp
-                    {{-- TODO: Need to implement html_select_date_a11y functionality --}}
-                    {{-- {html_select_date_a11y legend=$dateFromLegend prefix="dateFrom" time=$dateFrom start_year=$yearStart end_year=$yearEnd} --}}
+                    @htmlSelectDateA11y(['legend' => $dateFromLegend, 'prefix' => 'dateFrom', 'time' => $dateFrom ?? '', 'start_year' => $yearStart ?? '', 'end_year' => $yearEnd ?? ''])
                 </div>
                 <div class="to">
                     @php
                         $dateFromTo = __('search.dateTo');
                     @endphp
-                    {{-- TODO: Need to implement html_select_date_a11y functionality --}}
-                    {{-- {html_select_date_a11y legend=$dateFromTo prefix="dateTo" time=$dateTo start_year=$yearStart end_year=$yearEnd} --}}
+                    @htmlSelectDateA11y(['legend' => $dateFromTo, 'prefix' => 'dateTo', 'time' => $dateTo ?? '', 'start_year' => $yearStart ?? '', 'end_year' => $yearEnd ?? ''])
                 </div>
             </div>
             <div class="additional_options">
@@ -142,9 +140,8 @@
     {{-- Results pagination --}}
     @else
         <div class="cmp_pagination">
-            {{-- TODO: Need to implement page_info and page_links functionality --}}
-            {{-- {page_info iterator=$results} --}}
-            {{-- {page_links anchor="results" iterator=$results name="search" ...} --}}
+            @pageInfo(['iterator' => $results])
+            @pageLinks(['anchor' => 'results', 'iterator' => $results, 'name' => 'search', 'query' => $query ?? null, 'searchContext' => $searchContext ?? null, 'authors' => $authors ?? null, 'dateFromMonth' => $dateFromMonth ?? null, 'dateFromDay' => $dateFromDay ?? null, 'dateFromYear' => $dateFromYear ?? null, 'dateToMonth' => $dateToMonth ?? null, 'dateToDay' => $dateToDay ?? null, 'dateToYear' => $dateToYear ?? null])
         </div>
     @endif
 
