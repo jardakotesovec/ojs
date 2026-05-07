@@ -28,6 +28,7 @@ use PKP\decision\DecisionType;
 use PKP\decision\types\BackFromCopyediting;
 use PKP\decision\types\BackFromProduction;
 use PKP\decision\types\CancelReviewRound;
+use PKP\decision\types\ContinueToCopyediting;
 use PKP\decision\types\Decline;
 use PKP\decision\types\InitialDecline;
 use PKP\decision\types\NewExternalReviewRound;
@@ -140,6 +141,7 @@ class Schema extends \PKP\submission\maps\Schema
                         new RequestRevisions(),
                         new Resubmit(),
                         new Accept(),
+                        new ContinueToCopyediting(),
                         new NewExternalReviewRound()
                     ];
                     $cancelReviewRound = new CancelReviewRound();

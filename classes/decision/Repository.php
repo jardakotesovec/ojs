@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file classes/decision/Repository.php
  *
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Collection;
 use PKP\decision\types\BackFromCopyediting;
 use PKP\decision\types\BackFromProduction;
 use PKP\decision\types\CancelReviewRound;
+use PKP\decision\types\ContinueToCopyediting;
 use PKP\decision\types\Decline;
 use PKP\decision\types\InitialDecline;
 use PKP\decision\types\NewExternalReviewRound;
@@ -45,6 +47,7 @@ class Repository extends \PKP\decision\Repository
         if (!isset($this->decisionTypes)) {
             $decisionTypes = new Collection([
                 new Accept(),
+                new ContinueToCopyediting(),
                 new Decline(),
                 new InitialDecline(),
                 new NewExternalReviewRound(),
@@ -86,7 +89,7 @@ class Repository extends \PKP\decision\Repository
     public function getDecisionTypesMadeByRecommendingUsers(int $stageId): array
     {
         $recommendatorsAvailableDecisions = [];
-        switch($stageId) {
+        switch ($stageId) {
             case WORKFLOW_STAGE_ID_SUBMISSION:
                 $recommendatorsAvailableDecisions = [
                     new SendExternalReview()
