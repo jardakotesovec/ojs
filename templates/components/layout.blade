@@ -1,0 +1,31 @@
+{{--
+
+App Layout
+
+This is the default layout provided for Blade themes to
+use in all of their layouts.
+
+--}}
+
+@props([
+    'title',
+    'description',
+])
+
+<x-pkp::layout
+    title="{{ $title }}"
+    description="{{ $description }}"
+    {{ $attributes }}
+>
+    @if ($head && !$head->isEmpty())
+        <x-slot:head>
+            {!! $head !!}
+        </x-slot:head>
+    @endif
+    {{ $slot }}
+    @if ($foot && !$foot->isEmpty())
+        <x-slot:foot>
+            {!! $foot !!}
+        </x-slot:foot>
+    @endif
+</x-pkp::layout>

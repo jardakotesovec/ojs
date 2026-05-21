@@ -6,7 +6,7 @@ use APP\core\Application;
 use Illuminate\Support\Collection;
 use PKP\context\Context;
 
-class Layout extends \PKP\view\components\Layout
+class AppLayout extends \PKP\view\components\PKPLayout
 {
     /**
      * Add global template data
