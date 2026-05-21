@@ -19,12 +19,16 @@ use APP\facades\Repo;
 use APP\observers\events\UsageEvent;
 use APP\plugins\generic\htmlArticleGalley\classes\HtmlGalleyHelper;
 use APP\publication\Publication;
+use APP\submission\Submission;
 use APP\template\TemplateManager;
 use Illuminate\Support\Facades\Cache;
 use PKP\plugins\Hook;
 use PKP\security\Validation;
+use PKP\plugins\interfaces\HasMetadataBlocks;
+use PKP\view\MetadataBlock;
+use PKP\view\MetadataBlocksRegistry;
 
-class HtmlArticleGalleyPlugin extends \PKP\plugins\GenericPlugin
+class HtmlArticleGalleyPlugin extends \PKP\plugins\GenericPlugin implements HasMetadataBlocks
 {
     /**
      * @see Plugin::register()
@@ -41,6 +45,21 @@ class HtmlArticleGalleyPlugin extends \PKP\plugins\GenericPlugin
             Hook::add('ArticleHandler::download', $this->articleDownloadCallback(...), Hook::SEQUENCE_LATE);
         }
         return true;
+    }
+
+    public function registerMetadataBlocks(MetadataBlocksRegistry $blocks): void
+    {
+        $blocks->register(
+            new MetadataBlock(
+                id: 'html-galley',
+                title: 'HTML Galley',
+                description: 'Example html Galley description',
+                component: 'htmlarticlegalleyplugin::metadata.galley',
+                loader: function (Publication $publication, Submission $submission) {
+                    view()->share('htmlGalleyTest', 'This is an example of a custom article metadata block in a plugin.');
+                }
+            )
+        );
     }
 
     /**
