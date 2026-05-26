@@ -12,7 +12,7 @@ use in all of their layouts.
     'description',
 ])
 
-<x-pkp::layout
+<x-pkp-layout
     title="{{ $title }}"
     description="{{ $description }}"
     {{ $attributes }}
@@ -28,4 +28,4 @@ use in all of their layouts.
             {!! $foot !!}
         </x-slot:foot>
     @endif
-</x-pkp::layout>
+</x-pkp-layout>
