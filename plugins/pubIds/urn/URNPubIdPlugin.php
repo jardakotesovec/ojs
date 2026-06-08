@@ -468,7 +468,7 @@ class URNPubIdPlugin extends PubIdPlugin
         $templateMgr = $args[0];
         $template = $args[1];
 
-        if ($template !== 'dashboard/editors.tpl') {
+        if ($template !== 'dashboard.editors') {
             return;
         }
 

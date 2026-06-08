@@ -149,7 +149,7 @@ class StatsHandler extends PKPStatsHandler
         $templateMgr = $args[0];
         $template = $args[1];
 
-        if (!in_array($template, ['stats/publications.tpl', 'stats/editorial.tpl'])) {
+        if (!in_array($template, ['stats.publications', 'stats.editorial'])) {
             return;
         }
 
@@ -170,7 +170,7 @@ class StatsHandler extends PKPStatsHandler
                 ];
             }, $sections),
         ];
-        if ($template == 'stats/publications.tpl') {
+        if ($template == 'stats.publications') {
             $issues = Repo::issue()->getCollector()
                 ->filterByContextIds([$context->getId()])
                 ->filterByPublished(true)
