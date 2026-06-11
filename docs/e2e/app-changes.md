@@ -35,6 +35,11 @@ appends a row here.
 
 | 13 | **PubMed export fetches the NLM DTD over the network at request time**: `ArticlePubMedXmlFilter` declares `https://dtd.nlm.nih.gov/ncbi/pubmed/in/PubMed.dtd` as the DOCTYPE and the filter framework DTD-validates every export output, so libxml fetches the DTD (plus its MathML/ISO entity closure) per export. On any install without internet — or when NLM throttles DTD hotlinking, which they actively do — every PubMed export 500s (`Could not load the external subset`, then `displayXMLValidationErrors` fatals with "Could not convert selected objects"). | post-reset full-suite run 2026-06-11: pubmed-metadata.spec.js failed deterministically once the test config firewalled egress (which PKP wires into libxml via `PKPContainer::settingProxyForStreamContext`); 500 body shows the failed-external-subset libxml error | Remote DOCTYPE + unconditional filter output validation (`plugins/importexport/pubmed/filter/ArticlePubMedXmlFilter.php:64`, `lib/pkp/classes/xslt/XMLTypeDescription.php:134`) | Upstream: bundle the DTD with the plugin (resolve via local catalog/entity loader) or degrade validation gracefully when the DTD is unreachable; suite-side fixed with a committed DTD mirror + `XML_CATALOG_FILES` (see §3) |
 
+| 14 | **Activity Log "participant added" entries render a literal `{$userGroupName}`**: both the live grid handler and the scenario processor write event-log param key `userGroupName` (singular), but `eventLog.json` declares only `userGroupNames` (plural, multilingual), so the param is dropped before `EventLogEntry::getTranslatedMessage()` and `submission.event.participantAdded` keeps its raw placeholder. Affects every assignment made through the UI, not just seeded rows. | wave-5 activity-log agent: History grid shows "Daniel Barnes (dbarnes) was assigned to this submission as a {$userGroupName}." | Writer/schema param-key mismatch (`StageParticipantGridHandler.php:397` + ParticipantProcessor vs `lib/pkp/schemas/eventLog.json:307`) | Upstream: align the key (writer → `userGroupNames` or schema += `userGroupName`) |
+| 15 | **DiscussionManager stage heading goes stale on in-place stage switch**: `discussionTitleByStage` is evaluated once at setup (`lib/ui-library/src/managers/DiscussionManager/DiscussionManager.vue:115`) instead of `computed()`, so when the workflow side-nav switches stages and Vue reuses the component, the per-stage task list refetches correctly but the `<h3>` keeps the previous stage's title (e.g. "Production Tasks & Discussions" on the Copyediting panel). Cosmetic but misleading. | wave-5 discussions agent: error-context snapshot shows `heading "Workflow: Copyediting"` alongside `heading "Production Tasks & Discussions"` with a correctly-empty list; discussions.spec.js row 2 gates on the page-level stage h2 as workaround | One-line fix: wrap in `computed()` | Upstream ui-library |
+| 16 | **Legacy fbv `confirmSubmit` button dies after two validation-rejected confirm cycles** (reviewer step 3 "Submit Review"): the third click no longer opens the confirmation modal (no dialog, no `saveStep` POST). Likely `LinkActionHandler.enableLink` re-running `bindActionRequest()` per completed modal cycle without unbinding, accumulating duplicate click handlers (`lib/pkp/js/controllers/linkAction/LinkActionHandler.js:189-207` with `ButtonConfirmationModalHandler.modalConfirm`). User-facing recovery is a page reload. | wave-5 review-forms agent: reproduced in 2 independent runs pre-workaround; review-forms.spec.js row 4 works around via reload | Handler double-binding across confirm cycles | Upstream pkp-lib JS; affects any fbv form with confirmSubmit |
+| 17 | Minor candidates from wave 5: (a) Download-All archive filename carries a double dash (`{id}--submission-files.zip`) — `Str::kebab()` artifact on the id-prefixed locale string (`lib/pkp/controllers/api/file/FileApiHandler.php:168-175`); (b) `manager.reviewForms.confirmActivate`/`confirmDeactivate` ship empty `msgstr` in `lib/pkp/locale/en/manager.po` — the activate/deactivate confirm modal renders with no message text. | wave-5 submission-files + review-forms agents | — | Cosmetic / localization fixes upstream |
+
 ## 3. Flakiness sources in the local/CI environment (not app code)
 
 - **Server-side outbound HTTP can kill worker PHP servers** (2026-06-11 mass failure:
@@ -63,3 +68,16 @@ appends a row here.
   (one-time local ALTERs were applied in wave 1; fresh installs are correct).
 - **`playwright/.auth` storage-state files can tear under concurrent cross-agent logins**
   (one corruption observed wave 2); candidate hardening: atomic write in auth.js.
+- **Parallel implementation agents must not share the default HTML reporter**: one wave-5
+  agent's run died on `ENOENT: scandir test-results-wave5-…` when a sibling's output dir
+  vanished mid-scan. Agents run their specs with `--reporter=list` (plus their private
+  `--output` dir); only the orchestrator's full-suite runs use the default reporters.
+- **Legacy grid header link actions can swallow a click right after a DataChangedEvent
+  refresh** (~1 in 3 on the review-form elements grid's second "Create New Item");
+  bounded retry pattern in `ReviewFormSettingsPage.openCreateElementForm`.
+- **Near-midnight TZ-skew on date-boundary seeds**: Node's clock (test runner, local TZ)
+  and PHP/Postgres "now" can disagree across midnight — a subscription dated to start
+  "today" (Node) read as starting "tomorrow" server-side and failed validity for ~2 h
+  (subscription-access subscriber test, 2026-06-12 00:0x). Rule: any date a test writes
+  that must already be in effect gets at least a day of slack; exact-boundary semantics
+  belong to unit tests.

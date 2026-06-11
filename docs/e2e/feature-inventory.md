@@ -53,14 +53,14 @@ inventory update here.
 | copyediting-stage | Copyeditor assignment, copyedited files, author check, send-to-production decision | lib/pkp | H | 8 | done |
 | production-stage | Layout editor assignment, production-ready files, schedule-for-publication handoff | lib/pkp | H | 6 | done |
 | stage-participants | Add/remove participants, role-based access effects, assistant permissions | lib/pkp | H | 7 | done |
-| discussions | Discussion create/reply/close per stage, participant scoping | lib/pkp | M | 6 | planned |
-| editorial-tasks | Task create/assign/complete/due dates, templates applied in workflow | lib/pkp | M | 7 | planned |
-| submission-files | Per-stage file upload, revisions, dependent files, non-ASCII filenames, downloads | lib/pkp | H | 8 | planned |
-| activity-log | Event log entries for key actions, round history modal | lib/pkp | M | 4 | planned |
-| editor-metadata-editing | Editor/section-editor edits publication metadata pre-publication; author-edit-published permission gate | lib/pkp | M | 6 | planned |
-| review-forms | Manager creates review form with elements; reviewer fills it; editor reads responses | lib/pkp | M | 6 | planned |
-| review-anonymity | Double-anonymous vs anonymous vs open: what reviewer/author can see | lib/pkp | M | 5 | planned |
-| recommend-only-editors | Recommend-only section editor records recommendation; editor sees and decides | lib/pkp | M | 4 | planned |
+| discussions | Discussion create/reply/close per stage, participant scoping | lib/pkp | M | 6 | done |
+| editorial-tasks | Task create/assign/complete/due dates, templates applied in workflow | lib/pkp | M | 7 | done |
+| submission-files | Per-stage file upload, revisions, dependent files, non-ASCII filenames, downloads | lib/pkp | H | 8 | done |
+| activity-log | Event log entries for key actions, round history modal | lib/pkp | M | 4 | done |
+| editor-metadata-editing | Editor/section-editor edits publication metadata pre-publication; author-edit-published permission gate | lib/pkp | M | 6 | done |
+| review-forms | Manager creates review form with elements; reviewer fills it; editor reads responses | lib/pkp | M | 6 | done |
+| review-anonymity | Double-anonymous vs anonymous vs open: what reviewer/author can see | lib/pkp | M | 5 | done |
+| recommend-only-editors | Recommend-only section editor records recommendation; editor sees and decides | lib/pkp | M | 4 | done |
 
 ## 3. Publishing & issues
 
@@ -183,6 +183,12 @@ documented in the `ojs-playwright-tests` skill (scenarios.md).
   parity; needed by media-files plan rows 3–8. Parity-audit entry required.
 
 **Follow-ups surfaced during the wave (unscheduled):**
+- (wave 5) Consolidate the `authorWorkflowUrl`/`mySubmissions` deep-link helper — now
+  privately re-implemented in at least four specs (submission-stage-actions,
+  review-rounds-revisions, submission-files, review-anonymity); candidate home:
+  `DashboardPage` or a shared support util. Same for a `TaskTemplatesSettingsPage` POM
+  (helpers duplicated in editorial-tasks + task-templates specs) and a shared
+  legacy-confirmation-modal helper (`ReviewFormSettingsPage.confirmOk` is the third copy).
 - Stale gitignored build artifacts (`styles/build.css`, `js/build.js`) silently re-enable
   UI animations and caused 3 false test failures — add a bootstrap-time guard asserting the
   served CSS contains a `prefers-reduced-motion` block, or rebuild assets whenever the

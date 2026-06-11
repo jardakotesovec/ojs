@@ -1039,3 +1039,14 @@ For merge into §7 ReviewRoundProcessor.
 **Verified** (2026-06-11, live servers :8000-8001): `reviewer-response.spec.js` rows 3/8 (accepted ⇒ wizard resumes on step 2, advances to step 3, save-for-later round-trip) and row 12 (completed ⇒ "Review Submitted" completion view, earlier steps read-only) green twice consecutively; `reviewer-recommendations.spec.js` (invited-based wizard run + completed editor-side rows) re-ran green — no behavior shift for invited seeds or editor-side surfaces.
 
 **Verdict**: ✅ parity
+
+### Audit fragment — seeded `email_log` rows carry uncompiled template subjects
+
+Known-wrinkle entry (no Processor change yet); surfaced by the wave-5 activity-log agent.
+
+**Domain**: `email_log` rows written during scenario seeding (e.g. `AssignEditors.php:114-117` does `Mail::send()` then `logMailable()`).
+**Discrepancy**: under the scenario controllers' `Mail::fake()`, the variable compilation that normally happens inside the send pipeline is skipped, but the log row is still written — so seeded submissions show subjects like "An email has been sent: You have been assigned as an editor on a submission to {$contextName}" in the editor's Activity Log History tab, where production rows would show compiled text.
+**Impact**: cosmetic-only for current specs (activity-log.spec.js asserts on event types/actors, not on logged email subjects). Any future row asserting logged email subject text on a *seeded* action will hit this.
+**Candidate fix**: compile mailable variables before `logMailable()` in the seeding path, or swap `Mail::fake()` for a transport-level no-op so the pipeline (incl. compilation) runs.
+
+**Verdict**: ⚠️ known parity wrinkle, recorded — fix before any spec asserts on seeded email-log subject text

@@ -412,6 +412,19 @@ test.describe('Subscription-based access', () => {
 				.locator('select[name="status"]')
 				.selectOption({label: 'Active'});
 			const today = new Date();
+			// Start the subscription YESTERDAY, not today: the validity
+			// check compares date_start against PHP-side "now"
+			// (Core::getCurrentDate() in IndividualSubscriptionDAO::
+			// isValidIndividualSubscription), while this Date comes from
+			// Node's clock. Around midnight a TZ offset between the two
+			// (e.g. CEST test runner vs UTC PHP) makes a start of
+			// "today" read as "tomorrow" server-side and the fresh
+			// subscription is not yet valid — observed as a real
+			// near-midnight failure. A day of slack covers any offset
+			// without weakening the assertion (the gate under test is
+			// "active subscription grants access").
+			const subscriptionStart = new Date(today);
+			subscriptionStart.setDate(today.getDate() - 1);
 			const oneYearOut = new Date(today);
 			oneYearOut.setFullYear(today.getFullYear() + 1);
 			// templates/form/textInput.tpl#59-77 renders datepicker
@@ -464,7 +477,7 @@ test.describe('Subscription-based access', () => {
 					setByName('dateEnd', endVal);
 				},
 				{
-					startVal: formatDate(today),
+					startVal: formatDate(subscriptionStart),
 					endVal: formatDate(oneYearOut),
 				},
 			);
