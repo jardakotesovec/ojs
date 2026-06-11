@@ -1,0 +1,21 @@
+# Reviewer suggestions
+
+- **Area:** 1. Submission intake
+- **Placement:** lib/pkp
+- **Budget:** 4 tests
+- **Absorbs:** none
+- **Scenario needs:** publicknowledge has `reviewerSuggestionEnabled` ON per bootstrap enrichment. `reviewerSuggestions` passthrough APPROVED FOR BUILD (adjudicated): thin SubmissionBuilderProcessor extension writing `reviewer_suggestions` at submit parity; needed by rows 3–4 — wave-1 work item. Shape: array of `{givenName, familyName, email, affiliation, suggestionReason}` rows attached at submit-parity. Justification: rows 3–4 both need a *submitted* submission in review with suggestions attached (one matching an existing user, one not); without seeding, each test re-drives the full six-step wizard just to reach its starting state (rows 1–2 already cover that journey once). Suggestion state is a plain `reviewer_suggestions` insert at submission time, so parity cost is low.
+- **Round 2 / out of scope:**
+  - Reviewer-suggestion journal settings form (enable toggle, max suggestions, guidance text — owned by `review-settings`).
+  - Feature off ⇒ no wizard step (owned by `review-settings` row 5, which toggles `reviewerSuggestionEnabled` and asserts the step's presence/absence).
+  - Declining/ignoring a suggestion (no dedicated UI action beyond not approving).
+  - OMP/OPS parity of the manager panel (same shared component).
+
+## Tests
+
+| # | Title | Actors | Seed | Verifies | Status |
+|---|-------|--------|------|----------|--------|
+| 1 | Author manages suggestions in the wizard | atester | UI (publicknowledge, feature on by default) | Reviewer-suggestions step renders in the step list at its expected position (files → details → contributors → for-the-editors → reviewer suggestions → review); add a suggestion (name, email, affiliation, reason); edit it; delete one; remaining suggestion appears on the review step | planned |
+| 2 | Suggestions survive submit and reach the editor | atester, dbarnes | UI | Suggestions entered in the wizard persist through Submit; dbarnes opens the submission workflow and sees the suggestion list with name/affiliation details | planned |
+| 3 | Approve a suggestion into Add Reviewer (new user) | dbarnes | submission scenario `reviewerSuggestions` (approved for build; in review, suggestion email not a user) | "Add Reviewer" action on the suggestion opens the reviewer form in create-new mode prefilled from the suggestion; completing it assigns the reviewer and the suggestion leaves the unapproved list | planned |
+| 4 | Approve a suggestion matching an existing user | dbarnes | submission scenario `reviewerSuggestions` (approved for build; in review, suggestion email = jjanssen) | Approval routes to the enroll-existing/advanced-search selection instead of create-new; assignment links the suggestion to the existing account | planned |

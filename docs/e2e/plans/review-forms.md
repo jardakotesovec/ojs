@@ -1,0 +1,24 @@
+# Review forms
+
+- **Area:** 2. Editorial workflow
+- **Placement:** lib/pkp
+- **Budget:** 6 tests
+- **Absorbs:** none
+- **Scenario needs:** journal scenario with users (existing — review forms are journal-level, so every row runs on a scratch journal; publicknowledge stays untouched); submission scenario with `journal` override (existing). Verified in code: review form *attachment* is per-assignment (`ReviewerForm`/`EditReviewForm` carry `reviewFormId`), but the forms themselves are journal settings (Settings > Workflow > Review > Review Forms legacy grid), so even attachment rows need a scratch journal with a form in it.
+  - `GAP: context scenario reviewForms[]` (title/description + elements with type/required/options) — rows 2–6 all need a pre-existing form; creating one through the legacy grid UI per test is slow and duplicates row 1's coverage. Multiple rows ⇒ justified Processor extension per PRINCIPLES §3. **Verdict: BUILD approved** — new thin processor beside SectionProcessor writing `review_forms`/`review_form_elements` at grid parity; wave-1 work item requiring a parity-audit entry in `docs/scenario-processor-audit.md`.
+  - `GAP: submission scenario reviewRounds[].reviewers[].reviewFormId` — rows 4–6 need the assignment to already carry the form without driving the Add Reviewer modal each time. Same multi-row justification. **Verdict: BUILD approved** — one extra createParams key in `ReviewRoundProcessor::assignReviewer`; wave-1 work item requiring a parity-audit entry in `docs/scenario-processor-audit.md`.
+- **Round 2 / out of scope:**
+  - Multilingual review-form element entry (covered in spirit by languages-locales plan).
+  - Section-default review form (`Section::getReviewFormId` preselects in the Add Reviewer modal) — sections plan territory.
+  - Review-form responses in exports/reports.
+
+## Tests
+
+| # | Title | Actors | Seed | Verifies | Status |
+|---|-------|--------|------|----------|--------|
+| 1 | Manager creates a review form with elements and previews it | dbarnes | journal scenario (dbarnes manager); UI for the CRUD under test | Settings > Workflow > Review > Review Forms: create form (title/description); add elements (required textarea + radio buttons with options) via elements grid; preview renders the assembled form | planned |
+| 2 | Copy, deactivate and delete review forms; deactivated form not offered at assignment | dbarnes | journal scenario + seeded review form (`GAP: context reviewForms`) + submission in review on scratch journal | Copy creates an editable duplicate; deactivate removes the form from the Add Reviewer modal's review-form dropdown; delete removes an unused form from the grid | planned |
+| 3 | Editor attaches a review form when assigning a reviewer and can switch it later | dbarnes | journal scenario + seeded review form (`GAP: context reviewForms`) + submission in review (reviewer enrolled, assignment driven via UI) | Add Reviewer modal exposes the review-form select; assignment stores the chosen form; Edit Review modal shows it and lets the editor switch to another form before the review is completed | planned |
+| 4 | Reviewer fills the review form; required element gates submission | jjanssen | journal scenario + seeded form + submission in review with assignment carrying the form (`GAP: reviewers[].reviewFormId`), status accepted | Reviewer step 3 renders form elements instead of free-text comments; submitting with the required element empty raises `reviewer.submission.reviewFormResponse.form.responseRequired`; filling it allows submit and completes the review | planned |
+| 5 | Editor reads submitted review-form responses | jjanssen, dbarnes | same seed as row 4; reviewer submits filled form via UI, then editor reads | Read Review modal for the completed assignment shows the reviewer's responses to each element plus the recommendation; values match what the reviewer entered | planned |
+| 6 | A review form in use is locked in the manager grid | dbarnes | journal scenario + seeded form + assignment referencing it (`GAP: reviewers[].reviewFormId`, status accepted ⇒ incomplete count > 0) | Grid row for the in-use form loses Edit/Delete (`canEdit` requires zero complete + incomplete assignments); an unused form keeps its actions | planned |
