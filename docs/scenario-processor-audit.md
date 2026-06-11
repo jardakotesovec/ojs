@@ -1018,3 +1018,24 @@ For merge into the §4 PublicationsProcessor notes.
 
 **File**: `lib/pkp/classes/testing/scenario/Processor/PublicationsProcessor.php` (`resolveLatestPublishedIssue`)
 **Change** (2026-06-11): `Repo::issue()->getCollector()::ORDERBY_PUBLISHED` does not exist on OJS's `APP\issue\Collector` (its constants are `ORDERBY_DATE_PUBLISHED`, `ORDERBY_PUBLISHED_ISSUES`, …), so every spec using the `issue: 'latest'` shorthand 500'd with "Undefined constant". Fixed to `ORDERBY_DATE_PUBLISHED` (newest published issue first), which matches the documented "most recently published issue in this journal" semantics. The path was previously dead — all existing fixtures use the `{volume, number, year}` lookup — so no behavior shifted for existing specs; first consumer is `author-dashboard.spec.js` (published-view row on a scratch journal). No parity concern: issue resolution is harness-side sugar, not a mirrored production flow.
+
+### Audit fragment — ReviewRoundProcessor (`step` column on accepted/completed reviewers)
+
+For merge into §7 ReviewRoundProcessor.
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/ReviewRoundProcessor.php` (`statusFieldEdits`)
+**Domain**: `review_assignments.step`
+**Change** (2026-06-11, wave-3 reviewer-response implementation): seeded reviewer statuses now set the wizard `step` column the way the production reviewer wizard leaves it — `accepted` ⇒ `step = 2`, `completed` ⇒ `step = 4`. `invited` / `declined` / `cancelled` keep the DB default (`step = 1`), matching production (decline happens from step 1; cancel is editor-side).
+
+**Canonical UI entry point**:
+- Form / page: reviewer wizard (`PKPReviewerHandler::saveStep` → `PKPReviewerReviewStep{1,3}Form::execute`)
+
+**What the production path does**: every step submit runs `ReviewerReviewForm::updateReviewStepAndSaveSubmission`, which bumps `step` to `currentStep + 1` (accept on step 1 ⇒ 2; submit on step 3 ⇒ 4). `PKPReviewerHandler::submission` then resumes the wizard at `max(step, 1)` and clamps deep links to it, so a completed reviewer always lands on the step-4 "Review Submitted" completion view.
+
+**What the Processor did before**: never touched `step`, leaving the migration default `1`. A seeded `completed` reviewer re-opened the wizard on a read-only step 1 (a state production cannot produce — no completed assignment has `step = 1`), and a seeded `accepted` reviewer resumed on step 1 instead of step 2.
+
+**Discrepancies**: none known after the fix; `step` values are byte-identical to a reviewer who walked the wizard. (Intermediate states like "accepted and advanced to step 3 without saving" remain reachable by driving the UI — out of seed scope.)
+
+**Verified** (2026-06-11, live servers :8000-8001): `reviewer-response.spec.js` rows 3/8 (accepted ⇒ wizard resumes on step 2, advances to step 3, save-for-later round-trip) and row 12 (completed ⇒ "Review Submitted" completion view, earlier steps read-only) green twice consecutively; `reviewer-recommendations.spec.js` (invited-based wizard run + completed editor-side rows) re-ran green — no behavior shift for invited seeds or editor-side surfaces.
+
+**Verdict**: ✅ parity

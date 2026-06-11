@@ -42,10 +42,10 @@ during implementation waves; promote round-2 rows only with an inventory update 
 
 | Plan file | Scope | Placement | Imp | Budget | Status |
 |-----------|-------|-----------|-----|--------|--------|
-| editorial-dashboards | Dashboard views/filters/search per role (active, needs-editor, archived, my-assigned) | lib/pkp | H | 10 | planned |
-| submission-stage-actions | Assign editor, send to review, accept-and-skip-review, decline, delete/archive at stage 1 | lib/pkp | H | 9 | planned |
-| reviewer-assignment | Assign reviewer (search, due dates, anonymity mode, reviewer type), unassign/cancel, resend request | lib/pkp | H | 10 | planned |
-| reviewer-response | Reviewer accepts/declines invitation, completes review (recommendations, comments, attachments), one-click access, thank reviewer | lib/pkp | H | 12 | planned |
+| editorial-dashboards | Dashboard views/filters/search per role (active, needs-editor, archived, my-assigned) | lib/pkp | H | 10 | done |
+| submission-stage-actions | Assign editor, send to review, accept-and-skip-review, decline, delete/archive at stage 1 | lib/pkp | H | 9 | done |
+| reviewer-assignment | Assign reviewer (search, due dates, anonymity mode, reviewer type), unassign/cancel, resend request | lib/pkp | H | 10 | done |
+| reviewer-response | Reviewer accepts/declines invitation, completes review (recommendations, comments, attachments), one-click access, thank reviewer | lib/pkp | H | 12 | done |
 | review-rounds-revisions | New round, round status indicators, request-revisions → author uploads → editor sees, resubmit-for-review cycle, round history | lib/pkp | H | 12 | planned |
 | review-decisions | Accept, decline post-review, revert decline, notify-author emails with attachments, decision recording | lib/pkp | H | 8 | planned |
 | copyediting-stage | Copyeditor assignment, copyedited files, author check, send-to-production decision | lib/pkp | H | 8 | planned |

@@ -63,7 +63,7 @@ and for the final Cypress cross-check. Delete this file once round 1 absorption 
 | reduced-motion.spec.js | matchMedia + CSS rule respond; manual context inherits options | 3 |
 | review-round.spec.js | External review flow | 1 |
 | reviewer-assignment.spec.js | Assign reviewer via modal; anonymity + due dates; appears in list | 1 |
-| reviewer-completes-review.spec.js | Reviewer accepts, fills form with recommendation, submits | 1 |
+| reviewer-completes-review.spec.js | Reviewer accepts, fills form with recommendation, submits — ABSORBED into `reviewer-response.spec.js` (reviewer-response plan row 1); file deleted | 1 |
 | reviewer-recommendations.spec.js | Reviewer recommendation flows across scenarios | 5 |
 | scenario-decision-comments.spec.js | Decision comments seeding/verification | 2 |
 | scenario-default-file.spec.js | Seeded submissions have default PDF; comments create stage-1 discussion | 2 |

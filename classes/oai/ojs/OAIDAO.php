@@ -291,10 +291,11 @@ class OAIDAO extends PKPOAIDAO
                 return $query->where('p.section_id', '=', (int) $sectionId);
             })
             ->when($from, function ($query, $from) {
-                return $query->whereDate(DB::raw('GREATEST(a.last_modified, i.last_modified, p.last_modified)'), '>=', \DateTime::createFromFormat('U', $from));
+                // whereDate() cannot take a raw expression: the Postgres grammar probes the column with str_contains() and fatals on an Expression object.
+                return $query->whereRaw('DATE(GREATEST(a.last_modified, i.last_modified, p.last_modified)) >= ?', [\DateTime::createFromFormat('U', $from)->format('Y-m-d')]);
             })
             ->when($until, function ($query, $until) {
-                return $query->whereDate(DB::raw('GREATEST(a.last_modified, i.last_modified, p.last_modified)'), '<=', \DateTime::createFromFormat('U', $until));
+                return $query->whereRaw('DATE(GREATEST(a.last_modified, i.last_modified, p.last_modified)) <= ?', [\DateTime::createFromFormat('U', $until)->format('Y-m-d')]);
             })
             ->when($submissionId, function ($query, $submissionId) {
                 return $query->where('a.submission_id', '=', (int) $submissionId);

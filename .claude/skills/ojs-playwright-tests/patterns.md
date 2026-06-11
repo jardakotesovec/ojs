@@ -319,3 +319,11 @@ test('editor assigns reviewer, reviewer accepts', async ({page, asUser}) => {
 - **The wizard Steps rail collapses when it overflows** (non-current pills get `-screenReader`, 1px-clipped); a `force: true` click on a clipped pill is a silent no-op. Use `SubmissionWizardPage.gotoStep()`/`expectStep()` — they handle expansion, end-anchored name matching ('Review' vs 'Reviewer Suggestions'), and re-render-swallowed clicks.
 - **Side-modal wrappers report `visibility: hidden` permanently** — anchor visibility assertions on inner content, not the wrapper.
 - **`useFetch` tunnels DELETE via POST + method override; unauthorized API calls return 401** (not 403) — match assertions accordingly.
+
+## UI realities learned the hard way (wave 3)
+
+- **`getByRole` name strings are substring matches** — `{name: 'View'}` happily matches "Assign Re**view**ers". Use `exact: true` (or an anchored regex) for short, common words.
+- **The reviewer dashboard endpoint (`_submissions/reviewerAssignments`) ignores `searchPhrase` AND pagination** — it returns the full list. Reviewer-side list assertions need scratch-journal scoping (or a bounded full-list assertion), not search.
+- **The submission GET's `reviewAssignments` is a hand-rolled summary**: `statusId` + Y-m-d dates only — no `cancelled`/`declined`/`dateReminded`/`dateAcknowledged` fields. Assert state via `statusId` constants or the row's History modal, not via fields that aren't there.
+- **Review files are grant-based**: seeded in-review submissions carry no review-round files; production promotes them via a client-side REST `files/{id}/copy?stageId=1` follow-up and the Add Reviewer modal's file selection writes the `review_files` grant. Mirror that flow; don't expect seeded files to be reviewer-visible.
+- **A real wizard submit fires `AssignEditors`** (auto-assigns the journal's section editors), so `participants` on submitted scenarios is additive; seeding `participants: []` WITHOUT `submitted` is what produces a genuine needs-editor state.

@@ -1,6 +1,7 @@
 // @ts-check
 const {expect} = require('@playwright/test');
 const {BasePage} = require('../../lib/pkp/playwright/pages/BasePage.js');
+const {setTinyMceContent} = require('../../lib/pkp/playwright/support/tinymce.js');
 
 /**
  * POM for the OJS editorial workflow page — the per-submission view an
@@ -202,6 +203,153 @@ exports.EditorialWorkflowPage = class EditorialWorkflowPage extends BasePage {
 		await expect(this.page).toHaveURL(
 			new RegExp(`workflowSubmissionId=${submissionId}(?:&|$)`),
 		);
+	}
+
+	/**
+	 * The stage action panel — the column of decision buttons rendered
+	 * from the workflow store's actionItems (Send for Review, Decline
+	 * Submission, Revert Decline, Delete, …). Scope presence/ABSENCE
+	 * assertions on decision buttons to this container so they can't
+	 * accidentally match same-named buttons in other panels (file
+	 * managers, stacked modals).
+	 */
+	actionItems() {
+		return this.page.locator('[data-cy="workflow-action-items"]');
+	}
+
+	/**
+	 * Cancel out of the decision-record page without recording. The
+	 * footer "Cancel" button opens a confirmation dialog ("Cancel
+	 * Decision" / "Keep Working" — see DecisionPage.vue#cancel); the
+	 * warnable "Cancel Decision" action navigates back to the workflow
+	 * page via window.location. Call while on /decision/record/.
+	 */
+	async cancelDecision() {
+		await this.page
+			.getByRole('button', {name: 'Cancel', exact: true})
+			.click();
+		const dialog = this.page.locator('[data-cy="dialog"]').filter({
+			hasText: 'Are you sure you want to cancel this decision?',
+		});
+		await expect(dialog).toBeVisible({timeout: 10_000});
+		await Promise.all([
+			this.page.waitForURL(/workflowSubmissionId=/, {timeout: 15_000}),
+			dialog
+				.getByRole('button', {name: 'Cancel Decision', exact: true})
+				.click(),
+		]);
+	}
+
+	/**
+	 * Replace the Composer email body on a decision wizard step. Waits
+	 * for the AJAX template load to settle first — editing earlier would
+	 * be overwritten when the default template arrives (see
+	 * awaitEmailTemplateLoaded). The Composer's body field is a
+	 * FieldPreparedContent whose TinyMCE control id is
+	 * `{stepId}-body-control` (FieldBase#compileId with formId=step.id).
+	 *
+	 * @param {string} stepId  decision step id, e.g. 'notifyAuthors'
+	 * @param {string} html    replacement body HTML
+	 */
+	async setDecisionEmailBody(stepId, html) {
+		await this.awaitEmailTemplateLoaded();
+		await setTinyMceContent(this.page, `${stepId}-body-control`, html);
+	}
+
+	/**
+	 * Assign a user to the current stage through the Participants panel.
+	 * Drives the legacy add-participant form (StageParticipantNotifyHandler)
+	 * that the Vue ParticipantManager opens in a reka-ui dialog: pick the
+	 * user-group filter, search by name, check the user's radio, OK.
+	 * Leaves the recommendOnly / canChangeMetadata checkboxes at their
+	 * unchecked defaults (full decision powers; same as the legacy
+	 * Cypress assignParticipant command).
+	 *
+	 * @param {object} opts
+	 * @param {string} opts.userGroup   visible group label, e.g. 'Section editor'
+	 * @param {string} opts.nameSearch  name fragment for the user search, e.g. 'Buskins'
+	 * @param {string} opts.fullName    full display name expected in the results
+	 *                                  grid + participants list, e.g. 'David Buskins'
+	 */
+	async assignParticipant({userGroup, nameSearch, fullName}) {
+		const participantManager = this.page.locator(
+			'[data-cy="participant-manager"]',
+		);
+		await expect(participantManager).toBeVisible({timeout: 15_000});
+		await participantManager
+			.getByRole('button', {name: 'Assign', exact: true})
+			.click();
+
+		// Dialog title comes from editor.submission.addStageParticipant
+		// ("Assign Participant"); the PHP-rendered #addParticipantForm
+		// sits inside it.
+		const modal = this.page.getByRole('dialog', {
+			name: 'Assign Participant',
+			exact: true,
+		});
+		await expect(modal).toBeVisible({timeout: 15_000});
+		const form = modal.locator('#addParticipantForm').last();
+		await expect(form).toBeVisible({timeout: 15_000});
+
+		await form
+			.locator('select[name="filterUserGroupId"]')
+			.selectOption({label: userGroup});
+		await form.locator('input[name="name"]').fill(nameSearch);
+		await form.getByRole('button', {name: 'Search', exact: true}).click();
+
+		const row = modal.locator('tr', {hasText: fullName}).first();
+		await expect(row).toBeVisible({timeout: 15_000});
+		await row.locator('input[name="userId"]').check();
+
+		// fbvFormButtons renders a default "OK" submit.
+		await modal.getByRole('button', {name: 'OK', exact: true}).click();
+		await expect(modal).toBeHidden({timeout: 20_000});
+		await expect(participantManager).toContainText(fullName, {
+			timeout: 15_000,
+		});
+	}
+
+	/**
+	 * Delete the submission from the workflow page. The Delete button is
+	 * only rendered post-decline for users holding a manager/site-admin
+	 * role (workflowConfigEditorialOJS.js — gated on
+	 * DECISION_REVERT_INITIAL_DECLINE availability +
+	 * hasCurrentUserAtLeastOneAssignedRoleInAnyStage). Confirms the
+	 * PkpDialog; on success the workflow modal closes itself
+	 * (useWorkflowActions#workflowDeleteSubmission).
+	 */
+	async deleteSubmissionFromWorkflow() {
+		await this.actionItems()
+			.getByRole('button', {name: 'Delete', exact: true})
+			.click();
+		const dialog = this.page.locator('[data-cy="dialog"]').filter({
+			hasText: 'Are you sure you want to permanently delete this submission?',
+		});
+		await expect(dialog).toBeVisible({timeout: 10_000});
+		await dialog.getByRole('button', {name: 'Confirm', exact: true}).click();
+		await expect(dialog).toBeHidden({timeout: 15_000});
+	}
+
+	/**
+	 * Fetch the decision list for a submission via the REST API using
+	 * the page's session cookies. Normalizes the paginated/bare response
+	 * shapes to a plain array.
+	 *
+	 * @param {number} submissionId
+	 * @param {string} [journalPath='publicknowledge']
+	 * @returns {Promise<object[]>}
+	 */
+	async fetchDecisions(submissionId, journalPath = 'publicknowledge') {
+		const res = await this.page.request.get(
+			`/index.php/${journalPath}/api/v1/submissions/${submissionId}/decisions`,
+		);
+		if (!res.ok()) {
+			throw new Error(
+				`GET decisions for ${submissionId} failed: ${res.status()} ${await res.text()}`,
+			);
+		}
+		const body = await res.json();
+		return body.items || body;
 	}
 
 	/**
