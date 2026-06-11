@@ -136,6 +136,14 @@ are committed inside `lib/pkp`; OJS-only specs and all docs (including this dire
 committed in the OJS root. **Never bump the submodule pointer in a root commit** — run
 `git restore --staged lib/pkp` before committing the root repo.
 
+## App-code change ledger
+
+Any wave that (a) changes non-test code (anything outside `playwright/`, `docs/`,
+`.claude/`) or (b) diagnoses an app-side bug or flakiness source — even without fixing
+it — appends a row to `docs/e2e/app-changes.md` in the same wave. That file is the
+end-of-round review list for production-relevant changes; scenario-endpoint changes stay
+in `docs/scenario-processor-audit.md` instead.
+
 ## Related documents
 
 - `.claude/skills/ojs-playwright-tests/` — developer guide: users, app map, patterns, scenarios
