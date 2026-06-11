@@ -6,6 +6,7 @@
 - **Absorbs:** `lib/pkp/playwright/tests/decision-request-revisions.spec.js`; `lib/pkp/playwright/tests/review-round.spec.js` (`playwright/tests/scenarios/submission-in-round-2.spec.js` is a seeding self-test owned by the test-infrastructure plan)
 - **Scenario needs:** submission scenario — decision chains (`requestRevisions`, `resubmit`, `newExternalRound`), multi-round `reviewRounds` incl. per-round reviewer lists and an empty round 2, reviewer `recommendation`/`comments`, due-date passthrough. `UI-FALLBACK: seed review-revision files on a round` — adjudicated verdict for round 1: rows 2 and 4 reach the "author already uploaded revisions" state by driving the legacy plupload wizard through the UI (the path the absorbed spec proves, ~10s of legacy-form driving per test), which is acceptable; revisit a Processor extension only if more plans need seeded revisions.
 - **Round 2 / out of scope:**
+  - Summary of Changes (amendment notice) on revision uploads + Amendment Notice badge — owned by `plans/publication-amendments.md` (added 2026-06-11); revision rows here ignore the field.
   - Event-log entries and the round-history modal (activity-log plan).
   - Internal review stage (OMP-only; OJS has external review only).
   - "X of N reviews" minimum-review progress indicator (depends on `numReviewsPerSubmission` config; revisit with review-settings).

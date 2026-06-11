@@ -14,17 +14,19 @@ existing spec inventory (`docs/e2e/spec-inventory.md`).
 |------|----------|---------------|
 | 1. Submission intake | 7 | 59 |
 | 2. Editorial workflow | 17 | 128 |
-| 3. Publishing & issues | 7 | 54 |
+| 3. Publishing & issues | 9 | 68 |
 | 4. Reader front end | 8 | 41 |
 | 5. Users, roles & access | 9 | 48 |
 | 6. Settings & administration | 14 | 68 |
 | 7. Plugins (key set) | 9 | 57 |
 | 8. System & communications | 7 | 36 |
-| **Total** | **78** | **491** |
+| **Total** | **80** | **505** |
 
 Post-review totals (adversarial review removed duplicate-coverage rows and double-counted
-absorptions). The ~9-row headroom against the ~500 target is reserved for discoveries made
-during implementation waves; promote round-2 rows only with an inventory update here.
+absorptions); on 2026-06-11 the maintainer added two recently-landed 3.6 features the
+original exploration missed (media-files, publication-amendments: +14 rows, consuming the
+reserved headroom and landing at 505 ≈ the ~500 target). Promote round-2 rows only with an
+inventory update here.
 
 ## 1. Submission intake (author experience)
 
@@ -71,6 +73,8 @@ during implementation waves; promote round-2 rows only with an inventory update 
 | galleys | Galley create/edit/delete, file vs remote URL, labels, ordering | ojs | H | 8 | planned |
 | issue-management | Issue CRUD, TOC ordering, cover, publish issue + reader notification, current issue, unpublish/delete, issue galleys, back/future lists | ojs | H | 11 | planned |
 | issue-assignment-scheduling | Assign article to issue, schedule into future issue, publishes with issue | ojs | H | 5 | planned |
+| media-files | Media section: batch upload, web/high-res variant linking, metadata sync, sharing across galleys, author read-only (new in 3.6, Feb 2026) | lib/pkp | H | 8 | planned |
+| publication-amendments | Summary of Changes + update type: author submits with revisions, editor inserts into publication, versioned update types (new in 3.6, May 2026) | lib/pkp | M | 6 | planned |
 
 ## 4. Reader front end
 
@@ -172,6 +176,11 @@ applied to `publicknowledge` (which resolved the scheduled-task reminder-thresho
 conditional — the context passthrough stays unbuilt); full suite green under CI retry
 semantics: 141 passed in ~6 min, within the 20-minute budget. New seed capabilities are
 documented in the `ojs-playwright-tests` skill (scenarios.md).
+
+**Added 2026-06-11 (maintainer review — approved build for the wave that implements media-files):**
+- `publications[].mediaFiles[]` seeding in PublicationsProcessor beside `seedGalleys` —
+  SUBMISSION_FILE_MEDIA rows + `variant_groups` at `MediaFilesController`/`VariantGroup`
+  parity; needed by media-files plan rows 3–8. Parity-audit entry required.
 
 **Follow-ups surfaced during the wave (unscheduled):**
 - Stale gitignored build artifacts (`styles/build.css`, `js/build.js`) silently re-enable

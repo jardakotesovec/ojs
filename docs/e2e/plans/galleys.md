@@ -6,6 +6,7 @@
 - **Absorbs:** playwright/tests/galleys.spec.js
 - **Scenario needs:** submission scenario submission-published fixture (published VoR in Vol 1 No 2 2014, default Article Text file bundled) — exists; `participants` (layout editor) — exists; multi-version seeding via `publications[]` for row 8 — exists. Galley states in this plan's CRUD rows are created via UI (the grid is the behavior under test). **Adjudicated verdict:** `publications[].galleys[]` seeding **APPROVED FOR BUILD** in PublicationsProcessor (`Repo::galley()->add()` + a PROOF-stage file at galley-grid parity) — the strongest cross-plan demand (article-landing, subscription-access, payments, and this plan); wave-1 work item. Rows here that need a pre-existing galley as setup (2, 3, 5, 6) can switch to the seeded galley once built; rows 1, 4, 7 keep the UI path as the behavior under test.
 - **Round 2 / out of scope:**
+  - Media section (batch upload, web/high-res variants, media files shared across galleys) — owned by `plans/media-files.md` (added 2026-06-11); this plan keeps plain galley-file CRUD only.
   - Galley file download content/headers and inline viewing → article-landing plan.
   - HTML galley inline rendering / pdfJsViewer / lensGalley — round-2 plugin backlog.
   - Dependent files on galleys (e.g. HTML images) → submission-files plan.

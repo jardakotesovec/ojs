@@ -6,6 +6,7 @@
 - **Absorbs:** lib/pkp/playwright/tests/versioning.spec.js; playwright/tests/publication-language-change.spec.js (moves/refits per placement at implementation)
 - **Scenario needs:** submission scenario `publications[]` supports multi-entry version seeding (entry i>0 calls `Repo::publication()->version()` with `versionStage` + `versionIsMinor`) and per-version `published` — exists; `metadata.urlPath` passthrough — exists. No gaps.
 - **Round 2 / out of scope:**
+  - Update Type + Summary of Changes on the version/publish forms — owned by `plans/publication-amendments.md` (added 2026-06-11).
   - JATS file management per version; Body Text per version.
   - "Send to Text Editor" / version-source selection flows in the version dialog.
   - Deleting a version (no UI exists; intentionally untested).
