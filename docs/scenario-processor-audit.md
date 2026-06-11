@@ -489,3 +489,496 @@ The post-fix run is **consistently within ±10% of baseline** on all high-N buck
 The larger deltas (-15% to -28%) all live in low-N buckets (1–3 calls) where individual variance dominates. The single +15% total-time outlier on the `name,tag,users` 5-call bucket is driven by one slow call in the post-fix run, not a systematic regression — the median for that bucket is still -11%.
 
 **Conclusion**: the added side effects (notification INSERTs, event_log INSERTs, EDITOR_ASSIGNMENT_REQUIRED DELETE, ContributorRole pivot row, AUTHOR canChangeMetadata UPDATE) are all single-row operations that cost essentially nothing. **No measurable performance regression.** Both correctness and performance bars are met by the audit.
+
+## §4 · Wave-1 endpoint extensions (2026-06-11)
+
+Parity entries for the adjudicated wave-1 builds from
+`docs/e2e/feature-inventory.md` → "Wave 1 — infrastructure work items".
+Each subsection follows the §1 format: canonical flow mirrored, rows written,
+deliberate skips, discrepancies.
+
+### Audit fragment — scenario spec schema validation (dead-code fix)
+
+For merge into `docs/scenario-processor-audit.md`.
+
+**Finding fixed**: `PKPContextScenarioController::validateAgainstSchema()` gated Opis behind
+`class_exists(\Opis\JsonSchema\Validator::class)` while `opis/json-schema` was not installed —
+the whole Opis branch was dead code and validation silently degraded to "is `tag` non-empty".
+Unknown spec keys (typos, keys an agent assumed existed) were accepted and silently ignored by
+the processors, seeding misleading state. `PKPSubmissionScenarioController` had the same
+pattern.
+
+**Route chosen**: no JSON-schema *validator* ships in `lib/pkp/lib/vendor`
+(`Illuminate\JsonSchema` in Laravel 12 is a schema **builder** only; `justinrainbow/json-schema`
+and `opis/json-schema` appear in composer.lock solely as transitive require-dev entries of other
+packages and are not installed). Added `opis/json-schema ^2.4` (installed 2.6.0, pulls
+`opis/string` + `opis/uri`) to **require-dev** in `lib/pkp/composer.json`.
+
+**Commit implications**: `lib/pkp/lib/vendor` is gitignored (`lib/pkp/.gitignore:3`), so only
+`composer.json` + `composer.lock` are committed (in the lib/pkp repo, per commit discipline).
+Developers and CI must re-run `composer install` in lib/pkp; the Playwright workflow
+(`.github/workflows/playwright.yml:58`) already runs `composer install` without `--no-dev`, so
+dev deps land in CI. Production tarballs built `--no-dev` will not contain the validator — fine,
+because the `_test` routes only exist behind `TestModeGate` (`APPLICATION_ENV=test`), and the
+controller now **throws** (`RuntimeException`, surfaces as 500 with message) if the class is
+missing in test mode instead of silently skipping.
+
+**New behavior** (`lib/pkp/api/v1/_test/PKPContextScenarioController.php::validateAgainstSchema`):
+- Validation always runs in test mode; missing validator throws loudly.
+- Errors are formatted via `Opis\JsonSchema\Errors\ErrorFormatter` into `"<json-pointer>: <message>"`
+  lines and returned as HTTP 400 `{error: "Invalid spec", details}`. With
+  `additionalProperties:false` the message names the offending key, e.g.
+  `/: Additional object properties are not allowed: totallyUnknownKey` and nested paths like
+  `/reviewForms/0/elements/0: Additional object properties are not allowed: wrongKey`.
+- `schemaOverlayProperties(): array` (protected, default `[]`) lets app subclasses declare
+  app-only spec keys (e.g. OJS `subscriptions[]` in `JournalScenarioController`); definitions are
+  merged into the schema's `properties` before validation, which also exempts them from the
+  `additionalProperties:false` check (draft-07 semantics).
+
+**Knock-on effect — submission controller**: installing the package also *activates* the
+previously dead Opis branch in `PKPSubmissionScenarioController::validateAgainstSchema()`
+(unchanged file — owned by the submission-seeds workstream). Its schema
+(`schema/submission.json`, `additionalProperties:false`) covers every spec shape in the §0
+baseline (verified key diff 2026-06-11) and a canonical `submissionInReview` spec POSTed to the
+endpoint passes validation, but the submission workstream should re-run its suite to confirm no
+spec relies on the previous silent acceptance. The `schemaOverlayProperties` pattern was **not**
+applied to the submission controller — that file is owned by the parallel submission agent and
+was mid-edit; apply there separately if OJS-only submission keys appear.
+
+**Verified** (2026-06-11, live test server): unknown top-level key → 400 naming the key; bad
+enum value → 400 `(/keywords: The data should match one item from enum)`; nested unknown key →
+400 with full pointer; valid specs (incl. all new keys) → 200.
+
+### Audit fragment — context scenario schema ⇄ ContextBuilderProcessor whitelist sync
+
+For merge into `docs/scenario-processor-audit.md` (ContextBuilderProcessor section).
+
+**Goal**: every key the scenario schema (`lib/pkp/classes/testing/scenario/schema/context.json`)
+accepts is honored by a processor, and every key a processor honors is declared in the schema.
+With validation now enforced (see schema-validation.md), an undeclared key is a hard 400 and a
+declared-but-unhonored key would be a silent lie — both directions matter.
+
+#### Pre-existing gap found and fixed
+
+| Gap | Fix |
+|---|---|
+| `enableAnnouncements` was in the ContextBuilderProcessor scalar whitelist but missing from the scenario schema — with enforcement on, any spec using it would have started failing | Added to schema (`boolean`) |
+
+All other pre-existing schema keys verified as honored: `submitWithCategories`, `enableDois`,
+`doiPrefix`, `doiVersioning`, `registrationAgency`, `onlineIssn`, `printIssn`,
+`enablePublicComments`, `publishingMode` (scalar whitelist), `enabledDoiTypes` (array whitelist),
+`copyrightNotice` (multilingual whitelist), `plugins{}` (plugin settings block), and the
+core/name/locale/contact keys. `sections` / `categories` / `users` / `issues` are handled by
+SectionProcessor / CategoryProcessor / UserAssignmentProcessor / OJS `afterContextCreated` —
+unchanged.
+
+#### New seedable settings (bootstrap-enrichment support)
+
+Each name verified against the live settings form + the context entity schema
+(`lib/pkp/schemas/context.json`, OJS `schemas/context.json`). All flow through
+`Context::setAllData()` → `PKPContextService::add()`, i.e. the same persistence path as the
+settings forms' PUT handlers. Final supported set added to both the whitelist
+(`ContextBuilderProcessor.php`) and the scenario schema:
+
+| Key | Type / values | Source of truth |
+|---|---|---|
+| `enableAnnouncements` | bool | `PKPAnnouncementSettingsForm.php:42` |
+| `keywords` | `0` \| `'0'` \| `'enable'` \| `'request'` \| `'require'` (entity default `'request'`) | `PKPMetadataSettingsForm.php:67`; `Context::METADATA_*` (`Context.php:31-37`: DISABLE=0, ENABLE='enable', REQUEST='request', REQUIRE='require') |
+| `citations` | same values (entity default `'request'`) | `PKPMetadataSettingsForm.php:181` |
+| `reviewerSuggestionEnabled` | bool | `PKPReviewSetupForm.php:202`; OJS `schemas/context.json:380` |
+| `defaultReviewMode` | int 1 \| 2 \| 3 (anonymous / double-anonymous / open; entity default 2) | `PKPReviewSetupForm.php:67`; `ReviewAssignment::SUBMISSION_REVIEW_METHOD_*` |
+| `numWeeksPerResponse` | int ≥ 0 (entity default 4) | `PKPReviewSetupForm.php:107` |
+| `numWeeksPerReview` | int ≥ 0 (entity default 4) | `PKPReviewSetupForm.php:114` |
+| `numDaysBeforeReviewResponseReminderDue` | int 0–14 (UI slider bounds) | `PKPReviewSetupForm.php:146` |
+| `numDaysAfterReviewResponseReminderDue` | int 0–14 | `PKPReviewSetupForm.php:156` |
+| `numDaysBeforeReviewSubmitReminderDue` | int 0–14 | `PKPReviewSetupForm.php:166` |
+| `numDaysAfterReviewSubmitReminderDue` | int 0–14 | `PKPReviewSetupForm.php:176` |
+| `doiCreationTime` | `'copyEditCreationTime'` \| `'publicationCreationTime'` \| `'neverCreationTime'` | `PKPDoiSetupSettingsForm.php:102` (`Context::SETTING_DOI_CREATION_TIME`); `Repo::doi()::CREATION_TIME_*` |
+
+Note the scheduled-tasks plan's earlier naming (`numDaysBefore/AfterReviewResponse|SubmitReminderDue`)
+is confirmed correct — those four are exactly what `PKPReviewSetupForm` saves.
+
+**Automatic DOI assignment on publish**: requires `enableDois: true`, a `doiPrefix`,
+`enabledDoiTypes` including `'publication'` (OJS entity-schema default), and `doiCreationTime`
+of `'copyEditCreationTime'` (entity default) or `'publicationCreationTime'`;
+`'neverCreationTime'` = manual-only. All four knobs are now whitelisted + in the scenario schema.
+
+Also new in the schema: `reviewForms[]` (handled by the new ReviewFormProcessor — see
+reviewforms.md) and the `$defs/localizedString` helper it uses.
+
+**Verified** (2026-06-11, live test server): a spec setting all 12 settings produced the expected
+`journal_settings` rows (`keywords='require'`, `citations='request'`, `defaultReviewMode=3`,
+`doiCreationTime='publicationCreationTime'`, all four reminder values, `enableAnnouncements=1`,
+`reviewerSuggestionEnabled=1`, week values 2/6); `keywords: 0` persists as `'0'` (disabled), the
+same representation the settings form produces.
+
+**Verdict**: ✅ whitelist and scenario schema are in 1:1 sync (delegated keys excepted, listed above)
+
+### Audit fragment — ReviewFormProcessor (context `reviewForms[]`)
+
+For merge into `docs/scenario-processor-audit.md` §1.
+
+##### ReviewFormProcessor
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/ReviewFormProcessor.php` (new)
+**Domain**: `review_forms`, `review_form_settings`, `review_form_elements`, `review_form_element_settings`
+**Current implementation summary**: For each `reviewForms[]` item on a context scenario spec, creates one review form (+ its elements in spec order) on the scratch context and activates it. Returns `{id, title, elementIds}` per form in the endpoint response.
+
+**Canonical UI entry point**:
+- Form / page: Settings > Workflow > Review > Review Forms grid (create form → add elements → activate)
+- Controller methods:
+  - `ReviewFormForm::execute()` (`lib/pkp/controllers/grid/settings/reviewForms/form/ReviewFormForm.php:89`)
+  - `ReviewFormElementForm::execute()` (`lib/pkp/controllers/grid/settings/reviewForms/form/ReviewFormElementForm.php:127`)
+  - `ReviewFormGridHandler::activateReviewForm()` (`lib/pkp/controllers/grid/settings/reviewForms/ReviewFormGridHandler.php:423`)
+
+**What the production path does** (trace from the controllers):
+- New form: `ReviewFormDAO::newDataObject()`; `assocType = Application::getContextAssocType()`, `assocId = contextId`, `active = 0`, `seq = REALLY_BIG_NUMBER`; localized title/description; `insertObject()`; `resequenceReviewForms(assocType, contextId)`. Trivial (toast) notification for the acting manager.
+- New element: `ReviewFormElementDAO::newDataObject()`; `reviewFormId`, `seq = REALLY_BIG_NUMBER`; localized question (+description), `required` 0/1, `included` 0/1 (UI initData defaults included=1), int `elementType`; `possibleResponses` per-locale string arrays via `ListbuilderHandler::unpack` only for the multiple-response types (checkboxes/radiobuttons/dropdown), `null` otherwise; `insertObject()`; `resequenceReviewFormElements(reviewFormId)`. Trivial notification.
+- Activate: re-fetch via `getById(reviewFormId, assocType, contextId)`, `setActive(1)`, `updateObject()`. Trivial notification. CSRF check (UI-transport concern).
+
+**What the Processor does**:
+- Identical DAO sequence for form + elements, including `REALLY_BIG_NUMBER` insert-then-resequence, `included` defaulting to 1 (`includedInReview` spec key), and per-locale `possibleResponses` arrays in spec order (same `updateDataObjectSettings` path ⇒ identical `setting_type='object'` JSON rows).
+- Activation re-fetches the form by ID before `setActive(1) + updateObject()` — same as the grid action. (First implementation reused the in-memory object and wrote the stale `REALLY_BIG_NUMBER` seq back; caught in smoke test, fixed.)
+- Element `type` accepts the UI's locale-key names (`smalltextfield`, `textfield`, `textarea`, `checkboxes`, `radiobuttons`, `dropdown`/`dropdownbox`) and maps to `ReviewFormElement::REVIEW_FORM_ELEMENT_TYPE_*`.
+- Choice types without `options[]` throw (the UI cannot produce such an element either — the listbuilder always submits rows).
+- Registered in `PKPContextScenarioController::context()` directly after the sections block; results merged into the response as `reviewForms` so tests can select a seeded form without scraping the settings grid.
+
+**Discrepancies**:
+| # | Gap | Severity | Recommended fix |
+|---|---|---|---|
+| 1 | Trivial (toast) notifications for the acting manager are not created | ✅ intentional deviation | None — session-scoped UI feedback, consistent with the other scenario processors |
+| 2 | Element-level `description` not exposed in the spec | ✅ scope choice | Schema kept minimal per PRINCIPLES.md §3; extend if a plan row needs it |
+| 3 | Forms are always activated; no `active:false` option | ✅ scope choice | All current plan rows need selectable forms; drive the deactivate UI in-test if needed |
+
+**Verification** (2026-06-11, local postgres `ojs_test`): seeded 3 forms / 5 elements through the endpoint; `review_forms` rows have `assoc_type=256`, correct `assoc_id`, `seq` 1..3, `is_active=1`; element rows `seq` 1..n per form, correct `element_type/required/included`; `possibleResponses` stored as `setting_type='object'` JSON identical to UI output (same DAO code path).
+
+**Verdict**: ✅ parity (2 documented scope choices, 1 intentional deviation)
+
+### Audit fragment — ReviewRoundProcessor (`reviewRounds[].reviewers[].reviewForm`)
+
+For merge into `docs/scenario-processor-audit.md` §1.
+
+##### ReviewRoundProcessor — review form on assignment
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/ReviewRoundProcessor.php` (createParams wiring :136-143, `resolveReviewFormId` :441)
+**Domain**: `review_assignments.review_form_id`
+**Current implementation summary**: A reviewer spec may name a review form by title (string). At assignment time the title is resolved against the journal's *active* review forms and the resulting ID is set as `reviewFormId` in the assignment's createParams. Unknown titles fail with a message listing the active forms.
+
+**Canonical UI entry point**:
+- Form / page: workflow → review round → "Add Reviewer" form, "Review Form" dropdown
+- Controller method: `ReviewerForm` (`lib/pkp/controllers/grid/users/reviewer/form/ReviewerForm.php`)
+
+**What the production path does**:
+- The dropdown is populated from `ReviewFormDAO::getActiveByAssocId(Application::getContextAssocType(), $context->getId())` (`ReviewerForm::fetch()`, :258-264) — inactive forms are not selectable.
+- On save, `EditorAction::addReviewer()` creates the assignment, then the form re-validates the posted ID via `getById($reviewFormId, contextAssocType, contextId)` and stamps it with `Repo::reviewAssignment()->edit($assignment, ['dateNotified' => now, 'reviewFormId' => $reviewForm ? $reviewFormId : null, 'considered' => REVIEW_ASSIGNMENT_NEW])` (`ReviewerForm::execute()`, :366-377).
+
+**What the Processor does**:
+- `resolveReviewFormId()` iterates the same `getActiveByAssocId(contextAssocType, contextId)` set and matches the spec string against every locale of each form's `title` (exact match). The matched ID is placed in `createParams['reviewFormId']` so the single `Repo::reviewAssignment()->add()` insert lands the same row state production reaches via add-then-edit.
+- No active form with the title → `RuntimeException` listing the active forms' titles (raw locale maps, so the message doesn't depend on a request context).
+- Context-side `reviewForms[]` seeding is a separate capability (ReviewFormProcessor, see `reviewforms.md`); this lookup only reads existing forms.
+
+**Discrepancies**:
+| # | Gap | Severity | Recommended fix |
+|---|---|---|---|
+| 1 | Production sets `reviewFormId` in a post-add `edit()` (alongside `dateNotified` + `considered`); the Processor sets it at insert | ✅ same final row | The Processor already writes `dateNotified` at creation; `considered` keeps its column default, same as production's REVIEW_ASSIGNMENT_NEW. No observable difference in the row tests read. |
+| 2 | Lookup is by title instead of ID | ✅ by design | Spec ergonomics — titles are the natural key tests know. Ambiguity (two active forms sharing a title) resolves to the first match; production UI would present both identically labeled options, so this mirrors the operator's ambiguity. |
+| 3 | Inactive forms are not matched | ✅ matches | Same constraint as the dropdown. The error message distinguishes "no active forms" from "title not found". |
+
+**Verification** (2026-06-11, local postgres `ojs_test`, scratch journal 151 with 3 seeded active forms): CLI harness drove `ReviewRoundProcessor::run()` against a real round; `reviewForm: "Quality assessment"` → assignment row stored `review_form_id = 3`; unknown title → `RuntimeException: No active review form titled 'No Such Form' in context 151. Active review forms: Quality assessment | Second form | Third form`. (End-to-end via the decisions pipeline was blocked by an unrelated environmental schema drift — `edit_decisions.publication_id` NOT NULL not yet populated by DecisionProcessor; flagged separately.)
+
+**Verdict**: ✅ parity (insert-vs-edit timing note documented; same final row)
+
+### Audit fragment — PublicationsProcessor (`publications[].galleys[]`)
+
+For merge into `docs/scenario-processor-audit.md` §1.
+
+##### PublicationsProcessor — galley seeding
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/PublicationsProcessor.php` (`seedGalleys` :182, `attachGalleyFile` :240, `resolveGalleyFixturePath` :278)
+**Domain**: `publication_galleys`, `submission_files`, `files`, `event_log` (file-upload rows)
+**Current implementation summary**: For each `galleys[]` item on a `publications[]` entry — `{label, locale?, file?, urlRemote?}` — creates the galley row and, unless it's a remote galley, attaches a PROOF-stage SubmissionFile from a bundled fixture (`default-article.pdf` by default, or any named file under `lib/pkp/playwright/fixtures/files/`). Runs before `publish()` so DOI minting / publish events see galleys exactly as production does. Galley fragments (`{id, label, locale, submissionFileId, urlRemote}`) are returned in the scenario response under each publication.
+
+**Canonical UI entry point**:
+- Form / page: Production stage → Galleys grid → "Add galley", then "Upload file" wizard
+- Controller methods:
+  - `ArticleGalleyForm::execute()` (`controllers/grid/articleGalleys/form/ArticleGalleyForm.php:171-193`) — galley row
+  - `SubmissionFilesUploadForm::execute()` (`lib/pkp/controllers/wizard/fileUpload/form/SubmissionFilesUploadForm.php:183-238`) — file attach
+  - `APP\submissionFile\Repository::add()` (`classes/submissionFile/Repository.php:40-58`) — galley↔file wiring
+
+**What the production path does**:
+- Galley row: `Repo::galley()->add(Repo::galley()->newDataObject(['publicationId', 'label', 'locale', 'urlPath' => null, 'urlRemote' => null|value]))`. No `seq` assignment by the form (column default applies).
+- File attach (file galleys): copy upload into `Repo::submissionFile()->getSubmissionDir()` via `app()->get('file')->add()`; new SubmissionFile with `fileStage` (PROOF for the galley grid), `name` keyed by **submission** locale, `submissionId`, `uploaderUserId` (the acting editor), `assocType = ASSOC_TYPE_REPRESENTATION`, `assocId = galleyId`, `genreId` (picked in the wizard; Article Text by default); `Repo::submissionFile()->add()`.
+- `Repo::submissionFile()->add()` fires `SubmissionFile::add` hook, writes SUBMISSION_LOG_FILE_UPLOAD + SUBMISSION_LOG_FILE_REVISION_UPLOAD event-log rows, and — OJS-side — sets `galley.submissionFileId` when `assocType === ASSOC_TYPE_REPRESENTATION`.
+
+**What the Processor does**:
+- Identical `Repo::galley()->add(newDataObject(...))` call with the same field set; `locale` defaults to the submission locale (the form requires an explicit locale; the spec default matches the common case).
+- Identical SubmissionFile field set and the same `Repo::submissionFile()->add()` call, so the hook, both event-log rows, and the `galley.submissionFileId` wiring all run via the production code path.
+- Remote galleys write `urlRemote` and skip the file — exactly the form's remote-galley shape.
+- Setting both `file` and `urlRemote` throws (`PublicationsProcessor.php:190`); a missing fixture throws with the resolved path. Fixture names are reduced to `basename()` so specs can't traverse outside the fixtures dir.
+
+**Discrepancies**:
+| # | Gap | Severity | Recommended fix |
+|---|---|---|---|
+| 1 | `uploaderUserId` is attributed to `admin` instead of a journal-specific editor | ✅ intentional deviation | Processor runs out-of-session; same attribution convention as ReviewRoundProcessor's event-log rows. Extend the spec with an `uploader` key if a test ever asserts the uploader name. |
+| 2 | Genre is always Article Text (`GenreLookup 'ARTICLE'`); the wizard lets the user pick any genre | ✅ scope choice | Matches the wizard default and every current plan row; extend `galleys[].genre` if needed. |
+| 3 | `urlPath` not exposed in the spec | ✅ scope choice | Schema kept minimal; production form treats it as optional-null, which is what the Processor writes. |
+| 4 | No trivial (toast) notification for the acting user | ✅ intentional deviation | Session-scoped UI feedback, consistently skipped by all scenario processors. |
+
+**Verification** (2026-06-11, local postgres `ojs_test`, scratch journal 151): seeded one file galley + one remote galley + one named-fixture (`dummy.pdf`) galley. `publication_galleys` rows carry label/locale; file galley has `submission_file_id` wired by the OJS Repository hook; remote galley has `remote_url` and NULL file. `submission_files` row: `file_stage=10` (PROOF), `assoc_type=521` (ASSOC_TYPE_REPRESENTATION), `assoc_id=<galleyId>`, correct `genre_id`, `uploader_user_id=1`. Physical file present under `journals/151/articles/<id>/<uniqid>.pdf` in the files dir. Conflicting `file`+`urlRemote` spec rejected with a clear message.
+
+**Verdict**: ✅ parity (2 intentional deviations, 2 scope choices — all documented)
+
+### Audit fragment — PublicationsProcessor (`publications[].metadata.datePublished`)
+
+For merge into `docs/scenario-processor-audit.md` §1.
+
+##### PublicationsProcessor — datePublished passthrough
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/PublicationsProcessor.php` (`METADATA_FIELDS` :47-53; applied in `applyMetadataAndAttributes` :130)
+**Domain**: `publications.date_published`
+**Current implementation summary**: `datePublished` added to the METADATA_FIELDS passthrough so a spec's `publications[].metadata.datePublished` lands on the publication via the same `Repo::publication()->edit()` call as the other metadata. Because `applyMetadataAndAttributes()` runs before `publish()`, a predefined date now survives publish instead of being overwritten with today.
+
+**Canonical UI entry point**:
+- Form / page: Workflow → Publication → Issue tab — "Date Published" field (`classes/components/forms/publication/IssueEntryForm.php:124-128`)
+- REST endpoint: `PUT /submissions/{id}/publications/{id}` → `Repo::publication()->edit()`
+- Publish-time behavior: `APP\publication\Repository::setStatusOnPublish()` (`classes/publication/Repository.php:219-226`) — "If no predefined datePublished … use current date". A pre-set value is therefore preserved on publish, which is exactly the editor capability the spec mirrors.
+
+**What the production path does**:
+- Editor sets the date in the Issue tab form → validated by the publication schema → stored by `Repo::publication()->edit()`.
+- On publish, `setStatusOnPublish()` only stamps `Core::getCurrentDate()` when `datePublished` is empty and the status lands on STATUS_PUBLISHED.
+
+**What the Processor does**:
+- Same `Repo::publication()->edit()` call (one merged edit with the rest of the metadata), executed before `Repo::publication()->publish()`. No special-casing: the preservation on publish comes from the production `setStatusOnPublish()` logic itself, not from Processor code.
+- When the spec omits `datePublished` and publishes, behavior is unchanged: production code stamps today.
+
+**Discrepancies**:
+| # | Gap | Severity | Recommended fix |
+|---|---|---|---|
+| 1 | The Processor's `edit()` bypasses the REST controller's schema validation of the date format (`Y-m-d`) | ⚠️ test-input trust | Same trust level as every other metadata field in the passthrough (the Processor has never validated metadata). A malformed date fails at the DB layer with a clear SQL error. Document, don't fix. |
+
+**Verification** (2026-06-11, local postgres `ojs_test`): spec with `metadata.datePublished = "2024-03-15"` + `published: true` → response shows `status: 3` (PUBLISHED) and `datePublished: "2024-03-15"` (spec value preserved, not today). Spec without the key continues to get the current date stamped by `setStatusOnPublish()`.
+
+**Verdict**: ✅ parity (1 documented trust note)
+
+### Audit fragment — SubmissionBuilderProcessor (`reviewerSuggestions[]`)
+
+For merge into `docs/scenario-processor-audit.md` §1.
+
+##### SubmissionBuilderProcessor — reviewer suggestions
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/SubmissionBuilderProcessor.php` (`seedReviewerSuggestions` :213; invoked at :170 — before `submit()`, matching the wizard's order)
+**Domain**: `reviewer_suggestions`, `reviewer_suggestion_settings`
+**Current implementation summary**: For each top-level `reviewerSuggestions[]` item — `{givenName, familyName, email, affiliation?, suggestionReason?}` — writes one `ReviewerSuggestion::create()` row with `suggestingUserId` = the spec's submitter, exactly as if the author had added the suggestion in the wizard's Reviewer Suggestions panel before clicking Submit.
+
+**Canonical UI entry point**:
+- Form / page: submission wizard → `ReviewerSuggestionsListPanel` (`lib/pkp/classes/components/listPanels/ReviewerSuggestionsListPanel.php`), one POST per suggestion while the wizard is in progress
+- REST endpoint: `POST /submissions/{submissionId}/reviewers/suggestions`
+- Controller method: `ReviewerSuggestionController::add()` (`lib/pkp/api/v1/reviewers/suggestions/ReviewerSuggestionController.php:155-166`)
+
+**What the production path does**:
+- `AddReviewerSuggestion` form request (`lib/pkp/api/v1/reviewers/suggestions/formRequests/AddReviewerSuggestion.php`) merges `suggestingUserId` = current user and `submissionId` from the route (`prepareForValidation()`, :105-111); validates `givenName` / `email` / `affiliation` / `suggestionReason` required, `familyName` sometimes, email unique per submission, multilingual fields as `{locale: value}` maps.
+- `ReviewerSuggestion::create($validateds)` — Eloquent model with `ModelWithSettings`; `email`/IDs land on `reviewer_suggestions`, multilingual props (`givenName`, `familyName`, `affiliation`, `suggestionReason`) land in `reviewer_suggestion_settings`.
+- The route is gated by `SubmissionIncompletePolicy` — suggestions can only be added while the wizard is in progress, i.e. the rows exist *before* `submit()`. No notifications, no event-log rows, no mail on this path.
+
+**What the Processor does**:
+- Identical `ReviewerSuggestion::create()` call with the same key set; plain spec strings are wrapped as `[$submissionLocale => $value]`, matching a single-locale wizard entry. Runs before the `Repo::submission()->submit()` call, mirroring wizard ordering.
+- Later interaction preserved: production's `ReviewerForm::execute()` (`lib/pkp/controllers/grid/users/reviewer/form/ReviewerForm.php:407+`) looks suggestions up by reviewer email at Add Reviewer time — seeded rows are found by that query the same as wizard-created ones.
+
+**Discrepancies**:
+| # | Gap | Severity | Recommended fix |
+|---|---|---|---|
+| 1 | `affiliation` and `suggestionReason` optional in the spec, but required by production validation — an omitted value writes no settings row, a state the wizard can't produce | ⚠️ partial | Adjudicated spec shape keeps them optional for fixture brevity. Tests that render the suggestion details should provide both. Tighten the schema to `required` if a UI surface ever breaks on the missing settings. |
+| 2 | `orcidId` not exposed in the spec | ✅ scope choice | Production treats it as optional/nullable; extend when an ORCID-suggestion plan row appears. |
+| 3 | Multilingual values seeded only in the submission locale; the wizard form could post several form locales | ✅ scope choice | Single-locale is what an author typing into the panel produces in the default journal setup. |
+| 4 | No uniqueness check on email per submission (production validates) | ⚠️ test-input trust | Duplicate emails in one spec would write two rows where production rejects the second. Specs control their own input; document, don't fix. |
+
+**Verification** (2026-06-11, local postgres `ojs_test`): two suggestions seeded (one full, one minimal). `reviewer_suggestions` rows carry `suggesting_user_id` = submitter, correct `submission_id`, email; `reviewer_suggestion_settings` rows for givenName/familyName (+ affiliation/suggestionReason when provided) keyed by locale `en` — same shape `ReviewerSuggestion::create()` writes from the REST controller.
+
+**Verdict**: ✅ parity (2 documented trust/shape notes, 2 scope choices)
+
+### Audit fragment — UserCommentProcessor (`userComments[]`)
+
+For merge into `docs/scenario-processor-audit.md` §1.
+
+##### UserCommentProcessor (new)
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/UserCommentProcessor.php` (new); registered after PublicationsProcessor in `lib/pkp/api/v1/_test/PKPSubmissionScenarioController.php:124,147-149`
+**Domain**: `user_comments`, `user_comment_settings`, `notifications`
+**Current implementation summary**: For each top-level `userComments[]` item — `{user, text, approved?}` (approved defaults true) — writes one public reader comment on the scenario submission's current publication, exactly as the UserComment REST create path does, then applies the moderation flow's approval mutation when `approved` isn't false. Fails clearly when the current publication isn't published. Distinct from `commentsForEditor` (the wizard's stage-1 cover note).
+
+**Canonical UI entry point**:
+- Form / page: published article page comment form (reader-facing)
+- REST endpoints: `POST /comments` (`UserCommentController::submit`, `lib/pkp/api/v1/comments/UserCommentController.php:269-296`); approval via `PUT /comments/{id}/setApproval` (same file, :334-364)
+
+**What the production path does**:
+- `AddComment` form request (`lib/pkp/api/v1/comments/formRequests/AddComment.php`): publication must exist and be the submission's **current** publication (`after()`); `commentText` sanitized with `PKPString::stripUnsafeHtml()` in `validated()`.
+- `UserComment::query()->create(['userId', 'contextId', 'publicationId', 'commentText', 'isApproved' => false])` — comments are always born unapproved.
+- `notifyModerators()` (:485-509): one LEVEL_TASK `NOTIFICATION_TYPE_USER_COMMENT_POSTED` notification (assocType ASSOC_TYPE_COMMENT) per site admin / manager in the context. No mail on this path.
+- Moderator approval (`setApproval`): `isApproved = true`, `approvedAt = now()`, `approvedByUserId = <moderator>`, `save()`. The posted-comment task notification is *not* removed by approval.
+
+**What the Processor does**:
+- Validates the current publication is `STATUS_PUBLISHED` (UserCommentProcessor.php:58) — the reader form only exists on published article pages; clear `RuntimeException` otherwise.
+- Identical `UserComment::query()->create()` (created with `isApproved=false` first, like production) including the `stripUnsafeHtml` sanitation; identical `notifyModerators` loop; identical approval mutation applied afterward when `approved !== false`, with notifications intentionally left in place (production keeps them too).
+- Comment reports are deliberately out of scope (adjudicated constraint).
+
+**Discrepancies**:
+| # | Gap | Severity | Recommended fix |
+|---|---|---|---|
+| 1 | `approvedByUserId` attributed to `admin` rather than a journal manager | ✅ intentional deviation | Out-of-session convention shared with the other processors; admin is a legitimate moderator (route allows SITE_ADMIN). Extend the spec with an `approvedBy` key if a test asserts the moderator identity. |
+| 2 | The commenting `user` isn't required to hold any role in the journal | ✅ matches | Production only requires an authenticated user (`has.user` middleware), not a context role. |
+| 3 | Reports / `isReported` state cannot be seeded | ✅ scope choice | Adjudicated out of scope; drive the report UI in-test. |
+| 4 | Comments target the current publication implicitly (no `publicationId` in the spec) | ✅ matches | Production rejects non-current publications anyway (`AddComment::after()`), so the implicit target is the only valid one. |
+
+**Verification** (2026-06-11, local postgres `ojs_test`, scratch journal 151): seeded one approved + one pending comment on a published publication. `user_comments` rows: correct `user_id`/`context_id`/`publication_id`; `is_approved` t/f respectively; `user_comment_settings` rows `approvedAt` + `approvedByUserId` present only on the approved one. `notifications`: one row per comment — `type=16777261` (USER_COMMENT_POSTED), `assoc_type=1048592` (ASSOC_TYPE_COMMENT), `level=3` (TASK) for the context's sole moderator. Unpublished-publication spec rejected with the documented error.
+
+**Verdict**: ✅ parity (1 intentional deviation, 1 scope choice — both documented)
+
+##### N. SubscriptionProcessor (OJS-only)
+
+**File**: `classes/testing/bootstrap/Processor/SubscriptionProcessor.php`
+**Domain**: `subscription_types`, `subscription_type_settings`, `subscriptions`, `institutional_subscriptions`, `institutions`, `institution_settings`, `institution_ip`
+**Current implementation summary**: For each `subscriptions[]` item on the journal scenario — creates one subscription type (mirroring `SubscriptionTypeForm::execute()`), then one individual subscription (mirroring `IndividualSubscriptionForm::execute()` + `SubscriptionForm::execute()`) or one institution + institutional subscription (mirroring the Institutions form's `Repo::institution()->add()` plus `InstitutionalSubscriptionForm::execute()`). Hung off `JournalScenarioController::afterContextCreated()` like IssueProcessor; OJS-only, never in the shared cross-app schema.
+
+**Canonical UI entry points**:
+
+| Sub-operation | Entry point |
+|---|---|
+| Subscription type create | Payments → Subscription Types grid → `SubscriptionTypeForm::execute()` (`controllers/grid/subscriptions/SubscriptionTypeForm.php:155`) |
+| Individual subscription create | Payments → Individual Subscriptions grid → `IndividualSubscriptionForm::execute()` (`controllers/grid/subscriptions/IndividualSubscriptionForm.php:87`) on top of `SubscriptionForm::execute()` (`classes/subscription/form/SubscriptionForm.php:204`) |
+| Institution create | Settings → Institutions → `Repo::institution()->add()` (`lib/pkp/classes/institution/Repository.php:150`), IP parsing in `PKP\institution\DAO::insertIPRanges()` (`lib/pkp/classes/institution/DAO.php:207`) |
+| Institutional subscription create | Payments → Institutional Subscriptions grid → `InstitutionalSubscriptionForm::execute()` (`controllers/grid/subscriptions/InstitutionalSubscriptionForm.php:187`) |
+
+**What the production paths do**:
+- Type: `SubscriptionTypeDAO::newDataObject()`; sets institutional (0/1), journalId, localized name/description, `round(cost, 2)`, currency, duration (int months or null = non-expiring), format (1=online / 16=print / 17=printOnline), membership (0 when unchecked), disable_public_display (0), `setSequence(REALLY_BIG_NUMBER)`; `insertObject()` (writes `subscription_types` + `subscription_type_settings`); `resequenceSubscriptionTypes()`.
+- Individual: validates user exists and has no existing individual subscription for the journal (`subscriptionExistsByUserForJournal`); sets journalId, status (one of the `SUBSCRIPTION_STATUS_*` values — "expired" is NOT a status; expiry is date-derived via `Subscription::isExpired()`), userId, typeId, membership/referenceNumber/notes (null when blank); for expiring types sets dateStart (`Y-m-d`) and dateEnd normalized to end-of-day via `mktime(23,59,59,…)`; `IndividualSubscriptionDAO::insertObject()`. Optionally sends SubscriptionNotify mail when notifyEmail is checked.
+- Institutional: same base fields plus a contact user (required by the form's SubscriberSelect), institutionId (must pre-exist via Settings → Institutions), institutionMailingAddress, domain; the form requires domain OR ≥1 institution IP range for online formats; `InstitutionalSubscriptionDAO::insertObject()` writes `subscriptions` + `institutional_subscriptions`.
+
+**What the Processor does**:
+- Type: identical field-for-field path including REALLY_BIG_NUMBER + resequence; name/description localized into the journal's primary locale only; defaults: format=online, duration=12 months, cost=0, currency=USD, membership=0, public display enabled.
+- Individual: requires `user` (username); enforces the same exists + no-duplicate-subscription checks; status column always `SUBSCRIPTION_STATUS_ACTIVE` — spec `status: 'expired'` means ACTIVE status + past dateEnd (default: dateEnd=yesterday end-of-day, dateStart=dateEnd−duration), matching the row a real subscription leaves behind after lapsing. Rejects `'expired'` with a future dateEnd, and any dates on non-expiring types.
+- Institutional: creates the institution through `Repo::institution()->add()` with `ipRanges` in `_data` so `institution_ip` parsing (single IP / wildcards / dash ranges / CIDR) is the production DAO code; pre-validates ranges with the same grammar `PKP\institution\Repository::validate()` accepts. Requires ≥1 IP range (domain seeding unsupported — reach domain-based access via UI). Contact user defaults to bootstrap `admin` when `user` is omitted.
+
+**Discrepancies**:
+
+| # | Gap | Severity | Recommended fix |
+|---|---|---|---|
+| 1 | `notifyEmail` / SubscriptionNotify mailable not supported | ✅ matches by design | Form-only optional side effect; subscription-notify coverage is explicitly round-2 in the subscriptions-management plan. Seed leaves no mail, same as an unchecked checkbox. |
+| 2 | Expired subscriptions unreachable through the create form (date validators don't forbid past dates, but the grid workflow never produces them without back-dating tricks) | ⚠️ intentional divergence | This is the seeding's purpose (subscription-access row 4, approved for build). DB shape identical to a lapsed subscription: status ACTIVE, dateEnd in the past — exactly what `IndividualSubscriptionDAO::isValidIndividualSubscription()` date-range enforcement checks. |
+| 3 | Type name/description written in the journal's primary locale only; the form can post all supported locales | ✅ acceptable | Scratch journals are effectively single-locale in tests; extend to a locale-keyed object if a multilingual row ever needs it (YAGNI). |
+| 4 | Institutional `domain` and `institutionMailingAddress` always empty strings | ✅ matches by design | Plan rows only need IP-range gating; blank-form parity preserved (the grid posts `''` for untouched fields, and `isValidInstitutionalSubscription()` ignores `domain = ''`). Domain matching stays UI-tested. |
+| 5 | Institutional contact user defaults to `admin` when unspecified | ⚠️ documented | Production always records the picked SubscriberSelect user; `subscriptions.user_id` is NOT NULL so a real user is required. Tests asserting the contact column should pass `user` explicitly. |
+| 6 | Spec `status` only exposes `active`/`expired`; the form offers needsInformation/needsApproval/awaiting* states | ✅ acceptable | No plan row consumes the other states; the grids that create them remain the behavior under test (subscriptions-management rows 6–7). |
+| 7 | `publishingMode` not flipped by the seed | ✅ matches by design | Deliberate: tests pass `publishingMode` through the shared context schema so the gate configuration stays explicit in each spec. |
+
+**Verdict**: ✅ parity with the manager-grid create paths; 1 intentional divergence (#2 — the approved reason this seed exists) and 1 documented default (#5).
+
+##### N. MetricsProcessor (OJS-only)
+
+**File**: `classes/testing/bootstrap/Processor/MetricsProcessor.php`
+**Domain**: `metrics_submission`
+**Current implementation summary**: For the submission scenario's `metrics` spec key — inserts compiled abstract-view and galley-download rows for one submission directly into `metrics_submission`, the table the Stats > Articles page reads. Hung off `SubmissionScenarioController::afterSubmissionCreated()` (OJS-only wrapper around the shared `submission()` handler; lib/pkp parent untouched). Replaces the legacy Cypress `generateTestMetrics.php` shell-out (migration roadmap row #36, dropped as fragile/environment-dependent infrastructure).
+
+**Canonical production path** (no UI form — this data is produced by the usage-stats pipeline):
+- Event capture: `PKP\observers\listeners\LogUsageEvent` appends to `usage_events_YYYYMMDD.log`.
+- Nightly aggregation: `PKPUsageStatsLoader` scheduled task → temporary-table loaders → `PKPTemporaryTotalsDAO::compileSubmissionMetrics()` (`lib/pkp/classes/statistics/PKPTemporaryTotalsDAO.php:148`) inserts into `metrics_submission`:
+  - abstract views: `(load_id, context_id, submission_id, assoc_type=ASSOC_TYPE_SUBMISSION, date, metric)`
+  - galley downloads: `(load_id, context_id, submission_id, representation_id, submission_file_id, file_type, assoc_type=ASSOC_TYPE_SUBMISSION_FILE, date, metric)`
+- Read side (parity target): `/stats/publications` → `PKPStatsPublicationController` → `StatsPublicationQueryBuilder` (`classes/services/queryBuilders/StatsPublicationQueryBuilder.php`) aggregates `metrics_submission` by `assoc_type` + `date BETWEEN` — read-only parity means the page, the date-range filter and the CSV report must render the seeded numbers indistinguishably from compiled data.
+
+**What the Processor does**:
+- Spec `{views?, downloads?, months? (default 3)}`; totals split evenly across monthly buckets (1st of current month going backwards, remainder credited to the most recent month); never writes `metric = 0` rows (the compile step's `count(*)` can't produce them).
+- `load_id` per row is `usage_events_YYYYMMDD.log` of the row's date — the loader's file-naming convention.
+- Download rows reuse the current publication's first galley-with-file when one exists (real `representation_id` / `submission_file_id`, `file_type` from the file's mimetype via `PKPStatisticsHelper::getDocumentType()`); otherwise IDs stay null with `file_type` = PDF.
+- Two separate batched inserts (abstract vs file rows), mirroring the two `insertUsing()` calls in `compileSubmissionMetrics()`.
+- Echoes the inserted rows (`date`, `assocType`, `metric`) into the scenario response so tests derive date-range filters without re-implementing the bucket layout.
+
+**Discrepancies**:
+
+| # | Gap | Severity | Recommended fix |
+|---|---|---|---|
+| 1 | Numbers are synthetic — no usage-event log, no temporary-table lifecycle, no double-click filtering ran | ⚠️ intentional, scoped | The metrics are synthetic-but-shaped-correctly; the log-processing/compilation pipeline itself is explicitly round-2 per the usage-statistics plan and inventory. Round 1 only tests the read side (date filter, CSV — plan rows 4–5). |
+| 2 | Compile step does delete-by-`load_id`/date before insert (idempotent log re-processing); Processor inserts additively | ✅ intentional | The delete is an idempotency mechanism for re-running the loader, not part of the data shape; replicating it would wipe rows seeded by parallel tests sharing a date. |
+| 3 | Sibling compiled tables not written: `metrics_counter_submission_daily`/`_monthly` (COUNTER R5/SUSHI), `metrics_submission_geo_*` (geo), `metrics_issue`, `metrics_context` | ⚠️ scoped | The Stats > Articles page reads only `metrics_submission`. SUSHI/COUNTER and geo correctness are round-2 per plan; extend with parallel writers if those rows are ever pulled forward. |
+| 4 | When the scenario submission has no galley, download rows carry null `representation_id`/`submission_file_id` and a default PDF `file_type`; the pipeline only emits download rows for real files | ⚠️ documented | The stats page aggregates by `assoc_type` only, so totals render identically. Tests needing galley-level drill-down should add a real galley (production-stage POM) before seeding; the Processor then uses its real IDs. |
+| 5 | Rows are written regardless of publication status; the pipeline only logs events on public pages (i.e. published submissions) | ✅ acceptable | Consuming rows use the `submission-published` fixture; the detail table resolves titles from published submissions, so unpublished seeding is a test-authoring error surfaced by an empty table, not silent corruption. |
+
+**Verdict**: ✅ read-side parity for the Stats > Articles page (row shape, load_id naming, table choice identical to `compileSubmissionMetrics()`); the generation pipeline is intentionally out of scope for round 1 (#1–#3).
+
+### Audit fragment — "decision publication_id" drift (DB drift, not Processor drift)
+
+For merge into `docs/scenario-processor-audit.md`.
+
+**Symptom**: every decisions-bearing scenario POST 500'd with Postgres
+`null value in column "publication_id" of relation "edit_decisions" violates not-null constraint`.
+
+**Root cause — the drift is the test DATABASE, not the Processors.** The reported diagnosis
+("core added NOT NULL `edit_decisions.publication_id` + `ReviewRoundDAO::build()` gained a
+`publicationId` param; DecisionProcessor must populate it") matches an **intermediate** core
+state, not current core. Timeline in lib/pkp history (both commits are ancestors of the
+`e2e_revamp` HEAD):
+
+- `ebc3e4bf12` (pkp/pkp-lib#12049) added NOT NULL `publication_id` to **both**
+  `edit_decisions` and `review_rounds`, and gave `ReviewRoundDAO::build()` its
+  `int $publicationId` param.
+- `d3b0194d5a` (pkp/pkp-lib#12800, 2026-06-05) then **removed `edit_decisions.publication_id`
+  entirely** (column, FK, index, the `publicationId` schema property and DAO column mapping)
+  and made `review_rounds.publication_id` **nullable** (`?int` in `build()`). The #12049
+  upgrade migration was deleted outright (3.6 unreleased — install-time only), so a DB
+  installed at the #12049 state has **no upgrade path**; fresh installs simply never have the
+  column.
+
+The local `ojs_test` DB had been installed under the #12049-era schema. Current production
+code (post-#12800) inserts decisions **without** `publication_id`
+(`insert into "edit_decisions" ("date_decided","decision","editor_id","stage_id","submission_id") …`
+— reproduced live), so *any* decision recorded against that stale DB violates the leftover
+NOT NULL — a real editor recording a decision through the UI would 500 identically. Note the
+misdiagnosed fix is not even implementable: current core has no `publicationId` schema
+property, no DAO column mapping (`lib/pkp/classes/decision/DAO.php:46`), and an empty
+`settingsTable`, so no production API can write that column.
+
+**Processor parity check (no code change needed)** — verified DecisionProcessor and
+ReviewRoundProcessor already ride the exact production path:
+
+- Decisions: `Repo::decision()->add()` (`lib/pkp/classes/decision/Repository.php:212`) —
+  same call the decision form/API makes; insert columns come from
+  `lib/pkp/classes/decision/DAO.php:46` (no `publicationId` since #12800).
+- Round creation: neither Processor calls `ReviewRoundDAO::build()`
+  (`lib/pkp/classes/submission/reviewRound/ReviewRoundDAO.php:39`,
+  signature `(int $submissionId, ?int $publicationId, int $stageId, int $round, ?int $status)`)
+  directly. Rounds are created by the decision cascade, exactly as in production:
+  `DecisionType::runAdditionalActions` → `createReviewRound()`
+  (`lib/pkp/classes/decision/DecisionType.php:511`, `build()` call at `:518`), which sources
+  the publication id from `getLatestUnPublishedPublicationId()`
+  (`lib/pkp/classes/decision/DecisionType.php:556`); round-2+ via
+  `lib/pkp/classes/decision/types/NewExternalReviewRound.php:115`.
+- Swept the rest of `lib/pkp/classes/testing/` (scenario + bootstrap Processors, OJS
+  `classes/testing/`): no other use of decision or review-round write APIs — no other
+  callers of the drifted signatures exist.
+
+**Fix applied** — aligned `ojs_test` with the current fresh-install schema (what
+`tools/installTest.php` produces today):
+
+```sql
+ALTER TABLE edit_decisions DROP COLUMN publication_id;   -- matches lib/pkp/classes/migration/install/SubmissionsMigration.php:196-216
+ALTER TABLE review_rounds ALTER COLUMN publication_id DROP NOT NULL;  -- matches lib/pkp/classes/migration/install/ReviewsMigration.php:37
+```
+
+The existing FK + index on `review_rounds.publication_id` already match
+`classes/migration/install/OJSMigration.php:278-281` and were kept. A full
+`npm run test:e2e:reset` would heal this too (and is the right call for anyone hitting this
+on another machine); the surgical ALTERs were chosen to preserve seeded state mid-flight for
+the parallel workstreams. The bootstrap (`lib/pkp/playwright/tests/bootstrap.setup.js`) only
+installs when OJS isn't installed — it cannot self-heal schema drift, so **any test DB
+installed before 2026-06-05 needs the reset/ALTERs above**.
+
+**Verified** (2026-06-11, live server `APPLICATION_ENV=test php -S 127.0.0.1:8001` + psql):
+
+- Pre-fix: decisions-bearing spec reproduced the exact 500.
+- Post-fix: spec with `decisions: [{type:'sendExternalReview', by:'dbarnes'}]` + 1 reviewer →
+  200; `edit_decisions` row written (current schema has no `publication_id`);
+  `review_rounds.publication_id` = the submission's latest **unpublished** publication
+  (= `submissions.current_publication_id` for the seeded state), non-null as required.
+- Multi-round chain `sendExternalReview → requestRevisions → newExternalRound` → 200; both
+  rounds carry the correct non-null `publication_id` (covers both production round-creating
+  paths: `DecisionType` stage-advance and `NewExternalReviewRound`).
+- Probe submissions removed afterwards via `tools/deleteSubmissions.php`.

@@ -22,6 +22,18 @@ Optional top-level fields beyond the obvious ones:
 - **`submitted: boolean`** — defaults true when the scenario has decisions or reviewRounds. Calls `Repo::submission()->submit()`, matching the wizard's final step.
 - **`commentsForEditor: string`** — sets `commentsForTheEditors` on the submission. Combined with `submitted: true`, fires `SubmissionSubmitted` which creates the Stage 1 discussion automatically.
 - **`author: {orcid, orcidIsVerified}`** — narrow passthrough that bypasses the REST orcid validator, useful for tests that need a pre-verified ORCID without the OAuth flow.
+- **`reviewerSuggestions: [{givenName, familyName, email, affiliation?, suggestionReason?}]`** — seeds the wizard's reviewer suggestions as if the author entered them (strings, not locale maps; wrapped under the spec `locale`).
+- **`userComments: [{user, text, approved?}]`** — public reader comments on the current publication (`approved` defaults true; requires the publication to be published). Mirrors the UserComment REST create + moderation-approve path.
+- **`metrics: {views?, downloads?, months?}`** — OJS-only; writes compiled `metrics_submission` rows spread backwards from the current month so Stats pages render non-zero data. Synthetic-but-shaped-correctly; the log→compile pipeline stays untested.
+
+Per-publication (inside `publications[]`):
+
+- **`galleys: [{label, locale?, file?, urlRemote?}]`** — seeds galleys at galley-grid parity (`file` is a basename under `lib/pkp/playwright/fixtures/files/`, defaults to the standard Article Text PDF; `urlRemote` makes a remote galley; the two are mutually exclusive). Response echoes `galleys: [{id, label, ...}]`.
+- **`metadata.datePublished`** — survives `published: true` (mirrors the editor's ability to set the publication date); without it, publish stamps today.
+
+Per-reviewer (inside `reviewRounds[].reviewers[]`):
+
+- **`reviewForm: "<title>"`** — attaches an existing *active* review form by exact title match, as the Add Reviewer form does. Seed the form first via the context scenario's `reviewForms[]`.
 
 Per-decision optional fields:
 
@@ -39,11 +51,19 @@ Required: `tag`. Almost every other field is optional and seeds the correspondin
 
 Notable passthroughs accumulated across feature ports:
 
-- `copyrightNotice`, `enablePublicComments`, `submitWithCategories`, `publishingMode`
-- DOI: `enableDois`, `doiPrefix`, `doiVersioning`, `enabledDoiTypes`, `registrationAgency`
+- `copyrightNotice`, `enablePublicComments`, `submitWithCategories`, `publishingMode`, `enableAnnouncements`
+- DOI: `enableDois`, `doiPrefix`, `doiVersioning`, `enabledDoiTypes`, `registrationAgency`, `doiCreationTime` (`'publicationCreationTime'` = auto-assign on publish)
+- Submission metadata modes: `keywords`, `citations` (`0` | `'enable'` | `'request'` | `'require'`)
+- Review setup: `defaultReviewMode` (1 anonymous / 2 double-anonymous / 3 open), `reviewerSuggestionEnabled`, `numWeeksPerResponse`, `numWeeksPerReview`, `numDaysBefore/AfterReviewResponseReminderDue`, `numDaysBefore/AfterReviewSubmitReminderDue`
 - ISSNs: `onlineIssn`, `printIssn`
-- `plugins: {pluginName: {enabled: true, settings: {...}}}` — generic plugin-config seeding.
+- `plugins: {pluginName: {enabled: true, settings: {...}}}` — generic plugin-config seeding. Keys are `LazyLoadPlugin::getName()`, i.e. the lowercased class name (`citationstylelanguageplugin`, not `citationStyleLanguage`).
+- `reviewForms: [{title, description?, elements: [{type, question, required?, options?}]}]` — seeds active review forms at grid parity. Response echoes `reviewForms: [{id, title, elementIds}]`.
 - `issues: [...]` — OJS-only via `JournalScenarioController::afterContextCreated()`. Each issue accepts `accessStatus` (e.g., subscription-required), volume/number/year, etc.
+- `subscriptions: [...]` — OJS-only. `{type: {name, duration?, cost?, institutional?}, user?, institution?: {name, ipRanges}, status?: 'active'|'expired', dateStart?, dateEnd?}`. `'expired'` seeds an ACTIVE-status row with a past `date_end` — the lapsed state unreachable through the create form.
+
+**Schema validation is enforced** (Opis, dev dependency): a spec with unknown keys gets a 400 naming the offending key. App-specific keys (`issues`, `subscriptions`, `metrics`) are declared via `schemaOverlayProperties()` overrides in the OJS controllers.
+
+The baseline `publicknowledge` journal is seeded with enriched defaults (see `playwright/fixtures/bootstrap.js` and the inventory's "Bootstrap enrichment decisions"): announcements, public comments, categories-in-wizard, keywords/citations on request, reviewer suggestions, DOIs auto-assigned on publish, CSL plugin, double-anonymous review with deadlines + reminder thresholds. Tests needing any of these OFF use a scratch journal.
 
 ## Available fixtures
 
@@ -69,16 +89,18 @@ Fixture functions throw if `tag` is missing — every override callsite needs on
 
 Methods:
 
-- **`clearAll()`** — DELETE /api/v1/messages. Call at the start of any spec that asserts on freshly-arrived mail.
+- **`find({to, contains, subject?, timeoutMs?, poll?})`** — THE canonical assertion: polls Mailpit search scoped by recipient + a unique content marker; throws on unscoped use. Use this, not inbox-wide reads.
+- **`expectNone({to, contains, afterControl: {to, contains}})`** — negative assertion done right: waits for the control message to arrive (bounding the wait), then asserts zero matches for the target.
 - **`inboxFor(email, {timeout?, poll?})`** — polls until at least one message addressed to `email` arrives; throws on timeout.
 - **`latestTo(email)`** — convenience for `inboxFor(...)[0]`.
 - **`messageCount()`** — total messages, any recipient. Useful for asserting `Mail::fake()` actually suppressed every seeding email.
 - **`fullMessage(id)`** — full body (HTML, Text, Headers).
 - **`extractLink(html, linkText)`** — regex out the first `<a href>` whose visible text matches; for click-the-link flows.
+- **`clearAll()`** — DELETE /api/v1/messages. **Permitted ONLY in the serial test-infrastructure spec** (charter principle 8); everywhere else scope with `find`/`expectNone` and throwaway recipient users.
 
 Conventions:
 
-- **Don't auto-clear in `beforeEach`.** Mailpit is shared across parallel tests; a global wipe will yank mail belonging to a sibling. Each test that needs a clean inbox calls `clearAll()` itself.
+- **Never wipe the shared inbox from a parallel spec.** Mailpit is shared across parallel workers; scope every assertion by recipient + the test's unique tag, and use throwaway recipients when counting or asserting absence (charter principles 7–8).
 - **`Mail::fake()` in scenario controllers stays.** Seeding-side emails are discarded inside the scenario request. Only test-action mail (decisions submitted via UI, password resets, invitations) reaches Mailpit.
 
 Local: `brew services start mailpit`. CI install scripted separately. Default URL `http://127.0.0.1:8025`; override via `MAILPIT_URL` env var.

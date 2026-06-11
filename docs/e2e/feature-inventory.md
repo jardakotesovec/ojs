@@ -166,8 +166,25 @@ test churn gets reverted to scratch-journal-only.
 
 ## Wave 1 — infrastructure work items (adjudicated by adversarial review)
 
-Do these before/alongside the first implementation wave. Every Processor change requires a
-parity-audit entry in `docs/scenario-processor-audit.md` (charter principle 2).
+**Status: DONE (2026-06-11).** All eight endpoint builds and the harness/schema fixes landed
+with parity-audit entries (`docs/scenario-processor-audit.md` §4); bootstrap enrichment
+applied to `publicknowledge` (which resolved the scheduled-task reminder-threshold
+conditional — the context passthrough stays unbuilt); full suite green under CI retry
+semantics: 141 passed in ~6 min, within the 20-minute budget. New seed capabilities are
+documented in the `ojs-playwright-tests` skill (scenarios.md).
+
+**Follow-ups surfaced during the wave (unscheduled):**
+- Stale gitignored build artifacts (`styles/build.css`, `js/build.js`) silently re-enable
+  UI animations and caused 3 false test failures — add a bootstrap-time guard asserting the
+  served CSS contains a `prefers-reduced-motion` block, or rebuild assets whenever the
+  ui-library submodule pointer moves.
+- Rotating parallel-load flake tail: ~1–2 random specs per local full run time out on
+  dialogs/API calls and pass on retry (`retries: isCI ? 1 : 0`). Pre-existing; likely PHP
+  server saturation. Investigate together with the audit-§3 wizard-comments flake (now
+  confirmed environment-independent; DB-state accumulation is the strongest lead).
+
+Original adjudication follows. Every Processor change requires a parity-audit entry in
+`docs/scenario-processor-audit.md` (charter principle 2).
 
 **Approved scenario-endpoint builds:**
 1. `publications[].galleys[]` in PublicationsProcessor (`Repo::galley()->add()` + PROOF-stage

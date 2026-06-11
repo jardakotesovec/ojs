@@ -483,8 +483,15 @@ exports.EditorialWorkflowPage = class EditorialWorkflowPage extends BasePage {
 		});
 		await uploadDialog.locator('button#continueButton').click();
 
-		// 4. Step 2 — Review Details (name pre-filled from filename).
-		await expect(uploadDialog.getByText(/Name the file/i)).toBeVisible({
+		// 4. Step 2 — Review Details (name pre-filled from filename). The
+		//    metadata form renders one "Name the file" label per supported
+		//    form locale (visible en label + fr_CA screen-reader span on
+		//    multilingual journals), so a bare getByText(/Name the file/)
+		//    is not strict-mode-safe. Anchor on the primary-locale (en)
+		//    control's label instead.
+		await expect(
+			uploadDialog.locator('label[for$="-name-control-en"]'),
+		).toBeVisible({
 			timeout: 10_000,
 		});
 		await uploadDialog.locator('button#continueButton').click();

@@ -109,7 +109,11 @@ async function fillIssueForm(page, {volume, number, year}) {
 	await form.locator('input[name="volume"]').fill(String(volume));
 	await form.locator('input[name="number"]').fill(String(number));
 	await form.locator('input[name="year"]').fill(String(year));
-	await form.locator('input#showTitle').uncheck({force: true});
+	// No {force: true} here: force bypasses Playwright's stability wait,
+	// and a force-click during the side-modal's open transition can land
+	// on stale coordinates and miss the checkbox ("did not change state").
+	// Plain uncheck() auto-waits for the element to stop moving.
+	await form.locator('input#showTitle').uncheck();
 	await form.locator('button[id^="submitFormButton"]').click();
 	await expect(form).toHaveCount(0, {timeout: 15_000});
 	// AjaxFormHandler chains close + grid refresh; the next step (often
@@ -176,11 +180,13 @@ async function publishFirstFutureIssue(page, {sendNotification = true} = {}) {
 		.click();
 	const publishForm = page.locator('form#assignPublicIdentifierForm');
 	await expect(publishForm).toBeVisible();
+	// Same rationale as fillIssueForm's showTitle: no {force: true} —
+	// it bypasses the stability wait and can click mid-transition.
 	const checkbox = publishForm.locator('input#sendIssueNotification');
 	if (sendNotification) {
-		await checkbox.check({force: true});
+		await checkbox.check();
 	} else {
-		await checkbox.uncheck({force: true});
+		await checkbox.uncheck();
 	}
 	await publishForm.locator('button[id^="submitFormButton"]').click();
 	await expect(publishForm).toHaveCount(0, {timeout: 15_000});

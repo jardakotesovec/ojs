@@ -61,6 +61,32 @@ module.exports = {
 	onlineIssn: '0378-5955',
 	printIssn: '0378-5955',
 
+	// Bootstrap enrichment (docs/e2e/feature-inventory.md → "Bootstrap
+	// enrichment decisions"): representative defaults most real journals
+	// run with, so tests exercise typical configuration. Tests needing
+	// the OFF state of any of these use a scratch journal.
+	enableAnnouncements: true,
+	enablePublicComments: true,
+	submitWithCategories: true,
+	keywords: 'request',
+	citations: 'request',
+	reviewerSuggestionEnabled: true,
+	enableDois: true,
+	doiPrefix: '10.1234',
+	enabledDoiTypes: ['publication'],
+	doiCreationTime: 'publicationCreationTime',
+	defaultReviewMode: 2, // SUBMISSION_REVIEW_METHOD_DOUBLEANONYMOUS
+	numWeeksPerResponse: 4,
+	numWeeksPerReview: 4,
+	numDaysBeforeReviewResponseReminderDue: 2,
+	numDaysAfterReviewResponseReminderDue: 2,
+	numDaysBeforeReviewSubmitReminderDue: 2,
+	numDaysAfterReviewSubmitReminderDue: 2,
+	plugins: {
+		// Keys are LazyLoadPlugin::getName() — the lowercased class name.
+		citationstylelanguageplugin: {enabled: true},
+	},
+
 	sections: [
 		{
 			abbrev: {en: 'ART'},
