@@ -257,6 +257,106 @@ exports.EditorialWorkflowPage = class EditorialWorkflowPage extends BasePage {
 	}
 
 	/**
+	 * Replace the Composer email subject on a decision wizard step. Waits
+	 * for the AJAX template load to settle first — editing earlier would
+	 * be overwritten when the default template arrives. The Composer's
+	 * subject input id is `{stepId}-subject` (Composer.vue: `id + '-subject'`).
+	 *
+	 * @param {string} stepId   decision step id, e.g. 'notifyAuthors'
+	 * @param {string} subject  replacement subject line
+	 */
+	async setDecisionEmailSubject(stepId, subject) {
+		await this.awaitEmailTemplateLoaded();
+		await this.page.locator(`#${stepId}-subject`).fill(subject);
+	}
+
+	/**
+	 * Attach a file to the current decision email step via the Upload
+	 * attacher. The "Attach Files" entry point is a TinyMCE toolbar
+	 * button registered by Composer.vue (`pkpAttachFiles`); it opens the
+	 * FileAttacherModal (side modal titled "Attach Files") listing the
+	 * available attachers. The "Upload File" attacher opens a stacked
+	 * AttacherModal (titled "Upload File") hosting FileAttacherUpload,
+	 * whose dropzone appends its hidden `<input type=file>` inside the
+	 * `#previewFileUploader` container (FileUploader.vue
+	 * hiddenInputContainer). We drive that input directly — clicking the
+	 * visible button would open a real OS file dialog — racing the
+	 * temporaryFiles POST so the footer "Attach Files" click can't beat
+	 * the upload. Both side modals close themselves on attach
+	 * (FileAttacher#attachFiles + Composer#addAttachments) and the file
+	 * lands as a badge in the Composer's attachments strip.
+	 *
+	 * @param {string} filePath  absolute path of the file to upload
+	 */
+	async attachDecisionEmailUpload(filePath) {
+		await this.awaitEmailTemplateLoaded();
+		await this.page
+			.getByRole('button', {name: 'Attach Files', exact: true})
+			.click();
+
+		const attacherList = this.page.getByRole('dialog', {
+			name: 'Attach Files',
+		});
+		await expect(attacherList).toBeVisible({timeout: 10_000});
+		await attacherList
+			.getByRole('button', {name: 'Upload File', exact: true})
+			.click();
+
+		const uploadModal = this.page.getByRole('dialog', {name: 'Upload File'});
+		await expect(uploadModal).toBeVisible({timeout: 10_000});
+		const fileInput = this.page.locator(
+			'#previewFileUploader input[type="file"]',
+		);
+		await expect(fileInput).toBeAttached({timeout: 10_000});
+		await Promise.all([
+			this.page.waitForResponse(
+				(res) =>
+					res.request().method() === 'POST' &&
+					/\/api\/v1\/temporaryFiles/.test(res.url()) &&
+					res.ok(),
+				{timeout: 30_000},
+			),
+			fileInput.setInputFiles(filePath),
+		]);
+
+		const baseName = filePath.split(/[\\/]/).pop() ?? filePath;
+		// The uploaded file renders as a File row once the upload settles;
+		// only then does the footer "Attach Files" commit a non-empty list.
+		await expect(uploadModal.getByText(baseName).first()).toBeVisible({
+			timeout: 15_000,
+		});
+		await uploadModal
+			.getByRole('button', {name: 'Attach Files', exact: true})
+			.click();
+
+		// Both side modals close; the attachment badge appears under the
+		// Composer body field.
+		await expect(uploadModal).toBeHidden({timeout: 10_000});
+		await expect(
+			this.page.locator('.composer__attachments'),
+		).toContainText(baseName, {timeout: 10_000});
+	}
+
+	/**
+	 * Open a review-round panel from the workflow side nav. Round items
+	 * are labelled "Review Round {n}" (workflow.reviewRoundN) nested
+	 * under the "Review" stage item; when another stage is active the
+	 * parent may be collapsed, so expand it first when the round entry
+	 * isn't already visible.
+	 *
+	 * @param {number} [round=1]
+	 */
+	async openReviewRoundPanel(round = 1) {
+		const nav = this.workflowModal().locator('nav');
+		const roundItem = nav.getByText(`Review Round ${round}`, {exact: true});
+		if (!(await roundItem.isVisible().catch(() => false))) {
+			await nav.getByText('Review', {exact: true}).first().click();
+		}
+		await expect(roundItem).toBeVisible({timeout: 10_000});
+		await roundItem.click();
+	}
+
+	/**
 	 * Assign a user to the current stage through the Participants panel.
 	 * Drives the legacy add-participant form (StageParticipantNotifyHandler)
 	 * that the Vue ParticipantManager opens in a reka-ui dialog: pick the

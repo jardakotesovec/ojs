@@ -49,7 +49,7 @@ inventory update here.
 | reviewer-assignment | Assign reviewer (search, due dates, anonymity mode, reviewer type), unassign/cancel, resend request | lib/pkp | H | 10 | done |
 | reviewer-response | Reviewer accepts/declines invitation, completes review (recommendations, comments, attachments), one-click access, thank reviewer | lib/pkp | H | 12 | done |
 | review-rounds-revisions | New round, round status indicators, request-revisions → author uploads → editor sees, resubmit-for-review cycle, round history | lib/pkp | H | 12 | planned |
-| review-decisions | Accept, decline post-review, revert decline, notify-author emails with attachments, decision recording | lib/pkp | H | 8 | planned |
+| review-decisions | Accept, decline post-review, revert decline, notify-author emails with attachments, decision recording | lib/pkp | H | 8 | done |
 | copyediting-stage | Copyeditor assignment, copyedited files, author check, send-to-production decision | lib/pkp | H | 8 | planned |
 | production-stage | Layout editor assignment, production-ready files, schedule-for-publication handoff | lib/pkp | H | 6 | planned |
 | stage-participants | Add/remove participants, role-based access effects, assistant permissions | lib/pkp | H | 7 | planned |

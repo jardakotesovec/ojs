@@ -39,8 +39,8 @@ and for the final Cypress cross-check. Delete this file once round 1 absorption 
 | author-edit-published.spec.js | Author canChangeMetadata restriction vs unrestricted permission | 2 |
 | categories.spec.js | Categories field hidden by default; enabling exposes field; selections persist | 3 |
 | data-availability.spec.js | Enable metadata field; published article renders the section | 2 |
-| decision-accept.spec.js | Accept stage-1 (skip review); accept after external review | 2 |
-| decision-decline.spec.js | Decline stage-1 submission; decline after review | 2 |
+| decision-accept.spec.js | Accept stage-1 (skip review); accept after external review — SPLIT: stage-1 test absorbed into `submission-stage-actions.spec.js`, post-review test into `review-decisions.spec.js`; file deleted | 2 |
+| decision-decline.spec.js | Decline stage-1 submission; decline after review — SPLIT: stage-1 test absorbed into `submission-stage-actions.spec.js`, post-review test into `review-decisions.spec.js`; file deleted | 2 |
 | decision-request-revisions.spec.js | Request revisions; author sees upload affordance | 1 |
 | decision-send-to-production.spec.js | Send copyediting-stage submission to production | 1 |
 | decision-send-to-review.spec.js | Send stage-1 submission to external review | 1 |
