@@ -30,13 +30,13 @@ during implementation waves; promote round-2 rows only with an inventory update 
 
 | Plan file | Scope | Placement | Imp | Budget | Status |
 |-----------|-------|-----------|-----|--------|--------|
-| submission-wizard-core | Full wizard happy path: start, files+genres, details, contributors, confirm, submit; ack email | lib/pkp | H | 14 | planned |
+| submission-wizard-core | Full wizard happy path: start, files+genres, details, contributors, confirm, submit; ack email | lib/pkp | H | 14 | done |
 | submission-wizard-metadata | For-the-Editors fields (keywords, subjects, disciplines, agencies, coverage, type, citations, data availability), request vs require modes, categories in wizard | lib/pkp | H | 13 | planned |
-| submission-wizard-validation | Validation errors per step, checklist/copyright/privacy consent, section rules (inactive, editor-restricted), comments for the editors | lib/pkp | H | 10 | planned |
-| submission-wizard-language | Multilingual submission, locale picker, reconfigure modal (change section/locale mid-wizard) | lib/pkp | M | 6 | planned |
-| submission-drafts | Save-for-later, resume draft, delete draft, incomplete submissions list | lib/pkp | M | 6 | planned |
-| author-dashboard | My-submissions list, status/stage display, activity view of own submission | lib/pkp | H | 6 | planned |
-| reviewer-suggestions | Author suggests reviewers in wizard; editor sees suggestions at assignment | lib/pkp | M | 4 | planned |
+| submission-wizard-validation | Validation errors per step, checklist/copyright/privacy consent, section rules (inactive, editor-restricted), comments for the editors | lib/pkp | H | 10 | done |
+| submission-wizard-language | Multilingual submission, locale picker, reconfigure modal (change section/locale mid-wizard) | lib/pkp | M | 6 | done |
+| submission-drafts | Save-for-later, resume draft, delete draft, incomplete submissions list | lib/pkp | M | 6 | done |
+| author-dashboard | My-submissions list, status/stage display, activity view of own submission | lib/pkp | H | 6 | done |
+| reviewer-suggestions | Author suggests reviewers in wizard; editor sees suggestions at assignment | lib/pkp | M | 4 | done |
 
 ## 2. Editorial workflow
 

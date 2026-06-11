@@ -982,3 +982,39 @@ installed before 2026-06-05 needs the reset/ALTERs above**.
   rounds carry the correct non-null `publication_id` (covers both production round-creating
   paths: `DecisionType` stage-advance and `NewExternalReviewRound`).
 - Probe submissions removed afterwards via `tools/deleteSubmissions.php`.
+
+### Audit fragment — SubmissionBuilderProcessor (`submitted: false` draft shape)
+
+For merge into §1 alongside "§1.4 SubmissionBuilderProcessor".
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/SubmissionBuilderProcessor.php` (submission creation block + author stage assignment)
+**Domain**: `submissions.submission_progress`, `submissions.date_submitted`, `stage_assignments.can_change_metadata`
+**Change** (2026-06-11, wave-1 drafts/author-dashboard implementation): an explicit `submitted: false` in the spec now seeds a true wizard draft — `submission_progress = 'start'`, `date_submitted = NULL`, and the submitter's author stage assignment gets `canChangeMetadata = true` — instead of the previous always-`''`/always-stamped/default-flag shape.
+
+**Canonical UI entry point**:
+- Form / page: submission wizard Start form (`PKPSubmissionHandler::start` → `StartSubmission` form)
+- REST endpoint: `POST /api/v1/submissions` (`PKPSubmissionController::add`)
+
+**What the production path does**: a freshly-started submission carries the entity-schema default `submissionProgress = 'start'` (`lib/pkp/schemas/submission.json:364`) and **no** `dateSubmitted` — `Repository::add()` only stamps `dateSubmitted` when `submissionProgress` is empty (`lib/pkp/classes/submission/Repository.php:614`). Both markers are cleared/stamped together only by `Repository::submit()` (`:660`). All draft-consuming surfaces gate on these two fields: `Collector::filterByIncomplete` (`submission_progress <> ''`), wizard resume routing (`PKPSubmissionHandler::index:124`), author-dashboard Incomplete view, incomplete bulk-delete permission (`useDashboardBulkDelete.canBeDeleted` reads `submissionProgress`).
+
+**What the Processor did before**: hardcoded `submissionProgress => ''` + `dateSubmitted => now()` at creation regardless of `submitted`, so `submitted: false` produced a row no production path can create (never-submitted yet submitted-shaped). Such "drafts" were invisible to the Incomplete view and `/submission?id=N` routed to the completed screen instead of resuming the wizard.
+
+**What the Processor does now**: `($spec['submitted'] ?? null) === false` ⇒ `submissionProgress = 'start'`, `dateSubmitted = NULL` — byte-identical to the post-Start-form state. The author stage assignment additionally passes `canChangeMetadata = true` for drafts, mirroring `PKPSubmissionController::add()`'s "Authors can always edit metadata before submitting" branch — without it the wizard's Details autosaves on a seeded draft are rejected by `canEditPublication` (the author group's `permitMetadataEdit` defaults false) and edits silently fail. The **absent-key** default (no decisions/reviewRounds ⇒ no `submit()` call, submitted-shaped row, default `canChangeMetadata`) is intentionally unchanged: the Discussion Manager fixtures (`playwright/fixtures/scenarios/submission-draft.js`), `author-edit-published.spec.js` (asserts the disabled-Save state for default flags) and their dependent specs rely on that historical shape.
+
+**Discrepancies**:
+| # | Gap | Severity | Recommended fix |
+|---|---|---|---|
+| 1 | `submission_progress` always `'start'`; a real draft mid-wizard records the furthest step (`details`, `files`, …) | ✅ scope choice | The wizard falls back to step 1 for unknown/`start` values (`SubmissionWizardPage.vue created()`); resume tests drive their own step progression. Extend to a `progress` spec key only if a plan row needs a specific resume step. |
+| 2 | Absent `submitted` key without decisions/rounds still yields the legacy "submitted-shaped, no SubmissionSubmitted event" row — a state production can't produce | ⚠️ pre-existing (documented in §1.4) | Unchanged by this fix; revisit when the Discussion Manager fixtures migrate to `submitted: true`. |
+| 3 | Submitted-shaped seeds keep `canChangeMetadata = permitMetadataEdit` (false for the default author group), but a production wizard submission's author keeps the `true` set at start | ⚠️ pre-existing scope choice | Kept deliberately — `author-edit-published.spec.js` exercises both flag states against the seeded default. Flag for §1.4 if a plan row ever needs post-submit author metadata-edit parity. |
+
+**Verified** (2026-06-11, live server :8000 + psql `ojs_test`): spec `{submitted: false}` → `submission_progress = 'start'`, `date_submitted = NULL`, `status = 1`; draft resumes in the wizard at `/submission?id=N`, lists under the author dashboard Incomplete view, and is deletable via incomplete bulk-delete (exercised end-to-end by `lib/pkp/playwright/tests/submission-drafts.spec.js`). Specs without the key (Discussion Manager fixture shape) re-ran green — shape unchanged.
+
+**Verdict**: ✅ parity for explicit `submitted: false` (1 scope choice; 1 pre-existing gap unchanged)
+
+### Audit fragment — PublicationsProcessor (`issue: 'latest'` fatal constant)
+
+For merge into the §4 PublicationsProcessor notes.
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/PublicationsProcessor.php` (`resolveLatestPublishedIssue`)
+**Change** (2026-06-11): `Repo::issue()->getCollector()::ORDERBY_PUBLISHED` does not exist on OJS's `APP\issue\Collector` (its constants are `ORDERBY_DATE_PUBLISHED`, `ORDERBY_PUBLISHED_ISSUES`, …), so every spec using the `issue: 'latest'` shorthand 500'd with "Undefined constant". Fixed to `ORDERBY_DATE_PUBLISHED` (newest published issue first), which matches the documented "most recently published issue in this journal" semantics. The path was previously dead — all existing fixtures use the `{volume, number, year}` lookup — so no behavior shifted for existing specs; first consumer is `author-dashboard.spec.js` (published-view row on a scratch journal). No parity concern: issue resolution is harness-side sugar, not a mirrored production flow.

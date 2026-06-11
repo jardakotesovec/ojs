@@ -19,7 +19,7 @@ Required: `tag` (string, ≤64 chars, parallel-isolation key — see [tag conven
 
 Optional top-level fields beyond the obvious ones:
 
-- **`submitted: boolean`** — defaults true when the scenario has decisions or reviewRounds. Calls `Repo::submission()->submit()`, matching the wizard's final step.
+- **`submitted: boolean`** — defaults true when the scenario has decisions or reviewRounds. Calls `Repo::submission()->submit()`, matching the wizard's final step. An EXPLICIT `submitted: false` seeds a true wizard-resumable draft at parity (no `dateSubmitted`, `submissionProgress` set, author `canChangeMetadata`) — it appears in the author's Incomplete list and the wizard reopens on it. Omitting the key keeps the legacy Discussion-Manager shape.
 - **`commentsForEditor: string`** — sets `commentsForTheEditors` on the submission. Combined with `submitted: true`, fires `SubmissionSubmitted` which creates the Stage 1 discussion automatically.
 - **`author: {orcid, orcidIsVerified}`** — narrow passthrough that bypasses the REST orcid validator, useful for tests that need a pre-verified ORCID without the OAuth flow.
 - **`reviewerSuggestions: [{givenName, familyName, email, affiliation?, suggestionReason?}]`** — seeds the wizard's reviewer suggestions as if the author entered them (strings, not locale maps; wrapped under the spec `locale`).

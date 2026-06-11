@@ -310,3 +310,12 @@ test('editor assigns reviewer, reviewer accepts', async ({page, asUser}) => {
 - **Running the test server manually and also via Playwright.** `webServer` in `config-factory.js:47-65` auto-starts PHP. Trying to run `npm run test:e2e:serve` in another terminal at the same time fights over port 8000. If you need a manual server for poking around, stop the Playwright run first.
 - **Committing `.auth/` files.** Storage states contain session cookies. They're gitignored; if you see one staged, un-stage it.
 - **Assuming `rvaca` just works.** He's flagged `mustChangePassword: true`. For "a journal manager", prefer `dbarnes` unless the test is specifically exercising the password-change flow.
+
+## UI realities learned the hard way (wave 2)
+
+- **Dashboard search reacts to `keyup` only.** `fill()` sets the value without firing it — the list never filters. Use `pressSequentially()`.
+- **Paginated lists accumulate state across runs.** The test DB is long-lived locally; shared users like `atester` own hundreds of submissions. Never assert presence on an unscoped first page — search by the test's unique tag first. Extra trap: seeded drafts carry no `dateSubmitted` (real-draft parity) so they sort LAST in date-ordered lists.
+- **Server-rendered TinyMCE values never reach the backing textarea.** Assert via `getTinyMceContent()` (support/tinymce.js), not the textarea value.
+- **The wizard Steps rail collapses when it overflows** (non-current pills get `-screenReader`, 1px-clipped); a `force: true` click on a clipped pill is a silent no-op. Use `SubmissionWizardPage.gotoStep()`/`expectStep()` — they handle expansion, end-anchored name matching ('Review' vs 'Reviewer Suggestions'), and re-render-swallowed clicks.
+- **Side-modal wrappers report `visibility: hidden` permanently** — anchor visibility assertions on inner content, not the wrapper.
+- **`useFetch` tunnels DELETE via POST + method override; unauthorized API calls return 401** (not 403) — match assertions accordingly.
