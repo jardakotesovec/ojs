@@ -48,11 +48,11 @@ inventory update here.
 | submission-stage-actions | Assign editor, send to review, accept-and-skip-review, decline, delete/archive at stage 1 | lib/pkp | H | 9 | done |
 | reviewer-assignment | Assign reviewer (search, due dates, anonymity mode, reviewer type), unassign/cancel, resend request | lib/pkp | H | 10 | done |
 | reviewer-response | Reviewer accepts/declines invitation, completes review (recommendations, comments, attachments), one-click access, thank reviewer | lib/pkp | H | 12 | done |
-| review-rounds-revisions | New round, round status indicators, request-revisions → author uploads → editor sees, resubmit-for-review cycle, round history | lib/pkp | H | 12 | planned |
+| review-rounds-revisions | New round, round status indicators, request-revisions → author uploads → editor sees, resubmit-for-review cycle, round history | lib/pkp | H | 12 | done |
 | review-decisions | Accept, decline post-review, revert decline, notify-author emails with attachments, decision recording | lib/pkp | H | 8 | done |
-| copyediting-stage | Copyeditor assignment, copyedited files, author check, send-to-production decision | lib/pkp | H | 8 | planned |
-| production-stage | Layout editor assignment, production-ready files, schedule-for-publication handoff | lib/pkp | H | 6 | planned |
-| stage-participants | Add/remove participants, role-based access effects, assistant permissions | lib/pkp | H | 7 | planned |
+| copyediting-stage | Copyeditor assignment, copyedited files, author check, send-to-production decision | lib/pkp | H | 8 | done |
+| production-stage | Layout editor assignment, production-ready files, schedule-for-publication handoff | lib/pkp | H | 6 | done |
+| stage-participants | Add/remove participants, role-based access effects, assistant permissions | lib/pkp | H | 7 | done |
 | discussions | Discussion create/reply/close per stage, participant scoping | lib/pkp | M | 6 | planned |
 | editorial-tasks | Task create/assign/complete/due dates, templates applied in workflow | lib/pkp | M | 7 | planned |
 | submission-files | Per-stage file upload, revisions, dependent files, non-ASCII filenames, downloads | lib/pkp | H | 8 | planned |

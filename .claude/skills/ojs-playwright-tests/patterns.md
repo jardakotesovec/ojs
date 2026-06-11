@@ -144,8 +144,10 @@ The suite runs in parallel by default. The shared seed data is the unit of conte
 1. **`page.waitForURL(...)` with default `waitUntil:'load'` is fragile under parallel load.** Use `'commit'`.
 2. **`/notification/fetchNotification` drains all pending notifications for a user.** Two parallel tests as the same user share + race for the toast queue. Don't assert on toasts in parallel-running specs as the same user; assert on the actual save endpoint via `waitForResponse`.
 3. **`searchPhrase=` OR-joins on whitespace.** `searchPhrase: 'Published article {tag}'` matches every fixture-seeded "Published article" — falls off the `count=30` cap under load. Search by `tag` alone (single whitespace-free unique token).
-4. **Mailpit inbox is shared across parallel tests in a run.** Specs that need a clean inbox call `pkpMail.clearAll()` themselves; don't auto-clear in `beforeEach`.
+4. **Mailpit inbox is shared across parallel tests in a run.** Never `clearAll()` outside the dedicated serial infrastructure spec (charter principle 8); scope every assertion with `pkpMail.find({to, contains: tag})` / `expectNone`, using throwaway recipients for counting/absence checks.
 5. **`playwright/.auth/{user}.json` can go stale after `login-as` flows.** `PKPSessionGuard::signInAs/signOutAs` migrate the session and destroy the previous row. `ensureAuthStateFor` probes `/index/user/profile` before reusing storage state — it relogs in if the probe doesn't 200.
+6. **All server-side outbound HTTP is firewalled in test runs.** `config.test.inc.php` points `[proxy]` at a dead local port, which PKP wires into Guzzle, PHP streams AND libxml — so a test must never depend on the app reaching an external service (a hung egress call once killed worker PHP servers mid-suite; app-changes.md §2 rows 12–13). Remote DTDs the app validates against are mirrored at `lib/pkp/playwright/fixtures/dtd/` and resolved via `XML_CATALOG_FILES`.
+7. **Scheduled tasks never run on their own** (`[schedule] task_runner = Off` in the test config). A spec that needs a scheduled task (reminders etc.) belongs in the serial project and invokes `php lib/pkp/tools/scheduler.php run` explicitly. Queued jobs still process at end of request (`[queues] job_runner = On`).
 
 ## Tag conventions
 
