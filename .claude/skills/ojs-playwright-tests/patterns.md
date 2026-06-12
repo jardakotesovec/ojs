@@ -323,7 +323,7 @@ test('editor assigns reviewer, reviewer accepts', async ({page, asUser}) => {
 - **Server-rendered TinyMCE values never reach the backing textarea.** Assert via `getTinyMceContent()` (support/tinymce.js), not the textarea value.
 - **The wizard Steps rail collapses when it overflows** (non-current pills get `-screenReader`, 1px-clipped); a `force: true` click on a clipped pill is a silent no-op. Use `SubmissionWizardPage.gotoStep()`/`expectStep()` — they handle expansion, end-anchored name matching ('Review' vs 'Reviewer Suggestions'), and re-render-swallowed clicks.
 - **Side-modal wrappers report `visibility: hidden` permanently** — anchor visibility assertions on inner content, not the wrapper.
-- **`useFetch` tunnels DELETE via POST + method override; unauthorized API calls return 401** (not 403) — match assertions accordingly.
+- **`useFetch` tunnels DELETE *and PUT* via POST + `X-Http-Method-Override`; unauthorized API calls return 401** (not 403) — `waitForResponse` predicates on `request().method()` must accept POST for both (useFetch.js:130-133); match status assertions accordingly.
 
 ## UI realities learned the hard way (wave 3)
 

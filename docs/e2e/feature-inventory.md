@@ -83,19 +83,19 @@ inventory update here.
 | journal-homepage | Current issue display, sidebar blocks, announcements block | ojs | H | 5 | done |
 | article-landing | Metadata display, galley view/download incl. pdfJsViewer smoke, license display, DC meta tags, multilingual rendering | ojs | H | 8 | done |
 | issue-archive-toc | Archive listing, issue TOC page, section grouping | ojs | M | 4 | done |
-| site-search | Front-end search, filters, no-result behavior | ojs | H | 6 | planned |
-| browse-category-section | Category browse pages, section policies display | ojs | L | 4 | planned |
-| oai-sitemap-feeds | OAI-PMH ListRecords/GetRecord (DC), sitemap.xml, web feed presence | ojs | M | 5 | planned |
-| public-pages | Editorial masthead public page, about/contact, privacy statement | lib/pkp | M | 4 | planned |
-| public-comments | Reader comments: post, moderate, approve, anonymous gating | lib/pkp | M | 5 | planned |
+| site-search | Front-end search, filters, no-result behavior | ojs | H | 6 | done |
+| browse-category-section | Category browse pages, section policies display | ojs | L | 4 | done |
+| oai-sitemap-feeds | OAI-PMH ListRecords/GetRecord (DC), sitemap.xml, web feed presence | ojs | M | 5 | done |
+| public-pages | Editorial masthead public page, about/contact, privacy statement | lib/pkp | M | 4 | done |
+| public-comments | Reader comments: post, moderate, approve, anonymous gating | lib/pkp | M | 5 | done |
 
 ## 5. Users, roles & access
 
 | Plan file | Scope | Placement | Imp | Budget | Status |
 |-----------|-------|-----------|-----|--------|--------|
-| registration-login | Public registration (roles, consent), login, logout, failed login | lib/pkp | H | 8 | planned |
-| password-flows | Reset via email, forced change, change in profile | lib/pkp | H | 5 | planned |
-| user-profile | Identity/contact/public profile, notification prefs, API key, reviewer interests | lib/pkp | M | 6 | planned |
+| registration-login | Public registration (roles, consent), login, logout, failed login | lib/pkp | H | 8 | done |
+| password-flows | Reset via email, forced change, change in profile | lib/pkp | H | 5 | done |
+| user-profile | Identity/contact/public profile, notification prefs, API key, reviewer interests | lib/pkp | M | 6 | done |
 | user-management | Manager user CRUD, search/filter, disable/enable, remove role, email user, merge users | lib/pkp | H | 8 | planned |
 | user-invitations | Invite new user to role, invite existing user, accept-invitation flows | lib/pkp | H | 6 | planned |
 | roles-permissions | Role settings grid, custom role creation, stage assignment effects, settings-URL access gates | lib/pkp | M | 7 | planned |

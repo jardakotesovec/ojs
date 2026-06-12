@@ -18,6 +18,7 @@ namespace APP\pages\sitemap;
 
 use APP\facades\Repo;
 use APP\issue\Collector;
+use APP\submission\Submission;
 use PKP\pages\sitemap\PKPSitemapHandler;
 use PKP\plugins\Hook;
 
@@ -50,11 +51,19 @@ class SitemapHandler extends PKPSitemapHandler
             foreach ($publishedIssues as $issue) {
                 $root->appendChild($this->_createUrlTree($doc, $request->url($journal->getPath(), 'issue', 'view', [$issue->getId()])));
                 // Articles for issue
+                // Published submissions assigned to this issue. NOT
+                // filterByLatestPublished(true): that flag is the
+                // continuous-publication filter (current publication
+                // issueless or attached to an UNpublished issue —
+                // classes/submission/Collector.php), which contradicts
+                // filterByIssueIds() on a published issue and yields an
+                // empty set, dropping every article/galley URL from the
+                // sitemap (regression in da7c68874e / pkp/pkp-lib#12245).
                 $submissions = Repo::submission()
                     ->getCollector()
                     ->filterByContextIds([$journal->getId()])
                     ->filterByIssueIds([$issue->getId()])
-                    ->filterByLatestPublished(true)
+                    ->filterByStatus([Submission::STATUS_PUBLISHED])
                     ->getMany();
 
                 foreach ($submissions as $submission) {
