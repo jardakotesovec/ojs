@@ -15,5 +15,5 @@
 
 | # | Title | Actors | Seed | Verifies | Status |
 |---|-------|--------|------|----------|--------|
-| 1 | Create and edit an institution | dbarnes | scenario: scratch journal | `management/settings/institutions`: add an institution with multilingual name, IP ranges and ROR id → appears in the list panel; reopen → values round-tripped; edit the name and an IP range → updated row persists after reload. | planned |
-| 2 | Delete an institution | dbarnes | scenario: scratch journal | Create a second institution via UI, delete it from the list panel with confirm → removed from the list and stays gone after reload; the remaining institution is untouched. | planned |
+| 1 | Create and edit an institution | dbarnes | scenario: scratch journal | `management/settings/institutions`: add an institution with multilingual name, IP ranges and ROR id → appears in the list panel; reopen → values round-tripped; edit the name and an IP range → updated row persists after reload. | implemented (lib/pkp/playwright/tests/institutions.spec.js) |
+| 2 | Delete an institution | dbarnes | scenario: scratch journal | Create a second institution via UI, delete it from the list panel with confirm → removed from the list and stays gone after reload; the remaining institution is untouched. | implemented (lib/pkp/playwright/tests/institutions.spec.js) |

@@ -109,18 +109,18 @@ inventory update here.
 |-----------|-------|-----------|-----|--------|--------|
 | site-administration | Hosted journals CRUD + wizard, multi-context user navigation, admin maintenance pages smoke | lib/pkp | H | 8 | done |
 | site-settings | Site setup, site languages, site-level appearance | lib/pkp | M | 3 | done |
-| journal-setup | Masthead/contact context settings forms persist and surface publicly | ojs | H | 4 | planned |
-| website-appearance | Theme options, logo upload, homepage image, date/time formats | lib/pkp | M | 6 | planned |
-| navigation-menus | Menu CRUD, custom items, assignment to areas, front-end rendering | lib/pkp | M | 4 | planned |
-| sections | Section CRUD, ordering, editor restrictions, inactivation, wizard/front-end effects | ojs | H | 6 | planned |
-| categories | Category CRUD incl. nesting, wizard exposure, front-end browse hook | lib/pkp | M | 5 | planned |
-| submission-settings | Workflow>Submission settings forms: checklist, author guidelines, components/genres (metadata toggles owned by submission-wizard-metadata) | lib/pkp | M | 3 | planned |
-| review-settings | Review mode default, deadlines, reminder config, reviewer guidance | lib/pkp | M | 5 | planned |
-| email-templates-management | Manage Emails UI: edit/add/reset templates; edited template text used in sent mail | lib/pkp | H | 6 | planned |
-| announcements | Announcement CRUD, expiry, enable toggle, reader page + sitemap | lib/pkp | M | 5 | planned |
-| languages-locales | Enable locales for UI/forms/submissions, multilingual form entry, persistence | lib/pkp | M | 6 | planned |
-| distribution-settings | License defaults, indexing metadata, archiving display, payments enable, publishing mode (open vs subscription) | ojs | M | 5 | planned |
-| institutions | Institution CRUD (stats/subscription support) | lib/pkp | L | 2 | planned |
+| journal-setup | Masthead/contact context settings forms persist and surface publicly | ojs | H | 4 | done |
+| website-appearance | Theme options, logo upload, homepage image, date/time formats | lib/pkp | M | 6 | done |
+| navigation-menus | Menu CRUD, custom items, assignment to areas, front-end rendering | lib/pkp | M | 4 | done |
+| sections | Section CRUD, ordering, editor restrictions, inactivation, wizard/front-end effects | ojs | H | 6 | done |
+| categories | Category CRUD incl. nesting, wizard exposure, front-end browse hook | lib/pkp | M | 5 | done |
+| submission-settings | Workflow>Submission settings forms: checklist, author guidelines, components/genres (metadata toggles owned by submission-wizard-metadata) | lib/pkp | M | 3 | done |
+| review-settings | Review mode default, deadlines, reminder config, reviewer guidance | lib/pkp | M | 5 | done |
+| email-templates-management | Manage Emails UI: edit/add/reset templates; edited template text used in sent mail | lib/pkp | H | 6 | done |
+| announcements | Announcement CRUD, expiry, enable toggle, reader page + sitemap | lib/pkp | M | 5 | done |
+| languages-locales | Enable locales for UI/forms/submissions, multilingual form entry, persistence | lib/pkp | M | 6 | done |
+| distribution-settings | License defaults, indexing metadata, archiving display, payments enable, publishing mode (open vs subscription) | ojs | M | 5 | done |
+| institutions | Institution CRUD (stats/subscription support) | lib/pkp | L | 2 | done |
 
 ## 7. Plugins (key set)
 

@@ -1,5 +1,6 @@
 // @ts-check
 const {test, expect} = require('../support/fixtures.js');
+const {SectionsSettingsPage} = require('../pages/SectionsSettingsPage.js');
 /**
  * Sections — row #8 in docs/e2e-playwright-migration.md.
  *
@@ -342,7 +343,158 @@ test.describe('Sections', () => {
 					.first();
 				await expect(checkbox).toBeChecked();
 			}
-		
+
+		},
+	);
+
+	test(
+		'manager reorders sections and deletes an empty one; delete guards hold',
+		{tag: '@regression'},
+		async ({pkpApi, asUser}) => {
+			// Row 6 of docs/e2e/plans/sections.md. The journal scenario's
+			// `sections` array pre-seeds the three-section state (the
+			// SectionProcessor replaces the scratch journal's default
+			// Articles section with exactly these) so the UI only drives
+			// reorder + delete — the surfaces under test:
+			//   - OrderGridItemsFeature reorder commits via saveSequence
+			//     (kebab-cased `save-sequence` URL) and the new order must
+			//     survive a reload AND drive the submission wizard's
+			//     section radio order (Collector orders by `s.seq`).
+			//   - Deleting an empty section succeeds; deleting a section
+			//     with submissions is refused (manager.sections.alertDelete);
+			//     deleting the last ACTIVE section is refused
+			//     (manager.sections.confirmDeactivateSection.error).
+			//
+			// Both refusals surface as error toasts via the trivial
+			// notification queue, which `/notification/fetchNotification`
+			// drains for the WHOLE user across parallel workers
+			// (patterns.md, parallel-load lesson 2). A per-test throwaway
+			// manager (password follows the username+username convention so
+			// `asUser` works) owns its queue exclusively, making the toast
+			// text assertable without races.
+			const tag = uniqueTag();
+			const suffix = tag.slice(-6);
+			const manager = `smgr${suffix}`;
+			const alpha = `Alpha ${tag}`;
+			const beta = `Beta ${tag}`;
+			const gamma = `Gamma ${tag}`;
+
+			const {context} = await pkpApi.createJournal({
+				tag,
+				users: [
+					{
+						username: manager,
+						password: manager + manager,
+						givenName: 'Sections',
+						familyName: `Manager ${suffix}`,
+						roles: ['manager'],
+					},
+				],
+				sections: [
+					{abbrev: {en: 'ALP'}, title: {en: alpha}},
+					{abbrev: {en: 'BET'}, title: {en: beta}},
+					{abbrev: {en: 'GAM'}, title: {en: gamma}},
+				],
+			});
+
+			// One submission into Alpha — the anchor for the
+			// "section with submissions cannot be deleted" guard
+			// (Repo::section()->isEmpty counts submissions by sectionId).
+			await pkpApi.createSubmission({
+				tag,
+				journal: context.path,
+				submitter: 'atester',
+				section: 'ALP',
+				locale: 'en',
+			});
+
+			const ctx = await asUser(manager);
+			const page = await ctx.newPage();
+			const sections = new SectionsSettingsPage(page, context.path);
+			await sections.goto();
+
+			// Seeded sections carry no explicit sequence, so the initial
+			// order is whatever the DB returned — read it instead of
+			// assuming, then derive the expected permutation from the drag
+			// we perform (last row moved above the first).
+			const initialOrder = await sections.rowTitlesInOrder();
+			expect(initialOrder).toHaveLength(3);
+			expect([...initialOrder].sort()).toEqual([alpha, beta, gamma].sort());
+
+			const movedTitle = initialOrder[2];
+			const expectedOrder = [
+				movedTitle,
+				initialOrder[0],
+				initialOrder[1],
+			];
+
+			await sections.startOrdering();
+			await sections.dragRowAbove(
+				sections.rowByTitle(movedTitle).first(),
+				sections.rowByTitle(initialOrder[0]).first(),
+			);
+			await sections.finishOrdering();
+			expect(await sections.rowTitlesInOrder()).toEqual(expectedOrder);
+
+			// Reload — saveSequence wrote explicit 0,1,2 sequences, so the
+			// server-rendered grid must come back in the new order.
+			await sections.goto();
+			expect(await sections.rowTitlesInOrder()).toEqual(expectedOrder);
+
+			// The submission wizard's Start form renders the section radio
+			// options from the same seq-ordered collector — the choices
+			// must follow the new order.
+			await page.goto(`/index.php/${context.path}/submission`);
+			const sectionRadios = page.locator('input[name="sectionId"]');
+			await expect(sectionRadios.first()).toBeAttached({timeout: 20_000});
+			const radioLabels = await sectionRadios.evaluateAll((els) =>
+				els.map((el) => el.closest('label')?.textContent?.trim() ?? ''),
+			);
+			expect(radioLabels).toEqual(expectedOrder);
+
+			// --- Delete an empty section (Beta) — succeeds, row leaves the
+			// grid and the REST listing.
+			await sections.goto();
+			await sections.deleteSection(beta);
+			await expect(sections.rowByTitle(beta)).toHaveCount(0, {
+				timeout: 15_000,
+			});
+
+			// --- Delete the section holding the submission (Alpha) —
+			// refused with the alertDelete error; the row survives.
+			await sections.deleteSection(alpha);
+			await expect(
+				page
+					.getByText(
+						'Before this section can be deleted, you must move articles submitted to it into other sections.',
+					)
+					.first(),
+			).toBeVisible({timeout: 15_000});
+			await expect(sections.rowByTitle(alpha).first()).toBeVisible();
+
+			// --- Last-active-section guard: deactivate Alpha (allowed —
+			// Gamma is still active), leaving Gamma as the ONLY active
+			// section; deleting Gamma (empty but last active) is refused.
+			let form = await sections.openEditForm(alpha);
+			await form.locator('input#isInactive').check({force: true});
+			await sections.saveForm();
+
+			await sections.deleteSection(gamma);
+			await expect(
+				page.getByText('At least one section must be active').first(),
+			).toBeVisible({timeout: 15_000});
+			await expect(sections.rowByTitle(gamma).first()).toBeVisible();
+
+			// REST cross-check: exactly Alpha + Gamma remain.
+			const sectionsResp = await page.request.get(
+				`/index.php/${context.path}/api/v1/sections`,
+			);
+			expect(sectionsResp.ok(), 'list sections').toBe(true);
+			const body = await sectionsResp.json();
+			const titles = (body.items || [])
+				.map((s) => (s.title?.en || '').trim())
+				.sort();
+			expect(titles).toEqual([alpha, gamma].sort());
 		},
 	);
 });
