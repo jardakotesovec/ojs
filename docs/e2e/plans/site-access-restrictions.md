@@ -14,7 +14,18 @@
 
 | # | Title | Actors | Seed | Verifies | Status |
 |---|-------|--------|------|----------|--------|
-| 1 | Login-wall journal: anonymous readers are forced through login | anonymous; throwaway user | scenario: journal `users[]` + UI (Site Access form: `restrictSiteAccess` on) | With `restrictSiteAccess` on, homepage/about/issue URLs redirect anonymous visitors to login; `/login` and `/user/register` remain reachable (policy exemptions); after login the same pages render | planned |
-| 2 | Registration disabled: register surfaces close | anonymous | scenario: journal + UI (Site Access form: `disableUserReg` on) | `/user/register` renders the registration-disabled error with a Login backlink (no form); the Register nav item is hidden on the journal front end | planned |
-| 3 | Article access restriction: galleys require login (OJS) | anonymous; throwaway user | scenario: journal `users[]` + UI (Site Access form: `restrictArticleAccess` on) + submission scenario (published) + UI (remote galley) | Anonymous reader sees the article landing/abstract but galley view redirects to login; a logged-in user opens the galley | planned |
-| 4 | Disabled journal is hidden from the public but reachable by admins | admin; anonymous | scenario: journal + UI (admin unchecks `enabled` on the hosted-journal form) | Disabled scratch journal's front end is unavailable to anonymous visitors (404/redirect) and absent from the site journal list; site admin still reaches its settings/dashboard; re-enabling restores public access | planned |
+| 1 | Login-wall journal: anonymous readers are forced through login | anonymous; throwaway user | scenario: journal `users[]` + UI (Site Access form: `restrictSiteAccess` on) | With `restrictSiteAccess` on, homepage/about/issue URLs redirect anonymous visitors to login; `/login` and `/user/register` remain reachable (policy exemptions); after login the same pages render | implemented (lib/pkp/playwright/tests/site-access-restrictions.spec.js) |
+| 2 | Registration disabled: register surfaces close | anonymous | scenario: journal + UI (Site Access form: `disableUserReg` on) | `/user/register` renders the registration-disabled error with a Login backlink (no form); the Register nav item is hidden on the journal front end | implemented (lib/pkp/playwright/tests/site-access-restrictions.spec.js) |
+| 3 | Article access restriction: galleys require login (OJS) | anonymous; throwaway user | scenario: journal `users[]` + `issues[]` + UI (Site Access form: `restrictArticleAccess` on) + submission scenario (published, seeded remote galley via `publications[].galleys[].urlRemote` pointed at a local page — the add-galley UI is already covered by galleys.spec.js, and a local target keeps the redirect assertion network-independent) | Anonymous reader sees the article landing/abstract but galley view redirects to login (with `?source=` round-trip); a logged-in throwaway reader opens the galley (remote-galley redirect lands on the target) | implemented (playwright/tests/article-access-restriction.spec.js) |
+| 4 | Disabled journal is hidden from the public but reachable by admins | admin; anonymous | scenario: journal + UI (admin unchecks `enabled` in the contexts-grid Edit modal; re-enables via the Settings Wizard form — same FORM_CONTEXT, both admin surfaces) | Disabled scratch journal's front end redirects anonymous visitors to its login page (PKPPageRouter::route) and the journal is absent from the site index journal list; site admin still reaches its front end and Settings Wizard; re-enabling restores public access + the index listing | implemented (lib/pkp/playwright/tests/site-access-restrictions.spec.js) |
+
+Implementation notes (wave 9):
+- Rows 1–3 drive the Site Access form through a new shared POM
+  `lib/pkp/playwright/pages/SiteAccessSettingsPage.js` (tab activation,
+  checkbox/radio helpers, save-with-contexts-PUT wait).
+- Row 1's "issue URLs" probe uses OJS `issue/archive`; the
+  RestrictedSiteAccessPolicy applies before handler dispatch, so OMP/OPS
+  adopters of the shared spec swap in their own catalog path (probe list
+  is data in the test).
+- Row 4 disable-arm reality check: a disabled journal **redirects to its
+  login page** for anonymous visitors (no 404) — asserted accordingly.

@@ -151,6 +151,9 @@ The suite runs in parallel by default. The shared seed data is the unit of conte
 8. **"Anonymous" contexts aren't anonymous under `test.use({user})`.** `browser.newContext()` inherits the file's `storageState` context option, so a fresh context carries the logged-in session — and editors can *preview* unpublished articles, turning expected 404s into 200s. Every anonymous-reader check must pass an explicit empty state: `browser.newContext({storageState: {cookies: [], origins: []}})`. (Bit two wave-6 agents independently.)
 9. **Bare front-end URLs 302 to the locale-prefixed form** (`/index.php/<journal>/article/...` → `/index.php/<journal>/en/article/...`). `page.goto` hides this by following redirects, but any `request.get(..., {maxRedirects: 0})` probe must use the locale-prefixed URL.
 10. **Tags that back COUNT assertions need a per-run random component.** A tag built only from workerIndex + test-title slug repeats across runs, so counting tag matches on a shared surface (issue TOC, archive listing) picks up leftovers from previous runs on a long-lived DB. Existence assertions tolerate this; `toHaveCount(n)` does not.
+11. **Component-router URLs are kebab-cased** (`saveSequence` → `…/save-sequence`, `deleteContext` → `…/delete-context`) — `waitForResponse` predicates written against the camelCase op name never match. Bit three specs across waves 7–9.
+12. **Mailpit reads must go through `pkpMail.find({to, contains})`** — `inboxFor`/`latestTo` are now search-scoped (Mailpit's `/api/v1/messages?query=` ignores the query; only `/api/v1/search` filters), but `find` with a unique tag remains the only parallel-safe shape; an inbox-wide `latestTo` can still race two mails to the SAME recipient.
+13. **Scenario scratch journals auto-enroll `admin` as Journal manager** (`PKPContextService::add()` parity) — every Users-list/participant count on a scratch journal is +1 over the seeded `users[]`.
 
 ## Tag conventions
 

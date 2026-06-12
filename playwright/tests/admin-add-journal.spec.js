@@ -143,10 +143,18 @@ test.describe('Admin add journal UI', () => {
 					{timeout: 15_000},
 				);
 
-				// 4) Fix the path and submit successfully. AddContextForm.
+				// 4) Fix the path, enable the journal, and submit
+				//    successfully. The `enabled` checkbox defaults OFF
+				//    (ContextForm.php:41) and a disabled journal bounces
+				//    every anonymous front-end URL to its login page —
+				//    which still renders the journal name in the banner,
+				//    so step 7's name assertion alone would pass
+				//    vacuously (wave-9 finding; mirrors the legacy
+				//    Cypress flow, 20-CreateContext.cy.js). AddContextForm.
 				//    success() redirects to /admin/wizard/{id} —
 				//    page.waitForURL pins on that landing.
 				await form.locator('input[name="urlPath"]').fill(urlPath);
+				await form.locator('input[name="enabled"]').check();
 				await form.getByRole('button', {name: /Save/i}).click();
 
 				await page.waitForURL(/\/admin\/wizard\/\d+/, {
@@ -194,6 +202,11 @@ test.describe('Admin add journal UI', () => {
 				const page = await anonCtx.newPage();
 				const resp = await page.goto(`/index.php/${urlPath}/`);
 				expect(resp?.status()).toBe(200);
+				// The journal is genuinely public — no bounce to the
+				// journal login page (a disabled journal's login page
+				// also renders the name in its banner, so the URL
+				// check is the load-bearing reachability assertion).
+				await expect(page).not.toHaveURL(/\/login/);
 				// Journal name appears in the page header. Default
 				// OJS theme renders the localized name in the site
 				// header anchor; first occurrence is enough.

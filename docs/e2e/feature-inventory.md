@@ -96,19 +96,19 @@ inventory update here.
 | registration-login | Public registration (roles, consent), login, logout, failed login | lib/pkp | H | 8 | done |
 | password-flows | Reset via email, forced change, change in profile | lib/pkp | H | 5 | done |
 | user-profile | Identity/contact/public profile, notification prefs, API key, reviewer interests | lib/pkp | M | 6 | done |
-| user-management | Manager user CRUD, search/filter, disable/enable, remove role, email user, merge users | lib/pkp | H | 8 | planned |
-| user-invitations | Invite new user to role, invite existing user, accept-invitation flows | lib/pkp | H | 6 | planned |
-| roles-permissions | Role settings grid, custom role creation, stage assignment effects, settings-URL access gates | lib/pkp | M | 7 | planned |
-| login-as | Admin impersonation and return to own session | lib/pkp | M | 2 | planned |
-| site-access-restrictions | Login-wall site access, registration disabled, disabled journal visibility | lib/pkp | M | 4 | planned |
-| editorial-masthead | Masthead configuration reflects on public page; reviewer display opt-in | lib/pkp | M | 2 | planned |
+| user-management | Manager user CRUD, search/filter, disable/enable, remove role, email user, merge users | lib/pkp | H | 8 | done |
+| user-invitations | Invite new user to role, invite existing user, accept-invitation flows | lib/pkp | H | 6 | done |
+| roles-permissions | Role settings grid, custom role creation, stage assignment effects, settings-URL access gates | lib/pkp | M | 7 | done |
+| login-as | Admin impersonation and return to own session | lib/pkp | M | 2 | done |
+| site-access-restrictions | Login-wall site access, registration disabled, disabled journal visibility | lib/pkp | M | 4 | done |
+| editorial-masthead | Masthead configuration reflects on public page; reviewer display opt-in | lib/pkp | M | 2 | done |
 
 ## 6. Settings & administration
 
 | Plan file | Scope | Placement | Imp | Budget | Status |
 |-----------|-------|-----------|-----|--------|--------|
-| site-administration | Hosted journals CRUD + wizard, multi-context user navigation, admin maintenance pages smoke | lib/pkp | H | 8 | planned |
-| site-settings | Site setup, site languages, site-level appearance | lib/pkp | M | 3 | planned |
+| site-administration | Hosted journals CRUD + wizard, multi-context user navigation, admin maintenance pages smoke | lib/pkp | H | 8 | done |
+| site-settings | Site setup, site languages, site-level appearance | lib/pkp | M | 3 | done |
 | journal-setup | Masthead/contact context settings forms persist and surface publicly | ojs | H | 4 | planned |
 | website-appearance | Theme options, logo upload, homepage image, date/time formats | lib/pkp | M | 6 | planned |
 | navigation-menus | Menu CRUD, custom items, assignment to areas, front-end rendering | lib/pkp | M | 4 | planned |
