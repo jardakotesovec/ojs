@@ -66,13 +66,13 @@ inventory update here.
 
 | Plan file | Scope | Placement | Imp | Budget | Status |
 |-----------|-------|-----------|-----|--------|--------|
-| publication-publish-flow | Publish/unpublish/schedule preconditions and actions, republish, front-end visibility flip | ojs | H | 8 | planned |
-| publication-versioning | Create new version, edit version, version history, language change rules across versions | lib/pkp | M | 8 | planned |
-| publication-identifiers-license | Identifiers tab, license/permissions overrides, references, per-locale title/abstract on publication tabs | lib/pkp | M | 8 | planned |
-| contributors | Contributor CRUD, ordering, primary contact, affiliations on publication | lib/pkp | H | 6 | planned |
-| galleys | Galley create/edit/delete, file vs remote URL, labels, ordering | ojs | H | 8 | planned |
+| publication-publish-flow | Publish/unpublish/schedule preconditions and actions, republish, front-end visibility flip | ojs | H | 8 | done |
+| publication-versioning | Create new version, edit version, version history, language change rules across versions | lib/pkp | M | 8 | done |
+| publication-identifiers-license | Identifiers tab, license/permissions overrides, references, per-locale title/abstract on publication tabs | lib/pkp | M | 8 | done |
+| contributors | Contributor CRUD, ordering, primary contact, affiliations on publication | lib/pkp | H | 6 | done |
+| galleys | Galley create/edit/delete, file vs remote URL, labels, ordering | ojs | H | 8 | done |
 | issue-management | Issue CRUD, TOC ordering, cover, publish issue + reader notification, current issue, unpublish/delete, issue galleys, back/future lists | ojs | H | 11 | planned |
-| issue-assignment-scheduling | Assign article to issue, schedule into future issue, publishes with issue | ojs | H | 5 | planned |
+| issue-assignment-scheduling | Assign article to issue, schedule into future issue, publishes with issue | ojs | H | 5 | done |
 | media-files | Media section: batch upload, web/high-res variant linking, metadata sync, sharing across galleys, author read-only (new in 3.6, Feb 2026) | lib/pkp | H | 8 | planned |
 | publication-amendments | Summary of Changes + update type: author submits with revisions, editor inserts into publication, versioned update types (new in 3.6, May 2026) | lib/pkp | M | 6 | planned |
 

@@ -620,6 +620,112 @@ exports.EditorialWorkflowPage = class EditorialWorkflowPage extends BasePage {
 	}
 
 	/**
+	 * Open the "Review Publishing Details" side-modal from the current
+	 * Publication sub-panel WITHOUT driving it to completion — the
+	 * partial-flow counterpart to `publishCurrentPanel` for tests that
+	 * cancel the dialog or assert on a blocked publish. Clicks whichever
+	 * entry button the server rendered ("Schedule For Publication" on v1
+	 * panels, "Publish" on v2+ panels) and returns the side-modal's
+	 * dialog locator once visible.
+	 *
+	 * @returns {Promise<import('@playwright/test').Locator>}
+	 */
+	async openPublishingDetailsModal() {
+		const modal = this.workflowModal();
+		const schedule = modal.getByRole('button', {
+			name: 'Schedule For Publication',
+			exact: true,
+		});
+		const publish = modal.getByRole('button', {name: 'Publish', exact: true});
+		await schedule.or(publish).first().waitFor({state: 'visible', timeout: 15_000});
+		if (await schedule.isVisible().catch(() => false)) {
+			await schedule.click();
+		} else {
+			await publish.click();
+		}
+		const reviewDetails = this.page.getByRole('dialog', {
+			name: /Review Publishing Details/i,
+		});
+		await expect(reviewDetails).toBeVisible({timeout: 15_000});
+		return reviewDetails;
+	}
+
+	/**
+	 * Fill + Confirm the "Review Publishing Details" side-modal opened by
+	 * `openPublishingDetailsModal` and wait for the final publish
+	 * confirmation modal (`.pkpWorkflow__publishModal`, the PublishForm
+	 * rendered by PublishHandler). Returns that modal's locator WITHOUT
+	 * clicking its commit button — callers assert on the confirmation
+	 * message / requirement-error list and decide whether to commit.
+	 *
+	 * NOTE: Confirm itself persists the issue assignment — the form PUTs
+	 * issueId + a READY_TO_PUBLISH / READY_TO_SCHEDULE status onto the
+	 * publication (useWorkflowVersionForm#handleVersionSubmission) before
+	 * the publish modal opens. Tests that need a pristine STATUS_QUEUED
+	 * must cancel at the details modal instead (cancelPublishingDetails).
+	 *
+	 * @param {import('@playwright/test').Locator} reviewDetails
+	 * @param {object} [opts]
+	 * @param {'currentBack'|'noIssue'} [opts.assignment='currentBack']
+	 *   issue-assignment radio: "Assign To Current/Back Issue" or
+	 *   "Don't Assign To An Issue" (continuous publishing).
+	 * @param {string} [opts.issueLabel='Vol. 1 No. 2 (2014)']  only used
+	 *   for issue-bearing assignments.
+	 * @param {string} [opts.versionStage='VoR']      AO | PMUR | VoR
+	 * @param {'true'|'false'} [opts.versionIsMinor='true']
+	 * @returns {Promise<import('@playwright/test').Locator>} the publish modal
+	 */
+	async confirmPublishingDetails(
+		reviewDetails,
+		{
+			assignment = 'currentBack',
+			issueLabel = 'Vol. 1 No. 2 (2014)',
+			versionStage = 'VoR',
+			versionIsMinor = 'true',
+		} = {},
+	) {
+		if (assignment === 'noIssue') {
+			// Straight-vs-curly apostrophe varies by locale build — match loosely.
+			await reviewDetails.getByText(/Don.t Assign To An Issue/i).click();
+		} else {
+			await reviewDetails.getByText(/Assign To Current\/Back Issue/i).click();
+			const issueSelect = reviewDetails.locator('select[name=issueId]');
+			// The issue list loads async after the radio pick; wait for the
+			// select to mount instead of skipping it (the publish would
+			// otherwise carry issueId=null).
+			await expect(issueSelect).toBeVisible({timeout: 10_000});
+			await issueSelect.selectOption({label: issueLabel});
+		}
+		await reviewDetails
+			.locator('select[name=versionStage]')
+			.selectOption(versionStage);
+		await reviewDetails
+			.locator('select[name=versionIsMinor]')
+			.selectOption(versionIsMinor);
+		await reviewDetails
+			.getByRole('button', {name: 'Confirm', exact: true})
+			.click();
+
+		const publishModal = this.page.locator('.pkpWorkflow__publishModal');
+		await expect(publishModal).toBeVisible({timeout: 15_000});
+		return publishModal;
+	}
+
+	/**
+	 * Cancel out of the "Review Publishing Details" side-modal without
+	 * confirming — nothing is persisted (the PUT only happens on
+	 * Confirm), so the publication keeps its pre-dialog status.
+	 *
+	 * @param {import('@playwright/test').Locator} reviewDetails
+	 */
+	async cancelPublishingDetails(reviewDetails) {
+		await reviewDetails
+			.getByRole('button', {name: 'Cancel', exact: true})
+			.click();
+		await expect(reviewDetails).toBeHidden({timeout: 10_000});
+	}
+
+	/**
 	 * Click Unpublish on the current Publication sub-panel and confirm
 	 * the dialog. Caller is responsible for first opening a sub-panel
 	 * (e.g. Title & Abstract) on the publication to be unpublished —

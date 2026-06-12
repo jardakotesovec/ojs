@@ -18,8 +18,29 @@
 | # | Title | Actors | Seed | Verifies | Status |
 |---|-------|--------|------|----------|--------|
 | 1 | Editor adds a contributor with role and multilingual name | dbarnes | submission scenario: submission-in-review fixture | Add Contributor modal: givenName/familyName (en), email, country, Author role checkbox; new row appears in the list; publication authors API includes it | implemented (lib/pkp/playwright/tests/publication-metadata-editing.spec.js) |
-| 2 | Editor edits an existing contributor | dbarnes | submission scenario: draft submission (submitter's seeded author row) | Edit opens prefilled form; changed family name + email persist in the list and in the publication authors after reload | planned |
-| 3 | Editor deletes a contributor | dbarnes | submission scenario: draft submission + one extra contributor added via UI | Delete action confirms and removes the row; publication authors no longer include the deleted email; remaining contributor untouched | planned |
-| 4 | Editor reorders contributors and previews the byline | dbarnes | submission scenario: draft submission + second contributor via UI | Order mode moves a contributor up/down and Save Order persists; Preview modal shows contributor display lists in the new order; order survives reload | planned |
-| 5 | Editor reassigns the primary contact | dbarnes | submission scenario: draft submission + second contributor via UI | Primary-contact indicator sits on the submitter by default; "Set primary contact" moves the badge; persists (publication primaryContactId updated) | planned |
-| 6 | Contributor affiliations round-trip (manual entry) | dbarnes | submission scenario: draft submission | Affiliations field on the contributor form accepts a manually entered institution; affiliation shows on the contributor row/preview and persists on the publication author | planned |
+| 2 | Editor edits an existing contributor | dbarnes | submission scenario: draft submission (submitter's seeded author row) | Edit opens prefilled form; changed family name + email persist in the list and in the publication authors after reload | implemented (lib/pkp/playwright/tests/contributors.spec.js) |
+| 3 | Editor deletes a contributor | dbarnes | submission scenario: draft submission + one extra contributor added via UI | Delete action confirms and removes the row; publication authors no longer include the deleted email; remaining contributor untouched | implemented (lib/pkp/playwright/tests/contributors.spec.js) |
+| 4 | Editor reorders contributors and previews the byline | dbarnes | submission scenario: draft submission + second contributor via UI | Order mode moves a contributor up/down and Save Order persists; Preview modal shows contributor display lists in the new order; order survives reload | implemented (lib/pkp/playwright/tests/contributors.spec.js) |
+| 5 | Editor reassigns the primary contact | dbarnes | submission scenario: draft submission + second contributor via UI | Primary-contact indicator sits on the submitter by default; "Set primary contact" moves the badge; persists (publication primaryContactId updated) | implemented (lib/pkp/playwright/tests/contributors.spec.js) |
+| 6 | Contributor affiliations round-trip (manual entry) | dbarnes | submission scenario: draft submission | Affiliations field on the contributor form accepts a manually entered institution; affiliation shows on the contributor row/preview and persists on the publication author | implemented (lib/pkp/playwright/tests/contributors.spec.js) |
+
+## Implementation notes (wave 6)
+
+- Rows 2–6 live in `lib/pkp/playwright/tests/contributors.spec.js` (5 tests), driven via the new
+  shared POM `lib/pkp/playwright/pages/ContributorsPanel.js`.
+- **Row 6 deviation:** the contributor row's affiliation subtitle is a dead binding —
+  `ContributorsListPanel.vue:61` reads `item.affiliation`, but the author payload only carries the
+  `affiliations` array (`lib/pkp/schemas/author.json`), so affiliations never render under the
+  contributor's name in the list. The "shows on the contributor row" assertion was replaced by an
+  edit-form round-trip (reload → reopen Edit → affiliation listed) + the REST payload check.
+  Reported as an app-bug candidate in the wave-6 report.
+- **Row 6 hermeticity:** the affiliations autosuggest queries `https://api.ror.org` from the
+  *browser* once the input exceeds 3 chars; the test stubs that endpoint with an empty 200 via
+  `page.route()` and drives the free-text (allowCustom) option — the manual path never depends on
+  ROR.
+- **Flake class fixed in the POM:** every contributor mutation triggers
+  `updated:publication → triggerDataChange()`, which refetches `GET /submissions/{id}` +
+  `GET /submissions/{id}/publications/{id}` a beat after the mutation response; a click landing in
+  that re-render is silently swallowed and the refetch reverts optimistic state (this ate Save
+  Order and reverted the reorder). `ContributorsPanel#workflowRefetchAfterMutation()` absorbs the
+  refetch pair after every mutation.
