@@ -3,7 +3,14 @@ const path = require('path');
 const {test, expect} = require('../support/fixtures.js');
 const {ensureAuthStateFor} = require('../../lib/pkp/playwright/support/auth.js');
 const {waitForJQueryIdle} = require('../../lib/pkp/playwright/support/jquery.js');
+const {LoginPage} = require('../../lib/pkp/playwright/pages/LoginPage.js');
 const {EditorialWorkflowPage} = require('../pages/EditorialWorkflowPage.js');
+const {IssuePage} = require('../pages/IssuePage.js');
+const {
+	enableManualPayments,
+	fillLegacyDatepicker,
+	isoDateOffset,
+} = require('../pages/SubscriptionManagementPage.js');
 const submissionPublished = require('../fixtures/scenarios/submission-published.js');
 
 /**
@@ -554,6 +561,405 @@ test.describe('Subscription-based access', () => {
 });
 
 /**
+ * Rows 3–6 of docs/e2e/plans/subscription-access.md (wave 11). All on
+ * scratch journals in subscription mode with a published issue flagged
+ * ISSUE_ACCESS_SUBSCRIPTION (2). Where a subscription state is a
+ * PRECONDITION (rows 4–5) it comes from the `subscriptions[]` journal
+ * seed (wave-1 build — classes/testing/bootstrap/Processor/
+ * SubscriptionProcessor.php); the PDF galley comes from the
+ * `publications[].galleys[]` submission seed (wave-1 build) since the
+ * gate signal (`a.obj_galley_link.restricted` from galley_link.tpl)
+ * needs a real publication galley and the add-galley UI is already
+ * covered by rows 1–2 + galleys.spec.js.
+ *
+ * Throwaway readers are created through `users[]` (username+password =>
+ * UserAssignmentProcessor creates the account) and signed in through the
+ * real login form — `asUser` is reserved for the baseline cast.
+ */
+test.describe('Subscription access gates (rows 3-6)', () => {
+	// Row 3 — ArticleHandler::userCanViewGalley#672-677: with no
+	// purchase-article/membership fees configured, a logged-in
+	// non-subscriber requesting a restricted galley is redirected to
+	// about/subscriptions.
+	test(
+		'logged-in non-subscriber is routed to the subscriptions page',
+		{tag: '@regression'},
+		async ({pkpApi, asUser, browser, baseURL}) => {
+			const tag = uniqueTag(test.info(), 'gate');
+			const clean = tag.replace(/[^a-z0-9]/gi, '');
+			const reader = {username: `u${clean}r`, password: `pw-${tag}`};
+			const journalPath = `s-${tag}`;
+			const typeName = `Yearly ${tag}`;
+			await pkpApi.createJournal({
+				tag,
+				path: journalPath,
+				name: {en: `Subs Gate ${tag}`},
+				publishingMode: 1, // PUBLISHING_MODE_SUBSCRIPTION
+				users: [
+					{username: 'dbarnes', roles: ['manager']},
+					{
+						username: reader.username,
+						password: reader.password,
+						roles: ['reader'],
+					},
+				],
+				issues: [
+					{
+						volume: 1,
+						number: 1,
+						year: 2026,
+						published: true,
+						accessStatus: 2, // ISSUE_ACCESS_SUBSCRIPTION
+					},
+				],
+				// One subscription TYPE so the landing page has an offer to
+				// render; granted to the MANAGER so the reader stays a
+				// genuine non-subscriber.
+				subscriptions: [
+					{
+						type: {name: typeName, duration: 12, cost: 50, currency: 'CAD'},
+						user: 'dbarnes',
+					},
+				],
+			});
+
+			const spec = submissionPublished({
+				tag,
+				journal: journalPath,
+				issue: {volume: 1, number: 1, year: 2026},
+			});
+			spec.publications[0].galleys = [{label: 'PDF'}];
+			const {submission} = await pkpApi.createSubmission(spec);
+
+			// The redirect target itself 302s on to the journal index
+			// unless payments are configured (AboutHandler::
+			// subscriptions#40-45) — configure ManualPayment via the same
+			// REST call the Distribution → Payments form makes. No
+			// purchaseArticleFee is set, so purchaseArticleEnabled() stays
+			// false and ArticleHandler keeps the no-fees redirect branch.
+			const managerCtx = await asUser('dbarnes');
+			const managerPage = await managerCtx.newPage();
+			await enableManualPayments(managerPage, journalPath);
+
+			const readerSession = await loginThrowawayReader(
+				browser,
+				baseURL,
+				journalPath,
+				reader,
+			);
+			try {
+				const page = readerSession.page;
+				// The article landing still renders metadata with the
+				// restricted galley link.
+				const resp = await page.goto(
+					`/index.php/${journalPath}/article/view/${submission.id}`,
+				);
+				expect(resp?.status()).toBe(200);
+				await expect(
+					page.getByText(
+						'A fully-processed, published article in scenario form.',
+					),
+				).toBeVisible();
+				await expectRestrictedPdf(page);
+
+				// Requesting the galley bounces to /about/subscriptions,
+				// which explains how to subscribe (contact block + the
+				// seeded type on offer).
+				await page.locator('a.obj_galley_link.pdf.restricted').click();
+				await page.waitForURL(/\/about\/subscriptions/, {
+					timeout: 15_000,
+					waitUntil: 'commit',
+				});
+				await expect(
+					page.getByRole('heading', {name: 'Subscriptions', exact: true}),
+				).toBeVisible();
+				await expect(
+					page.getByRole('heading', {name: 'Individual Subscriptions'}),
+				).toBeVisible();
+				await expect(page.getByText(typeName)).toBeVisible();
+			} finally {
+				await readerSession.ctx.close();
+			}
+		},
+	);
+
+	// Row 4 — date-range enforcement: an ACTIVE-status subscription whose
+	// date_end has passed (the seed's `status: 'expired'` shape — a state
+	// the create form cannot produce) no longer grants access. The
+	// active-subscriber arm on the SAME article is the in-test control
+	// proving the seeding+gating pipeline, so the expired arm's
+	// `restricted` can only mean date-range enforcement.
+	test(
+		'expired subscription no longer grants access',
+		{tag: '@regression'},
+		async ({pkpApi, browser, baseURL}) => {
+			const tag = uniqueTag(test.info(), 'exp');
+			const clean = tag.replace(/[^a-z0-9]/gi, '');
+			const activeReader = {username: `u${clean}a`, password: `pw-${tag}`};
+			const expiredReader = {username: `u${clean}x`, password: `pw-${tag}`};
+			const journalPath = `s-${tag}`;
+			await pkpApi.createJournal({
+				tag,
+				path: journalPath,
+				name: {en: `Subs Expiry ${tag}`},
+				publishingMode: 1,
+				users: [
+					{username: 'dbarnes', roles: ['manager']},
+					{
+						username: activeReader.username,
+						password: activeReader.password,
+						roles: ['reader'],
+					},
+					{
+						username: expiredReader.username,
+						password: expiredReader.password,
+						roles: ['reader'],
+					},
+				],
+				issues: [
+					{
+						volume: 1,
+						number: 1,
+						year: 2026,
+						published: true,
+						accessStatus: 2,
+					},
+				],
+				// Default dates are resolved PHP-side (no Node-vs-PHP clock
+				// skew): active = today → +12 months; expired = ACTIVE
+				// status with date_end yesterday 23:59:59.
+				subscriptions: [
+					{type: {name: `Act ${tag}`}, user: activeReader.username},
+					{
+						type: {name: `Exp ${tag}`},
+						user: expiredReader.username,
+						status: 'expired',
+					},
+				],
+			});
+
+			const spec = submissionPublished({
+				tag,
+				journal: journalPath,
+				issue: {volume: 1, number: 1, year: 2026},
+			});
+			spec.publications[0].galleys = [{label: 'PDF'}];
+			const {submission} = await pkpApi.createSubmission(spec);
+			const articleUrl = `/index.php/${journalPath}/article/view/${submission.id}`;
+
+			// Control: the active subscription grants access.
+			const activeSession = await loginThrowawayReader(
+				browser,
+				baseURL,
+				journalPath,
+				activeReader,
+			);
+			try {
+				const resp = await activeSession.page.goto(articleUrl);
+				expect(resp?.status()).toBe(200);
+				await expectOpenPdf(activeSession.page);
+			} finally {
+				await activeSession.ctx.close();
+			}
+
+			// Under test: same article, same ACTIVE status — only the past
+			// date_end differs, and the galley is restricted again.
+			const expiredSession = await loginThrowawayReader(
+				browser,
+				baseURL,
+				journalPath,
+				expiredReader,
+			);
+			try {
+				const resp = await expiredSession.page.goto(articleUrl);
+				expect(resp?.status()).toBe(200);
+				await expectRestrictedPdf(expiredSession.page);
+			} finally {
+				await expiredSession.ctx.close();
+			}
+		},
+	);
+
+	// Row 5 — institutional subscription by IP: an anonymous request from
+	// an IP inside the institution's range (the test client connects from
+	// 127.0.0.1) passes IssueAction::subscribedDomain and sees the
+	// unrestricted galley without logging in. The anonymous-blocked
+	// counterpart (no covering subscription → restricted) is row 1's
+	// existing test.
+	test(
+		'institutional subscription grants anonymous access by IP',
+		{tag: '@regression'},
+		async ({pkpApi, browser, baseURL}) => {
+			const tag = uniqueTag(test.info(), 'ip');
+			const journalPath = `s-${tag}`;
+			await pkpApi.createJournal({
+				tag,
+				path: journalPath,
+				name: {en: `Subs IP ${tag}`},
+				publishingMode: 1,
+				users: [{username: 'dbarnes', roles: ['manager']}],
+				issues: [
+					{
+						volume: 1,
+						number: 1,
+						year: 2026,
+						published: true,
+						accessStatus: 2,
+					},
+				],
+				// Institutional subscription whose institution_ip rows cover
+				// the loopback address every test request originates from.
+				subscriptions: [
+					{
+						type: {name: `Inst ${tag}`, institutional: true},
+						institution: {
+							name: `Test University ${tag}`,
+							ipRanges: ['127.0.0.1'],
+						},
+					},
+				],
+			});
+
+			const spec = submissionPublished({
+				tag,
+				journal: journalPath,
+				issue: {volume: 1, number: 1, year: 2026},
+			});
+			spec.publications[0].galleys = [{label: 'PDF'}];
+			const {submission} = await pkpApi.createSubmission(spec);
+
+			// Anonymous — explicit empty storage state (patterns rule 8).
+			const anonCtx = await browser.newContext({
+				baseURL,
+				storageState: {cookies: [], origins: []},
+			});
+			try {
+				const page = await anonCtx.newPage();
+				const resp = await page.goto(
+					`/index.php/${journalPath}/article/view/${submission.id}`,
+				);
+				expect(resp?.status()).toBe(200);
+				await expect(
+					page.getByText(
+						'A fully-processed, published article in scenario form.',
+					),
+				).toBeVisible();
+				await expectOpenPdf(page);
+
+				// And the galley view itself serves (no login /
+				// about/subscriptions bounce).
+				await page.locator('a.obj_galley_link.pdf').click();
+				await page.waitForURL(
+					new RegExp(`/article/view/${submission.id}/`),
+					{timeout: 15_000, waitUntil: 'commit'},
+				);
+			} finally {
+				await anonCtx.close();
+			}
+		},
+	);
+
+	// Row 6 — delayed open access: IssueAction::subscriptionRequired#50-54
+	// only gates while openAccessDate is null or in the future. The
+	// per-issue date is set through the issue Access tab UI
+	// (IssueAccessForm — the tab only renders in subscription mode).
+	test(
+		'delayed open access opens back content per issue',
+		{tag: '@regression'},
+		async ({pkpApi, asUser, browser, baseURL}) => {
+			const tag = uniqueTag(test.info(), 'doa');
+			const journalPath = `s-${tag}`;
+			await pkpApi.createJournal({
+				tag,
+				path: journalPath,
+				name: {en: `Delayed OA ${tag}`},
+				publishingMode: 1,
+				users: [{username: 'dbarnes', roles: ['manager']}],
+				issues: [
+					{
+						volume: 1,
+						number: 1,
+						year: 2026,
+						published: true,
+						accessStatus: 2,
+					},
+					{
+						volume: 1,
+						number: 2,
+						year: 2026,
+						published: true,
+						accessStatus: 2,
+					},
+				],
+			});
+
+			const specOpen = submissionPublished({
+				tag,
+				journal: journalPath,
+				issue: {volume: 1, number: 1, year: 2026},
+			});
+			specOpen.publications[0].galleys = [{label: 'PDF'}];
+			const {submission: openSubmission} =
+				await pkpApi.createSubmission(specOpen);
+
+			const specEmbargo = submissionPublished({
+				tag,
+				journal: journalPath,
+				issue: {volume: 1, number: 2, year: 2026},
+			});
+			specEmbargo.publications[0].galleys = [{label: 'PDF'}];
+			const {submission: embargoSubmission} =
+				await pkpApi.createSubmission(specEmbargo);
+
+			// Manager sets each issue's open-access date through the
+			// Access tab. ≥1 day of slack on both sides of "now" so a
+			// Node-vs-PHP timezone gap can't flip either gate.
+			const managerCtx = await asUser('dbarnes');
+			const managerPage = await managerCtx.newPage();
+			const issuePage = new IssuePage(managerPage);
+			await issuePage.goto(journalPath);
+			await issuePage.openBackTab();
+			await setIssueOpenAccessDate(
+				issuePage,
+				managerPage,
+				issuePage.backRow({volume: 1, number: 1, year: 2026}),
+				isoDateOffset(-2), // already passed → open
+			);
+			await setIssueOpenAccessDate(
+				issuePage,
+				managerPage,
+				issuePage.backRow({volume: 1, number: 2, year: 2026}),
+				isoDateOffset(30), // still embargoed
+			);
+
+			const anonCtx = await browser.newContext({
+				baseURL,
+				storageState: {cookies: [], origins: []},
+			});
+			try {
+				const page = await anonCtx.newPage();
+
+				// Past open-access date → unrestricted anonymously.
+				const openResp = await page.goto(
+					`/index.php/${journalPath}/article/view/${openSubmission.id}`,
+				);
+				expect(openResp?.status()).toBe(200);
+				await expectOpenPdf(page);
+
+				// Future open-access date → still gated.
+				const embargoResp = await page.goto(
+					`/index.php/${journalPath}/article/view/${embargoSubmission.id}`,
+				);
+				expect(embargoResp?.status()).toBe(200);
+				await expectRestrictedPdf(page);
+			} finally {
+				await anonCtx.close();
+			}
+		},
+	);
+});
+
+/**
  * Open the article URL anonymously and assert the *PDF* galley-link
  * restriction state matches `expectRestricted`. We anchor on
  * `a.obj_galley_link.pdf` (filtered to the seeded "PDF" label) rather
@@ -660,4 +1066,99 @@ function formatDate(d) {
 	const m = String(d.getMonth() + 1).padStart(2, '0');
 	const day = String(d.getDate()).padStart(2, '0');
 	return `${y}-${m}-${day}`;
+}
+
+/**
+ * Sign a throwaway `users[]`-seeded reader in through the real login
+ * form, in a fresh context with an EXPLICIT empty storage state
+ * (patterns rule 8 — inherited storageState would carry an editorial
+ * session whose canPreview bypass masks the gate). Caller closes `ctx`.
+ *
+ * @param {import('@playwright/test').Browser} browser
+ * @param {string|undefined} baseURL
+ * @param {string} journalPath
+ * @param {{username: string, password: string}} reader
+ * @returns {Promise<{ctx: import('@playwright/test').BrowserContext, page: import('@playwright/test').Page}>}
+ */
+async function loginThrowawayReader(browser, baseURL, journalPath, reader) {
+	const ctx = await browser.newContext({
+		baseURL,
+		storageState: {cookies: [], origins: []},
+	});
+	const page = await ctx.newPage();
+	const login = new LoginPage(page);
+	await login.login(reader.username, reader.password, journalPath);
+	await page.waitForURL((url) => !url.pathname.includes('/login'), {
+		timeout: 15_000,
+		waitUntil: 'commit',
+	});
+	return {ctx, page};
+}
+
+/**
+ * The page's PDF galley link is present AND carries the `restricted`
+ * class (galley_link.tpl with hasAccess=false). Anchoring the presence
+ * check on the unclassed locator first keeps the failure message
+ * distinguishable ("no galley at all" vs "galley not restricted").
+ *
+ * @param {import('@playwright/test').Page} page
+ */
+async function expectRestrictedPdf(page) {
+	await expect(
+		page.locator('a.obj_galley_link.pdf').first(),
+	).toBeVisible({timeout: 15_000});
+	await expect(
+		page.locator('a.obj_galley_link.pdf.restricted'),
+	).toBeVisible();
+}
+
+/**
+ * The page's PDF galley link is present and NOT restricted.
+ *
+ * @param {import('@playwright/test').Page} page
+ */
+async function expectOpenPdf(page) {
+	await expect(
+		page.locator('a.obj_galley_link.pdf').first(),
+	).toBeVisible({timeout: 15_000});
+	await expect(
+		page.locator('a.obj_galley_link.pdf.restricted'),
+	).toHaveCount(0);
+}
+
+/**
+ * Drive one issue's Access tab: open the row's Edit modal, switch to the
+ * Access tab (rendered only in subscription mode — issue.tpl#24-26),
+ * write `openAccessDate` into the legacy datepicker pair, and save.
+ * IssueGridHandler::updateAccess returns a DataChangedEvent on success,
+ * which closes the whole edit modal (the same signal
+ * IssuePage#saveIssueForm waits on); a validation failure re-renders the
+ * form and the close assertion times out.
+ *
+ * @param {import('../pages/IssuePage.js').IssuePage} issuePage
+ * @param {import('@playwright/test').Page} page
+ * @param {import('@playwright/test').Locator} row  a tr.gridRow locator
+ * @param {string} isoDate  'YYYY-MM-DD'
+ */
+async function setIssueOpenAccessDate(issuePage, page, row, isoDate) {
+	const editLink = await issuePage.rowAction(row, 'edit');
+	await editLink.click();
+	await expect(issuePage.editIssueTabs).toBeVisible({timeout: 15_000});
+	await issuePage.editIssueTabs.locator('a', {hasText: 'Access'}).click();
+	const form = page.locator('form#issueAccessForm');
+	await expect(form).toBeVisible({timeout: 15_000});
+	// Settle the tab's AJAX load + the datepicker init (which renames the
+	// visible input to openAccessDate-removed) before driving the field.
+	await waitForJQueryIdle(page);
+	// accessStatus stays "Subscription" (preselected from the seeded
+	// issue); only the open-access date changes.
+	await fillLegacyDatepicker(
+		page,
+		'form#issueAccessForm',
+		'openAccessDate',
+		isoDate,
+	);
+	await form.locator('button[id^="submitFormButton"]').click();
+	await expect(issuePage.editIssueTabs).toHaveCount(0, {timeout: 15_000});
+	await waitForJQueryIdle(page);
 }

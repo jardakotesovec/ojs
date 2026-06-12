@@ -1,6 +1,8 @@
 // @ts-check
+const fs = require('fs');
 const {test, expect} = require('../support/fixtures.js');
 const submissionPublished = require('../fixtures/scenarios/submission-published.js');
+const {DoiManagementPage} = require('../pages/DoiManagementPage.js');
 
 const SCRATCH_ISSUE = {volume: 1, number: '1', year: 2026};
 
@@ -70,6 +72,23 @@ const SCRATCH_ISSUE = {volume: 1, number: '1', year: 2026};
  *     into the doi-export route.
  *   - `plugins` — enables the lazy-load Crossref plugin + its deposit
  *     credentials so the agency resolver finds it.
+ *
+ * Wave 11 (crossref-deposit plan rows 3–4) adds:
+ *   - Bulk Export through the /dois DoiListPanel UI, asserting on the
+ *     downloaded deposit XML. The historical blocker (the export
+ *     endpoint XSD-validates its output against the remotely-hosted
+ *     crossref5.4.0.xsd tree, which the firewalled test environment
+ *     can't fetch — earlier waves saw 30s+ max_execution_time fatals in
+ *     XMLTypeDescription::checkType) is resolved by mirroring the full
+ *     schema tree at lib/pkp/playwright/fixtures/dtd/crossref/ + w3/ and
+ *     mapping it in the libxml catalog (same XML_CATALOG_FILES precedent
+ *     as the PubMed DTD). Offline validation compiles in ~3s.
+ *   - Agency-gated affordances: Export/Deposit/"Deposit All" appear in
+ *     the DOI list panel only when the configured agency passes
+ *     CrossrefPlugin::isPluginConfigured() (required settings +
+ *     doiPrefix + publisherInstitution + an ISSN). No deposit is ever
+ *     triggered — deposits would attempt outbound HTTP (firewalled, and
+ *     forbidden by the e2e charter).
  */
 
 test.describe('DOI Crossref registration', () => {
@@ -339,19 +358,202 @@ test.describe('DOI Crossref registration', () => {
 		},
 	);
 
-});
+	test(
+		'manager exports Crossref deposit XML for a published submission via bulk Export',
+		{tag: '@regression'},
+		async ({asUser, pkpApi}) => {
+			// This file sets no default user — open an authenticated
+			// manager page explicitly (the /dois page is manager-gated).
+			const ctx = await asUser('dbarnes');
+			const page = await ctx.newPage();
+			const tag = uniqueTag(test.info(), 'xml');
+			const prefix = '10.9999';
+			const depositorName = 'Wave11 Depositor';
+			const depositorEmail = 'depositor-w11@example.com';
 
-// Crossref XML export deferred. Probing
-// `PUT /api/v1/dois/submissions/export` with a scratch-journal
-// publication runs into a PHP fatal at
-// `lib/pkp/classes/xslt/XMLTypeDescription.php:141` —
-// "Maximum execution time of 30+2 seconds exceeded": the Crossref
-// XSD-validation pass is too slow to complete inside the test
-// environment's `max_execution_time` (test PHP server is single-
-// threaded, no opcache for the schema). Reopen if the validation
-// step is moved off the request lifecycle (or if the schema is
-// pre-parsed/cached) — at that point the assertion shape from
-// Cypress (200 + temporaryFileId) becomes tractable.
+			// Registration-ready journal: besides the agency wiring, the
+			// Export affordance is gated on
+			// CrossrefPlugin::isPluginConfigured(), which additionally
+			// demands publisherInstitution + an ISSN (valid checksum —
+			// the context schema validates it). The abbreviation matters
+			// too: IssueCrossrefXmlFilter::createJournalMetadataNode()
+			// appends <abbrev_title> unconditionally (falling back to the
+			// acronym), so a journal with neither produces an EMPTY
+			// element that fails the Crossref XSD (minLength 1) and
+			// 400s the export — app-side bug, recorded in the wave-11
+			// ledger; the XSD marks abbrev_title optional.
+			const {context} = await pkpApi.createJournal({
+				tag,
+				enableDois: true,
+				doiPrefix: prefix,
+				registrationAgency: 'crossrefplugin',
+				publisherInstitution: 'Public Knowledge Project',
+				onlineIssn: '0378-5955',
+				abbreviation: {en: 'JPKW11'},
+				users: [{username: 'dbarnes', roles: ['manager']}],
+				issues: [{...SCRATCH_ISSUE, published: true}],
+				plugins: {
+					crossrefplugin: {
+						enabled: true,
+						settings: {
+							depositorName,
+							depositorEmail,
+							testMode: false,
+						},
+					},
+				},
+			});
+
+			// Registration-ready publication preset: submissionPublished
+			// already carries licenseUrl + abstract (METADATA_FIELDS);
+			// the galley supplies the crawler/text-mining resource links.
+			// The XML is generated + validated locally — never deposited.
+			const spec = submissionPublished({tag});
+			spec.journal = context.path;
+			spec.publications[0].issue = {...SCRATCH_ISSUE};
+			spec.publications[0].galleys = [{label: 'PDF'}];
+			const {submission} = await pkpApi.createSubmission(spec);
+
+			// The auto-minted DOI value (default suffix) for the XML
+			// assertion below.
+			const subResp = await page.request.get(
+				`/index.php/${context.path}/api/v1/submissions/${submission.id}`,
+			);
+			expect(subResp.ok()).toBeTruthy();
+			const subBody = await subResp.json();
+			const currentPub = subBody.publications.find(
+				(p) => p.id === subBody.currentPublicationId,
+			);
+			expect(currentPub.doiObject).toBeTruthy();
+			const doi = currentPub.doiObject.doi;
+			expect(doi).toMatch(new RegExp(`^${escapeRegex(prefix)}/`));
+
+			const doiPage = new DoiManagementPage(page, context.path);
+			await doiPage.goto();
+			await expect(doiPage.item('submission', submission.id)).toBeVisible();
+			await doiPage.selectItem('submission', submission.id);
+
+			// Bulk Export: PUT dois/submissions/export returns
+			// {temporaryFileId}; the panel then clicks a generated anchor
+			// at dois/exports/{id}, which streams the XML as a download.
+			const downloadPromise = page.waitForEvent('download');
+			await doiPage.bulkAction('submission', 'Export DOIs', 'export');
+			const download = await downloadPromise;
+			const xml = fs.readFileSync(await download.path(), 'utf8');
+
+			// Deposit XML essentials: schema root, the submission's DOI,
+			// the depositor block from the plugin settings, and the
+			// article title (tagged for parallel uniqueness).
+			expect(xml).toContain('<doi_batch');
+			expect(xml).toContain(`<doi>${doi}</doi>`);
+			expect(xml).toContain(`<depositor_name>${depositorName}</depositor_name>`);
+			expect(xml).toContain(`<email_address>${depositorEmail}</email_address>`);
+			expect(xml).toContain('Published article');
+			expect(xml).toContain(tag);
+		},
+	);
+
+	test(
+		'Deposit and Export bulk affordances appear only when a registration agency is configured',
+		{tag: '@regression'},
+		async ({asUser, pkpApi}) => {
+			// This file sets no default user — open an authenticated
+			// manager page explicitly (the /dois page is manager-gated).
+			const ctx = await asUser('dbarnes');
+			const page = await ctx.newPage();
+			const tag = uniqueTag(test.info(), 'gate');
+
+			// Journal A: Crossref fully configured (agency + required
+			// settings + publisherInstitution + ISSN).
+			const {context: withAgency} = await pkpApi.createJournal({
+				tag: `${tag}a`,
+				enableDois: true,
+				doiPrefix: '10.9999',
+				registrationAgency: 'crossrefplugin',
+				publisherInstitution: 'Public Knowledge Project',
+				onlineIssn: '1545-7885',
+				users: [{username: 'dbarnes', roles: ['manager']}],
+				plugins: {
+					crossrefplugin: {
+						enabled: true,
+						settings: {
+							depositorName: 'Wave11 Depositor',
+							depositorEmail: 'depositor-w11@example.com',
+							testMode: false,
+						},
+					},
+				},
+			});
+
+			// Journal B: DOIs on, no agency.
+			const {context: withoutAgency} = await pkpApi.createJournal({
+				tag: `${tag}b`,
+				enableDois: true,
+				doiPrefix: '10.9999',
+				users: [{username: 'dbarnes', roles: ['manager']}],
+			});
+
+			// With the agency configured the bulk menu offers Export +
+			// Deposit, and the standalone "Deposit All" button renders.
+			// NEVER click the deposit actions — they would attempt
+			// outbound HTTP to Crossref.
+			const agencyPage = new DoiManagementPage(page, withAgency.path);
+			await agencyPage.goto();
+			await agencyPage.openBulkActions('submission');
+			const agencyMenu = agencyPage
+				.panel('submission')
+				.locator('.pkpDropdown__content');
+			await expect(
+				agencyMenu.getByRole('button', {name: 'Export DOIs', exact: true}),
+			).toBeVisible();
+			await expect(
+				agencyMenu.getByRole('button', {name: 'Deposit DOIs', exact: true}),
+			).toBeVisible();
+			await expect(
+				agencyMenu.getByRole('button', {
+					name: 'Mark DOIs Registered',
+					exact: true,
+				}),
+			).toBeVisible();
+			await expect(
+				agencyPage
+					.panel('submission')
+					.getByRole('button', {name: 'Deposit All', exact: true}),
+			).toBeVisible();
+
+			// Without an agency the registration actions are absent; the
+			// agency-independent Mark/Assign actions are the positive
+			// control that the menu itself rendered.
+			const plainPage = new DoiManagementPage(page, withoutAgency.path);
+			await plainPage.goto();
+			await plainPage.openBulkActions('submission');
+			const plainMenu = plainPage
+				.panel('submission')
+				.locator('.pkpDropdown__content');
+			await expect(
+				plainMenu.getByRole('button', {
+					name: 'Mark DOIs Registered',
+					exact: true,
+				}),
+			).toBeVisible();
+			await expect(
+				plainMenu.getByRole('button', {name: 'Assign DOIs', exact: true}),
+			).toBeVisible();
+			await expect(
+				plainMenu.getByRole('button', {name: 'Export DOIs', exact: true}),
+			).toHaveCount(0);
+			await expect(
+				plainMenu.getByRole('button', {name: 'Deposit DOIs', exact: true}),
+			).toHaveCount(0);
+			await expect(
+				plainPage
+					.panel('submission')
+					.getByRole('button', {name: 'Deposit All', exact: true}),
+			).toHaveCount(0);
+		},
+	);
+
+});
 
 /**
  * Build a tag scoped to this worker + test title so parallel workers

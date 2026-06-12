@@ -17,7 +17,7 @@ Defined in `lib/pkp/classes/security/Role.php:24-31`. These are the integer IDs 
 | `ROLE_ID_READER` | 1048576 | — (default) | Reader — any registered user |
 | `ROLE_ID_SUBSCRIPTION_MANAGER` | 2097152 | — (OJS-only) | Manages subscriptions. **Not seeded in baseline users.** OJS-only role. |
 
-**Note on string keys:** `editor` and `sectionEditor` both correspond to `ROLE_ID_SUB_EDITOR` at the DB level. The UserProcessor on the backend maps user-group names to role IDs; the test-user data treats them as distinct groups for role assignment clarity.
+**Note on string keys:** `sectionEditor` corresponds to `ROLE_ID_SUB_EDITOR`. **CAUTION (verified wave 11):** on default scratch-journal user groups, the scenario role string `editor` resolves to the "Journal editor" group, which is **`ROLE_ID_MANAGER`** per `registry/userGroups.xml:18` — NOT sub-editor. A `users: [{roles: ['editor']}]` throwaway therefore passes manager-level gates (canPublish, settings access). Use `sectionEditor` when you need a non-manager editorial role.
 
 ## Seeded test users
 

@@ -33,7 +33,7 @@ inventory update here.
 | Plan file | Scope | Placement | Imp | Budget | Status |
 |-----------|-------|-----------|-----|--------|--------|
 | submission-wizard-core | Full wizard happy path: start, files+genres, details, contributors, confirm, submit; ack email | lib/pkp | H | 14 | done |
-| submission-wizard-metadata | For-the-Editors fields (keywords, subjects, disciplines, agencies, coverage, type, citations, data availability), request vs require modes, categories in wizard | lib/pkp | H | 13 | planned |
+| submission-wizard-metadata | For-the-Editors fields (keywords, subjects, disciplines, agencies, coverage, type, citations, data availability), request vs require modes, categories in wizard | lib/pkp | H | 13 | done |
 | submission-wizard-validation | Validation errors per step, checklist/copyright/privacy consent, section rules (inactive, editor-restricted), comments for the editors | lib/pkp | H | 10 | done |
 | submission-wizard-language | Multilingual submission, locale picker, reconfigure modal (change section/locale mid-wizard) | lib/pkp | M | 6 | done |
 | submission-drafts | Save-for-later, resume draft, delete draft, incomplete submissions list | lib/pkp | M | 6 | done |
@@ -126,15 +126,15 @@ inventory update here.
 
 | Plan file | Scope | Placement | Imp | Budget | Status |
 |-----------|-------|-----------|-----|--------|--------|
-| plugin-management | Installed plugins grid enable/disable + settings modal, site vs journal scope | lib/pkp | H | 5 | planned |
-| doi-management | DOI settings (prefix/pattern/auto-assign), assignment on publish, versioned DOI, management page statuses/filters | ojs | H | 9 | planned |
-| crossref-deposit | Crossref settings, export XML, manual deposit status marking (no live API) | ojs | H | 4 | planned |
-| orcid | ORCID settings, author request email, verified/unverified badge, registration prefill | lib/pkp | M | 7 | planned |
-| citation-style-language | CSL settings (styles offered, primary), how-to-cite render, downloads (BibTeX/RIS) | ojs | M | 6 | planned |
-| subscriptions-management | Subscription types CRUD, policies, individual/institutional subscriptions CRUD | ojs | H | 9 | planned |
-| subscription-access | Access enforcement: anonymous vs subscriber vs editor bypass; delayed open access | ojs | H | 6 | planned |
-| payments | Enable payments, manual payment record flow, payments grid, paypal config surface (no external calls) | ojs | M | 5 | planned |
-| usage-statistics | Stats pages (publications, editorial activity, users): render, date filter, CSV download; minimal metrics seeding | lib/pkp | M | 6 | planned |
+| plugin-management | Installed plugins grid enable/disable + settings modal, site vs journal scope | lib/pkp | H | 5 | done |
+| doi-management | DOI settings (prefix/pattern/auto-assign), assignment on publish, versioned DOI, management page statuses/filters | ojs | H | 9 | done |
+| crossref-deposit | Crossref settings, export XML, manual deposit status marking (no live API) | ojs | H | 4 | done |
+| orcid | ORCID settings, author request email, verified/unverified badge, registration prefill | lib/pkp | M | 7 | done |
+| citation-style-language | CSL settings (styles offered, primary), how-to-cite render, downloads (BibTeX/RIS) | ojs | M | 6 | done |
+| subscriptions-management | Subscription types CRUD, policies, individual/institutional subscriptions CRUD | ojs | H | 9 | done |
+| subscription-access | Access enforcement: anonymous vs subscriber vs editor bypass; delayed open access | ojs | H | 6 | done |
+| payments | Enable payments, manual payment record flow, payments grid, paypal config surface (no external calls) | ojs | M | 5 | done |
+| usage-statistics | Stats pages (publications, editorial activity, users): render, date filter, CSV download; minimal metrics seeding | lib/pkp | M | 6 | done |
 
 ## 8. System & communications
 
