@@ -150,6 +150,7 @@ The suite runs in parallel by default. The shared seed data is the unit of conte
 7. **Scheduled tasks never run on their own** (`[schedule] task_runner = Off` in the test config). A spec that needs a scheduled task (reminders etc.) belongs in the serial project and invokes `php lib/pkp/tools/scheduler.php run` explicitly. Queued jobs still process at end of request (`[queues] job_runner = On`).
 8. **"Anonymous" contexts aren't anonymous under `test.use({user})`.** `browser.newContext()` inherits the file's `storageState` context option, so a fresh context carries the logged-in session — and editors can *preview* unpublished articles, turning expected 404s into 200s. Every anonymous-reader check must pass an explicit empty state: `browser.newContext({storageState: {cookies: [], origins: []}})`. (Bit two wave-6 agents independently.)
 9. **Bare front-end URLs 302 to the locale-prefixed form** (`/index.php/<journal>/article/...` → `/index.php/<journal>/en/article/...`). `page.goto` hides this by following redirects, but any `request.get(..., {maxRedirects: 0})` probe must use the locale-prefixed URL.
+10. **Tags that back COUNT assertions need a per-run random component.** A tag built only from workerIndex + test-title slug repeats across runs, so counting tag matches on a shared surface (issue TOC, archive listing) picks up leftovers from previous runs on a long-lived DB. Existence assertions tolerate this; `toHaveCount(n)` does not.
 
 ## Tag conventions
 

@@ -71,18 +71,18 @@ inventory update here.
 | publication-identifiers-license | Identifiers tab, license/permissions overrides, references, per-locale title/abstract on publication tabs | lib/pkp | M | 8 | done |
 | contributors | Contributor CRUD, ordering, primary contact, affiliations on publication | lib/pkp | H | 6 | done |
 | galleys | Galley create/edit/delete, file vs remote URL, labels, ordering | ojs | H | 8 | done |
-| issue-management | Issue CRUD, TOC ordering, cover, publish issue + reader notification, current issue, unpublish/delete, issue galleys, back/future lists | ojs | H | 11 | planned |
+| issue-management | Issue CRUD, TOC ordering, cover, publish issue + reader notification, current issue, unpublish/delete, issue galleys, back/future lists | ojs | H | 11 | done |
 | issue-assignment-scheduling | Assign article to issue, schedule into future issue, publishes with issue | ojs | H | 5 | done |
-| media-files | Media section: batch upload, web/high-res variant linking, metadata sync, sharing across galleys, author read-only (new in 3.6, Feb 2026) | lib/pkp | H | 8 | planned |
-| publication-amendments | Summary of Changes + update type: author submits with revisions, editor inserts into publication, versioned update types (new in 3.6, May 2026) | lib/pkp | M | 6 | planned |
+| media-files | Media section: batch upload, web/high-res variant linking, metadata sync, sharing across galleys, author read-only (new in 3.6, Feb 2026) | lib/pkp | H | 8 | done |
+| publication-amendments | Summary of Changes + update type: author submits with revisions, editor inserts into publication, versioned update types (new in 3.6, May 2026) | lib/pkp | M | 6 | done |
 
 ## 4. Reader front end
 
 | Plan file | Scope | Placement | Imp | Budget | Status |
 |-----------|-------|-----------|-----|--------|--------|
-| journal-homepage | Current issue display, sidebar blocks, announcements block | ojs | H | 5 | planned |
-| article-landing | Metadata display, galley view/download incl. pdfJsViewer smoke, license display, DC meta tags, multilingual rendering | ojs | H | 8 | planned |
-| issue-archive-toc | Archive listing, issue TOC page, section grouping | ojs | M | 4 | planned |
+| journal-homepage | Current issue display, sidebar blocks, announcements block | ojs | H | 5 | done |
+| article-landing | Metadata display, galley view/download incl. pdfJsViewer smoke, license display, DC meta tags, multilingual rendering | ojs | H | 8 | done |
+| issue-archive-toc | Archive listing, issue TOC page, section grouping | ojs | M | 4 | done |
 | site-search | Front-end search, filters, no-result behavior | ojs | H | 6 | planned |
 | browse-category-section | Category browse pages, section policies display | ojs | L | 4 | planned |
 | oai-sitemap-feeds | OAI-PMH ListRecords/GetRecord (DC), sitemap.xml, web feed presence | ojs | M | 5 | planned |

@@ -471,18 +471,26 @@ test.describe('Issues', () => {
 			// row in the journal context who hasn't blocked
 			// NOTIFICATION_TYPE_PUBLISHED_ISSUE gets both an in-app
 			// notification and (because $sender is non-null on the second
-			// batch) an email via the IssuePublishedNotifyUsers job. dbarnes
-			// (manager of the scratch journal) is therefore a valid
-			// recipient — no extra reader user needs to be seeded. The
+			// batch) an email via the IssuePublishedNotifyUsers job. The
 			// publishingMode != _NONE gate passes because OJS's context
 			// schema leaves publishingMode unset by default; only
 			// PUBLISHING_MODE_NONE (=2) would suppress notification.
+			//
+			// Mailpit discipline (charter principle 8): Mailpit is shared
+			// across parallel workers, so the test never clears the inbox.
+			// Instead it enrolls a THROWAWAY reader with a per-test unique
+			// email in the scratch journal and asserts via pkpMail.find()
+			// scoped by that recipient + the scratch journal's unique tag
+			// (the journal is named "Scratch context {tag}", and the
+			// issue-published subject template `emails.issuePublishNotify.
+			// subject` is "Just published: {$issueIdentification} of
+			// {$contextName}" — so the tag lands in the subject).
 			//
 			// The job dispatches via Bus::batch and runs in
 			// PKPQueueProvider's register_shutdown_function on every web
 			// request. By the time the publish POST has returned and the
 			// next page action settles, Mailpit has the email;
-			// pkpMail.inboxFor polls up to 10s.
+			// pkpMail.find polls.
 			//
 			// The publish form's `sendIssueNotification` checkbox is
 			// rendered checked=true by assignPublicIdentifiersForm.tpl; we
@@ -490,85 +498,74 @@ test.describe('Issues', () => {
 			// default branch so the test is independent of the template's
 			// default state.
 			const tag = uniqueTag();
+			// Throwaway reader: unique username/email per test run so no
+			// other worker's mail can match the scoped query below.
+			const readerUsername = `rdr${tag.replace(/-/g, '')}`;
+			const readerEmail = `${readerUsername}@mailinator.com`;
 			const {context} = await pkpApi.createJournal({
 				tag,
-				users: [{username: 'dbarnes', roles: ['manager']}],
+				users: [
+					{username: 'dbarnes', roles: ['manager']},
+					{
+						username: readerUsername,
+						password: 'readerreader',
+						email: readerEmail,
+						givenName: 'Throwaway',
+						familyName: 'Reader',
+						roles: ['reader'],
+					},
+				],
 			});
 			const ctx = await asUser('dbarnes');
 
-			// Clear Mailpit before triggering the publish — other parallel
-			// workers may have left issue-publish mail addressed to
-			// dbarnes@mailinator.com (a shared address across the suite),
-			// which would race our latestTo() lookup.
-			await pkpMail.clearAll();
+			const page = await ctx.newPage();
+			await openManageIssues(page, context.path);
+			await createFutureIssue(page, {
+				volume: 5,
+				number: 1,
+				year: 2025,
+			});
+			await publishFirstFutureIssue(page, {sendNotification: true});
 
-			try {
-				const page = await ctx.newPage();
-				await openManageIssues(page, context.path);
-				await createFutureIssue(page, {
+			// Sanity-check the publish flow itself before asserting on
+			// the email — the issue must now be on the Back tab.
+			await openBackTab(page);
+			await expect(
+				findRow(page, '#backIssuesGridContainer', {
 					volume: 5,
 					number: 1,
 					year: 2025,
-				});
-				await publishFirstFutureIssue(page, {sendNotification: true});
+				}),
+			).toBeVisible();
 
-				// Sanity-check the publish flow itself before asserting on
-				// the email — the issue must now be on the Back tab.
-				await openBackTab(page);
-				await expect(
-					findRow(page, '#backIssuesGridContainer', {
-						volume: 5,
-						number: 1,
-						year: 2025,
-					}),
-				).toBeVisible();
+			// Note on To/Bcc: OJS dispatches batch notifications with
+			// the sender in To and the actual subscribers (including the
+			// throwaway reader) in BCC. Mailpit's `to:` search matches
+			// any recipient header (To/Cc/Bcc), which is why find()
+			// locates the message even though its visible To doesn't
+			// list the reader. Don't assert on the To shape — it's an
+			// OJS implementation detail, not the contract under test.
+			const messages = await pkpMail.find({
+				to: readerEmail,
+				contains: tag,
+				timeoutMs: 20_000,
+			});
+			const ours = messages.find((m) => (m.Subject || '').includes(tag));
+			expect(
+				ours,
+				`expected an issue-published email with tag "${tag}" in ` +
+					`the subject, got subjects: ${messages
+						.map((m) => m.Subject)
+						.join(' | ')}`,
+			).toBeTruthy();
+			expect(ours.Subject).toContain('Vol. 5 No. 1 (2025)');
 
-				// IssuePublishedNotify subject template
-				// (locale/en/emails.po `emails.issuePublishNotify.subject`)
-				// is "Just published: {$issueIdentification} of {$contextName}",
-				// so the rendered subject must contain the issue
-				// identification.
-				// Filter by the scratch journal's unique tag in the
-				// Subject so a parallel worker's "Just published" email
-				// to dbarnes can't race us — every parallel run uses
-				// `Vol. 5 No. 1 (2025)` so the volume alone isn't unique,
-				// but `Scratch context ${tag}` is.
-				//
-				// Note on To/Bcc: OJS dispatches batch notifications with
-				// the sender (admin) in To and the actual subscribers
-				// (including dbarnes) in BCC. Mailpit's `to:` search
-				// matches any recipient header (To/Cc/Bcc), which is why
-				// `inboxFor('dbarnes@mailinator.com')` finds the message
-				// even though `latest.To` only lists admin. Don't assert
-				// on the visible To shape — it's an OJS implementation
-				// detail, not the contract under test.
-				const messages = await pkpMail.inboxFor(
-					'dbarnes@mailinator.com',
-				);
-				const ours = messages.find((m) =>
-					(m.Subject || '').includes(tag),
-				);
-				expect(
-					ours,
-					`expected an issue-published email with tag "${tag}" in ` +
-						`the subject, got subjects: ${messages
-							.map((m) => m.Subject)
-							.join(' | ')}`,
-				).toBeTruthy();
-				expect(ours.Subject).toContain('Vol. 5 No. 1 (2025)');
-
-				// fullMessage round-trip — the body should reference the
-				// issue identification too (the default template body
-				// includes the {$issueIdentification} variable).
-				const full = await pkpMail.fullMessage(ours.ID);
-				const bodyText = (full.HTML || '') + (full.Text || '');
-				expect(bodyText).toContain('Vol. 5 No. 1 (2025)');
-			} finally {
-				// Leave Mailpit empty for the next test/worker so a stale
-				// "Vol. 5 No. 1 (2025)" message can't shadow a future
-				// assertion.
-				await pkpMail.clearAll();
-			}
+			// fullMessage round-trip — the body should reference the
+			// issue identification too (the default template body
+			// includes the {$issueIdentification} variable).
+			const full = await pkpMail.fullMessage(ours.ID);
+			const bodyText = (full.HTML || '') + (full.Text || '');
+			expect(bodyText).toContain('Vol. 5 No. 1 (2025)');
 		},
 	);
 });

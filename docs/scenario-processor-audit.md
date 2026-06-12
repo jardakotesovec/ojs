@@ -1050,3 +1050,31 @@ Known-wrinkle entry (no Processor change yet); surfaced by the wave-5 activity-l
 **Candidate fix**: compile mailable variables before `logMailable()` in the seeding path, or swap `Mail::fake()` for a transport-level no-op so the pipeline (incl. compilation) runs.
 
 **Verdict**: ⚠️ known parity wrinkle, recorded — fix before any spec asserts on seeded email-log subject text
+
+### Audit entry — PublicationsProcessor `publications[].mediaFiles[]` (wave 7)
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/PublicationsProcessor.php` (`seedMediaFiles`), schema `submission.json` (`$defs/mediaFile`), `GenreLookup` (+`IMAGE`).
+**Domain**: `submission_files` rows at `SUBMISSION_FILE_MEDIA` (23) + `variant_groups`.
+
+**Canonical UI entry point**: Production stage → Media tab → Add Media File / Link Media Files (Vue `MediaFileManager`), backed by `MediaFilesController::add()` / `linkMany()` (`lib/pkp/api/v1/submissions/MediaFilesController.php`).
+
+**What the production path does**: `add()` stores the upload via `app('file')->add()` into the submission dir, then `Repo::submissionFile()->add()` with `fileStage = SUBMISSION_FILE_MEDIA`, `assocType = ASSOC_TYPE_PUBLICATION`, `assocId = publicationId`, `genreId`, required `variantType` (`web` | `high_resolution`), `name` defaulted to the original filename keyed by the submission locale. `linkMany()` calls `VariantGroup::link(primary, secondary, submissionId)` — creates the `variant_groups` row, stamps `variant_group_id` on both files, copies the primary's *common media fields* (caption/creator/description/… — `Repository::getCommonMediaFileFields()`; `name` deliberately excluded) onto the sibling.
+
+**What the Processor does**: identical field set and the same `Repo::submissionFile()->add()` / `VariantGroup::link()` calls; the temporary-file hop is replaced by the bundled-fixture copy (same approach as galley seeding; default fixture `dependent-image.png`). Spec entries sharing a `group` label are linked pairwise with the FIRST entry as primary (mirrors the Link modal's web-side-primary). Group size pre-validated against `VariantGroup::MAX_GROUP_SIZE` so oversized specs fail before any rows are written. Uploader attributed to admin (out-of-session convention). Genre via `GenreLookup` (`IMAGE` default — the variant-supporting genre per `registry/genres.xml`; `ARTICLE` allowed).
+
+**Discrepancies**: none known. Event-log/hooks fire through the same `Repo::submissionFile()->add()`. The controller's `DB::transaction` wrapping is not mirrored (scenario seeding is single-threaded per request; a failure aborts the whole scenario anyway).
+
+**Verified** (2026-06-12, live server :8000): smoke spec with a `group`-linked pair + one solo file → REST/DB show one `variant_groups` row, both members stamped with it and their `variant_type`s, solo file ungrouped; `name` override honored on the primary, sibling keeps its own name (matches `getCommonMediaFileFields` exclusion).
+
+**Verdict**: ✅ parity
+
+### Audit fragment — SectionProcessor leaves `seq = 0` on seeded sections
+
+Known-wrinkle entry (no Processor change yet); surfaced by the wave-7 issue-archive-toc agent.
+
+**Domain**: `sections.seq` for context-scenario-seeded sections.
+**Discrepancy**: the UI create path sequences new sections (`SectionForm::execute` inserts at REALLY_BIG_NUMBER then resequences); scenario-seeded sections all keep `seq = 0`, so the journal's section ORDER on reader TOC surfaces is an arbitrary DB tie — a state the UI cannot produce once a manager has created sections. Bootstrap's own ART/REV also tie at 0.
+**Impact**: tests asserting positional section order must create at least the ordered sections through the UI (issue-archive-toc row 2 does); grouping/membership assertions are unaffected.
+**Candidate fix**: mirror the resequence in SectionProcessor (assign max(seq)+1 per insert).
+
+**Verdict**: ⚠️ known parity wrinkle, recorded

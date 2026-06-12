@@ -30,6 +30,7 @@ Per-publication (inside `publications[]`):
 
 - **`galleys: [{label, locale?, file?, urlRemote?}]`** — seeds galleys at galley-grid parity (`file` is a basename under `lib/pkp/playwright/fixtures/files/`, defaults to the standard Article Text PDF; `urlRemote` makes a remote galley; the two are mutually exclusive). Response echoes `galleys: [{id, label, ...}]`.
 - **`metadata.datePublished`** — survives `published: true` (mirrors the editor's ability to set the publication date); without it, publish stamps today.
+- **`mediaFiles: [{variantType, file?, name?, genre?, group?}]`** — seeds Media-tab files (`SUBMISSION_FILE_MEDIA`, assoc'd to the publication) at `MediaFilesController::add()` parity. `variantType` is required (`'web' | 'high_resolution'`); `file` is a basename under `lib/pkp/playwright/fixtures/files/` (default `dependent-image.png`); `genre` defaults to `IMAGE` (the variant-supporting genre). Entries sharing a `group` label are linked pairwise via `VariantGroup::link()` with the FIRST entry as primary (max 2 per group). Response echoes `mediaFiles: [{id, name, variantType, group, variantGroupId}]`.
 
 Per-reviewer (inside `reviewRounds[].reviewers[]`):
 
