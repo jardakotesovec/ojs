@@ -81,6 +81,11 @@ appends a row here.
 | 47 | **CSL RIS export renders malformed dates** (`PY  - %2026/%06/%12`): the Blade conversion left strftime placeholders feeding `Carbon::format()`, where `%` is a literal. | wave-11 CSL agent | `plugins/generic/citationStyleLanguage/templates/citation-styles/ris.blade:45,48,82` | Upstream: `'Y/m/d'` / `'Y'` |
 | 48 | Wave-11 minor batch: (a) record-payment API maps `'paid'` → Waiver and `'waived'` → ManualPayment (labels swapped; no UI renders them today — `BackendSubmissionsController.php:127,155`); (b) `purchaseArticleFeeEnabled`/`purchaseIssueFeeEnabled` are dead settings (declared, no template field, no consumer — gates are `fee > 0`); (c) `PaymentsGridHandler::viewPayment` is an empty FIXME stub (no payment-details surface); (d) OJS stats detail table renders 8 headers but 7-cell body rows (JATS column header without data); (e) legacy LinkAction re-enable lags modal close on the Vue bridge (`disabled` cleared before the handler re-arms — fast reopen clicks silently dropped; same family as §2 row 39); (f) the site-level enable checkbox for context-level generic plugins governs nothing journals see (journals read their own row, which installs enabled). | wave-11 agents | — | Triage/UX review |
 
+| 49 | **Email attachments always deliver as `application/octet-stream`**: `Mailable::attachTemporaryFile()` attaches by the temporary file's on-disk path (random name, no extension) with only `['as' => $name]` — Symfony Mime's extension guess falls back to octet-stream even though the temporary-files row stores the true type. Recipients get type-less downloads; inline preview never works. | wave-12 email-delivery agent: Mailpit `/api/v1/message/{id}` shows `application/octet-stream` for a PNG attached via the discussion composer; the spec pins the current behavior with a comment | `lib/pkp/classes/mail/Mailable.php:615` (the sibling `attachSubmissionFile`/`attachLibraryFile` paths deserve the same audit) | Upstream one-liner: pass `'mime' => $file->getFileType()` in the attach options |
+| 50 | **Editorial-reminder in-app notification is created at the wrong level**: the `EditorialReminder` job calls `createNotification()` without a level, inheriting the `NOTIFICATION_LEVEL_NORMAL` default — but the backend bell/tasks grid filters on `NOTIFICATION_LEVEL_TASK`, so the in-app counterpart of the reminder digest can never surface there (NORMAL notifications only flash via the general in-place banner framework). The email is unaffected. | wave-12 serial/scheduled-tasks agent: after a forced `EditorialReminders` run, `notifications` row exists (level 2) but the editor's Tasks grid never lists it | `lib/pkp/jobs/email/EditorialReminder.php:161-166`; default in `PKPNotificationOperationManager::createNotification` | Upstream: pass `NOTIFICATION_LEVEL_TASK` (or drop the in-app row) |
+| 51 | **API auth failure codes are inconsistent** (doc pins, both asserted by api-smoke rows 5–6 so upstream changes will surface loudly): (a) `HasRoles` middleware responds **401** `api.403.unauthorized` even for an authenticated-but-underprivileged user — REST convention says 403 (`lib/pkp/classes/middleware/HasRoles.php:70-73`); (b) a tampered-signature API token responds **400** `api.400.invalidApiToken` where 401 is conventional (`lib/pkp/classes/middleware/DecodeApiTokenWithValidation.php:108-112`; the unknown-key branch at `:100-105` correctly 401s). | wave-12 misc agent, verified live both directions | middleware cited | Upstream behavior call; if changed, update api-smoke rows 5–6 in the same PR |
+| 52 | **Add Reviewer dialog: reviewer-suggestions list quirks** (found building the G2 cross-check row): (a) every suggestion entry's Select button exposes accessible name **"Select undefined"** — the sr-only label interpolates a missing name param while the visible "Select Reviewer" text is aria-hidden (screen-reader users can't tell entries apart; the sibling Locate-a-Reviewer list interpolates correctly, "Select {name}"); (b) after a successful enroll-and-assign submit from the suggestion path, the dialog pops back to the selection step instead of closing and the reviewer manager underneath never live-refreshes (the legacy `dataChanged` event is dropped on this path) — the editor has no success feedback until a manual close + reload. | wave-12 gap-closure work: a11y snapshot shows `button "Select undefined"` per suggestion; trace shows `enroll-reviewer` 200 `status:true` + `dataChanged` with the manager still "No Items" 20 s later (reviewer-suggestions.spec.js row 5 reloads as workaround) | lib/ui-library ReviewerManager suggestion list + legacy-form event bridge | Upstream ui-library: fix the label interpolation; close the dialog (or at least refresh the manager) on success |
+
 ## 3. Flakiness sources in the local/CI environment (not app code)
 
 - **Server-side outbound HTTP can kill worker PHP servers** (2026-06-11 mass failure:
@@ -142,12 +147,28 @@ appends a row here.
   sibling's invitation mail and followed its decline link, failing the sibling's test.
   Fixed in `mail.js` (inboxFor → /api/v1/search). Rule stands: prefer
   `pkpMail.find({to, contains: tag})` over inbox-wide reads.
-- **`mailpit.spec.js` still runs `clearAll()` from the parallel project**: its
-  `describe.configure({mode:'serial'})` only orders its own tests — sibling workers' (and
-  parallel agents') in-flight mail is wiped whenever the spec runs. Its global-count leak
-  check was reworked tag-scoped + control-bounded in wave 8 (it could never be stably
-  green in parallel); the spec should move to the serial project in the
-  test-infrastructure wave, where the stronger global-count form can return.
+- **`clearAll()` is confined to the serial project (resolved wave 12)**: the old
+  `mailpit.spec.js` ran `clearAll()` from the parallel project, wiping sibling workers'
+  in-flight mail whenever it ran. It now lives at
+  `lib/pkp/playwright/tests/serial/mailpit-harness.spec.js` (serial project, no parallel
+  neighbors), where the strong global-count Mail::fake leak check
+  (`messageCount() === 0`, bounded by a positive control) returned. Rule stands: that
+  spec is the ONLY permitted `clearAll()` caller; everything else scopes
+  `pkpMail.find({to, contains: tag})`.
+- **End-of-request JobRunner can drain OTHER requests' queued jobs inside a Mail::fake'd
+  scenario request (wave-12 verified hazard)**: with `[queues] job_runner = On`, every
+  web request's shutdown hook pops queued jobs (`PKPQueueProvider::boot`). A scenario
+  seeding request runs under `Mail::fake()` — so a mail-sending job queued by anyone
+  else (e.g. `scheduler.php` dispatching ReviewReminder from a serial spec) that gets
+  popped there commits its side effects (`dateReminded` stamped) while the message is
+  swallowed before SMTP. Observed live during wave-12 development (parallel agents
+  seeding while the serial scheduled-tasks spec ran). DELIBERATELY NOT "fixed": skipping
+  the runner on scenario requests would leave seeding-dispatched jobs to drain in
+  neighboring UN-faked requests, leaking seed mail into Mailpit — the inverse and worse
+  failure, and the invariant the mailpit-harness spec exists to protect. The canonical
+  lifecycle is safe (the serial project depends on the parallel projects finishing;
+  scheduler runs only from serial specs). Rule: never run serial scheduled-task specs
+  while anything else is seeding on the same DB.
 - **Deterministic tags repeat across runs on a long-lived DB**: tag helpers built only
   from workerIndex + test-title slug produce the same tag every run, so count-assertions
   on shared surfaces (issue TOC, archive) match leftovers from prior runs ("expected 1,

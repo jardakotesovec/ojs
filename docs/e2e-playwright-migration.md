@@ -152,6 +152,15 @@ Scenario seeds a published submission (optionally with issue + versions + DOI). 
 ### Wave 8 · Retire Cypress
 
 - 56 · Delete `cypress/`, `lib/pkp/cypress/`, CI workflows, and `package.json` scripts. Only after every row in Waves 1–7 is green.
+  **DONE (2026-07-01, campaign wave 12):** retirement executed after the final
+  cross-check audit (`docs/e2e/cypress-crosscheck.md`, verdict RETIRE) mapped every
+  Cypress assertion in all 46 spec files to an implemented Playwright test or a
+  recorded drop. Deleted: both `cypress/` trees, `cypress.config.js`, the five
+  cypress devDependencies, and the stale `.gitignore` entries (no CI workflows or
+  npm scripts referenced Cypress). `docs/e2e/spec-inventory.md` was deleted in the
+  same commit per its own deletion condition; §4 below and the crosscheck report
+  are its successors. The Playwright suite record: 80 features / 507 planned rows,
+  see `docs/e2e/feature-inventory.md`.
 
 ## §2 · Scenario-endpoint extensions
 

@@ -1,4 +1,5 @@
 // @ts-check
+const fs = require('fs');
 const {test, expect} = require('../support/fixtures.js');
 const submissionPublished = require('../fixtures/scenarios/submission-published.js');
 
@@ -44,6 +45,13 @@ const submissionPublished = require('../fixtures/scenarios/submission-published.
  * the `page.waitForEvent('download')` UI route — `page.request.post`
  * captures the response body directly without engaging the browser's
  * download dispatcher.
+ *
+ * Wave 12 marker — the second describe below (plan row 4 of
+ * docs/e2e/plans/native-xml-import-export.md) complements that API
+ * path with the real Tools-UI journey: the jQuery-UI tab + Vue
+ * submissions-list-panel + AjaxFormHandler bounce-tab + an actual
+ * `download` browser event, i.e. the legacy grid/plupload-era surface
+ * the raw-request test deliberately bypasses.
  *
  * Scope vs. Cypress:
  *   - One test that round-trips export + reimport, plus a metadata
@@ -256,6 +264,97 @@ test.describe('Native XML — submission export/import', () => {
 			importedIds.length,
 			'imported submission has a fresh id distinct from the seed',
 		).toBeGreaterThanOrEqual(1);
+	});
+});
+
+test.describe('Native XML — Tools UI export', () => {
+	test('manager exports a submission through the Tools UI and downloads the XML', async ({
+		pkpApi,
+		asUser,
+	}) => {
+		// Hyphenless single-token tag (patterns rule 10): the list
+		// panel's search is space/hyphen-tokenized OR-matching on
+		// Postgres, so a hyphenated tag would match every other
+		// worker's leftovers and the toHaveCount(1) below would flake.
+		const tag = `nxtui${test.info().parallelIndex}${Math.random().toString(36).slice(2, 8)}`;
+		const spec = submissionPublished({tag});
+		const {submission} = await pkpApi.createSubmission(spec);
+
+		const ctx = await asUser('dbarnes');
+		const page = await ctx.newPage();
+
+		// Tools → Import/Export → Native XML Plugin landing page.
+		await page.goto(
+			'/index.php/publicknowledge/management/importexport/plugin/NativeImportExportPlugin',
+		);
+		await expect(
+			page.getByRole('heading', {name: /Native XML Plugin/i, level: 1}),
+		).toBeVisible({timeout: 15_000});
+
+		// The OJS plugin relabels plugins.importexport.native.
+		// exportSubmissions to "Export Articles" (plugin locale.po) —
+		// both the jQuery-UI tab and the submit button carry it.
+		await page.locator('a[href="#exportSubmissions-tab"]').click();
+		const exportTab = page.locator('#exportSubmissions-tab');
+		await expect(exportTab).toBeVisible();
+
+		// Search the exportable-submissions list panel by the tag. The
+		// Search component fires on keyup with a 250 ms debounce
+		// (Search.vue) — fill() would set the value silently, so type
+		// it. The waitForResponse pins the FULL-tag fetch so a split
+		// debounce can't leave us asserting against a partial result.
+		const filtered = page.waitForResponse(
+			(r) =>
+				r.url().includes('/api/v1/submissions') &&
+				r.url().includes(tag) &&
+				r.request().method() === 'GET',
+		);
+		await exportTab.getByRole('searchbox').pressSequentially(tag);
+		await filtered;
+
+		// Exactly our seeded submission surfaces; tick its checkbox
+		// (plain input bound to the ImportExportPage's
+		// selectedSubmissions v-model).
+		const item = exportTab
+			.locator('.listPanel__itemSummary')
+			.filter({hasText: tag});
+		await expect(item).toHaveCount(1);
+		await expect(item).toContainText('Published article');
+		await item
+			.locator('input[name="selectedSubmissions[]"]')
+			.check();
+
+		// Export. The AjaxFormHandler POSTs exportSubmissionsBounce,
+		// whose JSONMessage addTab event opens a results tab that GETs
+		// the real exportSubmissions op (writes the XML to disk) and
+		// renders resultsExport.tpl.
+		await exportTab
+			.getByRole('button', {name: 'Export Articles'})
+			.click();
+		await expect(
+			page.getByText('The export completed successfully.'),
+		).toBeVisible({timeout: 30_000});
+
+		// Download Exported File submits a plain form POST to
+		// downloadExportFile, which streams the temp file with
+		// Content-Disposition: attachment (FileManager::downloadByPath,
+		// $inline=false) — i.e. a REAL browser download event, not an
+		// inline navigation.
+		const downloadPromise = page.waitForEvent('download');
+		await page
+			.getByRole('button', {name: 'Download Exported File'})
+			.click();
+		const download = await downloadPromise;
+		expect(download.suggestedFilename()).toMatch(/\.xml$/);
+
+		// The downloaded bytes are the native XML carrying our tagged
+		// title — proof the grid selection reached the exporter and the
+		// streamed file is the produced export, not an error page.
+		const xml = fs.readFileSync(await download.path(), 'utf8');
+		expect(xml).toMatch(/<\?xml/);
+		expect(xml).toMatch(/<article\b/);
+		expect(xml).toContain('Published article');
+		expect(xml).toContain(tag);
 	});
 });
 

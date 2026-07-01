@@ -12,21 +12,26 @@ existing spec inventory (`docs/e2e/spec-inventory.md`).
 
 | Area | Features | Round-1 tests |
 |------|----------|---------------|
-| 1. Submission intake | 7 | 59 |
+| 1. Submission intake | 7 | 60 |
 | 2. Editorial workflow | 17 | 128 |
 | 3. Publishing & issues | 9 | 68 |
-| 4. Reader front end | 8 | 41 |
+| 4. Reader front end | 8 | 42 |
 | 5. Users, roles & access | 9 | 48 |
 | 6. Settings & administration | 14 | 68 |
 | 7. Plugins (key set) | 9 | 57 |
 | 8. System & communications | 7 | 36 |
-| **Total** | **80** | **505** |
+| **Total** | **80** | **507** |
 
 Post-review totals (adversarial review removed duplicate-coverage rows and double-counted
 absorptions); on 2026-06-11 the maintainer added two recently-landed 3.6 features the
 original exploration missed (media-files, publication-amendments: +14 rows, consuming the
-reserved headroom and landing at 505 ≈ the ~500 target). Promote round-2 rows only with an
+reserved headroom and landing at 505 ≈ the ~500 target). Wave 12 added two Cypress
+cross-check gap rows (reviewer-suggestions row 5, public-comments row 6 — see
+`docs/e2e/cypress-crosscheck.md`), landing at 507. Promote round-2 rows only with an
 inventory update here.
+
+**Round 1 complete (2026-07-01):** all 80 features `done`; the cross-check verdict is
+RETIRE and the legacy Cypress suite is deleted.
 
 ## 1. Submission intake (author experience)
 
@@ -38,7 +43,7 @@ inventory update here.
 | submission-wizard-language | Multilingual submission, locale picker, reconfigure modal (change section/locale mid-wizard) | lib/pkp | M | 6 | done |
 | submission-drafts | Save-for-later, resume draft, delete draft, incomplete submissions list | lib/pkp | M | 6 | done |
 | author-dashboard | My-submissions list, status/stage display, activity view of own submission | lib/pkp | H | 6 | done |
-| reviewer-suggestions | Author suggests reviewers in wizard; editor sees suggestions at assignment | lib/pkp | M | 4 | done |
+| reviewer-suggestions | Author suggests reviewers in wizard; editor sees suggestions at assignment | lib/pkp | M | 5 | done |
 
 ## 2. Editorial workflow
 
@@ -87,7 +92,7 @@ inventory update here.
 | browse-category-section | Category browse pages, section policies display | ojs | L | 4 | done |
 | oai-sitemap-feeds | OAI-PMH ListRecords/GetRecord (DC), sitemap.xml, web feed presence | ojs | M | 5 | done |
 | public-pages | Editorial masthead public page, about/contact, privacy statement | lib/pkp | M | 4 | done |
-| public-comments | Reader comments: post, moderate, approve, anonymous gating | lib/pkp | M | 5 | done |
+| public-comments | Reader comments: post, moderate, approve, anonymous gating | lib/pkp | M | 6 | done |
 
 ## 5. Users, roles & access
 
@@ -140,13 +145,13 @@ inventory update here.
 
 | Plan file | Scope | Placement | Imp | Budget | Status |
 |-----------|-------|-----------|-----|--------|--------|
-| email-delivery | Template variable rendering in real sends, email log per submission, notify-composer with attachments | lib/pkp | H | 6 | planned |
-| notifications | In-app bell/inbox, mark read, per-user notification opt-outs take effect | lib/pkp | M | 4 | planned |
-| jobs-queue | Jobs page, failed jobs, requeue | lib/pkp | M | 3 | planned |
-| scheduled-tasks | Review reminders + editorial reminders: trigger task, assert reminder email | lib/pkp | M | 4 | planned |
-| api-smoke | Token auth, key public endpoints (submissions, issues, users), permission rejections | lib/pkp | M | 6 | planned |
-| native-xml-import-export | Submission and issue XML export/import round-trips; PubMed export | ojs | L | 5 | planned |
-| test-infrastructure | Scenario seeding self-tests (stages, default files, decision comments), scratch journal, Mailpit harness, reduced-motion | lib/pkp | H | 8 | planned |
+| email-delivery | Template variable rendering in real sends, email log per submission, notify-composer with attachments | lib/pkp | H | 6 | done |
+| notifications | In-app bell/inbox, mark read, per-user notification opt-outs take effect | lib/pkp | M | 4 | done |
+| jobs-queue | Jobs page, failed jobs, requeue | lib/pkp | M | 3 | done |
+| scheduled-tasks | Review reminders + editorial reminders: trigger task, assert reminder email | lib/pkp | M | 4 | done |
+| api-smoke | Token auth, key public endpoints (submissions, issues, users), permission rejections | lib/pkp | M | 6 | done |
+| native-xml-import-export | Submission and issue XML export/import round-trips; PubMed export | ojs | L | 5 | done |
+| test-infrastructure | Scenario seeding self-tests (stages, default files, decision comments), scratch journal, Mailpit harness, reduced-motion | lib/pkp | H | 8 | done |
 
 ## Bootstrap enrichment decisions (apply at start of wave 1)
 
