@@ -18,10 +18,10 @@ paste the prompt. Plain paste also works as a one-shot nudge.
 > `docs/product/PROGRESS.md` (the source of truth) and follow the per-feature loop
 > there, resuming at the next feature that isn't `done`/`parked`. For each: build the
 > spec + Playwright tests, run them green against the app, verify, update PROGRESS,
-> commit, and keep going autonomously until all 92 features are done or parked. Pin
-> subagents to `model: sonnet` and judge them only by completion notifications, never
-> by transcript size. Respect the ≤700-test / ≤25-min budget and park-and-continue
-> after 3 failed attempts.
+> commit, and keep going autonomously until all 92 features are done or parked. Use
+> Fable for subagents (the default, most-capable model) and judge them only by
+> completion notifications, never by transcript size or token count. Respect the
+> ≤700-test / ≤25-min budget and park-and-continue after 3 failed attempts.
 
 ## How to resume (entry point for any session)
 
@@ -85,9 +85,15 @@ For the next `pending` feature:
 
 ## Safeguards & operating rules
 
-- **Subagents: pin `model: sonnet`.** Fable subagents hung in this environment; sonnet
-  ran clean. The **completion notification** is the only reliable liveness signal — do
-  NOT judge a subagent by transcript byte-size (it misled twice).
+- **Subagents: use Fable** (the default / top-tier model) — it's the most capable for
+  spec + test authoring and ran cleanly throughout this session (the four feature-map
+  strategies, the synthesis, the restructure were all Fable). The **completion
+  notification is the ONLY reliable liveness signal.** Do NOT judge a subagent by
+  transcript byte-size or token count — that repeatedly misled the orchestrator into
+  thinking *working* agents were "hung" and killing them (they were mid-read before
+  writing their output once at the end). If an agent looks stuck, check the ground
+  truth (has it edited its target file / made a git change?); otherwise just wait for
+  the completion notification. There is no confirmed Fable hang.
 - **Park-and-continue** — if a feature fails to reach done after **3 attempts**, mark
   its row `parked` with the reason and move on. One bad feature must never stall the
   other 91.
