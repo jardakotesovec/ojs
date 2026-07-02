@@ -49,7 +49,14 @@ grep, not a judgment call.
   A spec that silently transcribes bugs as requirements is poison for QA.
   **Deviation collection is NON-BLOCKING**: new bug/deviation candidates are appended
   to the ledger as they're found and the wave moves on — the maintainer reviews the
-  accumulated list at campaign end, not per wave. A spec reaches `verified` when its
+  accumulated list at campaign end, not per wave.
+  **Calibrate the ⚠**: reserve it for behaviour that is internally inconsistent, loses
+  data, contradicts a UI affordance, or would genuinely surprise a product owner — NOT
+  for a rule that is merely strict or restrictive, which is usually intended (e.g.
+  "replies can't be deleted" is by design, not a bug). "As-built" facts are solid;
+  "≠ intent" is a hypothesis only the maintainer can confirm. When unsure whether a
+  restriction is intended, write it as a plain rule plus an Open question, not a ⚠
+  deviation. Do not assert a suspected intent the code doesn't prove. A spec reaches `verified` when its
   claims match as-built behavior; intent adjudication and Open questions accumulate
   for the end review and never gate progress.
 - **Verified, not just written**: every spec passes an adversarial verification pass
@@ -60,6 +67,18 @@ grep, not a judgment call.
 - **Business language, anchored**: the spec body reads as a functional spec; code
   anchors (`file:line`) ride along per rule so any claim can be re-checked as code
   drifts. Anchors are provenance, not content.
+- **Frontend-first description, backend-verified rules**: the reader is a product owner
+  or QA person who interacts with the **UI**, not the API. Describe every feature as it
+  is experienced in the interface — what buttons/fields a role sees, what the screen
+  does. Use backend validation/policies as the **source of truth for the rules**
+  (they're authoritative and hardest to fake), but ALWAYS cross-check them against the
+  frontend logic (Vue managers/composables, templates, legacy JS) and lead with what
+  the UI actually offers. Where the two AGREE, state the UI behaviour and anchor both.
+  Where they DIVERGE — the API permits something the UI hides, or the UI shows a
+  control the backend rejects — the **UI reality is the headline**, and the divergence
+  is a ⚠ deviation (e.g. the versioning "section editors can publish via API but see no
+  button" finding). Never describe an ability only reachable by hand-crafting an API
+  call as if it were a normal user capability; call it out as API-only.
 - **Liveness before documentation**: code existing is not evidence the feature exists.
   OJS carries superseded surfaces — especially legacy grids/handlers being replaced by
   Vue managers — that are partly or fully unreachable. Before a spec documents a

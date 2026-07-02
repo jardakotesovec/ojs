@@ -80,262 +80,293 @@ email, with per-user opt-outs.
 
 ## Actors & permissions
 
-"Assigned" below means having a stage assignment on the submission for the item's
-stage (or, for reviewers, a review assignment in that review stage). All API access
-requires one of: site admin, manager, sub-editor, assistant, author, reviewer
-(lib/pkp/api/v1/submissions/tasks/EditorialTaskController.php:86-93).
+Permissions are organised **by action** — read one row to see who may do it and under
+what condition. Terms: *assigned* = has a stage assignment on the submission for the
+item's stage (for reviewers, a review assignment in that review stage); *participant* =
+named on the item; *responsible* = the participant marked as owning a task; *creator* =
+whoever created the item. The rule column states the product behaviour; how it is
+enforced (and where enforcement is buggy) lives in **Rules & state** and **Known
+deviations**, with the ⚠ marks pointing there. Two site-wide baselines apply to every
+row: **Site admin** acts as a manager on any journal they created (journal creation
+auto-enrols the admin as a manager — PKPContextService.php:560-578); **Anonymous /
+not-logged-in** users have no access at all. Reaching the feature requires being one
+of: site admin, manager, sub-editor, assistant, author, reviewer
+(EditorialTaskController.php:84-95).
 
-| Actor | Can | Cannot | Anchor |
-|-------|-----|--------|--------|
-| Manager (journal-level) | See **all** items on a submission regardless of participation; create; edit/delete/close/reopen/start any item; create without being a participant; attach submission files; edit any headnote at any time | Reply to an item they are not a participant of (replies are participant-only, no manager bypass — enforced as a 422 by AddNote validation; the controller's own 403 is unreachable) | EditorialTaskController.php:269-272; AddNote.php:58-60; QueryWritePolicy.php:52-54; EditTask.php:210-214; NoteAccessPolicy.php:103-106 |
-| Site admin (site-level group only) ⚠ | Reach every endpoint (role authorizer admits the role) | Effectively nothing beyond an unassigned user: every managerial exemption checks **journal-scoped** roles (`hasRole([…], $contextId)` never matches site-level groups), so a pure site admin lists zero items (`{"items":[],"itemMax":0}` live-probed), is denied writes (401 on close), and the explicit site-admin carve-outs in participant/creator validation and task pruning are void. Only the headnote 1-hour exemption deliberately checks the site context (EditTask.php:92) | EditorialTaskController.php:269; QueryWritePolicy.php:52; EditTask.php:92, :211, :235; Repository.php:258 — global ⚠, proposed ledger row (Known deviations) |
-| Sub-editor (assigned) | Create items on stages they can access; see items **they participate in only**; edit/delete items they created; on items they can already write (rule 13), edit the headnote without the author/1-hour restriction; attach submission files | See items they neither created nor participate in; edit items where they are a mere participant — headnote included: the sub-editor exemption in headnote validation does not grant write access, it only lifts the 1-hour window inside an edit already permitted by QueryWritePolicy (live-probed) | EditorialTaskController.php:273-279; QueryWritePolicy.php:57-59; EditTask.php:90-95, :285-303; QueryAccessPolicy.php:118-127 |
-| Assistant (assigned) | Create; participate; reply; edit/delete items they created; close/complete a task they are responsible for; attach submission files | Reopen or edit others' closed items; edit a headnote they authored after 1 hour | QueryAccessPolicy.php:79-88; QueryWritePolicy.php:57-78; EditTask.php:285-303; NoteAccessPolicy.php:96-115 |
-| Author (assigned) | Create items on their submission's stages; participate; reply; edit/delete items they created | Attach existing submission files (temporary uploads only); be added alongside an anonymous reviewer; see anonymous reviewers in participant lists | QueryAccessPolicy.php:104-114; EditTask.php:285-303, :180-186; EditorialTaskController.php:985-989 |
-| Reviewer | Create/read items in review stages where they hold **any** review assignment — ⚠ declined and cancelled assignments still grant stage access (the active + reviewer-accessible + latest-round filter exists only on the participant picker, EditorialTaskController.php:831-845, :954); participate; reply | Use the feature outside review stages (when reviewer is their only role); see author identities under double-anonymous review; see other blinded reviewers | QueryUserAccessibleWorkflowStageRequiredPolicy.php:45-60; EditorialTaskController.php:819-845, :879-884, :977-999; QueryAccessPolicy.php:92-101 |
-| Responsible participant (task owner, any role) | Edit, close, delete the task they own | Reopen a completed task from the row actions (see rule 11) | QueryWritePolicy.php:70-78; useDiscussionManagerConfig.js:127-138 |
-| Anonymous | Nothing (login + context membership required) | — | EditorialTaskController.php:84-95 |
-
-Task-template administration (CRUD, auto-add flag) is manager/site-admin only and
-additionally requires settings access; *listing* templates is open to all workflow
-roles so the "apply template" picker works
-(lib/pkp/api/v1/editTaskTemplates/PKPEditTaskTemplateController.php:52-76, :87-90).
-
-## Entry points
-
-| Entry | Path | Atom |
-|-------|------|------|
-| Tasks & Discussions panel (per stage) | Dashboard → submission workflow page → stage panel (editorial, author, and reviewer views); `DiscussionManager` fetches `GET api/v1/submissions/{id}/stages/{stageId}/tasks` | — |
-| Header Tasks bell | Any backend page → bell with unread count → tasks grid modal; the live path is TopNavActions.vue:205-216 fetching the `grid.notifications.taskNotificationsGridHandler` component URL directly (the `$tasksUrl`/`page.PageHandler` plumbing in PKPTemplateManager and `DashboardHandler::tasks` are dead code) | — |
-| Task/discussion CRUD API | `POST/PUT/DELETE api/v1/submissions/{id}/tasks[/{taskId}]`, `PUT …/close`, `…/open`, `…/start` (EditorialTaskController.php:102-148) | — |
-| Replies API | `POST/DELETE api/v1/submissions/{id}/tasks/{taskId}/notes[/{noteId}]` | — |
-| Participant options API | `GET api/v1/submissions/{id}/stages/{stageId}/tasks/participants` | — |
-| Template prefill API | `GET api/v1/submissions/{id}/stages/{stageId}/tasks/fromTemplate/{templateId}` | — |
-| Task Templates settings tab | Settings → Workflow → "Tasks and Discussions Templates" (lib/pkp/templates/management/workflow.tpl:101); API `api/v1/editTaskTemplates` | — |
-| Discussion email | Participant notification email: body is the message + stage-mailable footer with a link back to the thread; tokenized unsubscribe link (`{index}/notification/unsubscribe?validate=…&id=…`) | — |
-| Submission activity history | Per-item History modal (event-log entries rendered as `latestActivities`); same entries also in the submission activity log | — |
+| Action | Who may — and when | Anchors |
+|--------|--------------------|---------|
+| **View / list items** | • Managers — every item on the submission<br>• Everyone else — only items they created or participate in<br>• Reviewers — their review stage's items, via any review assignment ⚠ (declined/cancelled included) | EditorialTaskController.php:269-279, :819-845; QueryAccessPolicy.php:92-127; QueryUserAccessibleWorkflowStageRequiredPolicy.php:45-60 |
+| **Create a task or discussion** | • Assigned editorial roles (manager, sub-editor, assistant) — on stages they can access<br>• Authors — on their own submission's stages<br>• Reviewers — in a review stage they're assigned to<br>• Managers need not be a participant | EditorialTaskController.php:269-279; QueryAccessPolicy.php:79-114 |
+| **Edit item metadata** (title, due date, participants) | • The creator, the responsible participant, or a manager (any item)<br>• A sub-editor or assistant who is only a participant — cannot | QueryWritePolicy.php:52-78; EditTask.php:285-303 |
+| **Edit the head message** — its text is editable after creation, unlike a reply | • Managers and sub-editors — the text, any time<br>• Authors, assistants, reviewers — only their own head message, and only within one hour of writing it, then locked<br>• Requires edit rights on the item to begin with | EditTask.php:90-111 (exempt roles :90-95; own-author + 1-hour checks :103-110) |
+| **Post a reply** — replies are a permanent record | • Any participant may post a reply — and only a participant (even a manager must be added to the item first)<br>• A posted reply is permanent: no one can edit or delete it (by design) | AddNote.php:42-96; NoteAccessPolicy.php:96-115; EditorialTaskController.php:704, :779-793 |
+| **Attach files** — the message editor offers this while writing the head message or a reply | • Anyone posting a message can **upload a new file** ("Add file" in the editor)<br>• Only managers and assigned editors/assistants also see **"attach files from the submission"** (existing workflow files) — authors and reviewers do not<br>• The head message's files can be revised when its text is edited; a reply's files are fixed once posted | useDiscussionMessages.js:14,27-70 (UI); EditTask.php:273-305; AddNote.php:69-96 (backend) |
+| **Start a task** | • The responsible participant<br>• A manager | QueryWritePolicy.php:70-78 |
+| **Close / complete a task** | • The responsible participant<br>• A manager<br>• (discussions aren't "closed" the same way — see Rules & state) | QueryWritePolicy.php:70-78; EditTask.php:113-160 |
+| **Reopen a completed task** | • Managers only<br>• Other roles — no reopen affordance in the list ⚠ (an API-level gap exists — see rule 11) | useDiscussionManagerConfig.js:127-138; useDiscussionManagerForm.js:505-531 |
+| **Delete a whole task or discussion** (not a single reply) | • The creator, or a manager | QueryWritePolicy.php:52-78 |
+| **See identities under anonymous review** | • Authors — can't see reviewers, can't be added alongside an anonymous reviewer<br>• Reviewers — can't see author identities or other blinded reviewers | EditorialTaskController.php:879-884, :977-999; QueryAccessPolicy.php:92-101 |
+| **Administer task templates** (CRUD, auto-add flag) | • Managers — full management (also needs settings access)<br>• All workflow roles — may list templates for the "apply template" picker | PKPEditTaskTemplateController.php:52-76, :87-90 |
 
 ## Fields & validation
 
-**Task/discussion form** (create `AddTask`, edit `EditTask` — lib/pkp/api/v1/submissions/tasks/formRequests/):
+**The create/edit form** (opened from the panel's "Add" button, or an item's edit
+action). The fields the user fills:
 
-| Field | Type | Rules | Anchor |
-|-------|------|-------|--------|
-| type | enum | required; 1 = discussion, 2 = task (EditorialTaskType) | EditTask.php:69 |
-| title | text | required, ≤255 chars; not multilingual | EditTask.php:70 |
-| dateDue | date `Y-m-d` | required for tasks, **prohibited** for discussions; must be ≥ today (⚠ also on edit, rule 12) | EditTask.php:71-76 |
-| description | rich text | headnote (first message); required in the UI form; edit restricted (rule 14) | EditTask.php:77-112; useDiscussionManagerForm.js (description `isRequired: true`) |
-| participants | array of {userId, isResponsible} | required; per-item rules 5–9 below; userIds distinct and must exist | EditTask.php:114-264 |
-| participants.*.isResponsible | bool | required for tasks (exactly one true), prohibited for discussions | EditTask.php:266-272, :123-126 |
-| temporaryFileIds | int[] | optional; each must be the current user's temporary upload | EditTask.php:273-280 |
-| submissionFileIds | int[] | optional; only managers/admins or assigned sub-editors/assistants; files must belong to the submission | EditTask.php:281-310 |
-| createdBy / assocType / assocId / stageId | server-set | forced to current user / SUBMISSION / route submission / posted stage (must be a valid application stage) | AddTask.php:31-53 |
+| Field (UI label) | Required? | Rules | Anchor |
+|------------------|-----------|-------|--------|
+| **Name** | Yes | The item's title; up to 255 characters | useDiscussionManagerForm.js:614-622; EditTask.php:70 (`title`) |
+| **Message / details** | Yes | The item's first message (rich text); can carry file attachments (see "Attach files"); who may edit it later is in the permissions table | useDiscussionManagerForm.js:601-610; EditTask.php:77-112 (`headnote`) |
+| **Participants** | Yes | Who is on the item, chosen from the people assigned to the stage | useDiscussionManagerForm.js:624-633; EditTask.php:114-264 |
+| **Add task details** (toggle) | No | Off → it's a discussion (no owner, no due date); on → it's a task | useDiscussionManagerForm.js:640-644; EditTask.php:69 (`type`) |
+| **Due date** (only when it's a task) | Yes for a task | Must be today or later — ⚠ re-checked on every later edit too (rule 12) | useDiscussionManagerForm.js:300-309; EditTask.php:71-76 (`dateDue`) |
+| **Assignee** (only when it's a task) | Yes for a task | Exactly one participant is marked responsible for completing it | useDiscussionManagerForm.js:317-328; EditTask.php:266-272 (`isResponsible`) |
 
-**Reply** (`AddNote`): contents required, ≤65,535 chars; poster forced to current user
-and must already be a participant of the item (row exists in `edit_task_participants`);
-same attachment rules as above (AddNote.php:56-105).
+The server fills in context automatically (who created it, which submission and stage
+it belongs to) — not user-entered.
 
-**Template form** (`AddTaskTemplate`/`UpdateTaskTemplate`): type (required enum),
-stageId (required, valid stage), title (required ≤255), description (optional,
-supports email-template variables like `{$authorsShort}` — `GET
-editTaskTemplates/variables` lists them), include (bool, default false = the auto-add
-flag), dueInterval (optional, one of P1W/P2W/P3W/P4W/P1M/P1M15D/P2M/P2M15D/P3M —
-EditorialTaskDueInterval), restrictToUserGroups (bool) + userGroupIds (required,
-min 1, only when restricted) (AddTaskTemplate.php:32-47).
+**A reply** is just a message: rich text, required, up to ~65,000 characters, with the
+same optional file attachments. Only a participant of the item may post one
+(AddNote.php:56-105).
+
+**The task-template form** (Settings → Workflow → Tasks and Discussions Templates) has
+the same core fields — name, message, task-or-discussion, stage — plus template-only
+options: the message may include placeholder variables (e.g. the author's name) that
+fill in when the template is applied; an **"add automatically"** flag that creates the
+item as soon as a submission reaches that stage; a default **due interval** (one to
+four weeks, or one to three months); and an optional **restriction to chosen roles**
+(AddTaskTemplate.php:32-47).
 
 ## Rules & state
 
 **Type distinction**
 1. A **task** has exactly one responsible participant and a due date, and moves
-   through Yet-to-begin → In progress → Closed. A **discussion** has neither owner
-   nor due date and is only ever In progress or Closed — it is born "started"
-   (EditTask.php:71-76, :123-126; TaskResource.php:151-159).
-2. Status is **derived**, never stored: closed if `dateClosed` set; else (tasks only)
-   in-progress if `dateStarted` set, else pending. Discussions without `dateClosed`
-   are always in-progress (TaskResource.php:151-159).
-3. A discussion can be promoted to a task later ("Add Task Details" action, offered
-   while it is in progress); the UI never offers task → discussion (the task-info
-   checkbox is disabled once type is task), though the API accepts any valid type on
-   edit (useDiscussionManagerConfig.js:156-167; useDiscussionManagerForm.js:645;
+   through **Yet to begin → In progress → Closed**. A **discussion** has neither owner
+   nor due date and only ever shows **In progress** or **Closed** — it starts already
+   in progress (EditTask.php:71-76, :123-126; TaskResource.php:151-159).
+2. The state a user sees follows the actions taken on the item, not a field anyone
+   sets: a task is "Yet to begin" until it is started, "In progress" once started, and
+   "Closed" once completed; a discussion is "In progress" until it is closed. There is
+   no editable status field — the state is always computed from whether the item has
+   been started and/or closed (TaskResource.php:151-159 — from `dateStarted`/`dateClosed`).
+3. A discussion can be promoted to a task later — the **Add Task Details** action,
+   offered while it is In progress. The reverse is never offered in the UI: once an
+   item is a task, the task-details toggle is locked, so a task can't be turned back
+   into a discussion (though the API will accept any valid type on edit)
+   (useDiscussionManagerConfig.js:156-167; useDiscussionManagerForm.js:645;
    EditTask.php:69).
 
 **Participants**
-4. The participant pool for a stage = users with a stage assignment on the submission
-   at that stage, plus (in review stages) reviewers holding an active,
-   reviewer-accessible assignment on their latest review round, plus the current
-   manager/admin themselves (EditorialTaskController.php:804-943).
-5. Every non-exempt participant must either hold a stage assignment on the submission
-   at the item's stage, **or hold any review assignment on the submission at all** —
-   the reviewer branch is unfiltered by stage, status or accessibility (review
-   assignments are fetched submission-wide and accepted for items on *any* stage), so
-   a reviewer declined in round 1 is a valid participant for a Production task
-   (EditTask.php:249-257). Managers may participate anywhere (EditTask.php:232-236;
-   the site-admin half of that exemption is void — actor table ⚠).
-6. The creator must be among the participants — except managers, who may create
-   without participating (EditTask.php:203-219; the site-admin exemption at :211 is
-   void — actor table ⚠). The UI pre-checks the current user in the participants
-   list on create (useDiscussionManagerForm.js:216-219).
-7. Tasks need ≥1 participant; discussions need ≥2 (EditTask.php:190-197).
-8. Anonymity guards (any stage, when review assignments exist): at most one blinded
-   (anonymous or double-anonymous) reviewer per item, never together with another
-   reviewer; no author participant together with a blinded reviewer
-   (EditTask.php:128-188). Participant *pickers* additionally hide identities:
-   authors are hidden from a double-anonymous reviewer; blinded reviewers are hidden
-   from authors (and reviewers) (EditorialTaskController.php:879-884, :977-999).
-   Author names in template-variable substitution are stripped for double-anonymous
-   reviewers (EditorialTask.php:475-498).
-9. Removing a user's stage assignment (or a reviewer's assignment) strips them from
-   the submission's items — unless they are a manager (Repository.php:253-276; the
-   site-admin exemption at :258 is void — actor table ⚠;
-   StageParticipantGridHandler.php:433; PKPReviewerGridHandler.php:694).
+4. The people who can be added to an item on a given stage — the participant pool —
+   are: everyone with a stage assignment on the submission at that stage; in review
+   stages, reviewers holding an active, reviewer-accessible assignment on their latest
+   review round; and the current manager or admin themselves
+   (EditorialTaskController.php:804-943).
+5. Anyone added as a participant must either hold a stage assignment on the submission
+   at the item's stage, **or hold any review assignment on the submission at all**.
+   That second path is unfiltered by stage, review status or accessibility — a review
+   assignment anywhere on the submission qualifies a person for an item on *any* stage
+   — so a reviewer who declined in round 1 is still a valid participant for a
+   Production task (EditTask.php:249-257). Managers may participate anywhere
+   (EditTask.php:232-236; the site-admin half of that exemption is void — permissions
+   table ⚠).
+6. Whoever creates an item must be one of its participants — except managers, who may
+   create an item without joining it (EditTask.php:203-219; the site-admin exemption
+   at :211 is void — permissions table ⚠). When creating, the form pre-checks the
+   current user in the participant list so this is the default
+   (useDiscussionManagerForm.js:216-219).
+7. A task needs at least one participant; a discussion needs at least two
+   (EditTask.php:190-197).
+8. To protect anonymous review, whenever a submission has review assignments the item
+   limits who can share a thread (on any stage): at most one blinded reviewer —
+   anonymous or double-anonymous — per item, never alongside another reviewer, and no
+   author participant alongside a blinded reviewer (EditTask.php:128-188). The
+   participant pickers go further and hide identities outright: an author is hidden
+   from a double-anonymous reviewer, and blinded reviewers are hidden from authors and
+   from other reviewers (EditorialTaskController.php:879-884, :977-999). Author names
+   inserted by template variables are stripped for double-anonymous reviewers
+   (EditorialTask.php:475-498).
+9. When a user's stage assignment (or a reviewer's review assignment) is removed, they
+   are dropped from every item on that submission — unless they are a manager
+   (Repository.php:253-276; the site-admin exemption at :258 is void — permissions
+   table ⚠; StageParticipantGridHandler.php:433; PKPReviewerGridHandler.php:694).
 
 **Lifecycle**
-10. **Start** (tasks only): allowed once, when not yet started; requires ≥1
-    participant and exactly one responsible — auto-created tasks (rule 21) fail these
-    guards until edited; records `dateStarted` + `startedBy`. Starting a discussion is
-    a 409 (EditorialTaskController.php:531-590). ⚠ There is **no closed guard**: a
-    closed-but-never-started task can still be started via the API (:543-547 checks
-    only `dateStarted`/type) — it gains `dateStarted`/`startedBy` while staying
-    Closed, since `dateClosed` wins in status derivation (rule 2). On create the
-    form offers "Start task upon saving" (default) vs "Create, but don't start"
+10. **Starting** applies to tasks only and moves a task from Yet to begin to In
+    progress. It is allowed once, only while the task has not been started, and only
+    when the task has at least one participant and exactly one responsible participant
+    — auto-created tasks (rule 21) fail these checks until someone edits them. Trying
+    to start a discussion is rejected (EditorialTaskController.php:531-590 — records
+    `dateStarted` + `startedBy`; discussion start returns 409). ⚠ There is **no closed
+    guard**: a task that was closed but never started can still be started through the
+    API — it picks up a start time while still displaying as Closed, since a close
+    always wins in the computed state (rule 2) (EditorialTaskController.php:543-547
+    checks only `dateStarted`/type). On the create form the user picks **Start task
+    upon saving** (the default) or **Create, but don't start**
     (useDiscussionManagerForm.js:458-466, :658-673).
-11. **Close / reopen**: closing sets `dateClosed` (409 if already closed); reopening
-    clears it (409 if not closed). Who may do it = write access (rule 13). The UI
-    *row actions* forbid reopening tasks (one-way completion,
-    useDiscussionManagerActions.js:147-152), ⚠ but the API has no type guard
-    (EditorialTaskController.php:484-526) and neither does the view-modal status
-    switch, whose CLOSED→open branch applies to tasks too — only the start
-    transition is discussion-guarded (useDiscussionManagerForm.js:505-531). One-way
-    completion has holes on both surfaces — see Open questions #1.
-12. **Edit**: the UI disables Edit on closed items (useDiscussionManagerConfig.js:154).
-    ⚠ Editing a task whose due date has passed is impossible without also moving the
-    due date forward: `dateDue` is validated `after_or_equal:today` on every edit
-    (EditTask.php:75) — proposed ledger row (Known deviations).
-13. **Write access** (edit/delete/close/reopen/start): journal managers always (the
-    site-admin branch is void — actor table ⚠); the creator always; for tasks, the
-    responsible participant; everyone else is read-only even as a participant
-    (QueryWritePolicy.php:36-81). Read access to a single item (view, reply)
-    requires being assigned to it, with a manager exception
-    (QueryAccessPolicy.php:38-133). The UI mirrors this with
-    `userHasWriteAccess` = manager ∨ owner ∨ responsible
-    (useDiscussionManagerConfig.js:127-138).
-14. **Messages**: the first message ("headnote") is created with the item and edited
-    through the item's description field, which rides the item edit — so changing it
-    **first requires write access per rule 13** (creator / manager / responsible; a
-    sub-editor who is a mere participant cannot edit it, live-probed). Within a
-    permitted edit, managers, sub-editors and site admins (this check deliberately
-    uses the site context) are exempt from the extra restriction that other writers
-    may only change a headnote they authored, within 1 hour of its creation
-    (EditTask.php:90-112; same window in NoteAccessPolicy.php:96-115). Replies may
-    be posted only by participants — enforced as a 422 by AddNote validation
-    (AddNote.php:58-60); the controller's 403 check (EditorialTaskController.php:715-717)
-    is unreachable dead code. Template variables in the headnote are substituted at
-    save time using the participant set (sender = headnote author, recipients =
-    other participants) (EditorialTask.php:437-480).
-15. ⚠ **Reply deletion is dead code**: `DELETE …/notes/{noteId}` requires
-    NOTE_ACCESS_WRITE, which only ever permits headnotes
-    (NoteAccessPolicy.php:99-101), while the controller rejects headnotes
-    (EditorialTaskController.php:789-793) — every request fails one of the two.
-    Proposed ledger row (Known deviations).
-16. **Delete** item: any write-access user; cascades to its messages and its
-    notifications (EditorialTaskController.php:420-431; EditorialTask.php:92-99).
-    Deleting a submission removes all its items (Repository.php:240-251).
-17. **Listing**: per stage; journal managers see all items (the site-admin branch is
-    void — actor table ⚠), everyone else only items they participate in; optional
-    `isOpen` filter and date ordering (EditorialTaskController.php:262-299). The panel groups rows into
-    Yet to begin / In progress / Closed (discussionManagerStore.js:53-74).
-18. **Overdue** is a display state, not a status: due date past + not closed →
-    "Overdue" badge and a synthetic first entry in the item's activity list
-    (TaskResource.php:67-80; useDiscussionManagerForm.js getBadgeProps).
+11. **Closing and reopening**: closing an item marks it Closed; reopening clears that
+    and returns it to In progress. Each is one step at a time — closing an
+    already-closed item, or reopening one that isn't closed, is refused as a redundant
+    no-op (close sets `dateClosed`, reopen clears it; a repeat call returns 409). Doing
+    either requires write access (rule 13). In the UI, a completed task's **row
+    actions** offer no reopen, presenting completion as one-way
+    (useDiscussionManagerActions.js:147-152). ⚠ But nothing enforces that one-way rule
+    underneath: the reopen API carries no task-vs-discussion guard
+    (EditorialTaskController.php:484-526), and neither does the status switch in the
+    item's view modal — its Closed→open path applies to tasks too, with only the
+    *start* transition discussion-guarded there (useDiscussionManagerForm.js:505-531).
+    One-way completion has holes on both surfaces — see Open questions #1.
+12. **Editing**: the UI disables the Edit action on closed items
+    (useDiscussionManagerConfig.js:154). ⚠ A task whose due date has already passed
+    can't be edited at all without also moving the due date forward, so fixing a typo
+    or adding a participant on an overdue task is blocked until its due date is bumped
+    (EditTask.php:75 — `dateDue` re-validated `after_or_equal:today` on every edit) —
+    proposed ledger row (Known deviations).
+13. **Write access** — the ability to edit, delete, close, reopen or start an item —
+    is held by journal managers at all times (the site-admin branch is void —
+    permissions table ⚠), by the creator at all times, and, for tasks, by the
+    responsible participant; everyone else is read-only even when they are a
+    participant (QueryWritePolicy.php:36-81). Read access to a single item — viewing it
+    and replying — requires being one of its participants, again with a manager
+    exception (QueryAccessPolicy.php:38-133). The UI mirrors this, showing the write
+    controls only to a manager, the owner or the responsible participant
+    (useDiscussionManagerConfig.js:127-138 — `userHasWriteAccess`).
+14. **Messages**: the item's first message (its head message) is created together with
+    the item and later edited through the item's description field, as part of editing
+    the item — so changing it **first requires write access per rule 13** (creator,
+    manager or responsible participant; a sub-editor who is only a participant cannot
+    edit it, live-probed). Within a permitted edit, managers, sub-editors and site
+    admins are exempt from an extra restriction that applies to other writers: they may
+    change a head message only if they authored it, and only within one hour of writing
+    it (EditTask.php:90-112 — the site-admin check deliberately uses the site context;
+    same window in NoteAccessPolicy.php:96-115). Replies may be posted only by
+    participants — a non-participant's reply is rejected on validation
+    (AddNote.php:58-60); a second, controller-level check for the same thing never runs
+    (EditorialTaskController.php:715-717 — unreachable dead code). Template variables in
+    the head message are filled in when it is saved, using the participant set — the
+    head message's author as sender and the other participants as recipients
+    (EditorialTask.php:437-480).
+15. **Replies are permanent by design**: no one can edit or delete a posted reply — a
+    reply is a permanent record, and this is the intended rule. A note-deletion
+    endpoint exists in code but can never succeed for anyone: the write policy only
+    allows head messages while the delete handler rejects head messages, so every path
+    is blocked (NoteAccessPolicy.php:99-101; EditorialTaskController.php:789-793 —
+    `DELETE …/notes/{noteId}`). Because replies were never meant to be individually
+    deletable, this leaves no functional gap — it's a vestigial-endpoint cleanup
+    candidate, not a user-facing bug.
+16. **Deleting an item**: any user with write access can delete a whole task or
+    discussion; deleting it also removes all of its messages and the notifications that
+    pointed at it (EditorialTaskController.php:420-431; EditorialTask.php:92-99).
+    Deleting the submission removes all of its items (Repository.php:240-251).
+17. **Listing**: items are listed per stage. Journal managers see every item on the
+    submission (the site-admin branch is void — permissions table ⚠); everyone else
+    sees only items they participate in. The list can be filtered to open items only
+    and ordered by date (EditorialTaskController.php:262-299 — `isOpen` filter). In the
+    panel, rows are grouped under Yet to begin, In progress and Closed
+    (discussionManagerStore.js:53-74).
+18. **Overdue** is a display state, not a separate status: when a task's due date has
+    passed and it isn't closed, the item shows an **Overdue** badge and gains a
+    synthetic first entry at the top of its activity list (TaskResource.php:67-80;
+    useDiscussionManagerForm.js getBadgeProps).
 
 **Templates**
-19. Templates are journal-scoped. Non-managers only see templates that are
-    unrestricted or restricted to a user group they belong to; managers see all
+19. Templates are journal-scoped. A non-manager sees only templates that are
+    unrestricted or restricted to a user group they belong to; managers see all of them
     (PKPEditTaskTemplateController.php:200-215; Template.php:277-282).
-20. **Apply template** (workflow form): server returns an unsaved prefill — title,
-    type, description (variables substituted), due date = now + dueInterval,
-    participants = current holders of the template's user groups among the
-    submission's stage assignments; creator = current user. Template must belong to
-    the journal (404) and match the requested stage (409)
-    (EditorialTaskController.php:595-640; Template.php:150-176). The UI overwrites
-    form values after a confirm dialog when editing an existing item
-    (useDiscussionManagerForm.js:186-262).
-21. **Auto-add on stage entry** (`include` flag): when a submission is submitted
-    (its current stage) and on every stage entered via an editorial decision, each
-    included template for that stage is instantiated — with *no participants*,
-    `createdBy` NULL, due date from dueInterval. Deduplication checks whether a task
-    row from that template **currently exists** for the submission
-    (Repository.php:227-234): re-entering a stage does not duplicate a surviving auto
-    task, but if the auto task was deleted, re-entering the stage recreates it
-    (Repository.php:196-234; decision hook DecisionType.php:228; submit hook
-    classes/submission/Repository.php:677-688). Imported submissions intentionally
-    skip this.
+20. **Applying a template** in the add/edit form fills the form without saving
+    anything: it sets the title, the task-or-discussion type, the description (with
+    variables substituted), a due date of today plus the template's due interval, and
+    pre-selects participants — the people currently holding the template's user groups
+    among the submission's stage assignments — with the current user as creator. The
+    template must belong to this journal and match the stage being worked on, or the
+    prefill is refused (EditorialTaskController.php:595-640; Template.php:150-176 —
+    due date = now + `dueInterval`; 404 wrong journal, 409 wrong stage). If the user
+    applies a template while editing an existing item, the form warns first and then
+    overwrites the current values on confirm (useDiscussionManagerForm.js:186-262).
+21. **Auto-add on stage entry**: a template can be marked to create its item
+    automatically. When a submission is first submitted (into its starting stage) and
+    each time it enters a stage through an editorial decision, every auto-add template
+    for that stage is instantiated — as an item with *no participants*, no recorded
+    creator, and a due date set from the template's due interval. Before creating one,
+    the system checks whether an item from that template **already exists** on the
+    submission: re-entering a stage does not duplicate a surviving auto-created item,
+    but if that item was deleted, re-entering the stage creates it again
+    (Repository.php:196-234, dedup :227-234 — `include` flag, `createdBy` NULL, due
+    date from `dueInterval`; decision hook DecisionType.php:228; submit hook
+    classes/submission/Repository.php:677-688). Submissions brought in by import
+    intentionally skip this.
 
 ## Side effects
 
-- **In-app notifications**: on create (all participants + creator), on edit (newly
-  added participants only), on reply (all current participants — including the
-  poster), each recipient gets a `NOTIFICATION_TYPE_NEW_QUERY` notification at
-  `NOTIFICATION_LEVEL_TASK` pointing at the item — unless NEW_QUERY is in the user's
-  `blocked_notification` list for the journal, which skips that user entirely
-  (notification **and** email) (EditorialTaskController.php:226-231, :388-393, :755,
-  :1014-1093, in-app gate :1051-1057).
-- **Emails**: after the in-app gate, each recipient whose `blocked_emailed_notification`
-  list does not contain NEW_QUERY (:1070-1077) gets the stage-specific discussion
-  mailable — DiscussionSubmission / DiscussionReview / DiscussionCopyediting /
-  DiscussionProduction by stage (StageMailable.php:32-46) — subject = item title,
-  body = the message, attachments mirrored; sender = acting user. The footer carries
-  the tokenized unsubscribe link + List-Unsubscribe headers
-  (mail/traits/Discussion.php:23-40; Unsubscribe.php:49-103); following it
-  (`notification/unsubscribe?validate={HMAC token}&id={notificationId}`) shows a
-  form whose pre-checked boxes write `blocked_emailed_notification` rows
-  (NotificationHandler.php:89-159). Each send is logged as
-  `SubmissionEmailLogEventType::DISCUSSION_NOTIFY` (:1092).
-- **Header Tasks bell/grid**: the bell badge counts the user's *unread* LEVEL_TASK
-  notifications (PKPTemplateManager.php:1093-1103); the grid lists all their
-  LEVEL_TASK notifications newest-first with Mark Read / Mark New / Delete
-  (TaskNotificationsGridHandler.php:44-57; NotificationsGridHandler.php). ⚠ The
-  EditorialReminder digest's in-app row is created at NORMAL level so it can never
-  appear here (ledger row 50).
-- **Editing/production status flip**: whenever notifications fire for an item in the
-  Copyediting or Production stage, the four editing/production submission
-  notifications (assign copyeditor / awaiting copyedits / assign production user /
-  awaiting representations) are re-synced — the manager delegate treats "a discussion
-  exists in this stage" as "someone is assigned"
-  (EditorialTaskController.php:1029-1046;
-  PKPEditingProductionStatusNotificationManager.php:165). ⚠ ledger row 9: the
-  assignment itself never re-syncs; only this message path does.
-- **Event log** (assoc = the item, `submissionId` carried): created, closed, opened,
-  started, notePosted, fileUploaded/fileRemoved, dateDue modified (old→new), assigned
-  / reassigned (owner change, tasks only), participantsAdded/Removed — each with
-  acting user + localized role names (EditorialTaskController.php:209-224, :459-473,
-  :506-520, :570-584, :736-749, :1169-1368). These render in the History modal
-  (TaskResource.php:82-111). ⚠ Rendering of role placeholders is fragile across the
-  wider activity log — ledger row 14.
-- **Auto cover-note discussion**: submitting with "Comments for the Editor" creates a
-  stage-1 discussion titled with the cover-note label, participants = all assigned
-  managers/sub-editors/assistants/authors, sender = the author; participants get
-  NEW_QUERY notifications (this path skips the in-app block check) and a plain email
-  (generic mailable: no stage template, no unsubscribe footer, no email log)
-  (Repository.php:87-194; trigger classes/submission/Repository.php:675-678). ⚠ Its
-  first message is stored *without* the headnote flag (Repository.php:103-108), so
-  the cover note renders as a reply and the item is headnote-less — see Known
-  deviations.
+- **In-app notifications**: creating an item notifies all participants plus the
+  creator; editing notifies only the newly added participants; posting a reply
+  notifies all current participants, including the person who posted it. Each recipient
+  gets a *new discussion* notification that lands in the header Tasks bell and points
+  at the item — unless that user has blocked the *New discussion* notification for this
+  journal in their profile, in which case they are skipped entirely, for both the
+  in-app notification **and** the email (EditorialTaskController.php:226-231, :388-393,
+  :755, :1014-1093, in-app gate :1051-1057 — `NOTIFICATION_TYPE_NEW_QUERY` at
+  `NOTIFICATION_LEVEL_TASK`, `blocked_notification`).
+- **Emails**: past that gate, each remaining recipient who has not blocked *discussion
+  emails* for this journal gets an email built from a stage-specific template — one
+  each for the submission, review, copyediting and production stages
+  (StageMailable.php:32-46 — DiscussionSubmission / DiscussionReview /
+  DiscussionCopyediting / DiscussionProduction). Its subject is the item title, its
+  body is the message, and any attachments are carried through; the sender is the
+  acting user. The footer includes a personal unsubscribe link and standard
+  List-Unsubscribe headers (mail/traits/Discussion.php:23-40; Unsubscribe.php:49-103);
+  following that link opens a form whose pre-checked boxes record the email opt-out
+  (NotificationHandler.php:89-159 —
+  `notification/unsubscribe?validate={HMAC token}&id={notificationId}` writes
+  `blocked_emailed_notification` rows). Each email sent is recorded in the submission's
+  email log (EditorialTaskController.php:1070-1077 checks `blocked_emailed_notification`
+  for `NEW_QUERY`; :1092 logs `SubmissionEmailLogEventType::DISCUSSION_NOTIFY`).
+- **Header Tasks bell and grid**: the bell's badge counts the user's *unread*
+  task-level notifications (PKPTemplateManager.php:1093-1103); opening it lists all of
+  their task-level notifications, newest first, with Mark Read, Mark New and Delete
+  actions (TaskNotificationsGridHandler.php:44-57; NotificationsGridHandler.php). ⚠ The
+  editorial-reminder digest's in-app notification is created at normal level, not task
+  level, so it never appears in this bell or grid (ledger row 50).
+- **Copyediting/production status flip**: whenever notifications fire for an item on
+  the Copyediting or Production stage, the four editing/production status notices —
+  assign a copyeditor, awaiting copyedits, assign a production user, awaiting
+  representations — are recomputed, because the code treats "a discussion exists on
+  this stage" as if "someone is assigned" (EditorialTaskController.php:1029-1046;
+  PKPEditingProductionStatusNotificationManager.php:165). ⚠ The assignment itself never
+  triggers this recompute; only this discussion path does (ledger row 9).
+- **Event log**: each item records its own history — created, closed, reopened,
+  started, a reply posted, a file attached or removed, the due date changed (old to
+  new), the owner assigned or reassigned (tasks only), and participants added or
+  removed — each entry naming the acting user and the roles involved
+  (EditorialTaskController.php:209-224, :459-473, :506-520, :570-584, :736-749,
+  :1169-1368 — logged against the item, carrying `submissionId`). These entries appear
+  in the item's History modal (TaskResource.php:82-111). ⚠ Rendering the role
+  placeholders is fragile across the wider activity log — ledger row 14.
+- **Auto cover-note discussion**: submitting with "Comments for the Editor" filled in
+  creates a discussion on the submission stage, titled with the cover-note label, with
+  all assigned managers, sub-editors, assistants and authors as participants and the
+  author as sender. Participants get the *new discussion* notification (this path skips
+  the in-app block check) and a plain email — a generic message with no stage template,
+  no unsubscribe footer and no email-log entry (Repository.php:87-194 — `NEW_QUERY`;
+  trigger classes/submission/Repository.php:675-678). ⚠ The opening message is stored
+  *without* the head-message flag (Repository.php:103-108), so the cover note renders
+  as a reply and the item has no head message — see Known deviations.
 
 ## Settings that modify behavior
 
-- **Task templates** (Settings → Workflow → Tasks and Discussions Templates): each
-  template's `include` flag turns on auto-add (rule 21); `restrictToUserGroups` +
-  group list limits who sees it in the apply-template picker (rule 19); `dueInterval`
-  sets the computed due date.
-- **Profile → Notifications** (per user, per journal): "New discussion" in-app block
-  (`blocked_notification`) suppresses the notification *and* — as built — the email
-  (see Open questions #3); the email block (`blocked_emailed_notification`,
-  also written by the unsubscribe form) suppresses only the email
-  (EditorialTaskController.php:1051-1077). ⚠ The same form also offers a
-  "Discussion activity" (`NOTIFICATION_TYPE_QUERY_ACTIVITY`) row
-  (PKPNotificationSettingsForm.php:92), but nothing anywhere creates that
-  notification type — a dead settings row (Known deviations).
+- **Task templates** (Settings → Workflow → Tasks and Discussions Templates): a
+  template's auto-add flag turns on stage-entry creation (rule 21); its restrict-to-
+  roles setting and the chosen group list limit who sees it in the apply-template
+  picker (rule 19); its due interval sets the due date computed when the template is
+  applied (template fields `include`, `restrictToUserGroups`, `dueInterval`).
+- **Profile → Notifications** (per user, per journal): the *New discussion* in-app
+  opt-out suppresses the bell notification *and*, as built, the email too (see Open
+  questions #3); the separate email opt-out — also set by the unsubscribe form —
+  suppresses only the email (EditorialTaskController.php:1051-1077 —
+  `blocked_notification` vs `blocked_emailed_notification`). ⚠ The same settings form
+  also offers a *Discussion activity* opt-out (PKPNotificationSettingsForm.php:92 —
+  `NOTIFICATION_TYPE_QUERY_ACTIVITY`), but nothing anywhere creates that notification,
+  so the toggle does nothing — a dead settings row (Known deviations).
 - No config.inc.php variables alter these rules.
 
 ## Cross-feature interactions
@@ -349,44 +380,47 @@ min 1, only when restricted) (AddTaskTemplate.php:32-47).
   stage specs (ledger row 9 is the shared ⚠).
 - **Stage participants & reviewer assignment** — assignment removal prunes
   participants (rule 9); assignment rules live in those specs.
-- **Notifications framework** — bell/grid, block lists and the unsubscribe token are
-  shared machinery; this spec only owns their NEW_QUERY behavior.
-- **File attachments** — messages attach temporary uploads or submission files
-  (SaveNoteWithFiles); file-genre and file-stage semantics live with submission-files.
+- **Notifications framework** — the bell and grid, the block lists and the unsubscribe
+  token are shared machinery; this spec only owns their *new discussion* behavior
+  (NEW_QUERY).
+- **File attachments** — messages carry either newly uploaded files or existing
+  submission files (SaveNoteWithFiles); file-genre and file-stage semantics live with
+  submission-files.
 
 ## Canonical scenarios
 
-1. **Copyeditor task lifecycle** — editor (dbarnes): on the Copyediting panel creates
-   a task with the copyeditor as responsible, a future due date, "create, don't
-   start" → listed under "Yet to begin"; later starts it (In progress, startedBy
-   recorded); the copyeditor completes it → Closed group, Edit disabled, no reopen
-   offered.
-2. **Discussion with the author** — author submits with comments for the editor → a
-   stage-1 discussion appears In progress with author + editorial team as
-   participants; the author replies from their view; every participant gets a bell
-   notification and a stage-discussion email whose footer links back to the thread.
-3. **Permission boundary** — dbarnes creates a task with dbuskins responsible and
-   minoue as plain participant: dbuskins gets row actions and can edit/complete;
-   minoue sees it read-only; a sub-editor who is not a participant does not see the
-   row at all; the manager sees everything.
-4. **Auto-add on stage entry** — manager saves a Copyediting template with auto-add
-   ON and a 2-week due interval; recording Accept + Skip Review lands the submission
-   in Copyediting and a participant-less "Yet to begin" task materializes once (and
-   is not duplicated on stage re-entry while it exists — though deleting it and
-   re-entering the stage recreates it, rule 21); it cannot be started until someone
-   edits in participants and an owner.
-5. **Apply template prefill** — while adding an item, picking a template flips the
-   form to the template's type, prefills title/description/due date and pre-selects
-   participants from the template's user groups; nothing is saved until the user
-   submits.
-6. **Email opt-out both ways** — a participant blocks discussion emails in their
-   profile: next discussion still reaches their bell but not their inbox; a second
-   participant instead follows the email's unsubscribe link and confirms — same end
-   state, both scoped to that journal only.
+1. **Copyeditor task lifecycle** — an editor (dbarnes) on the Copyediting panel creates
+   a task with the copyeditor as responsible participant, a future due date, and
+   "Create, but don't start"; it appears under **Yet to begin**. The editor later
+   starts it, moving it to **In progress**; the copyeditor completes it, moving it to
+   the **Closed** group, where Edit is disabled and no reopen is offered.
+2. **Discussion with the author** — an author submits with comments for the editor; a
+   discussion appears on the submission stage, In progress, with the author and the
+   editorial team as participants. The author replies from their own view, and every
+   participant gets a Tasks-bell notification and a stage-discussion email whose footer
+   links back to the thread.
+3. **Permission boundary** — dbarnes creates a task with dbuskins as responsible
+   participant and minoue as a plain participant: dbuskins sees the row actions and can
+   edit and complete the task; minoue sees it read-only; a sub-editor who is not a
+   participant doesn't see the item at all; a manager sees everything.
+4. **Auto-add on stage entry** — a manager saves a Copyediting template with auto-add
+   on and a two-week due interval; recording Accept and Skip Review lands the
+   submission in Copyediting, and a participant-less **Yet to begin** task appears once.
+   It is not duplicated when the stage is re-entered while it still exists, though
+   deleting it and re-entering the stage creates it again (rule 21); it can't be
+   started until someone edits in participants and an owner.
+5. **Apply template prefill** — while adding an item, picking a template flips the form
+   to the template's type, prefills the title, description and due date, and
+   pre-selects participants from the template's user groups; nothing is saved until the
+   user submits the form.
+6. **Email opt-out both ways** — one participant blocks discussion emails in their
+   profile: the next discussion still reaches their Tasks bell but not their inbox. A
+   second participant instead follows the unsubscribe link in an email and confirms —
+   same end state, and both opt-outs are scoped to that journal only.
 
 ## Known deviations (as-built ≠ intent)
 
-- ⚠ Rule 11 / ledger row 9 (docs/e2e/app-changes.md §2 row 9): editing/production
+- ⚠ Side effects / ledger row 9 (docs/e2e/app-changes.md §2 row 9): editing/production
   "assigned" notices key on discussion existence, not assignments.
 - ⚠ Side effects / ledger row 14: event-log `{$userGroupName}` param mismatch in
   participant-added rendering (TaskResource.php:90 carries a defensive fallback).
@@ -394,25 +428,30 @@ min 1, only when restricted) (AddTaskTemplate.php:32-47).
   switch (DiscussionManager.vue:115) — cosmetic.
 - ⚠ Ledger row 50: EditorialReminder in-app notification is NORMAL-level, invisible
   to the TASK-filtered bell/grid.
-- ⚠ **Site admin is locked out of the whole feature** (live-probed; ledger row being
-  added — app-changes §2, product-spec pilot rows): every managerial exemption uses
+- ⚠ **Site-admin carve-outs check the wrong scope** (live-probed; app-changes §2,
+  product-spec pilot rows) — **low practical impact**: every managerial exemption uses
   journal-scoped `hasRole([…], $contextId)`, which never matches site-level groups
-  (RoleDAO.php:68 `COALESCE(context_id,0)`), so a pure site admin lists zero items,
-  gets 401 on writes, and the explicit site-admin carve-outs (EditTask.php:211,
-  :235; Repository.php:258) are dead — contrast EditTask.php:92, which deliberately
-  checks the site context. Suspected intent: site admin ≥ manager everywhere.
-- ⚠ **Reviewer stage access outlives the assignment** (rule and actor table;
+  (RoleDAO.php:68 `COALESCE(context_id,0)`), so the explicit site-admin carve-outs
+  (EditTask.php:211, :235; Repository.php:258) are dead code — a site admin holding no
+  manager role on the journal lists zero items and gets 401 on writes. Mitigated in
+  normal use because journal creation auto-enrols the creating admin as a manager of
+  that journal (PKPContextService.php:560-578), so admins ordinarily act through the
+  manager role; it only bites an admin account with no manager enrolment on the
+  journal. Contrast EditTask.php:92, which deliberately checks the site context.
+  Suspected intent: the carve-outs meant site admin ≥ manager everywhere.
+- ⚠ **Reviewer stage access outlives the assignment** (rule and permissions table;
   intent question): QueryUserAccessibleWorkflowStageRequiredPolicy.php:45-60 grants
   review-stage access for *any* review assignment, declined and cancelled included;
   the active/accessible/latest-round filtering exists only on the participant picker
   (EditorialTaskController.php:831-845, :954).
-- ⚠ **Note deletion is wholly dead** (live-probed — app-changes §2, product-spec
-  pilot rows): NoteAccessPolicy WRITE permits only headnotes
-  (NoteAccessPolicy.php:99-101) while deleteNote rejects headnotes
-  (EditorialTaskController.php:789-793) — replies fail authorization and headnote
-  attempts 401 too, even for a manager supplying `?stageId`. `DELETE
-  …/notes/{noteId}` can never succeed for anyone. Suspected intent: participants
-  (or at least managers) can delete a reply.
+- **Vestigial note-deletion endpoint** (live-probed — app-changes §2, product-spec
+  pilot rows) — **not a user-facing bug**: a `DELETE …/notes/{noteId}` route exists
+  but can never succeed for anyone (NoteAccessPolicy WRITE permits only headnotes,
+  NoteAccessPolicy.php:99-101, while deleteNote rejects headnotes,
+  EditorialTaskController.php:789-793 — replies fail authorization, headnote attempts
+  401 too, even for a manager supplying `?stageId`). Per the maintainer, replies are
+  intentionally permanent, so the observable behaviour is correct; this is dead code
+  to remove (or clarify what it was for), not a functional gap.
 - ⚠ **Overdue tasks are un-editable without a due-date bump** (live-probed: with a
   DB-forced past `date_due`, an edit resubmitting the same date is a 422) —
   `dateDue` is re-validated `after_or_equal:today` on every edit
@@ -441,19 +480,6 @@ min 1, only when restricted) (AddTaskTemplate.php:32-47).
   notification type — the toggle does nothing. App-changes §2, product-spec pilot
   rows.
 
-## Code anchors
-
-- lib/pkp/api/v1/submissions/tasks/EditorialTaskController.php — all item endpoints,
-  notifyParticipants (:1014), event logging
-- lib/pkp/api/v1/submissions/tasks/formRequests/{AddTask,EditTask,AddNote}.php — validation
-- lib/pkp/classes/editorialTask/{EditorialTask,Participant,Template,Repository}.php —
-  model, participants/headnote persistence, template promote/auto-add, cover-note query
-- lib/pkp/classes/security/authorization/{QueryAccessPolicy,QueryWritePolicy,NoteAccessPolicy}.php
-- lib/pkp/api/v1/editTaskTemplates/PKPEditTaskTemplateController.php (+ formRequests) — template CRUD
-- lib/pkp/controllers/grid/queries/traits/StageMailable.php; lib/pkp/classes/mail/traits/{Discussion,Unsubscribe}.php; lib/pkp/pages/notification/NotificationHandler.php — mail + unsubscribe
-- lib/pkp/controllers/grid/notifications/TaskNotificationsGridHandler.php; lib/pkp/classes/template/PKPTemplateManager.php:1093-1103 — Tasks bell/grid
-- lib/ui-library/src/managers/DiscussionManager/** (store, config, actions, form); lib/ui-library/src/managers/TaskTemplateManager/**
-
 ## Open questions
 
 1. Reopening a completed *task* is blocked by the row actions but allowed by
@@ -480,3 +506,35 @@ min 1, only when restricted) (AddTaskTemplate.php:32-47).
    tasks and discussions (QueryUserAccessibleWorkflowStageRequiredPolicy.php:45-60),
    given the participant picker deliberately filters to active, reviewer-accessible,
    latest-round assignments?
+
+---
+
+<!-- REFERENCE MATERIAL — provenance and campaign bookkeeping, not product-owner
+     narrative. The PO-facing "where do I find this" is in Purpose. -->
+
+## Reference — entry points & surfaces
+
+| Entry | Path | Atom |
+|-------|------|------|
+| Tasks & Discussions panel (per stage) | Dashboard → submission workflow page → stage panel (editorial, author, and reviewer views); `DiscussionManager` fetches `GET api/v1/submissions/{id}/stages/{stageId}/tasks` | — |
+| Header Tasks bell | Any backend page → bell with unread count → tasks grid modal; the live path is TopNavActions.vue:205-216 fetching the `grid.notifications.taskNotificationsGridHandler` component URL directly (the `$tasksUrl`/`page.PageHandler` plumbing in PKPTemplateManager and `DashboardHandler::tasks` are dead code) | — |
+| Task/discussion CRUD API | `POST/PUT/DELETE api/v1/submissions/{id}/tasks[/{taskId}]`, `PUT …/close`, `…/open`, `…/start` (EditorialTaskController.php:102-148) | — |
+| Replies API | `POST/DELETE api/v1/submissions/{id}/tasks/{taskId}/notes[/{noteId}]` | — |
+| Participant options API | `GET api/v1/submissions/{id}/stages/{stageId}/tasks/participants` | — |
+| Template prefill API | `GET api/v1/submissions/{id}/stages/{stageId}/tasks/fromTemplate/{templateId}` | — |
+| Task Templates settings tab | Settings → Workflow → "Tasks and Discussions Templates" (lib/pkp/templates/management/workflow.tpl:101); API `api/v1/editTaskTemplates` | — |
+| Discussion email | Participant notification email: body is the message + stage-mailable footer with a link back to the thread; tokenized unsubscribe link (`{index}/notification/unsubscribe?validate=…&id=…`) | — |
+| Submission activity history | Per-item History modal (event-log entries rendered as `latestActivities`); same entries also in the submission activity log | — |
+
+## Reference — code anchors
+
+- lib/pkp/api/v1/submissions/tasks/EditorialTaskController.php — all item endpoints,
+  notifyParticipants (:1014), event logging
+- lib/pkp/api/v1/submissions/tasks/formRequests/{AddTask,EditTask,AddNote}.php — validation
+- lib/pkp/classes/editorialTask/{EditorialTask,Participant,Template,Repository}.php —
+  model, participants/headnote persistence, template promote/auto-add, cover-note query
+- lib/pkp/classes/security/authorization/{QueryAccessPolicy,QueryWritePolicy,NoteAccessPolicy}.php
+- lib/pkp/api/v1/editTaskTemplates/PKPEditTaskTemplateController.php (+ formRequests) — template CRUD
+- lib/pkp/controllers/grid/queries/traits/StageMailable.php; lib/pkp/classes/mail/traits/{Discussion,Unsubscribe}.php; lib/pkp/pages/notification/NotificationHandler.php — mail + unsubscribe
+- lib/pkp/controllers/grid/notifications/TaskNotificationsGridHandler.php; lib/pkp/classes/template/PKPTemplateManager.php:1093-1103 — Tasks bell/grid
+- lib/ui-library/src/managers/DiscussionManager/** (store, config, actions, form); lib/ui-library/src/managers/TaskTemplateManager/**

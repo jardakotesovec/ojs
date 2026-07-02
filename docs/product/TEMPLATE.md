@@ -25,30 +25,71 @@ atlas-claims: [<atom IDs this spec owns>]
 
 ## Actors & permissions
 
-<!-- Table: role → what they can do / see. Include anonymous where relevant.
-     This is the section verifiers attack first — anchor every cell. -->
+<!-- ORGANISE BY ACTION, not by role: a table with one ROW PER CAPABILITY (View,
+     Create, Reply, Edit metadata, Edit description, Close, Delete, ...). This lets a
+     reader compare a single capability across all roles in one row — a role-centric
+     table buries cross-cutting rules (e.g. a one-hour edit window) inside individual
+     cells. Columns: Action | Who may — and when | Anchors.
 
-| Actor | Can | Cannot | Anchor |
-|-------|-----|--------|--------|
+     The "Who may — and when" cell is PLAIN PRODUCT LANGUAGE a product owner or QA
+     person reads without a developer. Describe OUTCOMES ("only a participant may
+     reply"), never mechanism: no HTTP status codes (401/403/422/404/500), no
+     route/method names, no class or variable names (canPublish, allowRecommendOnly,
+     changeVersion...), no "enforced by X / dead code / unreachable" commentary. All
+     mechanism goes to Rules & state (with anchors) and Known deviations. The Anchors
+     cell is provenance only.
 
-## Entry points
+     FRONTEND-FIRST: describe what the role sees and can do IN THE UI. Verify the
+     backend rule (source of truth) against the frontend logic and state the UI
+     reality. If an ability exists only by hand-crafting an API call with no UI
+     affordance, do not list it as a plain capability — mark it ⚠ "API-only, no UI
+     control" and defer detail to Known deviations (see the versioning publish-authority
+     row for the pattern).
 
-<!-- Where the feature is reached: UI paths (menu → page → panel), API endpoints,
-     CLI tools, links in emails. One row per entry point, with atlas atom ID. -->
+     Lead with a short paragraph BEFORE the table defining the recurring terms
+     (assigned, participant, creator, responsible...) and the site-wide baselines that
+     apply to every row (site admin, anonymous, recommend-only), so cells stay terse.
+     Where a rule is a bug or as-built oddity, put a bare ⚠ inline with a one-clause
+     "why it matters" and defer the mechanism + ledger link to Known deviations. This
+     is the section verifiers attack first — anchor every row.
 
-| Entry | Path | Atom |
-|-------|------|------|
+     In the "Who may — and when" cell, write a LIST of items (one per role-group or
+     condition), not a semicolon-chained sentence — use `<br>• ` between items so the
+     cell renders as a bulleted list and still reads in raw form. Each bullet: the
+     actor(s) then their condition, e.g. "• Managers — any time". -->
+
+| Action | Who may — and when | Anchors |
+|--------|--------------------|---------|
+| **<Action>** | • <actor(s)> — <condition><br>• <actor(s)> — <condition; ⚠ inline for oddities> | file:line |
 
 ## Fields & validation
 
-<!-- Per form/object: field, type, required?, validation rules, default,
-     multilingual?, who can edit. -->
+<!-- FRONTEND-FIRST: describe the fields the user actually sees in the UI form, by
+     their on-screen LABEL (Name, Due date, Assignee...), not the internal API/DB
+     attribute names (type, dateDue, isResponsible, temporaryFileIds, assocType,
+     createdBy...). State validation in plain terms (required?, limits, task-vs-
+     discussion differences, multilingual?). DROP purely server-set fields
+     (createdBy/assocType/assocId/stageId and the like) — they're invisible to the
+     user; if one matters, mention it in a sentence, don't table it. Put the internal
+     attribute name in the Anchor column only, as provenance. Columns:
+     Field (UI label) | Required? | Rules | Anchor. -->
+
+| Field (UI label) | Required? | Rules | Anchor |
+|------------------|-----------|-------|--------|
 
 ## Rules & state
 
 <!-- The heart. State machine (states, transitions, who triggers, guards),
      invariants, computed behavior, ordering/timing rules. Numbered rules,
-     each with an anchor. ⚠-flag as-built oddities with a ledger link. -->
+     each with an anchor. ⚠-flag as-built oddities with a ledger link.
+
+     Even here — the most technical PO-facing section — name states and fields as the
+     UI shows them ("Yet to begin", "In progress", "Closed"), not by their internal
+     column/attribute ("dateStarted", "dateClosed", "status"). Describe WHAT happens
+     and WHAT the user sees; the internal field that implements it goes in the anchor
+     (e.g. "...computed from whether it was started/closed (TaskResource.php:151 — from
+     dateStarted/dateClosed)"). Reserve an inline internal name only when it is the
+     single clearest way to state a constraint, which is rare. -->
 
 ## Side effects
 
@@ -79,13 +120,29 @@ atlas-claims: [<atom IDs this spec owns>]
 <!-- Every ⚠ rule from above, with docs/e2e/app-changes.md row link and one line on
      the suspected intent. New findings: propose a ledger row. -->
 
-## Code anchors
-
-<!-- The load-bearing files for this feature (handler/controller/manager/schema),
-     so a reader can go deeper. Not exhaustive. -->
-
 ## Open questions
 
 <!-- Anything the author or verifier could not determine from code or live probe.
      Each item phrased so the maintainer can answer with one sentence. -->
+
+---
+
+<!-- REFERENCE MATERIAL below this line — provenance and campaign bookkeeping, NOT
+     product-owner narrative. A PO/QA reads the sections above; the sections below are
+     for developers and for the atlas coverage crosswalk. -->
+
+## Reference — entry points & surfaces
+
+<!-- Where the feature is reached, as technical reference: UI paths (menu → page →
+     panel), API endpoints, CLI tools, links in emails. One row per entry point, with
+     its atlas atom ID (this is how the feature claims its atoms). The PO-facing "where
+     do I find this" belongs in Purpose, not here. -->
+
+| Entry | Path | Atom |
+|-------|------|------|
+
+## Reference — code anchors
+
+<!-- The load-bearing files for this feature (handler/controller/manager/schema),
+     so a reader can go deeper. Not exhaustive. -->
 ```
