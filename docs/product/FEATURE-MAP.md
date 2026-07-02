@@ -235,9 +235,13 @@ atoms: PAGE-login-{signinasuser,signoutasuser}, PAGE-admin-{confirmaccess,confir
 Config side; the public render lives in about-pages (referenced).
 atoms: FORM-{masthead,pkp-masthead,pkp-appearance-masthead}, API-user-masthead, MAIL-user-role-masthead-update-notify (~4)
 
+### site-access-restrictions — login-wall site access, registration disabled, disabled-journal visibility, restricted-article gating
+Access control (round-1 home, keeps Area 5's "& access" honest). ⚠ read-access is jointly determined here (restrictArticleAccess) with publishing mode (distribution-settings) and subscription enforcement (subscription-access) — cross-reference at spec time.
+atoms: PAGE-management-access, restrictSiteAccess/disableUserReg/restrictArticleAccess toggles, AUTHZ-{restricted-site-access,pkp-site-access,https,allowed-hosts}-policy (~4)
+
 ## Area 6 — Journal & site settings
 
-Settings-menu features (decision 6): the per-form split collapses into ~6 features by the journal Settings menu, plus the standalone content/admin managers.
+Settings-menu features (decision 6): the per-form split collapses into ~5 features by the journal Settings menu (Journal / Website / Workflow / Distribution + standalone Emails), plus the standalone content/admin managers. (Site & journal access gating is NOT a Settings-menu tab — it lives in Area 5 as `site-access-restrictions`.)
 
 ### journal-masthead-settings — journal masthead/identity/contact/info/privacy context settings that persist and surface publicly
 Renamed-from: journal-setup.
@@ -253,10 +257,6 @@ atoms: PAGE-management-settings-workflow, FORM-{access,metadata-settings,pkp-met
 
 ### distribution-settings — default license/copyright, indexing metadata, archiving display (LOCKSS/CLOCKSS), publishing mode (open vs subscription), payments enable
 atoms: PAGE-management-settings-distribution, FORM-{archiving-lockss,pkp-search-indexing,pkp-license}, PAGE-gateway-{lockss,clockss}, publishing-mode config (~6)
-
-### access-settings — login-wall site access, registration disabled, disabled-journal visibility, restricted-article gating
-Renamed-from: site-access-restrictions (moved here as one of the ~6 Settings-menu features, decision 6).
-atoms: PAGE-management-access, restrictSiteAccess/disableUserReg/restrictArticleAccess toggles, AUTHZ-{restricted-site-access,pkp-site-access,https,allowed-hosts}-policy (~4)
 
 ### email-templates-management — the Manage Emails UI: enable/disable mailables, edit/add/reset templates, role-based access; plus journal email setup (signature/bounce/bulk restrictions)
 Stays standalone (decision 6).
