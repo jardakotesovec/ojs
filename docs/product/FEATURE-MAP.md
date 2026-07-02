@@ -231,9 +231,9 @@ atoms: PAGE-management-{settings-access,permissions,resetpermissions}, VUE-user-
 ### login-as — admin impersonation of another user and return to own session
 atoms: PAGE-login-{signinasuser,signoutasuser}, PAGE-admin-{confirmaccess,confirmaccesssubmit}, AUTHZ-reauthentication-required-policy, DB-sessions (~4)
 
-### editorial-masthead — masthead configuration (role order, reviewer display opt-in) that drives the public masthead page
-Config side; the public render lives in about-pages (referenced).
-atoms: FORM-{masthead,pkp-masthead,pkp-appearance-masthead}, API-user-masthead, MAIL-user-role-masthead-update-notify (~4)
+### editorial-masthead — the editorial-team roster on the public masthead: which role groups appear, their order, reviewer display opt-in
+Settings › Website › "Editorial Masthead" tab (`PKPAppearanceMastheadForm`) + the public /about/editorialMasthead page (rendered in about-pages, referenced). Distinct from journal-masthead-settings, the Settings › Journal › "Masthead" *identity* tab. ⚠ the public page also renders `editorialHistory`, which is set in journal-masthead-settings — cross-reference at spec time.
+atoms: FORM-pkp-appearance-masthead, API-user-masthead, MAIL-user-role-masthead-update-notify (~3)
 
 ### site-access-restrictions — login-wall site access, registration disabled, disabled-journal visibility, restricted-article gating
 Access control (round-1 home, keeps Area 5's "& access" honest). ⚠ read-access is jointly determined here (restrictArticleAccess) with publishing mode (distribution-settings) and subscription enforcement (subscription-access) — cross-reference at spec time.
@@ -243,9 +243,9 @@ atoms: PAGE-management-access, restrictSiteAccess/disableUserReg/restrictArticle
 
 Settings-menu features (decision 6): the per-form split collapses into ~5 features by the journal Settings menu (Journal / Website / Workflow / Distribution + standalone Emails), plus the standalone content/admin managers. (Site & journal access gating is NOT a Settings-menu tab — it lives in Area 5 as `site-access-restrictions`.)
 
-### journal-masthead-settings — journal masthead/identity/contact/info/privacy context settings that persist and surface publicly
-Renamed-from: journal-setup.
-atoms: PAGE-management-settings-context, FORM-{context,pkp-contact,pkp-privacy,pkp-information}, SCHEMA-context-{ojs,pkp}, DB-journals/journal_settings (~4)
+### journal-masthead-settings — the Settings › Journal › "Masthead" tab: journal identity (name/acronym/about) plus contact, privacy and information settings that surface publicly
+Renamed-from: journal-setup. The UI tab is literally "Masthead" (journal identity, `PKPMastheadForm`) — not the editorial-team roster, which is editorial-masthead (Website settings). Owns the journal-identity Masthead form (moved here from editorial-masthead).
+atoms: PAGE-management-settings-context, FORM-{masthead,pkp-masthead,context,pkp-contact,pkp-privacy,pkp-information}, SCHEMA-context-{ojs,pkp}, DB-journals/journal_settings (~6)
 
 ### website-appearance-settings — theme options, logo/homepage image uploads, custom CSS, date/time formats, info/list pagination
 Renamed-from: website-appearance.
