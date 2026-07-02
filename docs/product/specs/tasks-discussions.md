@@ -88,10 +88,9 @@ whoever created the item. The rule column states the product behaviour; how it i
 enforced (and where enforcement is buggy) lives in **Rules & state** and **Known
 deviations**, with the ⚠ marks pointing there. Two site-wide baselines apply to every
 row: **Site admin** acts as a manager on any journal they created (journal creation
-auto-enrols the admin as a manager — PKPContextService::add()); **Anonymous /
-not-logged-in** users have no access at all. Reaching the feature requires being one
-of: site admin, manager, sub-editor, assistant, author, reviewer
-(EditorialTaskController::getRouteGroupMiddleware()).
+auto-enrols the admin as a manager); **Anonymous / not-logged-in** users have no access
+at all. Reaching the feature requires being one of: site admin, manager, sub-editor,
+assistant, author, reviewer. <sup>m</sup>
 
 | Action | Who may — and when |
 |--------|--------------------|
@@ -119,36 +118,45 @@ of: site admin, manager, sub-editor, assistant, author, reviewer
 <sup>i</sup> useDiscussionManagerConfig() userHasWriteAccess(); useDiscussionManagerForm() status switch ·
 <sup>j</sup> QueryWritePolicy::effect() ·
 <sup>k</sup> EditorialTaskController::getParticipants(), getReviewers(); QueryAccessPolicy::__construct() ·
-<sup>l</sup> PKPEditTaskTemplateController::getGroupRoutes(), authorize()
+<sup>l</sup> PKPEditTaskTemplateController::getGroupRoutes(), authorize() ·
+<sup>m</sup> (baselines) PKPContextService::add() (site-admin auto-enrol); EditorialTaskController::getRouteGroupMiddleware() (access requirement)
 
 ## Fields & validation
 
 **The create/edit form** (opened from the panel's "Add" button, or an item's edit
 action). The fields the user fills:
 
-| Field (UI label) | Required? | Rules | Anchor |
-|------------------|-----------|-------|--------|
-| **Name** | Yes | The item's title; up to 255 characters | useDiscussionManagerForm() addFieldText('title'); EditTask::rules() (`title`) |
-| **Message / details** | Yes | The item's first message (rich text); can carry file attachments (see "Attach files"); who may edit it later is in the permissions table | useDiscussionManagerForm() addFieldRichTextArea('description'); EditTask::rules() (`headnote`) |
-| **Participants** | Yes | Who is on the item, chosen from the people assigned to the stage | useDiscussionManagerForm() addFieldOptions('participants'); EditTask::rules() 'participants' |
-| **Add task details** (toggle) | No | Off → it's a discussion (no owner, no due date); on → it's a task | useDiscussionManagerForm() addFieldCheckbox('taskInfoAdd'); EditTask::rules() (`type`) |
-| **Due date** (only when it's a task) | Yes for a task | Must be today or later — ⚠ re-checked on every later edit too (rule 12) | useDiscussionManagerForm() addTaskInfoDueDate(); EditTask::rules() (`dateDue`) |
-| **Assignee** (only when it's a task) | Yes for a task | Exactly one participant is marked responsible for completing it | useDiscussionManagerForm() addTaskInfoAssignee(); EditTask::rules() (`isResponsible`) |
+| Field (UI label) | Required? | Rules |
+|------------------|-----------|-------|
+| **Name** | Yes | The item's title; up to 255 characters <sup>a</sup> |
+| **Message / details** | Yes | The item's first message (rich text); can carry file attachments (see "Attach files"); who may edit it later is in the permissions table <sup>b</sup> |
+| **Participants** | Yes | Who is on the item, chosen from the people assigned to the stage <sup>c</sup> |
+| **Add task details** (toggle) | No | Off → it's a discussion (no owner, no due date); on → it's a task <sup>d</sup> |
+| **Due date** (only when it's a task) | Yes for a task | Must be today or later — ⚠ re-checked on every later edit too (rule 12) <sup>e</sup> |
+| **Assignee** (only when it's a task) | Yes for a task | Exactly one participant is marked responsible for completing it <sup>f</sup> |
+
+<sup>a</sup> useDiscussionManagerForm() addFieldText('title'); EditTask::rules() (`title`) ·
+<sup>b</sup> useDiscussionManagerForm() addFieldRichTextArea('description'); EditTask::rules() (`headnote`) ·
+<sup>c</sup> useDiscussionManagerForm() addFieldOptions('participants'); EditTask::rules() 'participants' ·
+<sup>d</sup> useDiscussionManagerForm() addFieldCheckbox('taskInfoAdd'); EditTask::rules() (`type`) ·
+<sup>e</sup> useDiscussionManagerForm() addTaskInfoDueDate(); EditTask::rules() (`dateDue`) ·
+<sup>f</sup> useDiscussionManagerForm() addTaskInfoAssignee(); EditTask::rules() (`isResponsible`)
 
 The server fills in context automatically (who created it, which submission and stage
 it belongs to) — not user-entered.
 
 **A reply** is just a message: rich text, required, up to ~65,000 characters, with the
-same optional file attachments. Only a participant of the item may post one
-(AddNote::rules()).
+same optional file attachments. Only a participant of the item may post one. <sup>g</sup>
 
 **The task-template form** (Settings → Workflow → Tasks and Discussions Templates) has
 the same core fields — name, message, task-or-discussion, stage — plus template-only
 options: the message may include placeholder variables (e.g. the author's name) that
 fill in when the template is applied; an **"add automatically"** flag that creates the
 item as soon as a submission reaches that stage; a default **due interval** (one to
-four weeks, or one to three months); and an optional **restriction to chosen roles**
-(AddTaskTemplate::rules()).
+four weeks, or one to three months); and an optional **restriction to chosen roles**. <sup>h</sup>
+
+<sup>g</sup> AddNote::rules() ·
+<sup>h</sup> AddTaskTemplate::rules()
 
 ## Rules & state
 
@@ -156,92 +164,75 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
 1. A **task** has exactly one responsible participant and a due date, and moves
    through **Yet to begin → In progress → Closed**. A **discussion** has neither owner
    nor due date and only ever shows **In progress** or **Closed** — it starts already
-   in progress (EditTask rules for type/due-date; TaskResource::determineStatus()).
+   in progress. <sup>a</sup>
 2. The state a user sees follows the actions taken on the item, not a field anyone
    sets: a task is "Yet to begin" until it is started, "In progress" once started, and
    "Closed" once completed; a discussion is "In progress" until it is closed. There is
    no editable status field — the state is always computed from whether the item has
-   been started and/or closed (TaskResource::determineStatus() — from `dateStarted`/`dateClosed`).
+   been started and/or closed. <sup>b</sup>
 3. A discussion can be promoted to a task later — the **Add Task Details** action,
    offered while it is In progress. The reverse is never offered in the UI: once an
    item is a task, the task-details toggle is locked, so a task can't be turned back
-   into a discussion (though the API will accept any valid type on edit)
-   (useDiscussionManagerConfig() getItemActions(); useDiscussionManagerForm() addFieldCheckbox('taskInfoAdd');
-   EditTask::rules() (`type`)).
+   into a discussion (though the API will accept any valid type on edit). <sup>c</sup>
 
 **Participants**
 4. **Who the picker offers** as participants on an item: everyone assigned to the
    submission at that stage; in a review stage, also reviewers with an active,
    accessible assignment — across all of their review rounds, not just the latest — and
-   always the acting manager or admin (EditorialTaskController::getParticipants(),
-   getReviewers()). For a reviewer, the picker returns the review details per round
-   (round number and review method), so a reviewer who reviewed more than once is
-   listed with all their reviews (EditorialTaskParticipantResource).
+   always the acting manager or admin. For a reviewer, the picker returns the review
+   details per round (round number and review method), so a reviewer who reviewed more
+   than once is listed with all their reviews. <sup>d</sup>
 5. **The backend accepts more than the picker offers** ⚠: on save it applies no
    reviewer filtering at all — *any* review assignment anywhere on the submission
    qualifies a person, even a **declined or cancelled** one, for an item on any stage
    (so a reviewer who declined in round 1 can be added to a Production task; the picker
-   would never offer them). Managers may be added to any item regardless
-   (EditTask participant validation; see Known deviations).
+   would never offer them). Managers may be added to any item regardless (see Known
+   deviations). <sup>e</sup>
 6. Whoever creates an item must be one of its participants — except managers, who may
-   create an item without joining it (EditTask::rules() 'participants' creator check). When creating, the form
-   pre-checks the current user in the participant list so this is the default
-   (useDiscussionManagerForm() getSelectedParticipants()).
-7. A task needs at least one participant; a discussion needs at least two
-   (EditTask::rules() 'participants' count check).
+   create an item without joining it. When creating, the form pre-checks the current
+   user in the participant list so this is the default. <sup>f</sup>
+7. A task needs at least one participant; a discussion needs at least two. <sup>g</sup>
 8. To protect anonymous review, whenever a submission has review assignments the item
    limits who can share a thread (on any stage): at most one blinded reviewer —
    anonymous or double-anonymous — per item, never alongside another reviewer, and no
-   author participant alongside a blinded reviewer (EditTask::rules() 'participants' anonymity check). The
-   participant pickers go further and hide identities outright: an author is hidden
-   from a double-anonymous reviewer, and blinded reviewers are hidden from authors and
-   from other reviewers (EditorialTaskController::getParticipants(), getReviewers()).
-   Author names inserted by template variables are stripped for double-anonymous
-   reviewers (EditorialTask::compileDescription(), anonymizeAuthors()).
+   author participant alongside a blinded reviewer. The participant pickers go further
+   and hide identities outright: an author is hidden from a double-anonymous reviewer,
+   and blinded reviewers are hidden from authors and from other reviewers. Author names
+   inserted by template variables are stripped for double-anonymous reviewers. <sup>h</sup>
 9. When a user's stage assignment (or a reviewer's review assignment) is removed, they
-   are dropped from every item on that submission — unless they are a manager
-   (Repository::removeParticipantFromSubmissionTasks(); StageParticipantGridHandler::deleteParticipant();
-   PKPReviewerGridHandler::updateUnassignReviewer()).
+   are dropped from every item on that submission — unless they are a manager. <sup>i</sup>
 
 **Lifecycle**
 10. **Starting** applies to tasks only and moves a task from Yet to begin to In
     progress. It is allowed once, only while the task has not been started, and only
     when the task has at least one participant and exactly one responsible participant
     — auto-created tasks (rule 21) fail these checks until someone edits them. Trying
-    to start a discussion is rejected (EditorialTaskController::startTask() — records
-    `dateStarted` + `startedBy`; discussion start returns 409). ⚠ There is **no closed
-    guard**: a task that was closed but never started can still be started through the
-    API — it picks up a start time while still displaying as Closed, since a close
-    always wins in the computed state (rule 2) (EditorialTaskController::startTask()
-    checks only `dateStarted`/type). On the create form the user picks **Start task
-    upon saving** (the default) or **Create, but don't start**
-    (useDiscussionManagerForm() addWorkItem(), addFieldSelect('taskInfoShouldStart')).
+    to start a discussion is rejected. ⚠ There is **no closed guard**: a task that was
+    closed but never started can still be started through the API — it picks up a start
+    time while still displaying as Closed, since a close always wins in the computed
+    state (rule 2). On the create form the user picks **Start task upon saving** (the
+    default) or **Create, but don't start**. <sup>j</sup>
 11. **Closing and reopening**: closing an item marks it Closed; reopening clears that
     and returns it to In progress. Each is one step at a time — closing an
     already-closed item, or reopening one that isn't closed, is refused as a redundant
-    no-op (close sets `dateClosed`, reopen clears it; a repeat call returns 409). Doing
-    either requires write access (rule 13). In the UI, a completed task's **row
-    actions** offer no reopen, presenting completion as one-way
-    (useDiscussionManagerActions() discussionSetClosed()). ⚠ But nothing enforces that one-way rule
-    underneath: the reopen API carries no task-vs-discussion guard
-    (EditorialTaskController::openTask()), and neither does the status switch in the
-    item's view modal — its Closed→open path applies to tasks too, with only the
-    *start* transition discussion-guarded there (useDiscussionManagerForm() status switch).
-    One-way completion has holes on both surfaces — see Open questions #1.
-12. **Editing**: the UI disables the Edit action on closed items
-    (useDiscussionManagerConfig() getItemActions()). ⚠ A task whose due date has already passed
-    can't be edited at all without also moving the due date forward, so fixing a typo
-    or adding a participant on an overdue task is blocked until its due date is bumped
-    (EditTask::rules() 'dateDue' — re-validated `after_or_equal:today` on every edit) —
-    proposed ledger row (Known deviations).
+    no-op (a repeat call returns 409). Doing either requires write access (rule 13). In
+    the UI, a completed task's **row actions** offer no reopen, presenting completion as
+    one-way. ⚠ But nothing enforces that one-way rule underneath: the reopen API carries
+    no task-vs-discussion guard, and neither does the status switch in the item's view
+    modal — its Closed→open path applies to tasks too, with only the *start* transition
+    discussion-guarded there. One-way completion has holes on both surfaces — see Open
+    questions #1. <sup>k</sup>
+12. **Editing**: the UI disables the Edit action on closed items. ⚠ A task whose due
+    date has already passed can't be edited at all without also moving the due date
+    forward, so fixing a typo or adding a participant on an overdue task is blocked
+    until its due date is bumped — proposed ledger row (Known deviations). <sup>l</sup>
 13. **Write access** — the ability to edit, delete, close, reopen or start an item —
     is held by journal managers at all times, by the creator at all times, and, for
     tasks, by the responsible participant; everyone else is read-only even when they
-    are a participant (QueryWritePolicy::effect()). Read access to a single item — viewing it
-    and replying — requires being one of its participants, again with a manager
-    exception (QueryAccessPolicy::__construct()). The UI mirrors this, showing the write
-    controls only to a manager, the owner or the responsible participant
-    (useDiscussionManagerConfig() userHasWriteAccess()).
+    are a participant. Read access to a single item — viewing it and replying — requires
+    being one of its participants, again with a manager exception. The UI mirrors this,
+    showing the write controls only to a manager, the owner or the responsible
+    participant. <sup>m</sup>
 14. **Messages**: the item's first message (its head message) is created together with
     the item and later edited through the item's description field, as part of editing
     the item — so changing it **first requires write access per rule 13** (creator,
@@ -249,50 +240,41 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
     edit it, live-probed). Within a permitted edit, managers, sub-editors and site
     admins are exempt from an extra restriction that applies to other writers: they may
     change a head message only if they authored it, and only within one hour of writing
-    it (EditTask::rules() 'headnote' rule — the site-admin check deliberately uses the site context;
-    same window in NoteAccessPolicy::effect()). Replies may be posted only by
-    participants — a non-participant's reply is rejected on validation
-    (AddNote::rules() 'userId'); a second, controller-level check for the same thing never runs
-    (EditorialTaskController::addNote() — unreachable dead code). Template variables in
-    the head message are filled in when it is saved, using the participant set — the
-    head message's author as sender and the other participants as recipients
-    (EditorialTask::compileDescription()).
+    it. Replies may be posted only by participants — a non-participant's reply is
+    rejected on validation; a second, controller-level check for the same thing never
+    runs. Template variables in the head message are filled in when it is saved, using
+    the participant set — the head message's author as sender and the other participants
+    as recipients. <sup>n</sup>
 15. **Replies are permanent by design**: no one can edit or delete a posted reply — a
     reply is a permanent record, and this is the intended rule. A note-deletion
     endpoint exists in code but can never succeed for anyone: the write policy only
     allows head messages while the delete handler rejects head messages, so every path
-    is blocked (NoteAccessPolicy::effect(); EditorialTaskController::deleteNote() —
-    `DELETE …/notes/{noteId}`). Because replies were never meant to be individually
-    deletable, this leaves no functional gap — it's a vestigial-endpoint cleanup
-    candidate, not a user-facing bug.
+    is blocked. Because replies were never meant to be individually deletable, this
+    leaves no functional gap — it's a vestigial-endpoint cleanup candidate, not a
+    user-facing bug. <sup>o</sup>
 16. **Deleting an item**: any user with write access can delete a whole task or
     discussion; deleting it also removes all of its messages and the notifications that
-    pointed at it (EditorialTaskController::deleteTask(); EditorialTask::booted()).
-    Deleting the submission removes all of its items (Repository::deleteBySubmissionId()).
+    pointed at it. Deleting the submission removes all of its items. <sup>p</sup>
 17. **Listing**: items are listed per stage. Journal managers see every item on the
-    submission; everyone else sees only items they participate in. The list can be filtered to open items only
-    and ordered by date (EditorialTaskController::getTasks() — `isOpen` filter). In the
-    panel, rows are grouped under Yet to begin, In progress and Closed
-    (useDiscussionManagerStore() discussions[] groups).
+    submission; everyone else sees only items they participate in. The list can be
+    filtered to open items only and ordered by date. In the panel, rows are grouped
+    under Yet to begin, In progress and Closed. <sup>q</sup>
 18. **Overdue** is a display state, not a separate status: when a task's due date has
     passed and it isn't closed, the item shows an **Overdue** badge and gains a
-    synthetic first entry at the top of its activity list (TaskResource::toArray();
-    useDiscussionManagerForm() getBadgeProps()).
+    synthetic first entry at the top of its activity list. <sup>r</sup>
 
 **Templates**
 19. Templates are journal-scoped. A non-manager sees only templates that are
-    unrestricted or restricted to a user group they belong to; managers see all of them
-    (PKPEditTaskTemplateController::getMany(); Template::scopeWithUserGroupIds()).
+    unrestricted or restricted to a user group they belong to; managers see all of
+    them. <sup>s</sup>
 20. **Applying a template** in the add/edit form fills the form without saving
     anything: it sets the title, the task-or-discussion type, the description (with
     variables substituted), a due date of today plus the template's due interval, and
     pre-selects participants — the people currently holding the template's user groups
     among the submission's stage assignments — with the current user as creator. The
     template must belong to this journal and match the stage being worked on, or the
-    prefill is refused (EditorialTaskController::fromTemplate(); Template::promote() —
-    due date = now + `dueInterval`; 404 wrong journal, 409 wrong stage). If the user
-    applies a template while editing an existing item, the form warns first and then
-    overwrites the current values on confirm (useDiscussionManagerForm() onSelectTemplate(), setValuesFromTemplate()).
+    prefill is refused. If the user applies a template while editing an existing item,
+    the form warns first and then overwrites the current values on confirm. <sup>t</sup>
 21. **Auto-add on stage entry**: a template can be marked to create its item
     automatically. When a submission is first submitted (into its starting stage) and
     each time it enters a stage through an editorial decision, every auto-add template
@@ -300,11 +282,30 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
     creator, and a due date set from the template's due interval. Before creating one,
     the system checks whether an item from that template **already exists** on the
     submission: re-entering a stage does not duplicate a surviving auto-created item,
-    but if that item was deleted, re-entering the stage creates it again
-    (Repository::autoCreateFromTemplates(), dedup taskAlreadyCreatedFromTemplate() — `include` flag, `createdBy` NULL, due
-    date from `dueInterval`; decision hook DecisionType::runAdditionalActions(); submit hook
-    classes/submission/Repository::submit()). Submissions brought in by import
-    intentionally skip this.
+    but if that item was deleted, re-entering the stage creates it again. Submissions
+    brought in by import intentionally skip this. <sup>u</sup>
+
+<sup>a</sup> EditTask rules for type/due-date; TaskResource::determineStatus() ·
+<sup>b</sup> TaskResource::determineStatus() (from `dateStarted`/`dateClosed`) ·
+<sup>c</sup> useDiscussionManagerConfig() getItemActions(); useDiscussionManagerForm() addFieldCheckbox('taskInfoAdd'); EditTask::rules() (`type`) ·
+<sup>d</sup> EditorialTaskController::getParticipants(), getReviewers(); EditorialTaskParticipantResource ·
+<sup>e</sup> EditTask participant validation ·
+<sup>f</sup> EditTask::rules() 'participants' creator check; useDiscussionManagerForm() getSelectedParticipants() ·
+<sup>g</sup> EditTask::rules() 'participants' count check ·
+<sup>h</sup> EditTask::rules() 'participants' anonymity check; EditorialTaskController::getParticipants(), getReviewers(); EditorialTask::compileDescription(), anonymizeAuthors() ·
+<sup>i</sup> Repository::removeParticipantFromSubmissionTasks(); StageParticipantGridHandler::deleteParticipant(); PKPReviewerGridHandler::updateUnassignReviewer() ·
+<sup>j</sup> EditorialTaskController::startTask() (records `dateStarted`/`startedBy`; discussion-start returns 409; checks only `dateStarted`/type); useDiscussionManagerForm() addWorkItem(), addFieldSelect('taskInfoShouldStart') ·
+<sup>k</sup> useDiscussionManagerActions() discussionSetClosed(); EditorialTaskController::openTask(); useDiscussionManagerForm() status switch ·
+<sup>l</sup> useDiscussionManagerConfig() getItemActions(); EditTask::rules() 'dateDue' (re-validated `after_or_equal:today` on every edit) ·
+<sup>m</sup> QueryWritePolicy::effect(); QueryAccessPolicy::__construct(); useDiscussionManagerConfig() userHasWriteAccess() ·
+<sup>n</sup> EditTask::rules() 'headnote' rule (site-admin check uses the site context; same one-hour window in NoteAccessPolicy::effect()); AddNote::rules() 'userId'; EditorialTaskController::addNote() (unreachable dead code); EditorialTask::compileDescription() ·
+<sup>o</sup> NoteAccessPolicy::effect(); EditorialTaskController::deleteNote() (`DELETE …/notes/{noteId}`) ·
+<sup>p</sup> EditorialTaskController::deleteTask(); EditorialTask::booted(); Repository::deleteBySubmissionId() ·
+<sup>q</sup> EditorialTaskController::getTasks() (`isOpen` filter); useDiscussionManagerStore() discussions[] groups ·
+<sup>r</sup> TaskResource::toArray(); useDiscussionManagerForm() getBadgeProps() ·
+<sup>s</sup> PKPEditTaskTemplateController::getMany(); Template::scopeWithUserGroupIds() ·
+<sup>t</sup> EditorialTaskController::fromTemplate(); Template::promote() (due date = now + `dueInterval`; 404 wrong journal, 409 wrong stage); useDiscussionManagerForm() onSelectTemplate(), setValuesFromTemplate() ·
+<sup>u</sup> Repository::autoCreateFromTemplates(), taskAlreadyCreatedFromTemplate() (`include` flag, `createdBy` NULL, due date from `dueInterval`); DecisionType::runAdditionalActions(); classes/submission/Repository::submit()
 
 ## Side effects
 
@@ -314,55 +315,48 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
   gets a *new discussion* notification that lands in the header Tasks bell and points
   at the item — unless that user has blocked the *New discussion* notification for this
   journal in their profile, in which case they are skipped entirely, for both the
-  in-app notification **and** the email (EditorialTaskController::addTask(), editTask(),
-  addNote(), notifyParticipants() (in-app gate) — `NOTIFICATION_TYPE_NEW_QUERY` at
-  `NOTIFICATION_LEVEL_TASK`, `blocked_notification`).
+  in-app notification **and** the email. <sup>a</sup>
 - **Emails**: past that gate, each remaining recipient who has not blocked *discussion
   emails* for this journal gets an email built from a stage-specific template — one
-  each for the submission, review, copyediting and production stages
-  (StageMailable::getStageMailable() — DiscussionSubmission / DiscussionReview /
-  DiscussionCopyediting / DiscussionProduction). Its subject is the item title, its
-  body is the message, and any attachments are carried through; the sender is the
-  acting user. The footer includes a personal unsubscribe link and standard
-  List-Unsubscribe headers (Discussion::addFooter(); Unsubscribe::setupUnsubscribeFooter(), headers());
-  following that link opens a form whose pre-checked boxes record the email opt-out
-  (NotificationHandler::unsubscribe() —
-  `notification/unsubscribe?validate={HMAC token}&id={notificationId}` writes
-  `blocked_emailed_notification` rows). Each email sent is recorded in the submission's
-  email log (EditorialTaskController::notifyParticipants() checks `blocked_emailed_notification`
-  for `NEW_QUERY`; logs `SubmissionEmailLogEventType::DISCUSSION_NOTIFY`).
+  each for the submission, review, copyediting and production stages. Its subject is
+  the item title, its body is the message, and any attachments are carried through; the
+  sender is the acting user. The footer includes a personal unsubscribe link and
+  standard List-Unsubscribe headers; following that link opens a form whose pre-checked
+  boxes record the email opt-out. Each email sent is recorded in the submission's email
+  log. <sup>b</sup>
 - **Header Tasks bell and grid**: the bell's badge counts the user's *unread*
-  task-level notifications (PKPTemplateManager::setupBackendPage()); opening it lists all of
-  their task-level notifications, newest first, with Mark Read, Mark New and Delete
-  actions (TaskNotificationsGridHandler::loadData(); NotificationsGridHandler). ⚠ The
-  editorial-reminder digest's in-app notification is created at normal level, not task
-  level, so it never appears in this bell or grid (ledger row 50).
+  task-level notifications; opening it lists all of their task-level notifications,
+  newest first, with Mark Read, Mark New and Delete actions. ⚠ The editorial-reminder
+  digest's in-app notification is created at normal level, not task level, so it never
+  appears in this bell or grid (ledger row 50). <sup>c</sup>
 - **Copyediting/production status flip**: whenever notifications fire for an item on
   the Copyediting or Production stage, the four editing/production status notices —
   assign a copyeditor, awaiting copyedits, assign a production user, awaiting
   representations — are recomputed, because the code treats "a discussion exists on
-  this stage" as if "someone is assigned" (EditorialTaskController::notifyParticipants();
-  PKPEditingProductionStatusNotificationManager::updateNotification()). ⚠ The assignment itself never
-  triggers this recompute; only this discussion path does (ledger row 9).
+  this stage" as if "someone is assigned". ⚠ The assignment itself never triggers this
+  recompute; only this discussion path does (ledger row 9). <sup>d</sup>
 - **Event log**: each item records its own history — created, closed, reopened,
   started, a reply posted, a file attached or removed, the due date changed (old to
   new), the owner assigned or reassigned (tasks only), and participants added or
-  removed — each entry naming the acting user and the roles involved
-  (EditorialTaskController event-logging in the create/close/open/start/note/file/
-  participant handlers — logged against the item, carrying `submissionId`). These
-  entries appear in the item's History modal (TaskResource latest-activities), and a
-  file-attachment entry now carries the attached file's id and name so the modal can
-  link straight to it (TaskResource latest-activities `settings`). ⚠ Rendering the role
-  placeholders is fragile across the wider activity log — ledger row 14.
+  removed — each entry naming the acting user and the roles involved. These entries
+  appear in the item's History modal, and a file-attachment entry now carries the
+  attached file's id and name so the modal can link straight to it. ⚠ Rendering the
+  role placeholders is fragile across the wider activity log — ledger row 14. <sup>e</sup>
 - **Auto cover-note discussion**: submitting with "Comments for the Editor" filled in
   creates a discussion on the submission stage, titled with the cover-note label, with
   all assigned managers, sub-editors, assistants and authors as participants and the
   author as sender. Participants get the *new discussion* notification (this path skips
   the in-app block check) and a plain email — a generic message with no stage template,
-  no unsubscribe footer and no email-log entry (Repository::addCommentsForEditorsQuery(), addQuery() — `NEW_QUERY`;
-  trigger classes/submission/Repository::submit()). ⚠ The opening message is stored
-  *without* the head-message flag (Repository::addQuery()), so the cover note renders
-  as a reply and the item has no head message — see Known deviations.
+  no unsubscribe footer and no email-log entry. ⚠ The opening message is stored
+  *without* the head-message flag, so the cover note renders as a reply and the item
+  has no head message — see Known deviations. <sup>f</sup>
+
+<sup>a</sup> EditorialTaskController::addTask(), editTask(), addNote(), notifyParticipants() (in-app gate; `NOTIFICATION_TYPE_NEW_QUERY` at `NOTIFICATION_LEVEL_TASK`, `blocked_notification`) ·
+<sup>b</sup> StageMailable::getStageMailable() (DiscussionSubmission / DiscussionReview / DiscussionCopyediting / DiscussionProduction); Discussion::addFooter(); Unsubscribe::setupUnsubscribeFooter(), headers(); NotificationHandler::unsubscribe() (`notification/unsubscribe?validate={HMAC token}&id={notificationId}` → `blocked_emailed_notification`); EditorialTaskController::notifyParticipants() (logs `SubmissionEmailLogEventType::DISCUSSION_NOTIFY`) ·
+<sup>c</sup> PKPTemplateManager::setupBackendPage(); TaskNotificationsGridHandler::loadData(); NotificationsGridHandler ·
+<sup>d</sup> EditorialTaskController::notifyParticipants(); PKPEditingProductionStatusNotificationManager::updateNotification() ·
+<sup>e</sup> EditorialTaskController event-logging in the create/close/open/start/note/file/participant handlers (logged against the item, carrying `submissionId`); TaskResource latest-activities (+ `settings` for file id/name) ·
+<sup>f</sup> Repository::addCommentsForEditorsQuery(), addQuery() (`NEW_QUERY`; trigger classes/submission/Repository::submit()); Repository::addQuery() (head-message flag omitted)
 
 ## Settings that modify behavior
 
@@ -370,16 +364,17 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
   template's auto-add flag turns on stage-entry creation (rule 21); its restrict-to-
   roles setting and the chosen group list limit who sees it in the apply-template
   picker (rule 19); its due interval sets the due date computed when the template is
-  applied (template fields `include`, `restrictToUserGroups`, `dueInterval`).
+  applied. <sup>a</sup>
 - **Profile → Notifications** (per user, per journal): the *New discussion* in-app
   opt-out suppresses the bell notification *and*, as built, the email too (see Open
   questions #3); the separate email opt-out — also set by the unsubscribe form —
-  suppresses only the email (EditorialTaskController::notifyParticipants() —
-  `blocked_notification` vs `blocked_emailed_notification`). ⚠ The same settings form
-  also offers a *Discussion activity* opt-out (PKPNotificationSettingsForm::getNotificationSettingCategories() —
-  `NOTIFICATION_TYPE_QUERY_ACTIVITY`), but nothing anywhere creates that notification,
-  so the toggle does nothing — a dead settings row (Known deviations).
+  suppresses only the email. ⚠ The same settings form also offers a *Discussion
+  activity* opt-out, but nothing anywhere creates that notification, so the toggle does
+  nothing — a dead settings row (Known deviations). <sup>b</sup>
 - No config.inc.php variables alter these rules.
+
+<sup>a</sup> template fields `include`, `restrictToUserGroups`, `dueInterval` ·
+<sup>b</sup> EditorialTaskController::notifyParticipants() (`blocked_notification` vs `blocked_emailed_notification`); PKPNotificationSettingsForm::getNotificationSettingCategories() (`NOTIFICATION_TYPE_QUERY_ACTIVITY`)
 
 ## Cross-feature interactions
 
@@ -393,11 +388,12 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
 - **Stage participants & reviewer assignment** — assignment removal prunes
   participants (rule 9); assignment rules live in those specs.
 - **Notifications framework** — the bell and grid, the block lists and the unsubscribe
-  token are shared machinery; this spec only owns their *new discussion* behavior
-  (NEW_QUERY).
+  token are shared machinery; this spec only owns their *new discussion* behavior. <sup>a</sup>
 - **File attachments** — messages carry either newly uploaded files or existing
-  submission files (SaveNoteWithFiles); file-genre and file-stage semantics live with
-  submission-files.
+  submission files; file-genre and file-stage semantics live with submission-files. <sup>b</sup>
+
+<sup>a</sup> `NEW_QUERY` ·
+<sup>b</sup> SaveNoteWithFiles
 
 ## Canonical scenarios
 
