@@ -28,14 +28,21 @@ applying to every row: a **site admin** acts as a manager on any journal they cr
 (journal creation auto-enrols the admin as a manager); a **recommend-only editor** may
 only view, never act; an **anonymous reader** sees only published versions.
 
-| Action | Who may — and when | Anchors |
-|--------|--------------------|---------|
-| **Create a new version** | • Managers (including those not assigned to the submission)<br>• Assigned section editors and assistants (not recommend-only) — but ⚠ only via the API, no "Create New Version" button is shown to them | useWorkflowPermissions() canPublish; PKPSubmissionController::getGroupRoutes() versionPublication route; StageRolePolicy::effect() |
-| **Publish / unpublish / unschedule** | • Managers<br>• Assigned section editors and assistants (not recommend-only) — but ⚠ again only via the API (same hidden-ability gap)<br>• A recommend-only editor — cannot, through any route or button | PKPSubmissionController::$productionStageAccessRoles, getGroupRoutes() publish/unpublish routes, authorize() vs useWorkflowPermissions() canPublish |
-| **Edit a version's metadata** | • Managers — any version, including a published one (warned that changes go live)<br>• An author-only user — only while nothing is published or scheduled **and** an editor granted them metadata permission; once any version is published or scheduled, hard-locked out of every version | submission/Repository::canEditPublication(); useWorkflowPermissions() canEditPublication; workflowConfigAuthorOJS.js PublicationConfig.getPrimaryItems (WorkflowPublicationEditDisabled) |
-| **Relabel a version's stage/number** (change-version) | • Managers and assigned section editors only<br>• An assistant offered this action is refused | PKPSubmissionController::getGroupRoutes() versionPublication/publish routes (+Assistant) vs changeVersion route (Manager/SubEditor only); e2e publish-flow row 4 |
-| **View a published version** (reader) | • Anyone — the current version, and older versions by direct link<br>• Unpublished or scheduled versions are not reachable by the public | pages/article/ArticleHandler::initialize() |
-| **Preview an unpublished/scheduled version** | • Editorial staff — on the public article page, shown with a "viewing a preview" notice | ArticleHandler::initialize(); submission/Repository::canPreview(); templates/frontend/objects/article_details.tpl submission.viewingPreview notice |
+| Action | Who may — and when |
+|--------|--------------------|
+| **Create a new version** | • Managers (including those not assigned to the submission)<br>• Assigned section editors and assistants (not recommend-only) — but ⚠ only via the API, no "Create New Version" button is shown to them <sup>a</sup> |
+| **Publish / unpublish / unschedule** | • Managers<br>• Assigned section editors and assistants (not recommend-only) — but ⚠ again only via the API (same hidden-ability gap)<br>• A recommend-only editor — cannot, through any route or button <sup>b</sup> |
+| **Edit a version's metadata** | • Managers — any version, including a published one (warned that changes go live)<br>• An author-only user — only while nothing is published or scheduled **and** an editor granted them metadata permission; once any version is published or scheduled, hard-locked out of every version <sup>c</sup> |
+| **Relabel a version's stage/number** (change-version) | • Managers and assigned section editors only<br>• An assistant offered this action is refused <sup>d</sup> |
+| **View a published version** (reader) | • Anyone — the current version, and older versions by direct link<br>• Unpublished or scheduled versions are not reachable by the public <sup>e</sup> |
+| **Preview an unpublished/scheduled version** | • Editorial staff — on the public article page, shown with a "viewing a preview" notice <sup>f</sup> |
+
+<sup>a</sup> useWorkflowPermissions() canPublish; PKPSubmissionController::getGroupRoutes() versionPublication route; StageRolePolicy::effect() ·
+<sup>b</sup> PKPSubmissionController::$productionStageAccessRoles, getGroupRoutes() publish/unpublish routes, authorize() vs useWorkflowPermissions() canPublish ·
+<sup>c</sup> submission/Repository::canEditPublication(); useWorkflowPermissions() canEditPublication; workflowConfigAuthorOJS.js PublicationConfig (WorkflowPublicationEditDisabled) ·
+<sup>d</sup> PKPSubmissionController::getGroupRoutes() versionPublication/publish routes (+Assistant) vs changeVersion route (Manager/SubEditor only); e2e publish-flow row 4 ·
+<sup>e</sup> pages/article/ArticleHandler::initialize() ·
+<sup>f</sup> ArticleHandler::initialize(); submission/Repository::canPreview(); article_details.tpl submission.viewingPreview notice
 
 ## Fields & validation
 

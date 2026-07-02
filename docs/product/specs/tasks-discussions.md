@@ -93,20 +93,33 @@ not-logged-in** users have no access at all. Reaching the feature requires being
 of: site admin, manager, sub-editor, assistant, author, reviewer
 (EditorialTaskController::getRouteGroupMiddleware()).
 
-| Action | Who may — and when | Anchors |
-|--------|--------------------|---------|
-| **View / list items** | • Managers — every item on the submission<br>• Everyone else — only items they created or participate in<br>• Reviewers — their review stage's items, via any review assignment ⚠ (declined/cancelled included) | EditorialTaskController::getTasks(); getParticipants(); QueryAccessPolicy::__construct(); QueryUserAccessibleWorkflowStageRequiredPolicy::effect() |
-| **Create a task or discussion** | • Assigned editorial roles (manager, sub-editor, assistant) — on stages they can access<br>• Authors — on their own submission's stages<br>• Reviewers — in a review stage they're assigned to<br>• Managers need not be a participant | EditorialTaskController::getTasks(); QueryAccessPolicy::__construct() |
-| **Edit item metadata** (title, due date, participants) | • The creator, the responsible participant, or a manager (any item)<br>• A sub-editor or assistant who is only a participant — cannot | QueryWritePolicy::effect(); EditTask::rules() |
-| **Edit the head message** — its text is editable after creation, unlike a reply | • Managers and sub-editors — the text, any time<br>• Authors, assistants, reviewers — only their own head message, and only within one hour of writing it, then locked<br>• Requires edit rights on the item to begin with | EditTask::rules() 'headnote' rule (exempt roles; own-author + 1-hour checks) |
-| **Post a reply** — replies are a permanent record | • Any participant may post a reply — and only a participant (even a manager must be added to the item first)<br>• A posted reply is permanent: no one can edit or delete it (by design) | AddNote::rules(); NoteAccessPolicy::effect(); EditorialTaskController::addNote(), deleteNote() |
-| **Attach files** — the message editor offers this while writing the head message or a reply | • Anyone posting a message can **upload a new file** ("Add file" in the editor)<br>• Only managers and assigned editors/assistants also see **"attach files from the submission"** (existing workflow files) — authors and reviewers do not<br>• The head message's files can be revised when its text is edited; a reply's files are fixed once posted | useDiscussionMessages() messageFieldOptions/fileAttachers (UI); EditTask::rules() 'temporaryFileIds'/'submissionFileIds'; AddNote::rules() 'temporaryFileIds'/'submissionFileIds' (backend) |
-| **Start a task** | • The responsible participant<br>• A manager | QueryWritePolicy::effect() |
-| **Close / complete a task** | • The responsible participant<br>• A manager<br>• (discussions aren't "closed" the same way — see Rules & state) | QueryWritePolicy::effect(); EditTask::rules() 'participants' rule |
-| **Reopen a completed task** | • Managers only<br>• Other roles — no reopen affordance in the list ⚠ (an API-level gap exists — see rule 11) | useDiscussionManagerConfig() userHasWriteAccess(); useDiscussionManagerForm() status switch |
-| **Delete a whole task or discussion** (not a single reply) | • The creator, or a manager | QueryWritePolicy::effect() |
-| **See identities under anonymous review** | • Authors — can't see reviewers, can't be added alongside an anonymous reviewer<br>• Reviewers — can't see author identities or other blinded reviewers | EditorialTaskController::getParticipants(); getReviewers(); QueryAccessPolicy::__construct() |
-| **Administer task templates** (CRUD, auto-add flag) | • Managers — full management (also needs settings access)<br>• All workflow roles — may list templates for the "apply template" picker | PKPEditTaskTemplateController::getGroupRoutes(); authorize() |
+| Action | Who may — and when |
+|--------|--------------------|
+| **View / list items** | • Managers — every item on the submission<br>• Everyone else — only items they created or participate in<br>• Reviewers — their review stage's items, via any review assignment ⚠ (declined/cancelled included) <sup>a</sup> |
+| **Create a task or discussion** | • Assigned editorial roles (manager, sub-editor, assistant) — on stages they can access<br>• Authors — on their own submission's stages<br>• Reviewers — in a review stage they're assigned to<br>• Managers need not be a participant <sup>b</sup> |
+| **Edit item metadata** (title, due date, participants) | • The creator, the responsible participant, or a manager (any item)<br>• A sub-editor or assistant who is only a participant — cannot <sup>c</sup> |
+| **Edit the head message** — its text is editable after creation, unlike a reply | • Managers and sub-editors — the text, any time<br>• Authors, assistants, reviewers — only their own head message, and only within one hour of writing it, then locked<br>• Requires edit rights on the item to begin with <sup>d</sup> |
+| **Post a reply** — replies are a permanent record | • Any participant may post a reply — and only a participant (even a manager must be added to the item first)<br>• A posted reply is permanent: no one can edit or delete it (by design) <sup>e</sup> |
+| **Attach files** — the message editor offers this while writing the head message or a reply | • Anyone posting a message can **upload a new file** ("Add file" in the editor)<br>• Only managers and assigned editors/assistants also see **"attach files from the submission"** (existing workflow files) — authors and reviewers do not<br>• The head message's files can be revised when its text is edited; a reply's files are fixed once posted <sup>f</sup> |
+| **Start a task** | • The responsible participant<br>• A manager <sup>g</sup> |
+| **Close / complete a task** | • The responsible participant<br>• A manager<br>• (discussions aren't "closed" the same way — see Rules & state) <sup>h</sup> |
+| **Reopen a completed task** | • Managers only<br>• Other roles — no reopen affordance in the list ⚠ (an API-level gap exists — see rule 11) <sup>i</sup> |
+| **Delete a whole task or discussion** (not a single reply) | • The creator, or a manager <sup>j</sup> |
+| **See identities under anonymous review** | • Authors — can't see reviewers, can't be added alongside an anonymous reviewer<br>• Reviewers — can't see author identities or other blinded reviewers <sup>k</sup> |
+| **Administer task templates** (CRUD, auto-add flag) | • Managers — full management (also needs settings access)<br>• All workflow roles — may list templates for the "apply template" picker <sup>l</sup> |
+
+<sup>a</sup> EditorialTaskController::getTasks(), getParticipants(); QueryAccessPolicy::__construct(); QueryUserAccessibleWorkflowStageRequiredPolicy::effect() ·
+<sup>b</sup> EditorialTaskController::getTasks(); QueryAccessPolicy::__construct() ·
+<sup>c</sup> QueryWritePolicy::effect(); EditTask::rules() ·
+<sup>d</sup> EditTask::rules() 'headnote' rule (exempt roles; own-author + 1-hour checks) ·
+<sup>e</sup> AddNote::rules(); NoteAccessPolicy::effect(); EditorialTaskController::addNote(), deleteNote() ·
+<sup>f</sup> useDiscussionMessages() fileAttachers (UI); EditTask::rules()/AddNote::rules() 'temporaryFileIds'/'submissionFileIds' (backend) ·
+<sup>g</sup> QueryWritePolicy::effect() ·
+<sup>h</sup> QueryWritePolicy::effect(); EditTask::rules() 'participants' rule ·
+<sup>i</sup> useDiscussionManagerConfig() userHasWriteAccess(); useDiscussionManagerForm() status switch ·
+<sup>j</sup> QueryWritePolicy::effect() ·
+<sup>k</sup> EditorialTaskController::getParticipants(), getReviewers(); QueryAccessPolicy::__construct() ·
+<sup>l</sup> PKPEditTaskTemplateController::getGroupRoutes(), authorize()
 
 ## Fields & validation
 

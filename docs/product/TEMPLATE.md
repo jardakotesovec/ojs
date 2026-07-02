@@ -58,11 +58,21 @@ atlas-claims: [<atom IDs this spec owns>]
      In the "Who may — and when" cell, write a LIST of items (one per role-group or
      condition), not a semicolon-chained sentence — use `<br>• ` between items so the
      cell renders as a bulleted list and still reads in raw form. Each bullet: the
-     actor(s) then their condition, e.g. "• Managers — any time". -->
+     actor(s) then their condition, e.g. "• Managers — any time".
 
-| Action | Who may — and when | Anchors |
-|--------|--------------------|---------|
-| **<Action>** | • <actor(s)> — <condition><br>• <actor(s)> — <condition; ⚠ inline for oddities> | file:line |
+     ANCHORS AS FOOTNOTES, not a column: the table is a PO/QA-facing summary, and the
+     detailed rules are re-anchored in Rules & state anyway — so keep the table TWO
+     columns and hang the anchors off a `<sup>a</sup>` marker at the end of each "Who
+     may" cell, collected in a de-emphasized `<sup>a</sup> Class::method() · ...` block
+     directly below the table. Keeps provenance available but out of the reading flow.
+     (Docs stay Markdown — inline HTML like <sup>/<br> is used surgically only where a
+     structure needs it; do not convert specs to full HTML.) -->
+
+| Action | Who may — and when |
+|--------|--------------------|
+| **<Action>** | • <actor(s)> — <condition><br>• <actor(s)> — <condition; ⚠ inline for oddities> <sup>a</sup> |
+
+<sup>a</sup> Class::method(); OtherClass::method()
 
 ## Fields & validation
 

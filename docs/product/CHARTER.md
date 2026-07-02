@@ -1,7 +1,15 @@
 # OJS Product Specification Campaign — Charter
 
-Pilot started 2026-07-02 on branch `e2e_revamp_fable`. THE contract for this campaign;
-every session working on product specs reads this first.
+Pilot started 2026-07-02 on branch `e2e_revamp_fable` (work now on `e2e_revamp_fable_2`).
+THE contract for this campaign; every session working on product specs reads this first.
+
+**Format: Markdown, not HTML.** Specs stay in Markdown — the source is reviewed in raw
+and in diffs (the primary workflow), and Markdown keeps that readable and low-friction
+across 80+ specs; a rendered HTML site later is a trivial build step, the reverse is
+not. Reach for inline HTML surgically only where a structure genuinely needs it (`<br>`
+for in-cell lists, `<sup>` for anchor footnotes, `<details>` for a rare collapsible).
+Revisit a full HTML move only if a rich interactive doc site becomes the *primary* way
+PO/QA consume these and raw/diff review stops mattering.
 
 ## Mission
 
