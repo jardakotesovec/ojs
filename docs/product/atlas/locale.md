@@ -231,7 +231,7 @@
 | LOC-submission-publication-urlPath | `publication.urlPath.*` | submission.po | 4 keys |  | |
 | LOC-submission-publication-scheduledForPublication | `publication.scheduledForPublication.*` | submission.po | 4 keys |  | |
 | LOC-submission-publication-revisionSignificance | `publication.revisionSignificance.*` | submission.po | 4 keys |  | |
-| LOC-submission-dashboard-submissions | `dashboard.submissions.*` | submission.po | 4 keys |  | |
+| LOC-submission-dashboard-submissions | `dashboard.submissions.*` | submission.po | 4 keys (all `dashboard.submissions.incomplete.bulkDelete.*`) | | submission-drafts |
 | LOC-submission-catalog-sortBy | `catalog.sortBy.*` | submission.po | 4 keys |  | |
 | LOC-submission-misc | `(misc)` | submission.po | 13 rarer prefixes | grid.issueEntry (3), doi.submission (3), submission.stage (3), submission.queries (3), submission.publisherId (3), submission.parsedCitations (3), submission.authors (3), stage.review (3), publication.required (3), dashboard.recommendOnly (3), common.queue (3), author.submit (3), author.competingInterests (3) | |
 | LOC-sushi-sushi-exception | `sushi.exception.*` | sushi.po | 13 keys |  | |

@@ -60,7 +60,7 @@
 | MAIL-submission-acknowledgement-not-author | SubmissionAcknowledgementNotAuthor | lib/pkp/classes/mail/mailables/SubmissionAcknowledgementNotAuthor.php | template key: SUBMISSION_ACK_NOT_USER | | submission-wizard |
 | MAIL-submission-acknowledgement-other-authors | SubmissionAcknowledgementOtherAuthors | lib/pkp/classes/mail/mailables/SubmissionAcknowledgementOtherAuthors.php | template key: SUBMISSION_ACK_NOT_USER | | submission-wizard |
 | MAIL-submission-needs-editor | SubmissionNeedsEditor | lib/pkp/classes/mail/mailables/SubmissionNeedsEditor.php | template key: SUBMISSION_NEEDS_EDITOR | email-delivery | |
-| MAIL-submission-saved-for-later | SubmissionSavedForLater | lib/pkp/classes/mail/mailables/SubmissionSavedForLater.php | template key: SUBMISSION_SAVED_FOR_LATER | | |
+| MAIL-submission-saved-for-later | SubmissionSavedForLater | lib/pkp/classes/mail/mailables/SubmissionSavedForLater.php | template key: SUBMISSION_SAVED_FOR_LATER | | submission-drafts |
 | MAIL-subscription-expired | SubscriptionExpired | classes/mail/mailables/SubscriptionExpired.php | template key: SUBSCRIPTION_AFTER_EXPIRY | | |
 | MAIL-subscription-expired-last | SubscriptionExpiredLast | classes/mail/mailables/SubscriptionExpiredLast.php | template key: SUBSCRIPTION_AFTER_EXPIRY_LAST | | |
 | MAIL-subscription-expires-soon | SubscriptionExpiresSoon | classes/mail/mailables/SubscriptionExpiresSoon.php | template key: SUBSCRIPTION_BEFORE_EXPIRY | | |
