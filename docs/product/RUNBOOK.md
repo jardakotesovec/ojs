@@ -55,8 +55,14 @@ paste the prompt. Plain paste also works as a one-shot nudge.
 ## Budget & ceilings (HARD)
 
 - **≤ 700 tests total**, **≤ 25 min** full-suite runtime on a **fresh DB**.
-- ~7–8 tests/feature average; more for heavy features (editorial-decisions, the review
-  cluster), fewer for simple CRUD. Canonical-scenario level, not per-rule.
+- **Per-feature budgets are tiered, not flat** (rebalanced 2026-07-02 at the
+  maintainer's request): each PROGRESS row carries `Budget: tier·target` — H 10–13
+  (core workflows, big permission matrices, state machines), M 6–8 (standard),
+  L 3–4 (simple CRUD/read-only). Allocation ≈ 639 with ~61 headroom reserved for
+  end-of-run top-ups where the full-suite pass shows thin coverage. The spec's
+  canonical-scenario count targets the budget (±1–2 by author judgment); pass the
+  tier+target into the spec- and test-authoring subagent prompts. Tiers on
+  not-yet-built rows are provisional and cheap to change — respect maintainer edits.
 - After each feature, update the running totals in PROGRESS. If tests-used projects
   over 700, or the last full-suite timing trends toward 25 min, **trim** (drop the
   lowest-value scenarios) before continuing and note it in PROGRESS.

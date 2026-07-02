@@ -120,9 +120,11 @@ atlas-claims: [<atom IDs this spec owns>]
 
 ## Canonical scenarios
 
-<!-- 3–6 narrative user journeys a QA person would recognize, named. These are the
-     units the round-2 test crosswalk maps onto. Cover the core journey, the main
-     permission boundary, and the main state-rule variation at minimum. -->
+<!-- Narrative user journeys a QA person would recognize, named. These are the
+     units the round-2 test crosswalk maps onto — one retained test per scenario, so
+     the count comes from the feature's Budget column in PROGRESS.md (L 3–4, M 6–8,
+     H up to ~12–13). Cover the core journey, the main permission boundary, and the
+     main state-rule variation at minimum. -->
 
 1. **<Scenario name>** — <actor(s)>: <flow in 2–4 sentences, including the
    observable outcome>.
