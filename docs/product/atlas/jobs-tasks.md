@@ -2,7 +2,7 @@
 - Scope: jobs/, classes/task(s)/, scheduled-task registry (both repos)
 - Method: Find all .php files in jobs & task dirs; extract @class headers; hint from e2e plans
 - Date: 2026-07-02
-- Atom count: 57 (41 jobs + 16 tasks)
+- Atom count: 58 (42 jobs + 16 tasks)
 
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
@@ -14,6 +14,7 @@
 | JOB-orcidcitationjob | lib/pkp/jobs/citation | OrcidJob.php | Enrich citations via ORCID | ? |  |
 | JOB-depositcontext | lib/pkp/jobs/doi | DepositContext.php | Deposit journal metadata to registry | ? |  |
 | JOB-depositsubmission | lib/pkp/jobs/doi | DepositSubmission.php | Deposit article DOI metadata | ? |  |
+| JOB-depositpeerreview | lib/pkp/jobs/doi | DepositPeerReview.php | Deposit peer review DOI metadata to registration agency | doi-management |  |
 | JOB-editorialreminder | lib/pkp/jobs/email | EditorialReminder.php | Queue editorial reminder emails | scheduled-tasks e2e |  |
 | JOB-reviewreminder | lib/pkp/jobs/email | ReviewReminder.php | Queue peer review reminder emails | scheduled-tasks e2e |  |
 | JOB-removeexpiredinvitationsjob | lib/pkp/jobs/invitations | RemoveExpiredInvitationsJob.php | Clean up expired review invitations | ? |  |
@@ -68,3 +69,4 @@
 - **Scheduled task registry (scheduledTasks.xml)**: No registry file found in ojs-main; task frequency/cron timing not extracted (would require registry or Scheduler class inspection).
 - **Job dispatch sites**: Specific caller locations not mapped (grep on `::dispatch()` limited; would require full codebase scan).
 - **Historical vs. active**: No confirmation whether test jobs (TestJobSuccess, TestJobFailure) are enabled in production.
+- Delta-refresh 2026-07-02: +1 atom (`JOB-depositpeerreview`, new peer-review DOI deposit job, dispatched wherever `DepositSubmission`-style DOI deposits are triggered post-review). Also new in this rebase but out of this file's scope: `lib/pkp/classes/observers/listeners/ApplyDoneWorkflowStage.php`, an event listener (not a `jobs/`/`classes/task` file) that auto-records Done-stage decisions on publish/unpublish — see db-entities.md Gaps for the full Done-stage feature writeup.

@@ -2,7 +2,7 @@
 - Scope: lib/ui-library/src/{pages,managers,components(major)}, js/ mounts (extended to lib/ui-library/src/frontend/components for reader-facing surfaces, see Gaps)
 - Method: recursive `find`/`ls` of each directory (maxdepth 2-3), `head` on ambiguous files to decide page-root vs internal-part, cross-referenced `docs/e2e/plans/*.md` filenames for hints; no OJS-side js/ Vue mounts exist (all mounts live in lib/ui-library, wired from lib/pkp templates)
 - Date: 2026-07-02
-- Atom count: 75
+- Atom count: 76
 
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
@@ -81,6 +81,7 @@
 | VUE-pkp-crossmark-button | PkpCrossmarkButton | lib/ui-library/src/frontend/components/PkpCrossmarkButton/PkpCrossmarkButton.vue | component: Crossref Crossmark status button on article page | | |
 | VUE-pkp-usage-chart | PkpUsageChart | lib/ui-library/src/frontend/components/PkpUsageChart/PkpUsageChart.vue | component: reader-facing article/issue usage stats chart | usage-statistics | |
 | VUE-pkp-orcid-display | PkpOrcidDisplay | lib/ui-library/src/frontend/components/PkpOrcidDisplay/PkpOrcidDisplay.vue | component: ORCID icon/link display for a contributor | orcid | |
+| VUE-pandoc-converter | PandocConverter | lib/ui-library/src/components/PandocConverter/PandocConverter.vue | component: imports a Word/rich-text document and converts it to HTML (pandoc-wasm) for the publication body-text editor; used by WorkflowPublicationBodyText.vue | editor-metadata-editing | |
 
 ## Gaps
 - Skipped as primitives/layout building blocks (not atoms): components/{ActionPanel, Announcer, Badge, Button, ButtonIcon, ButtonRow, Chart, Checkbox, CodeHighlighter, Container, DateRange, Dropdown, DropdownActions, Expander, File, FileTypeIcon, FileUploader, FileMediaUploader, FileUploadProgress, Filter, GridWrapper, Header, Icon, InitialsAvatar, InlineSelect, InsertContent, List, Modal (incl. SideModal* family), MultilingualProgress, Notification, Orderer, Pagination, Panel, Popover, ProgressBar, ReviewMethodIcons, Search, ShowMore, SideMenu, SkipLink, Spinner, StageBubble, Steps, Table, Tabs, Tooltip, UserAvatar}; also Form/fields/* and Form/display/* (generic field/display primitives) and FormModal.
@@ -92,3 +93,4 @@
 - lib/pkp (checked out submodule) contains zero .vue files — confirms Vue UI lives entirely in lib/ui-library.
 - Oddities: ChapterManager, PublicationFormatManager, RepresentativeManager exist in the shared lib but are not wired into WorkflowPageOJS.vue's manager map — they appear OMP(monograph)-only; kept as atoms since the sweep covers the shared library, but likely out of OJS's real coverage surface.
 - WorkflowPageOMP.vue / WorkflowPageOPS.vue (sibling app mounts to WorkflowPageOJS.vue) and ListPanel/doi/DoiListPanelOMP.vue / DoiListPanelOPS.vue were deliberately skipped as out-of-app-scope (OJS repo only).
+- Delta-refresh 2026-07-02: +1 atom (PandocConverter). Rebase delta also renamed components/InlineSelect → components/SelectInput (still a skipped primitive) and added components/ListPanel/doi/useDoi.js (composable extracted from existing DoiListPanel, not a new atom). Modified-only files (FileManager, MediaFileManager, ReviewerSuggestionManager, AcceptInvitationPage, WorkflowPage internals/composables, DOI list panel) stayed within existing atoms' surfaces.

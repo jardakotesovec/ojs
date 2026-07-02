@@ -76,3 +76,4 @@
 - Level unresolved (marked "?"): NOTIFICATION_TYPE_CONFIGURE_PAYMENT_METHOD (no creation call site found at all — may be dead), NOTIFICATION_TYPE_QUERY_ACTIVITY (settings-map only, no explicit createNotification hit).
 - Surface/display path not confirmed beyond "bell vs tasks grid vs dashboard panel" heuristic (level -> surface mapping); no direct read of the Vue bell/tasks-grid filter component was done in this sweep.
 - 10 of 65 atoms (all NOTIFICATION_TYPE_BOOK_*) have zero OJS creation sites — confirmed dead/OMP-inherited via grep, not via runtime trace.
+- Delta-refresh 2026-07-02: +0 atoms — rebase onto upstream/main only touched `QueryNotificationManager.php` (null-safety fix on an existing `NOTIFICATION_TYPE_NEW_QUERY` message, not a new type); `lib/pkp/classes/notification/Notification.php` itself is unchanged, so no new `NOTIFICATION_TYPE_*` constant appeared.

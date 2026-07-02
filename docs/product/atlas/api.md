@@ -2,7 +2,7 @@
 - Scope: api/v1/, lib/pkp/api/v1/ (excl. _test)
 - Method: Grep `Route::(get|post|put|delete|patch)` in getGroupRoutes() across both dirs; paired each match with getHandlerPath() (+ Route::prefix() wrappers) to build the full path; hint from one `ls docs/e2e/plans/`
 - Date: 2026-07-02
-- Atom count: 284
+- Atom count: 285 (+1 delta-refresh 2026-07-02)
 
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
@@ -127,6 +127,7 @@
 | API-submission-get-participants-2 | GET /submissions/{submissionId}/participants/{stageId} | lib/pkp/api/v1/submissions/PKPSubmissionController.php:233 | Route handler PKPSubmissionController::getParticipants() |  | |
 | API-submission-get-decisions | GET /submissions/{submissionId}/decisions | lib/pkp/api/v1/submissions/PKPSubmissionController.php:245 | Route handler PKPSubmissionController::getDecisions() |  | |
 | API-submission-add-decision | POST /submissions/{submissionId}/decisions | lib/pkp/api/v1/submissions/PKPSubmissionController.php:249 | Route handler PKPSubmissionController::addDecision() |  | |
+| API-submission-return-to-done | POST /submissions/{submissionId}/returnToDone | lib/pkp/api/v1/submissions/PKPSubmissionController.php:256 | Route handler PKPSubmissionController::returnToDone(), reverses a Done-stage decision |  | |
 | API-submission-delete | DELETE /submissions/{submissionId} | lib/pkp/api/v1/submissions/PKPSubmissionController.php:253 | Route handler PKPSubmissionController::delete() |  | |
 | API-submission-change-locale | PUT /submissions/{submissionId}/publications/{publicationId}/changeLocale | lib/pkp/api/v1/submissions/PKPSubmissionController.php:257 | Route handler PKPSubmissionController::changeLocale() |  | |
 | API-submission-change-version | PUT /submissions/{submissionId}/publications/{publicationId}/version | lib/pkp/api/v1/submissions/PKPSubmissionController.php:261 | Route handler PKPSubmissionController::changeVersion() |  | publication-versioning |
@@ -297,3 +298,4 @@
 - `IssueController`, `StatsIssueController`, and `ReviewerRecommendationController` (api/v1/issues, api/v1/stats/issues, api/v1/reviewers/recommendations) extend `PKPBaseController` directly — OJS-only concepts (issues) with no PKP equivalent to compare against.
 - Two distinct controllers are both literally named `PKPEmailController`: `lib/pkp/api/v1/emails/` (author-email log, path `/emails`) and `lib/pkp/api/v1/_email/` (ad hoc compose, path `/_email`) — disambiguated here as `email` and `email-compose`.
 - Hints are mechanical best-guesses by domain-name match against `docs/e2e/plans/` filenames; many low-level/plumbing controllers (temporaryFiles, genres, vocabs, library, highlights, jats, bodyText, dataCitations, peerReviews, upload-public-file) have no obvious 1:1 plan and were left blank rather than force-fit.
+- Delta-refresh 2026-07-02: +1 atom from 1cad5eabf9..upstream/main (lib/pkp) / 85ff016d1f..upstream/main (root). New: `API-submission-return-to-done` (POST /submissions/{submissionId}/returnToDone), part of the new "Done" workflow stage (pkp/pkp-lib decisions MOVE_TO_DONE/RETURN_TO_DONE/RETURN_TO_WORKFLOW; the latter two decision types have no dedicated route, they flow through the existing `addDecision` endpoint). Root-side `api/v1/dois/DoiController.php` changed but added no new route. All other changed controllers (PKPBackendDoiController, PKPBackendSubmissionsController, PKPDoiController, PKPEmailController, ReviewerSuggestionController, MediaFilesController, EditorialTaskController, and several `resources/*.php` DTOs) only touched field-level/internal logic, no new routes.
