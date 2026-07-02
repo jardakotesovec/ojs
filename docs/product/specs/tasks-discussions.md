@@ -157,23 +157,18 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
    EditTask.php:69).
 
 **Participants**
-4. The people who can be added to an item on a given stage — the participant pool —
-   are: everyone with a stage assignment on the submission at that stage; in review
-   stages, reviewers holding an active, reviewer-accessible assignment on their latest
-   review round; and the current manager or admin themselves
+4. **Who the picker offers** as participants on an item: everyone assigned to the
+   submission at that stage; in a review stage, also reviewers with an active
+   assignment on their latest review round; and always the acting manager or admin
    (EditorialTaskController.php:804-943).
-5. Anyone added as a participant must either hold a stage assignment on the submission
-   at the item's stage, **or hold any review assignment on the submission at all**.
-   That second path is unfiltered by stage, review status or accessibility — a review
-   assignment anywhere on the submission qualifies a person for an item on *any* stage
-   — so a reviewer who declined in round 1 is still a valid participant for a
-   Production task (EditTask.php:249-257). Managers may participate anywhere
-   (EditTask.php:232-236; the site-admin half of that exemption is void — permissions
-   table ⚠).
+5. **The backend accepts more than the picker offers** ⚠: on save it applies no
+   reviewer filtering — *any* review assignment anywhere on the submission qualifies a
+   person, even a declined or earlier-round one, for an item on any stage (so a
+   reviewer who declined in round 1 can be added to a Production task). Managers may be
+   added to any item regardless (EditTask.php:232-257; see Known deviations).
 6. Whoever creates an item must be one of its participants — except managers, who may
-   create an item without joining it (EditTask.php:203-219; the site-admin exemption
-   at :211 is void — permissions table ⚠). When creating, the form pre-checks the
-   current user in the participant list so this is the default
+   create an item without joining it (EditTask.php:203-219). When creating, the form
+   pre-checks the current user in the participant list so this is the default
    (useDiscussionManagerForm.js:216-219).
 7. A task needs at least one participant; a discussion needs at least two
    (EditTask.php:190-197).
@@ -188,8 +183,8 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
    (EditorialTask.php:475-498).
 9. When a user's stage assignment (or a reviewer's review assignment) is removed, they
    are dropped from every item on that submission — unless they are a manager
-   (Repository.php:253-276; the site-admin exemption at :258 is void — permissions
-   table ⚠; StageParticipantGridHandler.php:433; PKPReviewerGridHandler.php:694).
+   (Repository.php:253-276; StageParticipantGridHandler.php:433;
+   PKPReviewerGridHandler.php:694).
 
 **Lifecycle**
 10. **Starting** applies to tasks only and moves a task from Yet to begin to In
@@ -223,10 +218,9 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
     (EditTask.php:75 — `dateDue` re-validated `after_or_equal:today` on every edit) —
     proposed ledger row (Known deviations).
 13. **Write access** — the ability to edit, delete, close, reopen or start an item —
-    is held by journal managers at all times (the site-admin branch is void —
-    permissions table ⚠), by the creator at all times, and, for tasks, by the
-    responsible participant; everyone else is read-only even when they are a
-    participant (QueryWritePolicy.php:36-81). Read access to a single item — viewing it
+    is held by journal managers at all times, by the creator at all times, and, for
+    tasks, by the responsible participant; everyone else is read-only even when they
+    are a participant (QueryWritePolicy.php:36-81). Read access to a single item — viewing it
     and replying — requires being one of its participants, again with a manager
     exception (QueryAccessPolicy.php:38-133). The UI mirrors this, showing the write
     controls only to a manager, the owner or the responsible participant
@@ -259,8 +253,7 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
     pointed at it (EditorialTaskController.php:420-431; EditorialTask.php:92-99).
     Deleting the submission removes all of its items (Repository.php:240-251).
 17. **Listing**: items are listed per stage. Journal managers see every item on the
-    submission (the site-admin branch is void — permissions table ⚠); everyone else
-    sees only items they participate in. The list can be filtered to open items only
+    submission; everyone else sees only items they participate in. The list can be filtered to open items only
     and ordered by date (EditorialTaskController.php:262-299 — `isOpen` filter). In the
     panel, rows are grouped under Yet to begin, In progress and Closed
     (discussionManagerStore.js:53-74).

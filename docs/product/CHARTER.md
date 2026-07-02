@@ -67,6 +67,16 @@ grep, not a judgment call.
 - **Business language, anchored**: the spec body reads as a functional spec; code
   anchors (`file:line`) ride along per rule so any claim can be re-checked as code
   drifts. Anchors are provenance, not content.
+- **Brief but comprehensive — state each thing once**: cover everything that matters,
+  but say it in one place. If two rules describe the same concept from different angles
+  (e.g. "who the picker offers" and "who the backend accepts"), state the shared part
+  once and keep only the genuine delta in the second. A cross-cutting caveat (e.g. the
+  site-admin scope bug that recurs at every manager exemption) is stated ONCE at its
+  canonical home (Known deviations / a permissions baseline) and merely referenced, not
+  re-narrated, at each site. Reserve a ⚠ for the first, canonical mention of a
+  deviation; don't repeat the same ⚠ on every rule it touches. Fewer words, same
+  coverage — repetition makes a reviewer reread to check whether it's the same point or
+  a new one.
 - **Frontend-first description, backend-verified rules**: the reader is a product owner
   or QA person who interacts with the **UI**, not the API. Describe every feature as it
   is experienced in the interface — what buttons/fields a role sees, what the screen
