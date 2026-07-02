@@ -5,10 +5,10 @@ after every feature. A feature is `done` only when its row says so AND it's comm
 
 ## Totals
 
-- Features: **1 done · 0 parked · 91 pending** (of 92)
-- Tests used: **6 / 700** (tier allocation ≈ 639 · headroom 61 for end-of-run top-ups)
-- Last full-suite runtime: **— / 25 min** (fresh DB; not yet run — submission-wizard file alone: ~24 s)
-- Last updated: 2026-07-02 · Last commit: submission-wizard (root + lib/pkp)
+- Features: **2 done · 0 parked · 90 pending** (of 92)
+- Tests used: **13 / 700** (tier allocation ≈ 639 · headroom 61 for end-of-run top-ups)
+- Last full-suite runtime: **— / 25 min** (fresh DB; not yet run — both wizard files together: ~39 s)
+- Last updated: 2026-07-02 · Last commit: submission-wizard-metadata (root + lib/pkp)
 
 Status legend — Spec: pending → draft → verified · Tests: pending → written → green(x2) ·
 Verified: — / yes (adversarial + live affordance probes done) · Budget: tier·target where
@@ -22,7 +22,7 @@ The target steers the spec's canonical-scenario count; ±1–2 by author judgmen
 | # | Area | Feature | Spec | Tests | Budget | #tests | Verified | Findings/notes |
 |---|------|---------|------|-------|--------|--------|----------|----------------|
 | 1 | Area 1 — Author submission & intake | `submission-wizard` | verified | green(x2) | H·12 | 6 | yes | 28→30 atoms; verifier live-probed all 4 unverified affordances + corrected Submit-As and Open/Cancel permission cells; ledger §2 row 61 added; tests green ×3 (2 agent + 1 orchestrator, 24 s) |
-| 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | pending | pending | M·7 | 0 | — | — |
+| 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | verified | green(x2) | M·7 | 7 | yes | 10 atoms; verifier live-probed all 4 unverified affordances (all held: rights/source/funding rendering, collect-only on workflow Metadata tab, data-availability require block, /vocabs reviewer exclusion) + assistant/site-admin panel access + both mid-flight flip directions (rule 4 sharpened: require-check re-binds on every Review entry); ledger row 62 re-verified; tests green ×2 (author + verifier, 33 s) |
 | 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | pending | pending | M·6 | 0 | — | — |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | pending | pending | M·6 | 0 | — | — |
 | 5 | Area 1 — Author submission & intake | `author-dashboard` | pending | pending | M·6 | 0 | — | — |
@@ -122,3 +122,4 @@ _(none yet)_
 _(loop appends one line per feature: date · feature · outcome · #tests · runtime delta)_
 
 - 2026-07-02 · submission-wizard · done (spec verified, adversarial + live affordance probes) · 6 tests · file runtime ~24 s
+- 2026-07-02 · submission-wizard-metadata · done (spec verified; all 4 deferred affordances held on live probe; ledger row 62: vocab journal-scoping bug) · 7 tests · both wizard files ~39 s

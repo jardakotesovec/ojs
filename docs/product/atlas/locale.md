@@ -188,7 +188,7 @@
 | LOC-reviewer-reviewer-reviewSteps | `reviewer.reviewSteps.*` | reviewer.po | 4 keys |  | |
 | LOC-reviewer-misc | `(misc)` | reviewer.po | 1 rarer prefixes | reviewer.step1 (3) | |
 | LOC-submission-editor-submission | `editor.submission.*` | submission.po | 158 keys |  | |
-| LOC-submission-metadata-property | `metadata.property.*` | submission.po | 85 keys |  | |
+| LOC-submission-metadata-property | `metadata.property.*` | submission.po | 85 keys |  | submission-wizard-metadata |
 | LOC-submission-submission-submit | `submission.submit.*` | submission.po | 69 keys |  | submission-wizard |
 | LOC-submission-submission-citations | `submission.citations.*` | submission.po | 66 keys |  | |
 | LOC-submission-submission-event | `submission.event.*` | submission.po | 55 keys |  | |

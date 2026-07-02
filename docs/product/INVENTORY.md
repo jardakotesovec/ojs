@@ -10,6 +10,7 @@ features are added here as atom clusters get named.
 | tasks-discussions | Editorial tasks & discussions on submissions | pkp-lib | verified (pilot) | 57 |
 | publication-versioning | Publication versions: create, publish, unpublish, reader display | pkp-lib | verified (pilot) | 18 |
 | submission-wizard | Make-a-Submission wizard: start form, steps, submit, acknowledgement, cancel, reconfigure | pkp-lib | verified | 30 |
+| submission-wizard-metadata | For-the-Editors metadata questions: per-field collect/ask/require modes, vocab chips, the Metadata settings panel | pkp-lib | verified | 10 |
 
 Pilot outcome (2026-07-02): both specs adversarially verified with live probes; verifier
 refuted 3 permission cells + 1 state rule in tasks-discussions pre-fix (all corrected),

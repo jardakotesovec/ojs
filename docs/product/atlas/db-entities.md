@@ -35,9 +35,9 @@
 | DB-user_settings | user_settings | lib/pkp/classes/migration/install/CommonMigration.php | User preferences and settings | user-profile | |
 | DB-users | users | lib/pkp/classes/migration/install/CommonMigration.php | User accounts | user-management | |
 | DB-versions | versions | lib/pkp/classes/migration/install/CommonMigration.php | System version history | | |
-| DB-controlled_vocab_entries | controlled_vocab_entries | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Controlled vocabulary entries | | |
-| DB-controlled_vocab_entry_settings | controlled_vocab_entry_settings | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary entry settings | | |
-| DB-controlled_vocabs | controlled_vocabs | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary lists | | |
+| DB-controlled_vocab_entries | controlled_vocab_entries | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Controlled vocabulary entries | | submission-wizard-metadata |
+| DB-controlled_vocab_entry_settings | controlled_vocab_entry_settings | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary entry settings | | submission-wizard-metadata |
+| DB-controlled_vocabs | controlled_vocabs | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary lists | | submission-wizard-metadata |
 | DB-user_interests | user_interests | lib/pkp/classes/migration/install/ControlledVocabMigration.php | User interest keywords | | |
 | DB-doi_settings | doi_settings | lib/pkp/classes/migration/install/DoiMigration.php | DOI configuration settings | publication-identifiers-license | |
 | DB-dois | dois | lib/pkp/classes/migration/install/DoiMigration.php | Digital object identifiers | publication-identifiers-license | |
