@@ -212,16 +212,17 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
     time while still displaying as Closed, since a close always wins in the computed
     state (rule 2). On the create form the user picks **Start task upon saving** (the
     default) or **Create, but don't start**. <sup>j</sup>
-11. **Closing and reopening**: closing an item marks it Closed; reopening clears that
-    and returns it to In progress. Each is one step at a time — closing an
-    already-closed item, or reopening one that isn't closed, is refused as a redundant
-    no-op (a repeat call returns 409). Doing either requires write access (rule 13). In
-    the UI, a completed task's **row actions** offer no reopen, presenting completion as
-    one-way. ⚠ But nothing enforces that one-way rule underneath: the reopen API carries
-    no task-vs-discussion guard, and neither does the status switch in the item's view
-    modal — its Closed→open path applies to tasks too, with only the *start* transition
-    discussion-guarded there. One-way completion has holes on both surfaces — see Open
-    questions #1. <sup>k</sup>
+11. **Closing and reopening** behaves differently for the two types. Closing marks an
+    item Closed (write access required, rule 13); reopening returns it to In progress
+    (reopening an item that isn't closed, or re-closing a closed one, is refused as a
+    no-op). A **discussion** can be reopened from the UI: the **Closed** column is a
+    checkbox, and unchecking it — after a confirm — reopens it. A **task**, once closed,
+    **cannot be reopened from the UI at all** — its Closed checkbox is disabled, and the
+    view modal's status control (which only offers *start* / *complete*) is disabled too
+    — so task completion is one-way. ⚠ That one-way rule is enforced only in the UI: the
+    reopen endpoint (`PUT …/open`) has no task-vs-discussion guard, so a closed task can
+    still be reopened by a direct API call (and a closed-but-unstarted task can even be
+    started, rule 10) — see Open questions #1. <sup>k</sup>
 12. **Editing**: the UI disables the Edit action on closed items. ⚠ A task whose due
     date has already passed can't be edited at all without also moving the due date
     forward, so fixing a typo or adding a participant on an overdue task is blocked
@@ -295,7 +296,7 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
 <sup>h</sup> EditTask::rules() 'participants' anonymity check; EditorialTaskController::getParticipants(), getReviewers(); EditorialTask::compileDescription(), anonymizeAuthors() ·
 <sup>i</sup> Repository::removeParticipantFromSubmissionTasks(); StageParticipantGridHandler::deleteParticipant(); PKPReviewerGridHandler::updateUnassignReviewer() ·
 <sup>j</sup> EditorialTaskController::startTask() (records `dateStarted`/`startedBy`; discussion-start returns 409; checks only `dateStarted`/type); useDiscussionManagerForm() addWorkItem(), addFieldSelect('taskInfoShouldStart') ·
-<sup>k</sup> useDiscussionManagerActions() discussionSetClosed(); EditorialTaskController::openTask(); useDiscussionManagerForm() status switch ·
+<sup>k</sup> DiscussionManagerCellClosed.vue (Closed-column checkbox, disabled for closed tasks); useDiscussionManagerActions() discussionSetClosed() (`// Tasks cannot be reopened` guard); DiscussionManagerTaskInfo.vue (view-modal status checkbox, disabled when closed); EditorialTaskController::openTask() (no type guard) ·
 <sup>l</sup> useDiscussionManagerConfig() getItemActions(); EditTask::rules() 'dateDue' (re-validated `after_or_equal:today` on every edit) ·
 <sup>m</sup> QueryWritePolicy::effect(); QueryAccessPolicy::__construct(); useDiscussionManagerConfig() userHasWriteAccess() ·
 <sup>n</sup> EditTask::rules() 'headnote' rule (site-admin check uses the site context; same one-hour window in NoteAccessPolicy::effect()); AddNote::rules() 'userId'; EditorialTaskController::addNote() (unreachable dead code); EditorialTask::compileDescription() ·
@@ -492,11 +493,12 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
 
 ## Open questions
 
-1. Reopening a completed *task* is blocked by the row actions but allowed by
-   `PUT …/open` (no type guard, EditorialTaskController::openTask()) *and* by the
-   view-modal status switch (useDiscussionManagerForm() status switch); a closed
-   unstarted task can even be "started" (rule 10 ⚠) — is one-way task completion
-   the product rule (API should 409) or are the row actions over-restrictive?
+1. Reopening a completed *task* is blocked everywhere in the UI (the Closed-column
+   checkbox and the view-modal status control are both disabled once the task is
+   closed), but the reopen endpoint `PUT …/open` has no task-vs-discussion guard, so a
+   task can still be reopened by a direct API call; a closed-but-unstarted task can even
+   be "started" (rule 10 ⚠). Is one-way task completion the intended product rule (the
+   API should then 409 for tasks), or is the API deliberately permissive?
 2. Should the acting user be excluded from their own NEW_QUERY notification/email
    (see Known deviations)?
 3. Blocking the *in-app* "new discussion" notification also suppresses the email
