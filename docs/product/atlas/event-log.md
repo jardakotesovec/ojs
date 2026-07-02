@@ -6,14 +6,14 @@
 
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
-| EVLOG-SUBM-SUBMIT | SUBMISSION_LOG_SUBMISSION_SUBMIT | lib/pkp/classes/observers/listeners/LogSubmissionSubmitted.php:42 | Author submits manuscript | submission.event.submissionSubmitted; activity-log | |
+| EVLOG-SUBM-SUBMIT | SUBMISSION_LOG_SUBMISSION_SUBMIT | lib/pkp/classes/observers/listeners/LogSubmissionSubmitted.php:42 | Author submits manuscript | submission.event.submissionSubmitted; activity-log | submission-wizard |
 | EVLOG-SUBM-META-UPD | SUBMISSION_LOG_METADATA_UPDATE | lib/pkp/classes/publication/Repository.php | Publication metadata changed | submission.event.metadataUpdated | |
 | EVLOG-SUBM-ADD-PART | SUBMISSION_LOG_ADD_PARTICIPANT | lib/pkp/controllers/grid/users/stageParticipant/StageParticipantGridHandler.php | Stage participant added | submission.event.participantAdded; stage-participants | |
 | EVLOG-SUBM-REM-PART | SUBMISSION_LOG_REMOVE_PARTICIPANT | lib/pkp/controllers/grid/users/stageParticipant/StageParticipantGridHandler.php | Stage participant removed | submission.event.participantRemoved; stage-participants | |
 | EVLOG-SUBM-META-PUB | SUBMISSION_LOG_METADATA_PUBLISH | lib/pkp/classes/publication/Repository.php | Metadata published | submission.event.metadataPublished | publication-versioning |
 | EVLOG-SUBM-META-UNPUB | SUBMISSION_LOG_METADATA_UNPUBLISH | lib/pkp/classes/publication/Repository.php | Metadata unpublished | submission.event.metadataUnpublished | publication-versioning |
 | EVLOG-SUBM-VER-CRT | SUBMISSION_LOG_CREATE_VERSION | lib/pkp/classes/publication/Repository.php | Publication version created | submission.event.versionCreated; publication-versioning | publication-versioning |
-| EVLOG-SUBM-COPY-AGR | SUBMISSION_LOG_COPYRIGHT_AGREED | lib/pkp/api/v1/submissions/PKPSubmissionController.php:267 | Author agrees to copyright notice | submission.event.copyrightNoticeAgreed | |
+| EVLOG-SUBM-COPY-AGR | SUBMISSION_LOG_COPYRIGHT_AGREED | lib/pkp/api/v1/submissions/PKPSubmissionController.php:267 | Author agrees to copyright notice | submission.event.copyrightNoticeAgreed | submission-wizard |
 | EVLOG-SUBM-ED-DEC | SUBMISSION_LOG_EDITOR_DECISION | lib/pkp/classes/decision/Repository.php | Editorial decision recorded | submission.event.editorDecision; review-decisions | |
 | EVLOG-SUBM-ED-REC | SUBMISSION_LOG_EDITOR_RECOMMENDATION | lib/pkp/classes/decision/Repository.php | Editor recommendation made | submission.event.editorRecommendation | |
 | EVLOG-SUBM-ED-EMAIL | SUBMISSION_LOG_DECISION_EMAIL_SENT | lib/pkp/classes/decision/types/traits/NotifyReviewers.php | Decision notification email sent | submission.event.decisionEmailSent; email-delivery | |

@@ -5,10 +5,10 @@ after every feature. A feature is `done` only when its row says so AND it's comm
 
 ## Totals
 
-- Features: **0 done · 0 parked · 92 pending** (of 92)
-- Tests used: **0 / 700**
-- Last full-suite runtime: **— / 25 min** (fresh DB)
-- Last updated: (not started) · Last commit: —
+- Features: **1 done · 0 parked · 91 pending** (of 92)
+- Tests used: **6 / 700**
+- Last full-suite runtime: **— / 25 min** (fresh DB; not yet run — submission-wizard file alone: ~24 s)
+- Last updated: 2026-07-02 · Last commit: submission-wizard (root + lib/pkp)
 
 Status legend — Spec: pending → draft → verified · Tests: pending → written → green(x2) ·
 Verified: — / yes (adversarial + live affordance probes done)
@@ -17,7 +17,7 @@ Verified: — / yes (adversarial + live affordance probes done)
 
 | # | Area | Feature | Spec | Tests | #tests | Verified | Findings/notes |
 |---|------|---------|------|-------|--------|----------|----------------|
-| 1 | Area 1 — Author submission & intake | `submission-wizard` | pending | pending | 0 | — | — |
+| 1 | Area 1 — Author submission & intake | `submission-wizard` | verified | green(x2) | 6 | yes | 28→30 atoms; verifier live-probed all 4 unverified affordances + corrected Submit-As and Open/Cancel permission cells; ledger §2 row 61 added; tests green ×3 (2 agent + 1 orchestrator, 24 s) |
 | 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | pending | pending | 0 | — | — |
 | 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | pending | pending | 0 | — | — |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | pending | pending | 0 | — | — |
@@ -116,3 +116,5 @@ _(none yet)_
 ## Run log
 
 _(loop appends one line per feature: date · feature · outcome · #tests · runtime delta)_
+
+- 2026-07-02 · submission-wizard · done (spec verified, adversarial + live affordance probes) · 6 tests · file runtime ~24 s

@@ -21,7 +21,7 @@
 | VUE-issue-download-report-modal | IssueDownloadReportModal | lib/ui-library/src/pages/statsIssues/IssueDownloadReportModal.vue | page/modal: download issue-level usage stats report | usage-statistics | |
 | VUE-publications-download-report-modal | PublicationsDownloadReportModal | lib/ui-library/src/pages/statsPublications/PublicationsDownloadReportModal.vue | page/modal: download publication-level usage stats report | usage-statistics | |
 | VUE-user-export-modal | UserExportModal | lib/ui-library/src/pages/statsUsers/UserExportModal.vue | page/modal: export user stats/list | usage-statistics | |
-| VUE-reconfigure-submission-modal | ReconfigureSubmissionModal | lib/ui-library/src/pages/submissionWizard/ReconfigureSubmissionModal.vue | page/modal: mid-flight reconfiguration of an in-progress submission wizard | submission-wizard-core | |
+| VUE-reconfigure-submission-modal | ReconfigureSubmissionModal | lib/ui-library/src/pages/submissionWizard/ReconfigureSubmissionModal.vue | page/modal: mid-flight reconfiguration of an in-progress submission wizard | submission-wizard-core | submission-wizard |
 | VUE-user-comments-page | UserCommentsPage | lib/ui-library/src/pages/userComments/UserCommentsPage.vue | page: shell hosting comments and comment-reports tabs | public-comments | |
 | VUE-user-comments-table | UserCommentsTable | lib/ui-library/src/pages/userComments/UserCommentsTable.vue | component: table of all public discussion comments (moderation) | public-comments | |
 | VUE-user-comment-reports-table | UserCommentReportsTable | lib/ui-library/src/pages/userComments/UserCommentReportsTable.vue | component: table of user-reported comments (moderation queue) | public-comments | |
@@ -62,7 +62,7 @@
 | VUE-doi-registration-settings-form | DoiRegistrationSettingsForm | lib/ui-library/src/components/Form/context/DoiRegistrationSettingsForm.vue | component: DOI registration agency settings form | doi-management | |
 | VUE-doi-setup-settings-form | DoiSetupSettingsForm | lib/ui-library/src/components/Form/context/DoiSetupSettingsForm.vue | component: DOI prefix/suffix setup settings form | doi-management | |
 | VUE-add-context-form | AddContextForm | lib/ui-library/src/components/Form/context/AddContextForm.vue | component: create-new-journal(context) form | site-administration | |
-| VUE-start-submission-form | StartSubmissionForm | lib/ui-library/src/components/Form/submission/StartSubmissionForm.vue | component: initial "start submission" title form | submission-wizard-core | |
+| VUE-start-submission-form | StartSubmissionForm | lib/ui-library/src/components/Form/submission/StartSubmissionForm.vue | component: initial "start submission" title form | submission-wizard-core | submission-wizard |
 | VUE-announcements-list-panel | AnnouncementsListPanel | lib/ui-library/src/components/ListPanel/announcements/AnnouncementsListPanel.vue | component: journal announcements list CRUD | announcements | |
 | VUE-contributors-list-panel | ContributorsListPanel | lib/ui-library/src/components/ListPanel/contributors/ContributorsListPanel.vue | component: publication contributors list panel (display/preview variant) | contributors | |
 | VUE-doi-list-panel | DoiListPanel | lib/ui-library/src/components/ListPanel/doi/DoiListPanel.vue | component: generic DOI assignment/registration list panel | doi-management | |

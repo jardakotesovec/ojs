@@ -96,10 +96,10 @@
 | PAGE-stats-users | StatsHandler::users (inherited) | pages/stats/StatsHandler.php | User statistics page | usage-statistics.md | |
 | PAGE-stats-reports | StatsHandler::reports (inherited) | pages/stats/StatsHandler.php | Statistics report generation page | usage-statistics.md | |
 | PAGE-stats-counterr5 | StatsHandler::counterR5 (inherited) | pages/stats/StatsHandler.php | COUNTER R5 report page | usage-statistics.md | |
-| PAGE-submission-index | SubmissionHandler::index (inherited) | pages/submission/SubmissionHandler.php | Submission wizard landing/start page | submission-wizard-core.md | |
-| PAGE-submission-saved | SubmissionHandler::saved (inherited) | pages/submission/SubmissionHandler.php | Submission-saved confirmation page | submission-wizard-core.md | |
-| PAGE-submission-wizard | SubmissionHandler::wizard (inherited, @deprecated 3.4) | pages/submission/SubmissionHandler.php | Deprecated submission wizard URL | submission-wizard-core.md | |
-| PAGE-submission-cancelled | SubmissionHandler::cancelled (inherited) | pages/submission/SubmissionHandler.php | Submission-cancelled confirmation page | submission-wizard-core.md | |
+| PAGE-submission-index | SubmissionHandler::index (inherited) | pages/submission/SubmissionHandler.php | Submission wizard landing/start page | submission-wizard-core.md | submission-wizard |
+| PAGE-submission-saved | SubmissionHandler::saved (inherited) | pages/submission/SubmissionHandler.php | Submission-saved confirmation page | submission-wizard-core.md | submission-wizard |
+| PAGE-submission-wizard | SubmissionHandler::wizard (inherited, @deprecated 3.4) | pages/submission/SubmissionHandler.php | Deprecated submission wizard URL | submission-wizard-core.md | submission-wizard |
+| PAGE-submission-cancelled | SubmissionHandler::cancelled (inherited) | pages/submission/SubmissionHandler.php | Submission-cancelled confirmation page | submission-wizard-core.md | submission-wizard |
 | PAGE-user-index | UserHandler::index | pages/user/UserHandler.php | User account landing page | user-profile.md | |
 | PAGE-user-subscriptions | UserHandler::subscriptions | pages/user/UserHandler.php | User's own subscriptions page | subscription-access.md | |
 | PAGE-user-authorizationdenied | UserHandler::authorizationDenied | pages/user/UserHandler.php | Access-denied notice page | roles-permissions.md | |

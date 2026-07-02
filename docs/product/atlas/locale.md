@@ -189,10 +189,10 @@
 | LOC-reviewer-misc | `(misc)` | reviewer.po | 1 rarer prefixes | reviewer.step1 (3) | |
 | LOC-submission-editor-submission | `editor.submission.*` | submission.po | 158 keys |  | |
 | LOC-submission-metadata-property | `metadata.property.*` | submission.po | 85 keys |  | |
-| LOC-submission-submission-submit | `submission.submit.*` | submission.po | 69 keys |  | |
+| LOC-submission-submission-submit | `submission.submit.*` | submission.po | 69 keys |  | submission-wizard |
 | LOC-submission-submission-citations | `submission.citations.*` | submission.po | 66 keys |  | |
 | LOC-submission-submission-event | `submission.event.*` | submission.po | 55 keys |  | |
-| LOC-submission-submission-wizard | `submission.wizard.*` | submission.po | 34 keys |  | |
+| LOC-submission-submission-wizard | `submission.wizard.*` | submission.po | 34 keys |  | submission-wizard |
 | LOC-submission-dashboard-reviewAssignment | `dashboard.reviewAssignment.*` | submission.po | 34 keys |  | |
 | LOC-submission-submission-list | `submission.list.*` | submission.po | 32 keys |  | |
 | LOC-submission-submission-layout | `submission.layout.*` | submission.po | 27 keys |  | |

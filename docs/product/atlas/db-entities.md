@@ -114,7 +114,7 @@
 | DB-subeditor_submission_group | subeditor_submission_group | lib/pkp/classes/migration/install/SubmissionsMigration.php | Subeditor assignment groups | | |
 | DB-submission_comments | submission_comments | lib/pkp/classes/migration/install/SubmissionsMigration.php | Comments on submissions | discussions | |
 | DB-submission_settings | submission_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Submission metadata settings | | |
-| DB-submissions | submissions | lib/pkp/classes/migration/install/SubmissionsMigration.php | Submission records | submission-drafts | |
+| DB-submissions | submissions | lib/pkp/classes/migration/install/SubmissionsMigration.php | Submission records | submission-drafts | submission-wizard |
 | DB-temporary_files | temporary_files | lib/pkp/classes/migration/install/TemporaryFilesMigration.php | Temporary file uploads | | |
 | DB-data_object_tombstone_oai_set_objects | data_object_tombstone_oai_set_objects | lib/pkp/classes/migration/install/TombstoneMigration.php | OAI set tombstone mappings | | |
 | DB-data_object_tombstone_settings | data_object_tombstone_settings | lib/pkp/classes/migration/install/TombstoneMigration.php | Tombstone metadata | | |

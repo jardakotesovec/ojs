@@ -56,9 +56,9 @@
 | MAIL-reviewer-unassign | ReviewerUnassign | lib/pkp/classes/mail/mailables/ReviewerUnassign.php | template key: REVIEW_CANCEL | email-delivery | |
 | MAIL-revised-version-notify | RevisedVersionNotify | lib/pkp/classes/mail/mailables/RevisedVersionNotify.php | template key: REVISED_VERSION_NOTIFY | notifications | |
 | MAIL-statistics-report-notify | StatisticsReportNotify | lib/pkp/classes/mail/mailables/StatisticsReportNotify.php | template key: STATISTICS_REPORT_NOTIFICATION | scheduled-tasks | |
-| MAIL-submission-acknowledgement | SubmissionAcknowledgement | lib/pkp/classes/mail/mailables/SubmissionAcknowledgement.php | template key: SUBMISSION_ACK | | |
-| MAIL-submission-acknowledgement-not-author | SubmissionAcknowledgementNotAuthor | lib/pkp/classes/mail/mailables/SubmissionAcknowledgementNotAuthor.php | template key: SUBMISSION_ACK_NOT_USER | | |
-| MAIL-submission-acknowledgement-other-authors | SubmissionAcknowledgementOtherAuthors | lib/pkp/classes/mail/mailables/SubmissionAcknowledgementOtherAuthors.php | template key: SUBMISSION_ACK_NOT_USER | | |
+| MAIL-submission-acknowledgement | SubmissionAcknowledgement | lib/pkp/classes/mail/mailables/SubmissionAcknowledgement.php | template key: SUBMISSION_ACK | | submission-wizard |
+| MAIL-submission-acknowledgement-not-author | SubmissionAcknowledgementNotAuthor | lib/pkp/classes/mail/mailables/SubmissionAcknowledgementNotAuthor.php | template key: SUBMISSION_ACK_NOT_USER | | submission-wizard |
+| MAIL-submission-acknowledgement-other-authors | SubmissionAcknowledgementOtherAuthors | lib/pkp/classes/mail/mailables/SubmissionAcknowledgementOtherAuthors.php | template key: SUBMISSION_ACK_NOT_USER | | submission-wizard |
 | MAIL-submission-needs-editor | SubmissionNeedsEditor | lib/pkp/classes/mail/mailables/SubmissionNeedsEditor.php | template key: SUBMISSION_NEEDS_EDITOR | email-delivery | |
 | MAIL-submission-saved-for-later | SubmissionSavedForLater | lib/pkp/classes/mail/mailables/SubmissionSavedForLater.php | template key: SUBMISSION_SAVED_FOR_LATER | | |
 | MAIL-subscription-expired | SubscriptionExpired | classes/mail/mailables/SubscriptionExpired.php | template key: SUBSCRIPTION_AFTER_EXPIRY | | |
