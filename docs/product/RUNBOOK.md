@@ -7,6 +7,22 @@ FEATURE-MAP). Do not rely on conversation memory. The loop is **stateless per
 iteration**: each wake-up reads PROGRESS, does the next `pending` feature, updates
 PROGRESS, commits, continues.
 
+## Kick-off / resume prompt (paste this in any session)
+
+The same prompt starts the run and resumes it after any break — the loop is
+file-driven, so `PROGRESS.md` always says where to pick up. For an unattended run,
+wrap it with the `/loop` skill (self-paced) so it re-invokes itself: type `/loop` then
+paste the prompt. Plain paste also works as a one-shot nudge.
+
+> Run the OJS product-spec big-bang build. Read `docs/product/RUNBOOK.md` and
+> `docs/product/PROGRESS.md` (the source of truth) and follow the per-feature loop
+> there, resuming at the next feature that isn't `done`/`parked`. For each: build the
+> spec + Playwright tests, run them green against the app, verify, update PROGRESS,
+> commit, and keep going autonomously until all 92 features are done or parked. Pin
+> subagents to `model: sonnet` and judge them only by completion notifications, never
+> by transcript size. Respect the ≤700-test / ≤25-min budget and park-and-continue
+> after 3 failed attempts.
+
 ## How to resume (entry point for any session)
 
 1. Read `docs/product/RUNBOOK.md` (this file), `docs/product/PROGRESS.md`,
