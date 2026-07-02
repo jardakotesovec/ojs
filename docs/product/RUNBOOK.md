@@ -37,12 +37,16 @@ paste the prompt. Plain paste also works as a one-shot nudge.
 
 - **Scope: OJS only** (CHARTER Scope). 92 features in `FEATURE-MAP.md` v1 (Areas 1–8).
   Background & pipelines items are documented infra, NOT features to spec.
-- **Prior tests: discarded.** Round-1 test **spec files** under `lib/pkp/playwright/tests/`
-  and `playwright/tests/` are removed and rebuilt spec-driven. **Keep the harness**:
-  scenario-seeding endpoints (`api/v1/_test/`), `config-factory.js`, the serial project,
-  POMs under `playwright/pages/` (extend/reuse), `support/`, fixtures, and the
-  `ojs-playwright-tests` skill. tasks-discussions + publication-versioning specs already
-  exist and are verified.
+- **Prior tests: CLEAN-SLATED (done 2026-07-02).** All 114 round-1 scenario `*.spec.js`
+  files (under `lib/pkp/playwright/tests/` + `playwright/tests/`) were **deleted** so the
+  new spec-driven build can't anchor to the old, less-robust scenarios. Do NOT read or
+  resurrect them — git history has them if ever needed. **KEPT (reuse/extend):** the
+  setup project (`bootstrap.setup.js`), POMs (`playwright/pages/` + `lib/pkp/playwright/
+  pages/`, ~30 files), `support/` helpers (~8), `fixtures/`, `config-factory.js`, the
+  serial project wiring, scenario-seeding endpoints (`api/v1/_test/` — app code), and the
+  `ojs-playwright-tests` skill. The loop writes NEW tests per feature from that
+  infrastructure. tasks-discussions + publication-versioning **specs** already exist and
+  are verified; their tests get built fresh by the loop like every other feature.
 - Per-feature atom coverage is in that feature's row in FEATURE-MAP (`atoms:`).
 
 ## Budget & ceilings (HARD)
