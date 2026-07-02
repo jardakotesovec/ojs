@@ -78,6 +78,13 @@ For the next `pending` feature:
 - **DB hygiene** — reset (`npm run test:e2e:reset`) before any full-suite timing run and
   every ~8–10 features (long-lived DBs accumulate drafts whose worker tokens collide;
   see `docs/e2e/app-changes.md` §3). Never delete `config.test.inc.php` alone.
+- **Plugin-submodule alignment after the rebase** — the branch was rebased onto main,
+  which added `IDoiRegistrationAgency::depositPeerReviews/exportPeerReviews`; the
+  `crossref` plugin submodule lagged and fataled boot (abstract-methods error). FIXED
+  2026-07-02 by checking crossref out at root's recorded commit (`61a64961`, #12509). If
+  the app fatals on a plugin "contains N abstract methods" error, align that plugin
+  submodule to the SHA root records (`git ls-tree HEAD plugins/generic/<p>` → checkout
+  it in the submodule) — do NOT blow away webFeed/credit which carry local env-patches.
 - **Env invariants** (unchanged from round 1): all server-side egress firewalled;
   `[schedule] task_runner=Off`; DTD/XSD mirrors via `XML_CATALOG_FILES`; Mailpit reads
   only `pkpMail.find({to, contains: tag})`; serial specs for globally-scanning ops.
