@@ -1,0 +1,94 @@
+# Atlas sweep: Vue surfaces
+- Scope: lib/ui-library/src/{pages,managers,components(major)}, js/ mounts (extended to lib/ui-library/src/frontend/components for reader-facing surfaces, see Gaps)
+- Method: recursive `find`/`ls` of each directory (maxdepth 2-3), `head` on ambiguous files to decide page-root vs internal-part, cross-referenced `docs/e2e/plans/*.md` filenames for hints; no OJS-side js/ Vue mounts exist (all mounts live in lib/ui-library, wired from lib/pkp templates)
+- Date: 2026-07-02
+- Atom count: 75
+
+| ID | Surface | Pointer | What it is | Hint | Claimed by |
+|----|---------|---------|------------|------|------------|
+| VUE-accept-invitation-page | AcceptInvitationPage | lib/ui-library/src/pages/acceptInvitation/AcceptInvitationPage.vue | page: multi-step invitation acceptance wizard (roles, ORCID, account details) | user-invitations | |
+| VUE-counter-reports-page | CounterReportsPage | lib/ui-library/src/pages/counter/CounterReportsPage.vue | page: COUNTER usage report list/edit wrapper | usage-statistics | |
+| VUE-dashboard-page | DashboardPage | lib/ui-library/src/pages/dashboard/DashboardPage.vue | page: editorial/submissions dashboard shell (filters, table, modals) | editorial-dashboards | |
+| VUE-dashboard-table | DashboardTable | lib/ui-library/src/pages/dashboard/components/DashboardTable/DashboardTable.vue | component: submissions/review-assignments data table used by dashboard | editorial-dashboards | |
+| VUE-jobs-page | JobsPage | lib/ui-library/src/pages/jobs/JobsPage.vue | page: queued jobs list | jobs-queue | |
+| VUE-failed-jobs-page | FailedJobsPage | lib/ui-library/src/pages/jobs/FailedJobsPage.vue | page: failed jobs list | jobs-queue | |
+| VUE-failed-job-details-page | FailedJobDetailsPage | lib/ui-library/src/pages/jobs/FailedJobDetailsPage.vue | page: single failed job detail/trace view | jobs-queue | |
+| VUE-edit-mailable-modal | EditMailableModal | lib/ui-library/src/pages/manageEmails/EditMailableModal.vue | page/modal: enable/disable + configure a system mailable | email-templates-management | |
+| VUE-edit-template-modal | EditTemplateModal | lib/ui-library/src/pages/manageEmails/EditTemplateModal.vue | page/modal: edit an email template's subject/body | email-templates-management | |
+| VUE-request-review-round-author-response | RequestReviewRoundAuthorResponse | lib/ui-library/src/pages/requestReviewRoundAuthorResponse/RequestReviewRoundAuthorResponse.vue | page: editor requests author response to a review round | review-rounds-revisions | |
+| VUE-reviewer-submission-page | ReviewerSubmissionPage | lib/ui-library/src/pages/reviewerSubmission/ReviewerSubmissionPage.vue | page: reviewer-facing submission review workspace | reviewer-response | |
+| VUE-context-download-report-modal | ContextDownloadReportModal | lib/ui-library/src/pages/statsContext/ContextDownloadReportModal.vue | page/modal: download journal-level usage stats report | usage-statistics | |
+| VUE-issue-download-report-modal | IssueDownloadReportModal | lib/ui-library/src/pages/statsIssues/IssueDownloadReportModal.vue | page/modal: download issue-level usage stats report | usage-statistics | |
+| VUE-publications-download-report-modal | PublicationsDownloadReportModal | lib/ui-library/src/pages/statsPublications/PublicationsDownloadReportModal.vue | page/modal: download publication-level usage stats report | usage-statistics | |
+| VUE-user-export-modal | UserExportModal | lib/ui-library/src/pages/statsUsers/UserExportModal.vue | page/modal: export user stats/list | usage-statistics | |
+| VUE-reconfigure-submission-modal | ReconfigureSubmissionModal | lib/ui-library/src/pages/submissionWizard/ReconfigureSubmissionModal.vue | page/modal: mid-flight reconfiguration of an in-progress submission wizard | submission-wizard-core | |
+| VUE-user-comments-page | UserCommentsPage | lib/ui-library/src/pages/userComments/UserCommentsPage.vue | page: shell hosting comments and comment-reports tabs | public-comments | |
+| VUE-user-comments-table | UserCommentsTable | lib/ui-library/src/pages/userComments/UserCommentsTable.vue | component: table of all public discussion comments (moderation) | public-comments | |
+| VUE-user-comment-reports-table | UserCommentReportsTable | lib/ui-library/src/pages/userComments/UserCommentReportsTable.vue | component: table of user-reported comments (moderation queue) | public-comments | |
+| VUE-user-invitation-page | UserInvitationPage | lib/ui-library/src/pages/userInvitation/UserInvitationPage.vue | page: multi-step wizard to invite a new/existing user | user-invitations | |
+| VUE-workflow-page | WorkflowPage | lib/ui-library/src/pages/workflow/WorkflowPage.vue | page: generic submission workflow side-modal shell (title/stage/actions chrome) | submission-stage-actions | |
+| VUE-workflow-page-ojs | WorkflowPageOJS | lib/ui-library/src/pages/workflow/WorkflowPageOJS.vue | page: OJS-specific workflow mount wiring managers (file/reviewer/contributor/galley/etc.) into WorkflowPage | submission-stage-actions | |
+| VUE-category-manager | CategoryManager | lib/ui-library/src/managers/CategoryManager/CategoryManager.vue | manager: journal category tree CRUD; store categoryManagerStore.js | categories | |
+| VUE-chapter-manager | ChapterManager | lib/ui-library/src/managers/ChapterManager/ChapterManager.vue | manager: monograph chapter list CRUD; no store file | | |
+| VUE-citation-manager | CitationManager | lib/ui-library/src/managers/CitationManager/CitationManager.vue | manager: publication reference/citation list + metadata lookup; store citationManagerStore.js | | |
+| VUE-contributor-manager | ContributorManager | lib/ui-library/src/managers/ContributorManager/ContributorManager.vue | manager: submission author/contributor list CRUD; store contributorManagerStore.js | contributors | |
+| VUE-contributor-role-manager | ContributorRoleManager | lib/ui-library/src/managers/ContributorRoleManager/ContributorRoleManager.vue | manager: CRediT contributor role settings CRUD; store contributorRoleManagerStore.js | contributors | |
+| VUE-data-citation-manager | DataCitationManager | lib/ui-library/src/managers/DataCitationManager/DataCitationManager.vue | manager: data availability citation list; store dataCitationManagerStore.js | | |
+| VUE-discussion-manager | DiscussionManager | lib/ui-library/src/managers/DiscussionManager/DiscussionManager.vue | manager: internal editorial discussion threads; store discussionManagerStore.js | discussions | tasks-discussions |
+| VUE-file-manager | FileManager | lib/ui-library/src/managers/FileManager/FileManager.vue | manager: submission file stage list; store fileManagerStore.js | submission-files | |
+| VUE-galley-manager | GalleyManager | lib/ui-library/src/managers/GalleyManager/GalleyManager.vue | manager: publication galley (format) list CRUD; store galleyManagerStore.js | galleys | |
+| VUE-media-file-manager | MediaFileManager | lib/ui-library/src/managers/MediaFileManager/MediaFileManager.vue | manager: publication media/supplementary file list; store mediaFileManagerStore.js | media-files | |
+| VUE-navigation-menu-manager-field | NavigationMenuManagerField | lib/ui-library/src/managers/NavigationMenuManager/NavigationMenuManagerField.vue | manager: form field for assigning navigation-menu items; no store file (uses useNavigationMenuManagerForm.js) | navigation-menus | |
+| VUE-participant-manager | ParticipantManager | lib/ui-library/src/managers/ParticipantManager/ParticipantManager.vue | manager: stage participant assignment list; store participantManagerStore.js | stage-participants | |
+| VUE-publication-format-manager | PublicationFormatManager | lib/ui-library/src/managers/PublicationFormatManager/PublicationFormatManager.vue | manager: monograph publication format list; no store file | | |
+| VUE-representative-manager | RepresentativeManager | lib/ui-library/src/managers/RepresentativeManager/RepresentativeManager.vue | manager: monograph sales representative list; no store file | | |
+| VUE-reviewer-manager | ReviewerManager | lib/ui-library/src/managers/ReviewerManager/ReviewerManager.vue | manager: review round reviewer assignment list; store reviewerManagerStore.js | reviewer-assignment | |
+| VUE-reviewer-recommendation-manager | ReviewerRecommendationManager | lib/ui-library/src/managers/ReviewerRecommendationManager/ReviewerRecommendationManager.vue | manager: reviewer recommendation list (recommend-only editors); store reviewerRecommendationManagerStore.js | recommend-only-editors | |
+| VUE-reviewer-suggestion-manager | ReviewerSuggestionManager | lib/ui-library/src/managers/ReviewerSuggestionManager/ReviewerSuggestionManager.vue | manager: author-suggested reviewer list; store reviewerSuggestionManagerStore.js | reviewer-suggestions | |
+| VUE-author-response-manager | AuthorResponseManager | lib/ui-library/src/managers/ReviewRoundResponseManager/AuthorResponseManager/AuthorResponseManager.vue | manager: author's response UI to an editor's review-round request | reviewer-response | |
+| VUE-author-response-request-manager | AuthorResponseRequestManager | lib/ui-library/src/managers/ReviewRoundResponseManager/AuthorResponseRequestManager/AuthorResponseRequestManager.vue | manager: editor's list of requests sent to authors; store AuthorResponseRequestManagerStore.js | reviewer-response | |
+| VUE-task-template-manager | TaskTemplateManager | lib/ui-library/src/managers/TaskTemplateManager/TaskTemplateManager.vue | manager: editorial task template list CRUD; store taskTemplateManagerStore.js | editorial-tasks | tasks-discussions |
+| VUE-user-access-manager | UserAccessManager | lib/ui-library/src/managers/UserAccessManager/UserAccessManager.vue | manager: user role/group access list; store UserAccessManagerStore.js | roles-permissions | |
+| VUE-user-invitation-manager | UserInvitationManager | lib/ui-library/src/managers/UserInvitationManager/UserInvitationManager.vue | manager: pending user invitation list; store UserInvitationManagerStore.js | user-invitations | |
+| VUE-composer | Composer | lib/ui-library/src/components/Composer/Composer.vue | component: rich email composer used across editorial email workflows | email-delivery | |
+| VUE-file-attacher | FileAttacher | lib/ui-library/src/components/FileAttacher/FileAttacher.vue | component: attach submission/review/library files to an email or message | submission-files | |
+| VUE-navigation-menu-editor | NavigationMenuEditor | lib/ui-library/src/components/NavigationMenuEditor/NavigationMenuEditor.vue | component: drag-and-drop navigation menu tree editor | navigation-menus | |
+| VUE-insert-summary-of-changes-modal | InsertSummaryOfChangesModal | lib/ui-library/src/components/InsertSummaryOfChanges/InsertSummaryOfChangesModal.vue | component: modal to log a change-summary note when editing published metadata | editor-metadata-editing | |
+| VUE-top-nav-actions | TopNavActions | lib/ui-library/src/components/TopNavActions/TopNavActions.vue | component: site header actions bar (help, tasks/notifications, user menu) | notifications | |
+| VUE-side-nav | SideNav | lib/ui-library/src/components/SideNav/SideNav.vue | component: app-wide left sidebar navigation | | |
+| VUE-theme-form | ThemeForm | lib/ui-library/src/components/Form/context/ThemeForm.vue | component: journal theme selection/appearance settings form | website-appearance | |
+| VUE-notify-users-form | NotifyUsersForm | lib/ui-library/src/components/Form/context/NotifyUsersForm.vue | component: bulk "notify users" email form with recipient counts | email-delivery | |
+| VUE-date-time-form | DateTimeForm | lib/ui-library/src/components/Form/context/DateTimeForm.vue | component: date/time settings form (extends base Form) | | |
+| VUE-doi-registration-settings-form | DoiRegistrationSettingsForm | lib/ui-library/src/components/Form/context/DoiRegistrationSettingsForm.vue | component: DOI registration agency settings form | doi-management | |
+| VUE-doi-setup-settings-form | DoiSetupSettingsForm | lib/ui-library/src/components/Form/context/DoiSetupSettingsForm.vue | component: DOI prefix/suffix setup settings form | doi-management | |
+| VUE-add-context-form | AddContextForm | lib/ui-library/src/components/Form/context/AddContextForm.vue | component: create-new-journal(context) form | site-administration | |
+| VUE-start-submission-form | StartSubmissionForm | lib/ui-library/src/components/Form/submission/StartSubmissionForm.vue | component: initial "start submission" title form | submission-wizard-core | |
+| VUE-announcements-list-panel | AnnouncementsListPanel | lib/ui-library/src/components/ListPanel/announcements/AnnouncementsListPanel.vue | component: journal announcements list CRUD | announcements | |
+| VUE-contributors-list-panel | ContributorsListPanel | lib/ui-library/src/components/ListPanel/contributors/ContributorsListPanel.vue | component: publication contributors list panel (display/preview variant) | contributors | |
+| VUE-doi-list-panel | DoiListPanel | lib/ui-library/src/components/ListPanel/doi/DoiListPanel.vue | component: generic DOI assignment/registration list panel | doi-management | |
+| VUE-doi-list-panel-ojs | DoiListPanelOJS | lib/ui-library/src/components/ListPanel/doi/DoiListPanelOJS.vue | component: OJS-specific DOI list panel mount (issues+articles+galleys) | doi-management | |
+| VUE-highlights-list-panel | HighlightsListPanel | lib/ui-library/src/components/ListPanel/highlights/HighlightsListPanel.vue | component: homepage "highlights" carousel item list CRUD | journal-homepage | |
+| VUE-institutions-list-panel | InstitutionsListPanel | lib/ui-library/src/components/ListPanel/institutions/InstitutionsListPanel.vue | component: subscription-access institutions list CRUD | institutions | |
+| VUE-listing-files-list-panel | ListingFilesListPanel | lib/ui-library/src/components/ListPanel/listingFiles/ListingFilesListPanel.vue | component: read-only listing of files (e.g. dependent files) | submission-files | |
+| VUE-reviewer-suggestions-list-panel | ReviewerSuggestionsListPanel | lib/ui-library/src/components/ListPanel/reviewerSuggestions/ReviewerSuggestionsListPanel.vue | component: list panel of author-suggested reviewers | reviewer-suggestions | |
+| VUE-submission-files-list-panel | SubmissionFilesListPanel | lib/ui-library/src/components/ListPanel/submissionFiles/SubmissionFilesListPanel.vue | component: submission files list panel with selection | submission-files | |
+| VUE-catalog-list-panel | CatalogListPanel | lib/ui-library/src/components/ListPanel/submissions/CatalogListPanel.vue | component: published catalog entries list (OMP-oriented) | | |
+| VUE-submissions-list-panel | SubmissionsListPanel | lib/ui-library/src/components/ListPanel/submissions/SubmissionsListPanel.vue | component: generic submissions list panel | author-dashboard | |
+| VUE-select-reviewer-list-panel | SelectReviewerListPanel | lib/ui-library/src/components/ListPanel/users/SelectReviewerListPanel.vue | component: reviewer picker list panel used when assigning reviewers | reviewer-assignment | |
+| VUE-pkp-comments | PkpComments | lib/ui-library/src/frontend/components/PkpComments/PkpComments.vue | component: reader-facing public discussion comments + reporting | public-comments | |
+| VUE-pkp-open-review | PkpOpenReview | lib/ui-library/src/frontend/components/PkpOpenReview/PkpOpenReview.vue | component: public display of open/transparent peer review history | review-anonymity | |
+| VUE-pkp-cite | PkpCiteBody | lib/ui-library/src/frontend/components/PkpCite/PkpCiteBody.vue | component: article "how to cite" citation-format display/download | | |
+| VUE-pkp-crossmark-button | PkpCrossmarkButton | lib/ui-library/src/frontend/components/PkpCrossmarkButton/PkpCrossmarkButton.vue | component: Crossref Crossmark status button on article page | | |
+| VUE-pkp-usage-chart | PkpUsageChart | lib/ui-library/src/frontend/components/PkpUsageChart/PkpUsageChart.vue | component: reader-facing article/issue usage stats chart | usage-statistics | |
+| VUE-pkp-orcid-display | PkpOrcidDisplay | lib/ui-library/src/frontend/components/PkpOrcidDisplay/PkpOrcidDisplay.vue | component: ORCID icon/link display for a contributor | orcid | |
+
+## Gaps
+- Skipped as primitives/layout building blocks (not atoms): components/{ActionPanel, Announcer, Badge, Button, ButtonIcon, ButtonRow, Chart, Checkbox, CodeHighlighter, Container, DateRange, Dropdown, DropdownActions, Expander, File, FileTypeIcon, FileUploader, FileMediaUploader, FileUploadProgress, Filter, GridWrapper, Header, Icon, InitialsAvatar, InlineSelect, InsertContent, List, Modal (incl. SideModal* family), MultilingualProgress, Notification, Orderer, Pagination, Panel, Popover, ProgressBar, ReviewMethodIcons, Search, ShowMore, SideMenu, SkipLink, Spinner, StageBubble, Steps, Table, Tabs, Tooltip, UserAvatar}; also Form/fields/* and Form/display/* (generic field/display primitives) and FormModal.
+- components/ContextSwitcher is an empty directory (stale, no files) — skipped.
+- Within each Manager/ListPanel/Page directory, only the root surface is an atom; internal Cell renderers, "*EditModal"/"*DialogBody" popups, and mocks/ subfolders were treated as parts of that atom, not separate atoms (mirrors how managers' modals/ subdirs were excluded).
+- pages/doi/ is an empty directory (DOI UI actually lives in components/ListPanel/doi) — skipped.
+- Scope extended beyond the literal prompt path to lib/ui-library/src/frontend/components/ (reader-facing theme components distinct from the editorial-side components/ dir) since it hosts significant public surfaces (comments, open review, usage chart, ORCID, cite, crossmark); flagging this extension explicitly in case it should be a separate sweep modality instead.
+- No app-specific Vue mount containers exist under OJS's js/ — all Vue is authored in lib/ui-library and instantiated from lib/pkp legacy templates, so the "js/ mounts" part of scope yielded zero additional atoms.
+- lib/pkp (checked out submodule) contains zero .vue files — confirms Vue UI lives entirely in lib/ui-library.
+- Oddities: ChapterManager, PublicationFormatManager, RepresentativeManager exist in the shared lib but are not wired into WorkflowPageOJS.vue's manager map — they appear OMP(monograph)-only; kept as atoms since the sweep covers the shared library, but likely out of OJS's real coverage surface.
+- WorkflowPageOMP.vue / WorkflowPageOPS.vue (sibling app mounts to WorkflowPageOJS.vue) and ListPanel/doi/DoiListPanelOMP.vue / DoiListPanelOPS.vue were deliberately skipped as out-of-app-scope (OJS repo only).
