@@ -76,10 +76,19 @@ For the next `pending` feature:
    `ojs-playwright-tests` skill: scenario-seed state, reuse/extend POMs, scope Mailpit
    by recipient+tag, `--output` to a private dir, `--reporter=list`.
 4. **Run them against the live app** (`php -S localhost:7001` or the config-factory
-   servers on 8000+). Green **twice** consecutively. For every UI-affordance claim
-   ("control X appears / is enabled / says Y in state Z"), drive it — Chrome or a
-   Playwright probe — across the relevant state × role matrix. Reset/tweak the DB as
-   needed.
+   servers on 8000+). Green **twice** consecutively. **Affordance claims need executable
+   evidence.** Any statement about what a UI control *does* — "button X appears / is
+   enabled / says Y / is absent, in state Z for role R" — is the error class that
+   code-reading gets WRONG: reading the handler/method cannot see the `:disabled` /
+   `v-if` / `v-show` binding that makes a code path unreachable in the UI. (This burned
+   us once: the spec claimed a view-modal switch reopens a closed task because
+   `EditorialTaskController::openTask()` exists in code — but the Closed control is
+   disabled once closed, so no user can reach it. "Rule 11" stayed wrong until it was
+   driven in the browser.) So **no affordance claim ships without driving it** — a
+   throwaway Playwright probe or the browser — across the relevant **state × role
+   matrix**. A code path existing ≠ a user can reach it. These probes are throwaway
+   verification during authoring; the *retained* tests are the canonical scenarios from
+   step 3. Reset/tweak the DB as needed.
 5. **Feedback discipline** — if a test contradicts the spec, the **SPEC is wrong**: fix
    it (and, if it's a real app bug, add a row to `docs/e2e/app-changes.md` §2 — NON-
    blocking, for the maintainer). Never edit a test to pass a claim the app disproves.
