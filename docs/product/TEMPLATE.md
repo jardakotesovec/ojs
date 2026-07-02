@@ -1,9 +1,11 @@
 # Spec template
 
 Copy this file to `specs/<feature>.md` and fill every section (or mark it `N/A —
-<reason>`). Keep the body in business language; code anchors (`file:line`) are
-provenance footnotes on rules, not the content. HTML comments are guidance — delete
-them in the real spec.
+<reason>`). Keep the body in business language; code anchors are provenance footnotes
+on rules, not the content. Anchor to a STABLE SYMBOL — `ClassName::method()`, a
+constant, a route path, a form field, a Vue composable/function — never a line number
+(line numbers drift on any edit above them; symbols survive and are greppable). HTML
+comments are guidance — delete them in the real spec.
 
 ---
 

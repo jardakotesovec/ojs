@@ -143,12 +143,12 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
 1. A **task** has exactly one responsible participant and a due date, and moves
    through **Yet to begin → In progress → Closed**. A **discussion** has neither owner
    nor due date and only ever shows **In progress** or **Closed** — it starts already
-   in progress (EditTask.php:71-76, :123-126; TaskResource.php:151-159).
+   in progress (EditTask rules for type/due-date; TaskResource::determineStatus()).
 2. The state a user sees follows the actions taken on the item, not a field anyone
    sets: a task is "Yet to begin" until it is started, "In progress" once started, and
    "Closed" once completed; a discussion is "In progress" until it is closed. There is
    no editable status field — the state is always computed from whether the item has
-   been started and/or closed (TaskResource.php:151-159 — from `dateStarted`/`dateClosed`).
+   been started and/or closed (TaskResource::determineStatus() — from `dateStarted`/`dateClosed`).
 3. A discussion can be promoted to a task later — the **Add Task Details** action,
    offered while it is In progress. The reverse is never offered in the UI: once an
    item is a task, the task-details toggle is locked, so a task can't be turned back
@@ -158,14 +158,18 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
 
 **Participants**
 4. **Who the picker offers** as participants on an item: everyone assigned to the
-   submission at that stage; in a review stage, also reviewers with an active
-   assignment on their latest review round; and always the acting manager or admin
-   (EditorialTaskController.php:804-943).
+   submission at that stage; in a review stage, also reviewers with an active,
+   accessible assignment — across all of their review rounds, not just the latest — and
+   always the acting manager or admin (EditorialTaskController::getParticipants(),
+   getReviewers()). For a reviewer, the picker returns the review details per round
+   (round number and review method), so a reviewer who reviewed more than once is
+   listed with all their reviews (EditorialTaskParticipantResource).
 5. **The backend accepts more than the picker offers** ⚠: on save it applies no
-   reviewer filtering — *any* review assignment anywhere on the submission qualifies a
-   person, even a declined or earlier-round one, for an item on any stage (so a
-   reviewer who declined in round 1 can be added to a Production task). Managers may be
-   added to any item regardless (EditTask.php:232-257; see Known deviations).
+   reviewer filtering at all — *any* review assignment anywhere on the submission
+   qualifies a person, even a **declined or cancelled** one, for an item on any stage
+   (so a reviewer who declined in round 1 can be added to a Production task; the picker
+   would never offer them). Managers may be added to any item regardless
+   (EditTask participant validation; see Known deviations).
 6. Whoever creates an item must be one of its participants — except managers, who may
    create an item without joining it (EditTask.php:203-219). When creating, the form
    pre-checks the current user in the participant list so this is the default
@@ -178,9 +182,9 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
    author participant alongside a blinded reviewer (EditTask.php:128-188). The
    participant pickers go further and hide identities outright: an author is hidden
    from a double-anonymous reviewer, and blinded reviewers are hidden from authors and
-   from other reviewers (EditorialTaskController.php:879-884, :977-999). Author names
-   inserted by template variables are stripped for double-anonymous reviewers
-   (EditorialTask.php:475-498).
+   from other reviewers (EditorialTaskController::getParticipants(), getReviewers()).
+   Author names inserted by template variables are stripped for double-anonymous
+   reviewers (EditorialTask::getReplacedMessage() / template-variable stripping).
 9. When a user's stage assignment (or a reviewer's review assignment) is removed, they
    are dropped from every item on that submission — unless they are a manager
    (Repository.php:253-276; StageParticipantGridHandler.php:433;
@@ -331,9 +335,11 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
   started, a reply posted, a file attached or removed, the due date changed (old to
   new), the owner assigned or reassigned (tasks only), and participants added or
   removed — each entry naming the acting user and the roles involved
-  (EditorialTaskController.php:209-224, :459-473, :506-520, :570-584, :736-749,
-  :1169-1368 — logged against the item, carrying `submissionId`). These entries appear
-  in the item's History modal (TaskResource.php:82-111). ⚠ Rendering the role
+  (EditorialTaskController event-logging in the create/close/open/start/note/file/
+  participant handlers — logged against the item, carrying `submissionId`). These
+  entries appear in the item's History modal (TaskResource latest-activities), and a
+  file-attachment entry now carries the attached file's id and name so the modal can
+  link straight to it (TaskResource latest-activities `settings`). ⚠ Rendering the role
   placeholders is fragile across the wider activity log — ledger row 14.
 - **Auto cover-note discussion**: submitting with "Comments for the Editor" filled in
   creates a discussion on the submission stage, titled with the cover-note label, with
@@ -433,10 +439,12 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
   journal. Contrast EditTask.php:92, which deliberately checks the site context.
   Suspected intent: the carve-outs meant site admin ≥ manager everywhere.
 - ⚠ **Reviewer stage access outlives the assignment** (rule and permissions table;
-  intent question): QueryUserAccessibleWorkflowStageRequiredPolicy.php:45-60 grants
-  review-stage access for *any* review assignment, declined and cancelled included;
-  the active/accessible/latest-round filtering exists only on the participant picker
-  (EditorialTaskController.php:831-845, :954).
+  intent question): QueryUserAccessibleWorkflowStageRequiredPolicy grants review-stage
+  access for *any* review assignment, declined and cancelled included; the picker's
+  active/accessible filtering exists only on the participant list, not on access
+  (EditorialTaskController::getParticipants(), getReviewers()). (Upstream #12928, Jun
+  2026, removed the picker's *latest-round* limit so it now offers all active rounds —
+  the declined/cancelled mismatch with access still stands.)
 - **Vestigial note-deletion endpoint** (live-probed — app-changes §2, product-spec
   pilot rows) — **not a user-facing bug**: a `DELETE …/notes/{noteId}` route exists
   but can never succeed for anyone (NoteAccessPolicy WRITE permits only headnotes,
@@ -494,11 +502,12 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
    exist on the model (`withClosed`, `withUserIds`) and has no callers — dead code to
    delete, or a regression from the query→editorialTask rename?
 6. `edit_tasks.status`/`closed` columns are fillable but never read (status is always
-   derived, TaskResource.php:151-159) — schema leftovers?
+   derived, TaskResource::determineStatus()) — schema leftovers?
 7. Should declined/cancelled review assignments keep granting review-stage access to
-   tasks and discussions (QueryUserAccessibleWorkflowStageRequiredPolicy.php:45-60),
-   given the participant picker deliberately filters to active, reviewer-accessible,
-   latest-round assignments?
+   tasks and discussions (QueryUserAccessibleWorkflowStageRequiredPolicy), given the
+   participant picker still filters them out? (Upstream #12928 loosened the picker to
+   all active rounds but kept excluding declined/cancelled, so the access-vs-picker
+   mismatch narrowed but was not closed.)
 
 ---
 

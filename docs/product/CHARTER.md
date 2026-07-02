@@ -64,9 +64,17 @@ grep, not a judgment call.
   the atlas for surfaces the spec should own but doesn't). Ambiguous rules are probed
   **live** on the test environment (scenario seeding + running PHP servers — see
   Live-probe etiquette) rather than guessed from code.
-- **Business language, anchored**: the spec body reads as a functional spec; code
-  anchors (`file:line`) ride along per rule so any claim can be re-checked as code
-  drifts. Anchors are provenance, not content.
+- **Business language, anchored — by symbol, not line**: the spec body reads as a
+  functional spec; code anchors ride along per rule so any claim can be re-checked.
+  Anchor to a STABLE SYMBOL — `ClassName::method()`, a constant name, a route path, a
+  form-request field, a Vue composable/function — NOT a line number. Line numbers drift
+  the moment anyone edits the file above them (a single upstream commit shifted dozens
+  of anchors in this campaign); a method name survives edits, renames are greppable, and
+  a reader jumps straight to the symbol. Format: `EditorialTaskController::getParticipants()`,
+  `TaskResource::determineStatus()`, `useDiscussionMessages() fileAttachers`. Fall back
+  to a line number only when there is genuinely no nameable symbol (a bare config
+  constant in an array, a template fragment), and treat that as a smell. Anchors are
+  provenance, not content.
 - **Brief but comprehensive — state each thing once**: cover everything that matters,
   but say it in one place. If two rules describe the same concept from different angles
   (e.g. "who the picker offers" and "who the backend accepts"), state the shared part
