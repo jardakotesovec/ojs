@@ -18,6 +18,17 @@ state, permissions, side effects — precisely enough that the feature could be
 reimplemented from the spec alone. Audience: QA, developers, AI agents, and the
 round-2 test-coverage crosswalk that will follow.
 
+**Scope: OJS only** (decided 2026-07-02). Focusing on OJS keeps every spec and its
+tests sharp instead of hedged with OMP/OPS caveats. The distinction:
+- **In scope** — any feature reachable in OJS, *including* the large share implemented
+  in shared `lib/pkp`. Those are spec'd from the OJS angle (`shared: pkp-lib` in
+  frontmatter flags that OMP/OPS also use the code, for a future extraction — but we
+  don't document their behaviour).
+- **Out of scope** — OMP/OPS-*specific* surfaces that OJS never exposes: monographs,
+  chapters, publication formats, the catalog, `NOTIFICATION_TYPE_BOOK_*`, the
+  `*_INTERNAL` review-stage decisions, and the OMP/OPS-only Vue managers unwired in
+  `WorkflowPageOJS`. These are dropped, not parked.
+
 ## Why (and why now)
 
 Round 1 of the e2e revamp (`docs/e2e/`) built ~524 tests over 80 features, but its

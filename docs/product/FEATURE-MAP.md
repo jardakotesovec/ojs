@@ -490,7 +490,7 @@ atoms: PAGE-install-{index,install,upgrade,installupgrade}, DB-versions, LOC ins
 Atom clusters that none of the four placed cleanly into a user-facing feature (kept so
 nothing is silently dropped). All four drafts converge on this residue:
 
-- **OMP/OPS-only Vue surfaces** — ChapterManager, PublicationFormatManager, RepresentativeManager, CatalogListPanel, WorkflowPageOMP/OPS, DoiListPanelOMP/OPS: present in the shared lib but unwired in OJS's WorkflowPageOJS map. Out of OJS scope; parked (all four agree).
+- **OMP/OPS-only Vue surfaces** — ChapterManager, PublicationFormatManager, RepresentativeManager, CatalogListPanel, WorkflowPageOMP/OPS, DoiListPanelOMP/OPS: present in the shared lib but unwired in OJS's WorkflowPageOJS map. **OUT OF SCOPE — dropped** (OJS-only decision, 2026-07-02; charter Scope). Same for `NOTIFICATION_TYPE_BOOK_*` (10 atoms) and the `*_INTERNAL` review-stage decisions.
 - **Dead-code candidates** (UNASSIGNED.md, ~19 atoms) — the ~6–8 superseded legacy grids (PubIdExport* lists, ProductionReadyFiles, WorkflowReviewRevisions, SelectableLibraryFile, EditorSubmissionDetailsFiles, AuthorGridHandler), PAGE-manager-legacy + ~6 routed-but-unimplemented ops, NOTIF-configure-payment-method, 10 NOTIF-BOOK-* (OMP legacy), NOTIF-query-activity, EVLOG-REV-DUE. Cleanup candidates, not features.
 - **Metrics/stats ETL & temporary tables** (~15) — usage_stats_*_temporary_records, metrics_submission_geo_*, the compile/loader/dedup jobs: promoted by clustering to `usage-stats-processing` (1/4 ⚑); background-only, no dedicated surface.
 - **Filters framework** — DB-filters/filter_groups/filter_settings: the document-transform engine behind native XML import/export and OAI. Infra; parked under native-xml-import-export by proximity.
