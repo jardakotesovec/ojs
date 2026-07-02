@@ -30,12 +30,12 @@ only view, never act; an **anonymous reader** sees only published versions.
 
 | Action | Who may — and when | Anchors |
 |--------|--------------------|---------|
-| **Create a new version** | • Managers (including those not assigned to the submission)<br>• Assigned section editors and assistants (not recommend-only) — but ⚠ only via the API, no "Create New Version" button is shown to them | useWorkflowPermissions.js:79-87; PKPSubmissionController.php:238-297; StageRolePolicy.php:91-115 |
-| **Publish / unpublish / unschedule** | • Managers<br>• Assigned section editors and assistants (not recommend-only) — but ⚠ again only via the API (same hidden-ability gap)<br>• A recommend-only editor — cannot, through any route or button | PKPSubmissionController.php:149-162,270-297,421-423 vs useWorkflowPermissions.js:79-87 |
-| **Edit a version's metadata** | • Managers — any version, including a published one (warned that changes go live)<br>• An author-only user — only while nothing is published or scheduled **and** an editor granted them metadata permission; once any version is published or scheduled, hard-locked out of every version | submission/Repository.php:535-574 (block at :551-562); useWorkflowPermissions.js:53-65; workflowConfigAuthorOJS.js:289-297 |
-| **Relabel a version's stage/number** (change-version) | • Managers and assigned section editors only<br>• An assistant offered this action is refused | PKPSubmissionController.php:270-297 vs :261-267; e2e publish-flow row 4 |
-| **View a published version** (reader) | • Anyone — the current version, and older versions by direct link<br>• Unpublished or scheduled versions are not reachable by the public | pages/article/ArticleHandler.php:153-156 |
-| **Preview an unpublished/scheduled version** | • Editorial staff — on the public article page, shown with a "viewing a preview" notice | ArticleHandler.php:153-156; submission/Repository.php:580-589; templates/frontend/objects/article_details.tpl:78-83 |
+| **Create a new version** | • Managers (including those not assigned to the submission)<br>• Assigned section editors and assistants (not recommend-only) — but ⚠ only via the API, no "Create New Version" button is shown to them | useWorkflowPermissions() canPublish; PKPSubmissionController::getGroupRoutes() versionPublication route; StageRolePolicy::effect() |
+| **Publish / unpublish / unschedule** | • Managers<br>• Assigned section editors and assistants (not recommend-only) — but ⚠ again only via the API (same hidden-ability gap)<br>• A recommend-only editor — cannot, through any route or button | PKPSubmissionController::$productionStageAccessRoles, getGroupRoutes() publish/unpublish routes, authorize() vs useWorkflowPermissions() canPublish |
+| **Edit a version's metadata** | • Managers — any version, including a published one (warned that changes go live)<br>• An author-only user — only while nothing is published or scheduled **and** an editor granted them metadata permission; once any version is published or scheduled, hard-locked out of every version | submission/Repository::canEditPublication(); useWorkflowPermissions() canEditPublication; workflowConfigAuthorOJS.js PublicationConfig.getPrimaryItems (WorkflowPublicationEditDisabled) |
+| **Relabel a version's stage/number** (change-version) | • Managers and assigned section editors only<br>• An assistant offered this action is refused | PKPSubmissionController::getGroupRoutes() versionPublication/publish routes (+Assistant) vs changeVersion route (Manager/SubEditor only); e2e publish-flow row 4 |
+| **View a published version** (reader) | • Anyone — the current version, and older versions by direct link<br>• Unpublished or scheduled versions are not reachable by the public | pages/article/ArticleHandler::initialize() |
+| **Preview an unpublished/scheduled version** | • Editorial staff — on the public article page, shown with a "viewing a preview" notice | ArticleHandler::initialize(); submission/Repository::canPreview(); templates/frontend/objects/article_details.tpl submission.viewingPreview notice |
 
 ## Fields & validation
 
@@ -43,29 +43,29 @@ only view, never act; an **anonymous reader** sees only published versions.
 
 | Field (UI label) | Required? | Rules | Anchor |
 |------------------|-----------|-------|--------|
-| **Version Source** | Yes (defaults to the latest version) | Which existing version the new one is copied from | useWorkflowVersionForm.js:297-305 (`versionSource`) |
-| **Version Stage** | Yes when publishing | Author Original / Published Manuscript Under Review / Version of Record (the JAV stages, ordered AO → PMUR → VoR) | useWorkflowVersionForm.js:309-319; VersionStage.php:19-41 (`versionStage`) |
-| **Revision Significance** | Yes | Major or Minor — Minor is disabled until at least one version already exists at the chosen stage | useWorkflowVersionForm.js:206-242 (`versionIsMinor`) |
+| **Version Source** | Yes (defaults to the latest version) | Which existing version the new one is copied from | useWorkflowVersionForm() (`versionSource`) |
+| **Version Stage** | Yes when publishing | Author Original / Published Manuscript Under Review / Version of Record (the JAV stages, ordered AO → PMUR → VoR) | useWorkflowVersionForm() versionStage field; VersionStage enum cases (`versionStage`) |
+| **Revision Significance** | Yes | Major or Minor — Minor is disabled until at least one version already exists at the chosen stage | useWorkflowVersionForm() getVersionIsMinorField() (`versionIsMinor`) |
 
 The version **number** is never typed: the system always computes the next free number
 (rule 3). In "Send to Text Editor" mode the same dialog instead shows a target-version
 picker (an existing unassigned version or "Create New Version"), and the stage/
 significance fields appear only for a version that has no stage yet
-(useWorkflowVersionForm.js:244-294). In publish mode ("Review Publishing Details") it
+(useWorkflowVersionForm() getUnassignedVersions()/resetVersionStageValues()). In publish mode ("Review Publishing Details") it
 adds the amendment-notice fields (owned by the **publication-amendments** spec) and,
 when the journal has issues, the issue-assignment controls
-(useWorkflowPublicationFormIssue.js:95-127). Re-labelling a version rejects an invalid
+(useWorkflowPublicationFormIssue() createFields()). Re-labelling a version rejects an invalid
 stage, while the create dialog silently tolerates one ⚠ (see Known deviations).
 
 **How a version is labelled** to editors and readers: "{stage} {major}.{minor}" — e.g.
 "Version of Record 1.0"; a version with no stage yet shows "Unassigned Version
-({created date})" (Repository.php:889-912).
+({created date})" (Repository::getVersionString()).
 
 **Underlying data** (reference — drives the rules below, not entered directly): each
 version carries its stage, major/minor numbers, the version it was copied from, a
 status (Unscheduled/Unpublished, Scheduled, or Published — plus OJS's transient
 pre-publish intents), and a first-published date stamped once and never cleared on
-unpublish. *Anchors: publication.json:478-506,352; PKPPublication.php:35-38; classes/publication/Publication.php:29-44; classes/publication/Repository.php:322-345.*
+unpublish. *Anchors: publication.json `versionMajor`/`versionMinor`/`versionStage` + `sourcePublicationId` properties; PKPPublication::STATUS_* constants; classes/publication/Publication::STATUS_READY_TO_PUBLISH/READY_TO_SCHEDULE constants; classes/publication/Repository::getIssueAssignmentStatus().*
 
 ## Rules & state
 
@@ -75,107 +75,107 @@ unpublish. *Anchors: publication.json:478-506,352; PKPPublication.php:35-38; cla
    shown in order of maturity: any version not yet assigned a stage comes first (ordered by its
    publication date), then versions are ordered by stage (Author Original, then Published Manuscript
    Under Review, then Version of Record) and by ascending major and minor number
-   (`lib/pkp/classes/publication/Collector.php:215-228` — sorted by `datePublished`, then loaded in
-   that order onto the submission at `lib/pkp/classes/submission/DAO.php:211-218`).
+   (`lib/pkp/classes/publication/Collector::getQueryBuilder()` — sorted by `datePublished`, then loaded in
+   that order onto the submission at `lib/pkp/classes/submission/DAO::fromRow()`).
 2. The **latest** version is the last one in that maturity order. The **current** version — the one a
    reader gets by default — is the most mature *published* version, or simply the latest version when
-   nothing is published (`lib/pkp/classes/submission/Repository.php:1422-1441` —
+   nothing is published (`lib/pkp/classes/submission/Repository::getCurrentPublicationIdByPublications()` —
    `current_publication_id`). This pointer is recomputed every time a version is added, published,
-   unpublished or deleted (`lib/pkp/classes/publication/Repository.php:359,633,763,856`).
+   unpublished or deleted (`lib/pkp/classes/publication/Repository::add()/publish()/unpublish()/delete()`).
 3. Numbering runs per stage: the first version at a stage is 1.0; a minor revision increments the
    minor number; a major revision increments the major number and resets the minor to 0 — always
    computed from the highest number already in use at that stage
-   (`lib/pkp/classes/submission/Repository.php:918-948`).
+   (`lib/pkp/classes/submission/Repository::getNextAvailableVersion()`).
 
 **Statuses per version**
 
 4. The draft state before publication shows as "Unscheduled" when the version is the current one and
-   "Unpublished" otherwise (`WorkflowPublicationVersionControl.vue:31-57` — underlying status
+   "Unpublished" otherwise (`WorkflowPublicationVersionControl.vue statusProps` — underlying status
    `QUEUED`).
 5. Before the editor confirms a publish, the version can hold one of two transient pre-publish intents
    (OJS only) that record where the editor chose to place it; these are the only statuses an ordinary
    metadata save can set, whereas Scheduled, Published and the draft state are reached only through the
-   dedicated publish/unpublish actions (`PKPSubmissionController.php:1342-1354`,
-   `classes/publication/Publication.php:38-44` — `READY_TO_PUBLISH`/`READY_TO_SCHEDULE` vs
+   dedicated publish/unpublish actions (`PKPSubmissionController::editPublication()`,
+   `classes/publication/Publication::getPrePublishStatuses()` — `READY_TO_PUBLISH`/`READY_TO_SCHEDULE` vs
    `PUBLISHED`/`SCHEDULED`/`QUEUED`). The issue choice decides which intent is recorded: no issue, a
    back issue, or "publish into a future issue" record the ready-to-publish intent, while "schedule
    into a future issue" records the ready-to-schedule intent
-   (`classes/issue/enums/IssueAssignment.php:44-52`).
-6. Confirming the publish resolves the final status (`classes/publication/Repository.php:188-227`): a
+   (`classes/issue/enums/IssueAssignment::getPublicationStatus()`).
+6. Confirming the publish resolves the final status (`classes/publication/Repository::setStatusOnPublish()`): a
    recorded ready-to-publish intent becomes Published and a ready-to-schedule intent becomes
    Scheduled; without a recorded intent the issue decides — no issue or an already-published issue
    publishes immediately, while an unpublished issue schedules it. The publication date is stamped with
    the current date only the first time the version becomes Published and only if it had none, so a
    version that was unpublished and republished keeps its original date (`datePublished`).
 7. Unpublish (labelled "Unschedule" for a Scheduled version) always returns the version to the draft
-   state (`lib/pkp/classes/publication/Repository.php:737-741` — back to `QUEUED`), and the action is
-   accepted only from Published or Scheduled (`PKPSubmissionController.php:1489-1493`). A "declined"
+   state (`lib/pkp/classes/publication/Repository::unpublish()` — back to `QUEUED`), and the action is
+   accepted only from Published or Scheduled (`PKPSubmissionController::unpublishPublication()`). A "declined"
    publication status exists in the constants but nothing in OJS ever sets it on a version — declining
    happens at the submission level (rule 17) (`DECLINED`).
 8. A Published version cannot be published again and cannot be deleted — both are refused
-   (`PKPSubmissionController.php:1421-1425`; `:1533-1537`). Deleting any other version also removes its
+   (`PKPSubmissionController::publishPublication()`; `deletePublication()`). Deleting any other version also removes its
    galleys and recomputes the submission's status and which version is current
-   (`classes/publication/Repository.php:230-241`, `lib/pkp/classes/publication/Repository.php:841-859`).
+   (`classes/publication/Repository::delete()`, `lib/pkp/classes/publication/Repository::delete()`).
    There is deliberately no delete control in the interface.
 
 **Creating a version**
 
 9. "Create New Version" copies the chosen source version (the latest by default) into a new version in
-   the draft state (`lib/pkp/classes/publication/Repository.php:372-501` — new publication in `QUEUED`):
+   the draft state (`lib/pkp/classes/publication/Repository::version()` — new publication in `QUEUED`):
    - **Copied**: all publication metadata (title, abstract, section, issue assignment, URL path, cover
      image, license/copyright, keywords, categories (`categoryIds`), amendment fields), contributors
-     (cloned, with the primary contact remapped, `:417-429`), citations (`:406-413`), data citations
-     (`:432-438`), a custom JATS file if one exists (`:443-449`), publication media files including
-     their variant groupings (`:451-481`), and in OJS all galleys
-     (`classes/publication/Repository.php:151-172`).
+     (cloned, with the primary contact remapped, `version()`), citations (`version()`), data citations
+     (`version()`), a custom JATS file if one exists (`version()`), publication media files including
+     their variant groupings (`version()`), and in OJS all galleys
+     (`classes/publication/Repository::version()`).
    - **Reset**: the publication date is cleared, the version starts in the draft state, and it keeps a
-     pointer back to the version it was copied from (`:374-378` — `datePublished` null, `status`
+     pointer back to the version it was copied from (`version()` — `datePublished` null, `status`
      `QUEUED`, `sourcePublicationId`).
    - **Version label**: bumped per rule 3 using the requested stage and significance; with no request
      it stays at the source's stage as a minor bump, and a source with no stage yields another
-     unassigned version (`:382-395`).
+     unassigned version (`version()`).
    - **DOI**: kept (shared with the source) — unless journal DOI versioning is enabled *and* the bump
      is major, in which case the publication and galley DOIs are cleared for fresh assignment
-     (`:402-404`, `classes/publication/Repository.php:158-166`).
-   - A single review round not yet tied to any publication is attached to the new version (`:483,1244-1269`).
+     (`version()`, `classes/publication/Repository::version()`).
+   - A single review round not yet tied to any publication is attached to the new version (`version()`; `setReviewPublicationAssociations()`).
 10. Who may: the create-version capability is open to managers, assigned sub-editors and assistants
     with production access (see the Actors table); the "Create New Version" action appears in the
     interface only for users the dashboard treats as able to publish
-    (`useWorkflowNavigationConfigOJS.js:262-268` — `canPublish`).
+    (`useWorkflowNavigationConfigOJS() canPublish` — createNewVersion menu item).
 11. The "Send to Text Editor" re-label path is **not** label-only: it validates the full publication
     payload and then runs the generic publication edit, so a request missing required metadata is
     rejected outright (probed live: with no title, the save fails with a "title required" error)
-    (`PKPSubmissionController.php:1053-1068`).
+    (`PKPSubmissionController::changeVersion()`).
 12. The lookup that computes the next available version number is restricted to managers and
     sub-editors — narrower than the create-version action that consumes the same computation
-    (`PKPSubmissionController.php:265-267`).
+    (`PKPSubmissionController::getGroupRoutes() getNextAvailableVersion route (Manager/SubEditor)`).
 
 **Editability**
 
 13. For editorial roles a Published version is *warn-locked*, not hard-locked: its panels display
     "Warning: This version has been published. Editing it may impact the published content." yet every
-    form stays editable and saves straight to the live version (`workflowConfigEditorialOJS.js:727-735`,
+    form stays editable and saves straight to the live version (`workflowConfigEditorialOJS.js PublicationConfig.getPrimaryItems (WorkflowPublicationEditWarning)`,
     banner text `publication.editorEditWarning`). The hard "must create a new version" lock applies only
-    to the author dashboard (`workflowConfigAuthorOJS.js:289-297`). ⚠ Related: on a published version
+    to the author dashboard (`workflowConfigAuthorOJS.js PublicationConfig.getPrimaryItems (WorkflowPublicationEditDisabled)`). ⚠ Related: on a published version
     the galley row action reads "View" but opens a fully editable form —
     [app-changes §2 row 22b](../../e2e/app-changes.md).
 14. Whether an editorial write is allowed comes down to this: managers and admins may always edit; a
     user whose stage assignments are all author-role is locked out of every version once **any** version
     of the submission is Published or Scheduled — even if an editor had granted them metadata permission
-    — and otherwise that granted permission decides (`lib/pkp/classes/submission/Repository.php:535-574`
-    — `canEditPublication` over `canChangeMetadata`; applied at `PKPSubmissionController.php:1328-1337`).
+    — and otherwise that granted permission decides (`lib/pkp/classes/submission/Repository::canEditPublication()`
+    — `canEditPublication` over `canChangeMetadata`; applied at `PKPSubmissionController::editPublication()`).
 15. Publishing any version permanently revokes the author-side metadata-edit permission from every
-    author-role assignment on the submission (`PKPSubmissionController.php:1442-1451` — `canChangeMetadata`).
+    author-role assignment on the submission (`PKPSubmissionController::publishPublication()` — `canChangeMetadata`).
 16. The control for changing the submission's primary language is offered only while the submission is
-    unpublished and has fewer than two versions (`workflowConfigEditorialOJS.js:745-757`).
+    unpublished and has fewer than two versions (`workflowConfigEditorialOJS.js PublicationConfig.getPrimaryControlsLeft (WorkflowChangeSubmissionLanguage)`).
 
 **Publishing a version**
 
 17. Pre-publish validation must pass, or the confirm modal renders the blocking errors with no submit
     button: a declined submission cannot be published
-    (`lib/pkp/classes/publication/Repository.php:280-283`); ORCID problems block it when ORCID is
-    enabled (`:286-298`); OJS also blocks on an invalid issue selection and on an enabled-but-unpaid
-    article processing charge (APC) (`classes/publication/Repository.php:125-148`); plugins may add
+    (`lib/pkp/classes/publication/Repository::validatePublish()`); ORCID problems block it when ORCID is
+    enabled (`validatePublish()`); OJS also blocks on an invalid issue selection and on an enabled-but-unpaid
+    article processing charge (APC) (`classes/publication/Repository::validatePublish()`); plugins may add
     further checks through a hook (`Publication::validatePublish`). ⚠ Yet the Schedule For Publication
     button is still offered on declined submissions, and the "Review Publishing Details" Confirm persists
     the chosen issue and pre-publish intent *before* this validation runs; a late fetch can also
@@ -185,111 +185,111 @@ unpublish. *Anchors: publication.json:478-506,352; PKPPublication.php:35-38; cla
     stage, significance, issue intent and amendment fields through the generic edit endpoint); then a
     legacy confirm modal states the consequence — back-issue publish, continuous publication into a
     future issue, issueless publish, or schedule — and submits the publish action
-    (`useWorkflowActions.js:86-162`, `lib/pkp/controllers/modals/publish/PublishHandler.php:88-120`,
-    `classes/components/forms/publication/PublishForm.php:57-124`). ⚠ The related Issue-entry
+    (`useWorkflowActions() workflowScheduleForPublication()`, `lib/pkp/controllers/modals/publish/PublishHandler::publish()`,
+    `classes/components/forms/publication/PublishForm::__construct()`). ⚠ The related Issue-entry
     ("Publication Settings") form refuses to save *anything* until its required Issue radio is answered
     — [app-changes §2 row 26](../../e2e/app-changes.md).
 19. A version published without a stage is auto-assigned the next major **Version of Record** number,
     and the confirm modal announces the exact label beforehand
-    (`lib/pkp/classes/publication/Repository.php:613-619`, `classes/publication/Publication.php:33`,
-    `PublishForm.php:91-106`).
+    (`lib/pkp/classes/publication/Repository::publish()`, `classes/publication/Publication::DEFAULT_VERSION_STAGE`,
+    `PublishForm::__construct()`).
 20. When a version first becomes Published, any empty copyright holder, copyright year and license URL
-    are filled from the journal defaults (`lib/pkp/classes/publication/Repository.php:578-611`).
+    are filled from the journal defaults (`lib/pkp/classes/publication/Repository::publish()`).
 21. Issue actions cascade to the versions assigned to them: publishing a not-yet-published issue
     publishes every Scheduled version in it
-    (`classes/controllers/grid/issues/IssueGridHandler.php:595-625`); unpublishing an issue returns its
+    (`classes/controllers/grid/issues/IssueGridHandler::publishIssue()`); unpublishing an issue returns its
     Published versions to Scheduled rather than to the draft state, by running an
-    unpublish-then-republish on each (`:710-727`).
+    unpublish-then-republish on each (`unpublishIssue()`).
 
 **Effect on the submission**
 
 22. The submission's own status is derived from its versions: if any version is Published the
     submission is Published; otherwise if any is Scheduled it is Scheduled; otherwise it is unpublished;
     a declined submission stays Declined regardless
-    (`lib/pkp/classes/submission/Repository.php:1387-1416`). Unpublishing a version and creating or
-    deleting one all trigger this recompute (`lib/pkp/classes/publication/Repository.php:756-765`).
+    (`lib/pkp/classes/submission/Repository::getStatusByPublications()`). Unpublishing a version and creating or
+    deleting one all trigger this recompute (`lib/pkp/classes/publication/Repository::unpublish()`).
 23. A submission left with **zero** versions derives the status Declined — the recompute treats an
-    empty submission as mid-deletion (`lib/pkp/classes/submission/Repository.php:1396-1399`).
+    empty submission as mid-deletion (`lib/pkp/classes/submission/Repository::getStatusByPublications()`).
 24. ⚠ **Known mismatch**: the publish *endpoint* skips that recompute and hard-codes the submission to
     Published even when the version only became Scheduled — so a UI-scheduled article lands in the
-    dashboard "Published" view and never in "Scheduled" (`PKPSubmissionController.php:1440,1456`;
+    dashboard "Published" view and never in "Scheduled" (`PKPSubmissionController::publishPublication()`;
     [app-changes §2 row 18](../../e2e/app-changes.md)). Seed and CLI paths that go through the
     publication publish method alone (`Repo::publication()->publish()`) compute both the version and the
     submission as Scheduled correctly.
 25. OJS also keeps OAI tombstones in step as the submission's status flips — clearing them when it
     becomes Published and creating them when it leaves Published, so OAI harvesters see the change
-    (`classes/submission/Repository.php:106-129`).
+    (`classes/submission/Repository::updateStatus()`).
 
 **Reader side**
 
 26. The plain article URL always shows the **current** version; a request whose path segment doesn't
     match the current version's preferred identifier (its URL path or submission id) is redirected to it
-    (`pages/article/ArticleHandler.php:127-151`). A `/article/view/{id}/version/{publicationId}` URL
-    addresses one specific version, and an unknown version id gives a not-found page (`:137-147`).
+    (`pages/article/ArticleHandler::initialize()`). A `/article/view/{id}/version/{publicationId}` URL
+    addresses one specific version, and an unknown version id gives a not-found page (`initialize()`).
 27. A non-published version is not reachable by the public (they get a not-found page); a user with
     preview rights — editorial and subscription-manager roles, or assigned participants, and never on an
     incomplete submission — sees it instead with a "viewing a preview" notice
-    (`ArticleHandler.php:153-156` — `canPreview`; `article_details.tpl:78-83`).
+    (`ArticleHandler::initialize()` — `canPreview`; `article_details.tpl submission.viewingPreview notice`).
 28. Viewing an outdated version (published but no longer current) shows the "outdated version" notice
     linking to the newest version, and the page carries a no-index instruction plus a canonical link to
-    the current URL (`article_details.tpl:84-93`, `ArticleHandler.php:373-378,418-421`).
+    the current URL (`article_details.tpl submission.outdatedVersion notice`, `ArticleHandler::view()`).
 29. The article landing page lists only **published** versions in its "Versions" list, newest first,
     each entry showing its date and version label; the current one links to the plain article URL and
-    older ones to their `/version/{id}` URLs (`article_details.tpl:381-399`,
-    `lib/pkp/classes/submission/PKPSubmission.php:141-151`). The "Published" line shows the
-    first-published date, adding "Updated on …" once later versions exist (`:365-379`).
+    older ones to their `/version/{id}` URLs (`article_details.tpl submission.versions section`,
+    `lib/pkp/classes/submission/PKPSubmission::getPublishedPublications()`). The "Published" line shows the
+    first-published date, adding "Updated on …" once later versions exist (`article_details.tpl submissions.published/updatedOn item`).
 30. Unpublishing the current version moves the current pointer back to the most mature remaining
     published version (rule 2): readers see that earlier version again and the unpublished one drops out
     of the versions list; if no published version remains, the article gives readers a not-found page. A
     galley URL that survives only on an outdated version redirects to the current article page
-    (`ArticleHandler.php:171-184`).
+    (`ArticleHandler::initialize()`).
 
 **DOIs per version**
 
 31. With journal DOI versioning **off**: every version shares the source's DOI; publishing marks the
     DOIs stale (due for re-deposit) only when the published version is the current one, and unpublishing
     does so only when the unpublished version was current
-    (`lib/pkp/classes/publication/Repository.php:686-694,802-805`). A version that has no DOI of its own
-    shows the current version's DOI to readers (`ArticleHandler.php:252-262`).
+    (`lib/pkp/classes/publication/Repository::publish()/unpublish()`). A version that has no DOI of its own
+    shows the current version's DOI to readers (`ArticleHandler::view()`).
 32. With DOI versioning **on**: major versions receive fresh DOIs (rule 9); publishing a major version
     marks all of the submission's DOIs stale, while publishing or unpublishing a minor version marks its
-    DOIs stale only when it is (or was) the highest published minor within its major (`:660-685,779-801`);
-    a reader falls back to a sibling minor version's DOI (`ArticleHandler.php:254-256`). Fresh DOIs are
+    DOIs stale only when it is (or was) the highest published minor within its major (`publish()/unpublish()`);
+    a reader falls back to a sibling minor version's DOI (`ArticleHandler::view()`). Fresh DOIs are
     minted at publish time when the journal is set to mint at publication
-    (`lib/pkp/classes/observers/listeners/VersionDois.php:39-55`).
+    (`lib/pkp/classes/observers/listeners/VersionDois::handlePublishedEvent()`).
 
 ## Side effects
 
 - **Create version**: an activity-log entry "New version created" is recorded — attributed to the
   real user even when someone is impersonating them
-  (`lib/pkp/classes/publication/Repository.php:489-498` — `publication.event.versionCreated`, type
+  (`lib/pkp/classes/publication/Repository::version()` — `publication.event.versionCreated`, type
   `CREATE_VERSION`). Every user assigned to the submission receives a task-level notification and,
   unless they have blocked that email type, the new-version notification email
-  (`PKPSubmissionController.php:2502-2556` — `SUBMISSION_NEW_VERSION`, `PublicationVersionNotify`).
+  (`PKPSubmissionController::createNewPublicationVersionAndNotify()` — `SUBMISSION_NEW_VERSION`, `PublicationVersionNotify`).
 - **Publish**: an activity-log "published" or "scheduled" entry (worded as "version
   published/scheduled" once more than one version exists)
-  (`lib/pkp/classes/publication/Repository.php:637-654`); publishing triggers a search-index update
-  (`UpdateSubmissionInSearchIndex.php:49-52`), an ORCID deposit (`SendSubmissionToOrcid.php:38`) and
-  DOI minting (`VersionDois.php:39-55`) via the publish event (`PublicationPublished`); author
+  (`lib/pkp/classes/publication/Repository::publish()`); publishing triggers a search-index update
+  (`UpdateSubmissionInSearchIndex::handlePublicationPublished()`), an ORCID deposit (`SendSubmissionToOrcid::handle()`) and
+  DOI minting (`VersionDois::handlePublishedEvent()`) via the publish event (`PublicationPublished`); author
   metadata grants are revoked (rule 15); DOI staleness follows rules 31-32.
-- **Unpublish**: an activity-log "unpublished" entry (or "version unpublished") (`:767-816`) and a
-  search re-index (`UpdateSubmissionInSearchIndex.php:43-47` — `PublicationUnpublished` event); OAI
+- **Unpublish**: an activity-log "unpublished" entry (or "version unpublished") (`unpublish()`) and a
+  search re-index (`UpdateSubmissionInSearchIndex::handleUnpublished()` — `PublicationUnpublished` event); OAI
   tombstones are created when the submission leaves Published (rule 25).
-- **Metadata edit on any version**: an activity-log "metadata updated" entry (`:536-546`).
+- **Metadata edit on any version**: an activity-log "metadata updated" entry (`edit()`).
 
 ## Settings that modify behavior
 
 - **DOI versioning** (a journal DOI setting) — switches DOI inheritance and staleness between rules
-  31 and 32 (`lib/pkp/classes/context/Context.php:47` — `doiVersioning`).
+  31 and 32 (`lib/pkp/classes/context/Context::SETTING_DOI_VERSIONING` — `doiVersioning`).
 - **DOIs enabled, with a creation time other than "never"** — enables the publish-time DOI minting
-  above (`VersionDois.php:44-52`).
+  above (`VersionDois::handlePublishedEvent()`).
 - **Publication fee (APC)** enabled with an amount above zero — blocks publishing any version until
-  the fee is paid (`classes/publication/Repository.php:139-145`).
-- **ORCID enabled** — adds the ORCID pre-publish checks (`lib/pkp/classes/publication/Repository.php:286-298`).
+  the fee is paid (`classes/publication/Repository::validatePublish()`).
+- **ORCID enabled** — adds the ORCID pre-publish checks (`lib/pkp/classes/publication/Repository::validatePublish()`).
 - **Journal has no issues** — the publish form hides the issue-assignment fields and submits with no
-  issue and the ready-to-publish intent (`useWorkflowVersionForm.js:111-123` — issueId null,
+  issue and the ready-to-publish intent (`useWorkflowVersionForm() handleVersionSubmission()` — issueId null,
   `READY_TO_PUBLISH`).
-- **Notification opt-outs** — let each user block the new-version email (`PKPSubmissionController.php:2531-2541`).
+- **Notification opt-outs** — let each user block the new-version email (`PKPSubmissionController::createNewPublicationVersionAndNotify()`).
 
 ## Cross-feature interactions
 
@@ -328,7 +328,7 @@ unpublish. *Anchors: publication.json:478-506,352; PKPPublication.php:35-38; cla
 4. **Author locked out by publication** — Author who was granted metadata permission: once any version
    is published or scheduled, every metadata save is refused, even on draft versions. The explanatory
    "cannot be edited" panel appears only when the *selected* version is Published
-   (`workflowConfigAuthorOJS.js:289-297`) — so on a scheduled-only submission the author's forms are
+   (`workflowConfigAuthorOJS.js PublicationConfig.getPrimaryItems (WorkflowPublicationEditDisabled)`) — so on a scheduled-only submission the author's forms are
    locked with no panel explaining why. The editor's own panels show only the yellow edit warning and
    remain editable.
 5. **Blocked publish** — Editor on a declined submission (or one with an unpaid APC): Schedule For
@@ -352,20 +352,20 @@ unpublish. *Anchors: publication.json:478-506,352; PKPPublication.php:35-38; cla
 - ⚠ `publications.seq` never stamped → undefined TOC order: [row 28](../../e2e/app-changes.md).
 - ⚠ **VERIFIED REAL (live-probed)** — UI/API publish-authority mismatch: the dashboard shows
   publish/unpublish/create-version controls only when the user's production-stage roles include
-  Manager/Site Admin (`useWorkflowPermissions.js:79-87`), but the API authorizes assigned
+  Manager/Site Admin (`useWorkflowPermissions() canPublish`), but the API authorizes assigned
   sub-editors *and assistants* (non-recommend-only) for the same operations
-  (`PKPSubmissionController.php:149-162,270-297`). Probed: a section editor with `canPublish=false`
+  (`PKPSubmissionController::$productionStageAccessRoles, getGroupRoutes() version/publish routes`). Probed: a section editor with `canPublish=false`
   in the UI got 200 on `POST …/version`, `PUT …/publish` and `PUT …/unpublish`. Ledger row being
   added — [app-changes §2 (wave: product-spec pilot)](../../e2e/app-changes.md).
 - ⚠ **VERIFIED REAL (live-probed, minor)** — `POST …/version` silently ignores an invalid
   `versionStage` value (`VersionStage::tryFrom` → null → inherits the source's stage; probed:
   `"BOGUS"` → 200) while `PUT …/version` correctly 422s the same input
-  (`PKPSubmissionController.php:1289-1294` vs `:2337-2351`). Ledger row being added —
+  (`PKPSubmissionController::versionPublication()` vs `validateVersionStage()`). Ledger row being added —
   [app-changes §2 (wave: product-spec pilot)](../../e2e/app-changes.md).
 - ⚠ **VERIFIED REAL (live-probed, companion)** — an invalid `versionIsMinor` value (e.g.
   `"banana"`) on `POST …/version` returns a 500: `FILTER_NULL_ON_FAILURE` yields null, which is
   passed into a `bool`-typed parameter → TypeError
-  (`PKPSubmissionController.php:1292-1294,2353-2360`). Ledger row being added —
+  (`PKPSubmissionController::versionPublication(), validateVersionIsMinor()`). Ledger row being added —
   [app-changes §2 (wave: product-spec pilot)](../../e2e/app-changes.md).
 
 ## Open questions
