@@ -68,9 +68,9 @@
 | DB-notes | notes | lib/pkp/classes/migration/install/NotesMigration.php | Editor/reviewer notes | | tasks-discussions |
 | DB-review_assignment_settings | review_assignment_settings | lib/pkp/classes/migration/install/ReviewAssignmentSettingsMigration.php | Review assignment settings | | |
 | DB-reviewer_recommendation_settings | reviewer_recommendation_settings | classes/migration/install/ReviewerRecommendationsMigration.php | Reviewer recommendation settings | | |
-| DB-reviewer_recommendations | reviewer_recommendations | classes/migration/install/ReviewerRecommendationsMigration.php | Recommended reviewers | reviewer-suggestions | |
-| DB-reviewer_suggestion_settings | reviewer_suggestion_settings | lib/pkp/classes/migration/install/ReviewerSuggestionsMigration.php | Reviewer suggestion settings | | |
-| DB-reviewer_suggestions | reviewer_suggestions | lib/pkp/classes/migration/install/ReviewerSuggestionsMigration.php | Suggested reviewers | reviewer-suggestions | |
+| DB-reviewer_recommendations | reviewer_recommendations | classes/migration/install/ReviewerRecommendationsMigration.php | Configurable reviewer-recommendation options (NOT reviewer suggestions — different feature) | review-settings | |
+| DB-reviewer_suggestion_settings | reviewer_suggestion_settings | lib/pkp/classes/migration/install/ReviewerSuggestionsMigration.php | Reviewer suggestion settings | | reviewer-suggestions |
+| DB-reviewer_suggestions | reviewer_suggestions | lib/pkp/classes/migration/install/ReviewerSuggestionsMigration.php | Suggested reviewers | reviewer-suggestions | reviewer-suggestions |
 | DB-review_form_element_settings | review_form_element_settings | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form element settings | | |
 | DB-review_form_elements | review_form_elements | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form fields | review-forms | |
 | DB-review_form_settings | review_form_settings | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form configuration | | |

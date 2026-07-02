@@ -5,10 +5,10 @@ after every feature. A feature is `done` only when its row says so AND it's comm
 
 ## Totals
 
-- Features: **2 done · 0 parked · 90 pending** (of 92)
-- Tests used: **13 / 700** (tier allocation ≈ 639 · headroom 61 for end-of-run top-ups)
-- Last full-suite runtime: **— / 25 min** (fresh DB; not yet run — both wizard files together: ~39 s)
-- Last updated: 2026-07-02 · Last commit: submission-wizard-metadata (root + lib/pkp)
+- Features: **3 done · 0 parked · 89 pending** (of 92)
+- Tests used: **19 / 700** (tier allocation ≈ 639 · headroom 61 for end-of-run top-ups)
+- Last full-suite runtime: **~1.1 min / 25 min** (19 tests, fresh DB reset 2026-07-02)
+- Last updated: 2026-07-02 · Last commit: reviewer-suggestions (root + lib/pkp)
 
 Status legend — Spec: pending → draft → verified · Tests: pending → written → green(x2) ·
 Verified: — / yes (adversarial + live affordance probes done) · Budget: tier·target where
@@ -23,7 +23,7 @@ The target steers the spec's canonical-scenario count; ±1–2 by author judgmen
 |---|------|---------|------|-------|--------|--------|----------|----------------|
 | 1 | Area 1 — Author submission & intake | `submission-wizard` | verified | green(x2) | H·12 | 6 | yes | 28→30 atoms; verifier live-probed all 4 unverified affordances + corrected Submit-As and Open/Cancel permission cells; ledger §2 row 61 added; tests green ×3 (2 agent + 1 orchestrator, 24 s) |
 | 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | verified | green(x2) | M·7 | 7 | yes | 10 atoms; verifier live-probed all 4 unverified affordances (all held: rights/source/funding rendering, collect-only on workflow Metadata tab, data-availability require block, /vocabs reviewer exclusion) + assistant/site-admin panel access + both mid-flight flip directions (rule 4 sharpened: require-check re-binds on every Review entry); ledger row 62 re-verified; tests green ×2 (author + verifier, 33 s) |
-| 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | pending | pending | M·6 | 0 | — | — |
+| 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | verified | green(x2) | M·6 | 6 | yes | 10 atoms; verifier live-probed the full permission+freeze matrix (add/edit/delete pre vs post submit for author/manager, assistant+reviewer refused, declined submission also frozen) and all five flagged affordances: (a) enroll-existing verified via retained test, (b) assistant "dead Add button" REFUTED (assistant can't open the wizard — role gate), (c) Submission-stage panel keeps approved suggestions read-only (verified live post-approval via real UI assignment), (d) toggle-off hides editor surface while DB row persists (verified live), (e) required-locale = context primary confirmed with a fr_CA submission; ledger §2 row 64 appended (author API anonymity leak, re-verified end-to-end on double-anonymous publicknowledge); atlas DB-reviewer_recommendations mis-hint corrected → review-settings |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | pending | pending | M·6 | 0 | — | — |
 | 5 | Area 1 — Author submission & intake | `author-dashboard` | pending | pending | M·6 | 0 | — | — |
 | 6 | Area 2 — Editorial workflow & peer review | `editorial-dashboards` | pending | pending | H·10 | 0 | — | — |
@@ -123,3 +123,4 @@ _(loop appends one line per feature: date · feature · outcome · #tests · run
 
 - 2026-07-02 · submission-wizard · done (spec verified, adversarial + live affordance probes) · 6 tests · file runtime ~24 s
 - 2026-07-02 · submission-wizard-metadata · done (spec verified; all 4 deferred affordances held on live probe; ledger row 62: vocab journal-scoping bug) · 7 tests · both wizard files ~39 s
+- 2026-07-02 · reviewer-suggestions · done (spec verified; 1 claim refuted+corrected — assistants denied the wizard, no dead button; ledger row 64: author API sees reviewer uptake = anonymity leak; row 63: Steps aria-current gap) · 6 tests · full retained suite ~1.1 min. Also: hardened SubmissionWizardPage.continueStep() against swallowed clicks (4 distinct load-flakes eliminated; suite green ×2 at 21 tests)
