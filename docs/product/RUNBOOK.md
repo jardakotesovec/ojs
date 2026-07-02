@@ -14,14 +14,17 @@ file-driven, so `PROGRESS.md` always says where to pick up. For an unattended ru
 wrap it with the `/loop` skill (self-paced) so it re-invokes itself: type `/loop` then
 paste the prompt. Plain paste also works as a one-shot nudge.
 
-> Run the OJS product-spec big-bang build. Read `docs/product/RUNBOOK.md` and
-> `docs/product/PROGRESS.md` (the source of truth) and follow the per-feature loop
-> there, resuming at the next feature that isn't `done`/`parked`. For each: build the
-> spec + Playwright tests, run them green against the app, verify, update PROGRESS,
-> commit, and keep going autonomously until all 92 features are done or parked. Use
-> Fable for subagents (the default, most-capable model) and judge them only by
-> completion notifications, never by transcript size or token count. Respect the
-> ≤700-test / ≤25-min budget and park-and-continue after 3 failed attempts.
+> Continue the OJS product-spec big-bang build. Source of truth:
+> `docs/product/RUNBOOK.md` + `docs/product/PROGRESS.md`. Each iteration: read PROGRESS,
+> take the next feature that isn't `done`/`parked`, and run the RUNBOOK per-feature loop
+> on it — build its spec + Playwright tests, run them green against the live app, verify
+> UI-affordance claims in a browser, update PROGRESS, and commit (lib/pkp and root
+> separately, never bumping submodule pointers). Delegate the heavy authoring to **Fable**
+> subagents; judge them ONLY by completion notifications, never by transcript size or
+> token count. Respect the ≤700-test / ≤25-min budget; park-and-continue after 3 failed
+> attempts. Always end each iteration in a committed state so the run stays resumable.
+> When every feature is `done` or `parked`, run the full suite on a fresh DB, write a
+> final summary + parked list to PROGRESS, and stop the loop.
 
 ## How to resume (entry point for any session)
 
