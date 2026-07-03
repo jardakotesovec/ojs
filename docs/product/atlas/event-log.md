@@ -88,8 +88,8 @@
 | EVLOG-EMAIL-LAYOUT-ED-NOT | LAYOUT_NOTIFY_EDITOR | lib/pkp/classes/log/SubmissionEmailLogEventType.php:73 | Layout stage editor notification | lib.pkp.submission.event.layoutNotifyEditor | production-stage |
 | EVLOG-EMAIL-LAYOUT-ED-THANK | LAYOUT_THANK_EDITOR | lib/pkp/classes/log/SubmissionEmailLogEventType.php:74 | Thank you for layout | lib.pkp.submission.event.layoutThankEditor | production-stage |
 | EVLOG-EMAIL-LAYOUT-COMPL | LAYOUT_NOTIFY_COMPLETE | lib/pkp/classes/log/SubmissionEmailLogEventType.php:75 | Layout complete notification | lib.pkp.submission.event.layoutNotifyComplete | production-stage |
-| EVLOG-EMAIL-INDEX-NOT | INDEX_NOTIFY_INDEXER | lib/pkp/classes/log/SubmissionEmailLogEventType.php:78 | Indexer notification | lib.pkp.submission.event.indexNotifyIndexer | ? |
-| EVLOG-EMAIL-INDEX-COMPL | INDEX_NOTIFY_COMPLETE | lib/pkp/classes/log/SubmissionEmailLogEventType.php:79 | Indexing complete | lib.pkp.submission.event.indexNotifyComplete | ? |
+| EVLOG-EMAIL-INDEX-NOT | INDEX_NOTIFY_INDEXER | lib/pkp/classes/log/SubmissionEmailLogEventType.php:78 | Indexer notification | lib.pkp.submission.event.indexNotifyIndexer | production-stage |
+| EVLOG-EMAIL-INDEX-COMPL | INDEX_NOTIFY_COMPLETE | lib/pkp/classes/log/SubmissionEmailLogEventType.php:79 | Indexing complete | lib.pkp.submission.event.indexNotifyComplete | production-stage |
 | EVLOG-EMAIL-DISC-NOT | DISCUSSION_NOTIFY | lib/pkp/classes/log/SubmissionEmailLogEventType.php:82 | Discussion notification | lib.pkp.submission.event.discussionNotify | tasks-discussions |
 
 ## Gaps

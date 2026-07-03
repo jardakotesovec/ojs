@@ -7,6 +7,8 @@ e2e-plans: [copyediting-stage.md]
 atlas-claims:
   - GRID-lib-pkp-grid-files-copyedit-copyedit-files-grid-handler
   - GRID-lib-pkp-grid-files-copyedit-manage-copyedit-files-grid-handler
+  - GRID-lib-pkp-grid-files-final-final-draft-files-grid-handler
+  - GRID-lib-pkp-grid-files-final-manage-final-draft-files-grid-handler
   - NOTIF-copyedit-assignment
   - NOTIF-assign-copyeditor
   - NOTIF-awaiting-copyedits
@@ -154,8 +156,9 @@ Stages by UI name, from `editorial-decisions`: **Submission**(1) · **Review**(3
    Draft Files grid reads "No Items"), so on that path the editor/copyeditor uploads
    or selects the source manuscript here. Editors, managers, site admins and copyeditors get
    Upload / Select / edit / delete / view-notes; **authors have no access to this grid**. The
-   grid-handler atom lives with `production-stage` (seam — see Cross-feature); this spec owns
-   only that the Draft Files panel is a stage-4 pane. <sup>d</sup>
+   Draft Files grid-handler atoms (`FinalDraftFilesGridHandler` + its select-grid) are **owned
+   here** — the seam the FEATURE-MAP hinted to `production-stage` is resolved to copyediting, since
+   the panel renders only in this stage (production-stage rule 3 / Open question 1). <sup>d</sup>
 4. **The Copyedited Files grid is the copyeditor's output, bound for production.** The second
    file panel is the `FileManager` in the `COPYEDITED_FILES` namespace — file stage
    **Copyedited** (`SUBMISSION_FILE_COPYEDIT`), titled **"Copyedited Files"**, described
@@ -292,10 +295,10 @@ Side effects fire from the actions the panels host:
 - **submission-files** — owns the general `FileManager` grid, upload/edit/select forms and
   dependent files; this spec owns the stage-4 `COPYEDITED_FILES` / `FINAL_DRAFT_FILES` usage
   and file stages.
-- **production-stage** (feature 18, not yet written) — owns the production workspace and the
-  `GRID-final-draft` **grid-handler atom**, even though the **Draft Files panel renders in
-  *this* stage** (seam — see Open questions); production-stage should reference rule 3 rather
-  than re-document the Draft Files panel.
+- **production-stage** — owns the production workspace; the Send-To-Production promotion carries
+  this stage's Copyedited + Draft files into the Production Ready Files grid. The
+  `GRID-final-draft` grid-handler atoms are owned **here** (the Draft Files panel renders only in
+  copyediting — seam resolved by production-stage Open question 1).
 - **tasks-discussions** — owns the Copyediting Discussions panel, the generic-template notify
   path, and the `NEW_QUERY` notification.
 - **author-dashboard** — owns the author's read-mostly stage-4 composition (Copyedited Files +
@@ -387,12 +390,13 @@ Side effects fire from the actions the panels host:
 
 ## Open questions
 
-1. **`GRID-final-draft` ownership (seam).** The **Draft Files** panel
-   (`FINAL_DRAFT_FILES` / `FinalDraftFilesGridHandler`) renders in the **copyediting** stage,
-   but the FEATURE-MAP assigns its grid-handler atom to **production-stage**. This spec
-   documents the panel (rule 3) and leaves the atom to production-stage per the map. Is
-   production-stage the right home for a grid that only appears in copyediting, or should the
-   atom move here? (One-owner rule kept; flagged for the maintainer / grooming.)
+1. **`GRID-final-draft` ownership (seam) — resolved to copyediting.** The **Draft Files** panel
+   (`FINAL_DRAFT_FILES` / `FinalDraftFilesGridHandler`, and its `ManageFinalDraftFilesGridHandler`
+   select-grid) renders **only** in the copyediting stage — the production-stage pane has no
+   final-draft grid (`workflowConfigEditorialOJS` `WORKFLOW_STAGE_ID_PRODUCTION` exposes only
+   `PRODUCTION_READY_FILES`). The production-stage spec (its Open question 1) therefore reassigned
+   both `final` grid atoms **here**, and this spec now claims them. Flagged for the maintainer in
+   case the FEATURE-MAP's original production hint was intentional.
 2. **Copyedit task notification on the default template.** As-built, assigning a copyeditor
    raises the `COPYEDIT_ASSIGNMENT` task only when the editor picks the **Request Copyedit**
    template (rule 8). Is it intended that assigning with the default `DiscussionCopyediting`
@@ -422,7 +426,7 @@ Side effects fire from the actions the panels host:
 | Copyediting workspace (pane) | `/{journal}/dashboard/editorial?workflowSubmissionId={id}&workflowMenuKey=workflow_4` (Copyediting menu item; shell owned by `workflow-stage-navigation`) | PAGE-workflow-editorial *(owned by workflow-stage-navigation — referenced)* |
 | Copyedited Files grid | `FileManager` namespace `COPYEDITED_FILES` (`SUBMISSION_FILE_COPYEDIT`); legacy `grid.files.copyedit.CopyeditFilesGridHandler` | GRID-lib-pkp-grid-files-copyedit-copyedit-files-grid-handler |
 | Copyedited Files "Select Files" | `grid.files.copyedit.ManageCopyeditFilesGridHandler` (`addFile`/`downloadFile`/`deleteFile`/`updateCopyeditFiles`) → `ManageCopyeditFilesForm` | GRID-lib-pkp-grid-files-copyedit-manage-copyedit-files-grid-handler |
-| Draft Files grid | `FileManager` namespace `FINAL_DRAFT_FILES` (`SUBMISSION_FILE_FINAL`); `grid.files.final.FinalDraftFilesGridHandler` | GRID-lib-pkp-grid-files-final-final-draft-files-grid-handler *(owned by production-stage — referenced)* |
+| Draft Files grid | `FileManager` namespace `FINAL_DRAFT_FILES` (`SUBMISSION_FILE_FINAL`); `grid.files.final.FinalDraftFilesGridHandler` (+ `ManageFinalDraftFilesGridHandler` select-grid) | GRID-lib-pkp-grid-files-final-final-draft-files-grid-handler, GRID-lib-pkp-grid-files-final-manage-final-draft-files-grid-handler *(owned here — seam resolved from production-stage)* |
 | Editor status prompt (assigned editors only; seeded by Accept/Send-To-Production, **absent on skip** — rule 2) | `POST notification/fetchNotification` (NORMAL: ASSIGN_COPYEDITOR + AWAITING_COPYEDITS), rendered by `WorkflowNotificationDisplay` | NOTIF-assign-copyeditor, NOTIF-awaiting-copyedits |
 | Copyeditor task notification | `NOTIFICATION_TYPE_COPYEDIT_ASSIGNMENT` (level TASK) via Participants → Notify "Request Copyedit" | NOTIF-copyedit-assignment |
 | Copyedit email-log types | `SubmissionEmailLogEventType::COPYEDIT_NOTIFY_*` (only `_COPYEDITOR` written) | EVLOG-EMAIL-COPY-* |
