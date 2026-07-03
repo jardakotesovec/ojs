@@ -19,12 +19,12 @@
 | EVLOG-SUBM-ED-EMAIL | SUBMISSION_LOG_DECISION_EMAIL_SENT | lib/pkp/classes/decision/types/traits/NotifyReviewers.php | Decision notification email sent | submission.event.decisionEmailSent; email-delivery | editorial-decisions |
 | EVLOG-REV-ASSIGN | SUBMISSION_LOG_REVIEW_ASSIGN | lib/pkp/classes/submission/action/EditorAction.php | Reviewer assigned to review | submission.event.reviewerAssigned; reviewer-assignment | assign-and-manage-reviewers |
 | EVLOG-REV-REIN | SUBMISSION_LOG_REVIEW_REINSTATED | lib/pkp/controllers/grid/users/reviewer/form/ReinstateReviewerForm.php | Review assignment reinstated | submission.event.reviewerReinstated | assign-and-manage-reviewers |
-| EVLOG-REV-ACCP | SUBMISSION_LOG_REVIEW_ACCEPT | lib/pkp/classes/submission/reviewer/ReviewerAction.php | Reviewer accepts review | submission.event.reviewerAccepted; reviewer-response | |
-| EVLOG-REV-DECL | SUBMISSION_LOG_REVIEW_DECLINE | lib/pkp/classes/submission/reviewer/ReviewerAction.php | Reviewer declines review | submission.event.reviewerDeclined; reviewer-response | |
+| EVLOG-REV-ACCP | SUBMISSION_LOG_REVIEW_ACCEPT | lib/pkp/classes/submission/reviewer/ReviewerAction.php | Reviewer accepts review | submission.event.reviewerAccepted; reviewer-response | reviewer-response |
+| EVLOG-REV-DECL | SUBMISSION_LOG_REVIEW_DECLINE | lib/pkp/classes/submission/reviewer/ReviewerAction.php | Reviewer declines review | submission.event.reviewerDeclined; reviewer-response | reviewer-response |
 | EVLOG-REV-UNCON | SUBMISSION_LOG_REVIEW_UNCONSIDERED | lib/pkp/classes/controllers/grid/users/reviewer/PKPReviewerGridHandler.php | Review marked unconsidered | submission.event.reviewNotConsidered | assign-and-manage-reviewers |
 | EVLOG-REV-DUE | SUBMISSION_LOG_REVIEW_SET_DUE_DATE | ? | Review due date set/modified | submission.event.reviewDueDateSet | |
 | EVLOG-REV-CLR | SUBMISSION_LOG_REVIEW_CLEAR | lib/pkp/controllers/grid/users/reviewer/form/UnassignReviewerForm.php | Review unassigned | submission.event.reviewUnassigned | assign-and-manage-reviewers |
-| EVLOG-REV-RDY | SUBMISSION_LOG_REVIEW_READY | lib/pkp/classes/submission/reviewer/form/PKPReviewerReviewStep3Form.php | Review completed by reviewer | submission.event.reviewCompleted; reviewer-response | |
+| EVLOG-REV-RDY | SUBMISSION_LOG_REVIEW_READY | lib/pkp/classes/submission/reviewer/form/PKPReviewerReviewStep3Form.php | Review completed by reviewer | submission.event.reviewCompleted; reviewer-response | reviewer-response |
 | EVLOG-REV-CONF | SUBMISSION_LOG_REVIEW_CONFIRMED | lib/pkp/classes/controllers/grid/users/reviewer/PKPReviewerGridHandler.php | Review confirmed by editor | submission.event.reviewConfirmed | assign-and-manage-reviewers |
 | EVLOG-REV-REM | SUBMISSION_LOG_REVIEW_REMIND | lib/pkp/controllers/grid/users/reviewer/form/ReviewReminderForm.php | Manual review reminder sent | submission.event.reviewReminderSent; email-delivery | |
 | EVLOG-REV-REM-AUTO | SUBMISSION_LOG_REVIEW_REMIND_AUTO | lib/pkp/jobs/email/ReviewReminder.php | Automatic review reminder sent | submission.event.reviewAutoReminderSent; scheduled-tasks | |

@@ -41,10 +41,10 @@
 | MAIL-publication-version-notify | PublicationVersionNotify | lib/pkp/classes/mail/mailables/PublicationVersionNotify.php | template key: VERSION_CREATED | notifications | publication-versioning |
 | MAIL-recommendation-notify-editors | RecommendationNotifyEditors | lib/pkp/classes/mail/mailables/RecommendationNotifyEditors.php | template key: EDITOR_RECOMMENDATION | notifications | editorial-decisions |
 | MAIL-request-review-round-author-response | RequestReviewRoundAuthorResponse | lib/pkp/classes/mail/mailables/RequestReviewRoundAuthorResponse.php | template key: REQUEST_REVIEW_ROUND_AUTHOR_RESPONSE | email-delivery | |
-| MAIL-review-acknowledgement | ReviewAcknowledgement | lib/pkp/classes/mail/mailables/ReviewAcknowledgement.php | template key: REVIEW_ACK | email-delivery | |
-| MAIL-review-complete-notify-editors | ReviewCompleteNotifyEditors | lib/pkp/classes/mail/mailables/ReviewCompleteNotifyEditors.php | template key: REVIEW_COMPLETE | notifications | |
-| MAIL-review-confirm | ReviewConfirm | lib/pkp/classes/mail/mailables/ReviewConfirm.php | template key: REVIEW_CONFIRM | email-delivery | |
-| MAIL-review-decline | ReviewDecline | lib/pkp/classes/mail/mailables/ReviewDecline.php | template key: REVIEW_DECLINE | email-delivery | |
+| MAIL-review-acknowledgement | ReviewAcknowledgement | lib/pkp/classes/mail/mailables/ReviewAcknowledgement.php | template key: REVIEW_ACK | email-delivery | reviewer-response |
+| MAIL-review-complete-notify-editors | ReviewCompleteNotifyEditors | lib/pkp/classes/mail/mailables/ReviewCompleteNotifyEditors.php | template key: REVIEW_COMPLETE | notifications | reviewer-response |
+| MAIL-review-confirm | ReviewConfirm | lib/pkp/classes/mail/mailables/ReviewConfirm.php | template key: REVIEW_CONFIRM | email-delivery | reviewer-response |
+| MAIL-review-decline | ReviewDecline | lib/pkp/classes/mail/mailables/ReviewDecline.php | template key: REVIEW_DECLINE | email-delivery | reviewer-response |
 | MAIL-review-remind | ReviewRemind | lib/pkp/classes/mail/mailables/ReviewRemind.php | template key: REVIEW_REMIND | scheduled-tasks | |
 | MAIL-review-remind-auto | ReviewRemindAuto | lib/pkp/classes/mail/mailables/ReviewRemindAuto.php | template key: REVIEW_REMIND_AUTO | scheduled-tasks | |
 | MAIL-review-request | ReviewRequest | lib/pkp/classes/mail/mailables/ReviewRequest.php | template key: REVIEW_REQUEST | email-delivery | assign-and-manage-reviewers |

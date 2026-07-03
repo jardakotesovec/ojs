@@ -79,11 +79,11 @@
 | PAGE-payments-paymenttypes | PaymentsHandler::paymentTypes (op) | pages/payments/PaymentsHandler.php | Payment types settings page | payments.md | |
 | PAGE-payments-savepaymenttypes | PaymentsHandler::savePaymentTypes (op) | pages/payments/PaymentsHandler.php | Save payment types form | payments.md | |
 | PAGE-payments-payments | PaymentsHandler::payments (op) | pages/payments/PaymentsHandler.php | Payments listing page | payments.md | |
-| PAGE-reviewer-submission | ReviewerHandler::submission | pages/reviewer/ReviewerHandler.php | Reviewer's submission review page | reviewer-assignment.md | |
-| PAGE-reviewer-step | ReviewerHandler::step | pages/reviewer/ReviewerHandler.php | Review wizard step page | reviewer-assignment.md | |
-| PAGE-reviewer-savestep | ReviewerHandler::saveStep | pages/reviewer/ReviewerHandler.php | Save review wizard step | reviewer-assignment.md | |
-| PAGE-reviewer-showdeclinereview | ReviewerHandler::showDeclineReview | pages/reviewer/ReviewerHandler.php | Show decline-review confirmation form | reviewer-response.md | |
-| PAGE-reviewer-savedeclinereview | ReviewerHandler::saveDeclineReview | pages/reviewer/ReviewerHandler.php | Submit decline-review form | reviewer-response.md | |
+| PAGE-reviewer-submission | ReviewerHandler::submission | pages/reviewer/ReviewerHandler.php | Reviewer's submission review page | reviewer-assignment.md | reviewer-response |
+| PAGE-reviewer-step | ReviewerHandler::step | pages/reviewer/ReviewerHandler.php | Review wizard step page | reviewer-assignment.md | reviewer-response |
+| PAGE-reviewer-savestep | ReviewerHandler::saveStep | pages/reviewer/ReviewerHandler.php | Save review wizard step | reviewer-assignment.md | reviewer-response |
+| PAGE-reviewer-showdeclinereview | ReviewerHandler::showDeclineReview | pages/reviewer/ReviewerHandler.php | Show decline-review confirmation form | reviewer-response.md | reviewer-response |
+| PAGE-reviewer-savedeclinereview | ReviewerHandler::saveDeclineReview | pages/reviewer/ReviewerHandler.php | Submit decline-review form | reviewer-response.md | reviewer-response |
 | PAGE-reviewer-downloadfile | ReviewerHandler::downloadFile | pages/reviewer/ReviewerHandler.php | In role list but not routed/implemented (dead) | | |
 | PAGE-search-index | SearchHandler::index (inherited) | pages/search/SearchHandler.php | Site/journal search landing page | site-search.md | |
 | PAGE-search-search | SearchHandler::search (inherited) | pages/search/SearchHandler.php | Search results page | site-search.md | |

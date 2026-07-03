@@ -16,7 +16,7 @@
 | VUE-edit-mailable-modal | EditMailableModal | lib/ui-library/src/pages/manageEmails/EditMailableModal.vue | page/modal: enable/disable + configure a system mailable | email-templates-management | |
 | VUE-edit-template-modal | EditTemplateModal | lib/ui-library/src/pages/manageEmails/EditTemplateModal.vue | page/modal: edit an email template's subject/body | email-templates-management | |
 | VUE-request-review-round-author-response | RequestReviewRoundAuthorResponse | lib/ui-library/src/pages/requestReviewRoundAuthorResponse/RequestReviewRoundAuthorResponse.vue | page: editor requests author response to a review round | review-rounds-revisions | |
-| VUE-reviewer-submission-page | ReviewerSubmissionPage | lib/ui-library/src/pages/reviewerSubmission/ReviewerSubmissionPage.vue | page: reviewer-facing submission review workspace | reviewer-response | |
+| VUE-reviewer-submission-page | ReviewerSubmissionPage | lib/ui-library/src/pages/reviewerSubmission/ReviewerSubmissionPage.vue | page: reviewer-facing submission review workspace | reviewer-response | reviewer-response |
 | VUE-context-download-report-modal | ContextDownloadReportModal | lib/ui-library/src/pages/statsContext/ContextDownloadReportModal.vue | page/modal: download journal-level usage stats report | usage-statistics | |
 | VUE-issue-download-report-modal | IssueDownloadReportModal | lib/ui-library/src/pages/statsIssues/IssueDownloadReportModal.vue | page/modal: download issue-level usage stats report | usage-statistics | |
 | VUE-publications-download-report-modal | PublicationsDownloadReportModal | lib/ui-library/src/pages/statsPublications/PublicationsDownloadReportModal.vue | page/modal: download publication-level usage stats report | usage-statistics | |
