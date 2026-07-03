@@ -18,15 +18,15 @@
 | PAGE-article-viewfile | ArticleHandler::viewFile | pages/article/ArticleHandler.php | Legacy article file view URL | | |
 | PAGE-article-downloadsuppfile | ArticleHandler::downloadSuppFile | pages/article/ArticleHandler.php | Legacy supplementary file download URL | | |
 | PAGE-article-download | ArticleHandler::download | pages/article/ArticleHandler.php | Article galley/file download | galleys.md | |
-| PAGE-authordashboard-submission | AuthorDashboardHandler::submission (inherited) | pages/authorDashboard/AuthorDashboardHandler.php | Author's submission dashboard page | author-dashboard.md | |
-| PAGE-authordashboard-readsubmissionemail | AuthorDashboardHandler::readSubmissionEmail (inherited) | pages/authorDashboard/AuthorDashboardHandler.php | Marks a submission notification email as read | author-dashboard.md | |
+| PAGE-authordashboard-submission | AuthorDashboardHandler::submission (inherited) | pages/authorDashboard/AuthorDashboardHandler.php | Legacy author-dashboard URL; live as a 302 to dashboard/mySubmissions?workflowSubmissionId=N (verified 2026-07-03) | author-dashboard.md | author-dashboard |
+| PAGE-authordashboard-readsubmissionemail | AuthorDashboardHandler::readSubmissionEmail (inherited) | pages/authorDashboard/AuthorDashboardHandler.php | Renders a notify-author email as JSON for the author's Notifications listing (nothing is marked read; verified 2026-07-03) | author-dashboard.md | author-dashboard |
 | PAGE-authordashboard-reviewroundinfo | AuthorDashboardHandler::reviewRoundInfo | pages/authorDashboard/index.php | Op routed in switch; no matching handler method found (dead) | | |
 | PAGE-catalog-category | PKPCatalogHandler::category | lib/pkp/pages/catalog/PKPCatalogHandler.php | Public catalog listing by category, reached via pages/catalog | | |
 | PAGE-catalog-fullsize | PKPCatalogHandler::fullSize | lib/pkp/pages/catalog/PKPCatalogHandler.php | Full-size catalog cover image | | |
 | PAGE-catalog-thumbnail | PKPCatalogHandler::thumbnail | lib/pkp/pages/catalog/PKPCatalogHandler.php | Thumbnail catalog cover image | | |
 | PAGE-dashboard-index | DashboardHandler::index (inherited) | pages/dashboard/DashboardHandler.php | Editorial/submissions dashboard, default view | editorial-dashboards.md | |
 | PAGE-dashboard-editorial | DashboardHandler::editorial (inherited) | pages/dashboard/DashboardHandler.php | Editorial-role dashboard view | editorial-dashboards.md | |
-| PAGE-dashboard-mysubmissions | DashboardHandler::mySubmissions (inherited) | pages/dashboard/DashboardHandler.php | Author's "my submissions" dashboard view | editorial-dashboards.md | |
+| PAGE-dashboard-mysubmissions | DashboardHandler::mySubmissions (inherited) | pages/dashboard/DashboardHandler.php | Author's "my submissions" dashboard view | author-dashboard.md | author-dashboard |
 | PAGE-dashboard-reviewassignments | DashboardHandler::reviewAssignments (inherited) | pages/dashboard/DashboardHandler.php | Reviewer's assignments dashboard view | editorial-dashboards.md | |
 | PAGE-decision-record | DecisionHandler::record | lib/pkp/pages/decision/DecisionHandler.php | Record an editorial decision, reached via pages/decision | review-decisions.md | |
 | PAGE-dois-index | DoisHandler::index (inherited) | pages/dois/DoisHandler.php | DOI management listing page | doi-management.md | |

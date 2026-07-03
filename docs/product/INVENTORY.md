@@ -13,6 +13,7 @@ features are added here as atom clusters get named.
 | submission-wizard-metadata | For-the-Editors metadata questions: per-field collect/ask/require modes, vocab chips, the Metadata settings panel | pkp-lib | verified | 10 |
 | reviewer-suggestions | Author suggests reviewers in a wizard step; editors consume them at assignment (prefill + approval); journal toggle + guidance | pkp-lib | verified | 10 |
 | submission-drafts | Save-for-Later + resume email, the Incomplete-submissions list, resume-at-step, and draft deletion (single + bulk) | pkp-lib | verified | 5 |
+| author-dashboard | My Submissions list (state views, search, filters, per-state rows) + the author's read-mostly tracking view of one submission; legacy authorDashboard redirect + readSubmissionEmail | pkp-lib | verified | 5 |
 
 Pilot outcome (2026-07-02): both specs adversarially verified with live probes; verifier
 refuted 3 permission cells + 1 state rule in tasks-discussions pre-fix (all corrected),
