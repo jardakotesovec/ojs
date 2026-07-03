@@ -118,7 +118,7 @@
 | SCHEMA-navigation-menu | Schema | `lib/pkp/schemas/navigationMenu.json` | Navigation Menu entity; theme nav-area menu; menuTree/areaName (5 props) | navigation-menus.md | |
 | SCHEMA-navigation-menu-item | Schema | `lib/pkp/schemas/navigationMenuItem.json` | Navigation Menu Item entity; item assignable to nav menus; remoteUrl/path/type (12 props) | navigation-menus.md | |
 | SCHEMA-publication-pkp | Schema | `lib/pkp/schemas/publication.json` | Publication entity; shared published-version entity; status/version/DOI/authors/citations (51 props) | publication-publish-flow.md | publication-versioning |
-| SCHEMA-review-assignment | Schema | `lib/pkp/schemas/reviewAssignment.json` | Review Assignment entity; reviewer's assignment; date* lifecycle props, ORCID put-code (42 props) | reviewer-assignment.md | |
+| SCHEMA-review-assignment | Schema | `lib/pkp/schemas/reviewAssignment.json` | Review Assignment entity; reviewer's assignment; date* lifecycle props, ORCID put-code (42 props) | reviewer-assignment.md | assign-and-manage-reviewers |
 | SCHEMA-review-round | Schema | `lib/pkp/schemas/reviewRound.json` | Review Round entity; round of review assignments; status/round/stageId (7 props) | review-rounds-revisions.md | |
 | SCHEMA-ror | Schema | `lib/pkp/schemas/ror.json` | Ror entity; cached ror.org institution registry record (7 props) | | |
 | SCHEMA-section-pkp | Schema | `lib/pkp/schemas/section.json` | Section entity; shared section/series entity; editorRestricted/isInactive (6 props) | sections.md | |

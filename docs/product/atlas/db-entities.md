@@ -66,7 +66,7 @@
 | DB-navigation_menu_items | navigation_menu_items | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Menu item definitions | navigation-menus | |
 | DB-navigation_menus | navigation_menus | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Navigation menu structures | navigation-menus | |
 | DB-notes | notes | lib/pkp/classes/migration/install/NotesMigration.php | Editor/reviewer notes | | tasks-discussions |
-| DB-review_assignment_settings | review_assignment_settings | lib/pkp/classes/migration/install/ReviewAssignmentSettingsMigration.php | Review assignment settings | | |
+| DB-review_assignment_settings | review_assignment_settings | lib/pkp/classes/migration/install/ReviewAssignmentSettingsMigration.php | Review assignment settings | | assign-and-manage-reviewers |
 | DB-reviewer_recommendation_settings | reviewer_recommendation_settings | classes/migration/install/ReviewerRecommendationsMigration.php | Reviewer recommendation settings | | |
 | DB-reviewer_recommendations | reviewer_recommendations | classes/migration/install/ReviewerRecommendationsMigration.php | Configurable reviewer-recommendation options (NOT reviewer suggestions — different feature) | review-settings | |
 | DB-reviewer_suggestion_settings | reviewer_suggestion_settings | lib/pkp/classes/migration/install/ReviewerSuggestionsMigration.php | Reviewer suggestion settings | | reviewer-suggestions |
@@ -79,7 +79,7 @@
 | DB-review_round_author_response_settings | review_round_author_response_settings | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Author response settings | | |
 | DB-review_round_author_responses | review_round_author_responses | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Author revision responses | reviewer-response | |
 | DB-review_round_settings | review_round_settings | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Review round configuration | | |
-| DB-review_assignments | review_assignments | lib/pkp/classes/migration/install/ReviewsMigration.php | Review assignments | reviewer-assignment | |
+| DB-review_assignments | review_assignments | lib/pkp/classes/migration/install/ReviewsMigration.php | Review assignments | reviewer-assignment | assign-and-manage-reviewers |
 | DB-review_files | review_files | lib/pkp/classes/migration/install/ReviewsMigration.php | Review attachments | | |
 | DB-review_form_responses | review_form_responses | lib/pkp/classes/migration/install/ReviewsMigration.php | Reviewer form responses | | |
 | DB-review_round_files | review_round_files | lib/pkp/classes/migration/install/ReviewsMigration.php | Review round attachments | | |

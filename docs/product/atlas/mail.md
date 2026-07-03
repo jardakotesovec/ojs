@@ -47,13 +47,13 @@
 | MAIL-review-decline | ReviewDecline | lib/pkp/classes/mail/mailables/ReviewDecline.php | template key: REVIEW_DECLINE | email-delivery | |
 | MAIL-review-remind | ReviewRemind | lib/pkp/classes/mail/mailables/ReviewRemind.php | template key: REVIEW_REMIND | scheduled-tasks | |
 | MAIL-review-remind-auto | ReviewRemindAuto | lib/pkp/classes/mail/mailables/ReviewRemindAuto.php | template key: REVIEW_REMIND_AUTO | scheduled-tasks | |
-| MAIL-review-request | ReviewRequest | lib/pkp/classes/mail/mailables/ReviewRequest.php | template key: REVIEW_REQUEST | email-delivery | |
-| MAIL-review-request-subsequent | ReviewRequestSubsequent | lib/pkp/classes/mail/mailables/ReviewRequestSubsequent.php | template key: REVIEW_REQUEST_SUBSEQUENT | email-delivery | |
+| MAIL-review-request | ReviewRequest | lib/pkp/classes/mail/mailables/ReviewRequest.php | template key: REVIEW_REQUEST | email-delivery | assign-and-manage-reviewers |
+| MAIL-review-request-subsequent | ReviewRequestSubsequent | lib/pkp/classes/mail/mailables/ReviewRequestSubsequent.php | template key: REVIEW_REQUEST_SUBSEQUENT | email-delivery | assign-and-manage-reviewers |
 | MAIL-review-response-remind-auto | ReviewResponseRemindAuto | lib/pkp/classes/mail/mailables/ReviewResponseRemindAuto.php | template key: REVIEW_RESPONSE_OVERDUE_AUTO | scheduled-tasks | |
 | MAIL-reviewer-register | ReviewerRegister | lib/pkp/classes/mail/mailables/ReviewerRegister.php | template key: REVIEWER_REGISTER | email-delivery | |
-| MAIL-reviewer-reinstate | ReviewerReinstate | lib/pkp/classes/mail/mailables/ReviewerReinstate.php | template key: REVIEW_REINSTATE | email-delivery | |
-| MAIL-reviewer-resend-request | ReviewerResendRequest | lib/pkp/classes/mail/mailables/ReviewerResendRequest.php | template key: REVIEW_RESEND_REQUEST | email-delivery | |
-| MAIL-reviewer-unassign | ReviewerUnassign | lib/pkp/classes/mail/mailables/ReviewerUnassign.php | template key: REVIEW_CANCEL | email-delivery | |
+| MAIL-reviewer-reinstate | ReviewerReinstate | lib/pkp/classes/mail/mailables/ReviewerReinstate.php | template key: REVIEW_REINSTATE | email-delivery | assign-and-manage-reviewers |
+| MAIL-reviewer-resend-request | ReviewerResendRequest | lib/pkp/classes/mail/mailables/ReviewerResendRequest.php | template key: REVIEW_RESEND_REQUEST | email-delivery | assign-and-manage-reviewers |
+| MAIL-reviewer-unassign | ReviewerUnassign | lib/pkp/classes/mail/mailables/ReviewerUnassign.php | template key: REVIEW_CANCEL | email-delivery | assign-and-manage-reviewers |
 | MAIL-revised-version-notify | RevisedVersionNotify | lib/pkp/classes/mail/mailables/RevisedVersionNotify.php | template key: REVISED_VERSION_NOTIFY | notifications | |
 | MAIL-statistics-report-notify | StatisticsReportNotify | lib/pkp/classes/mail/mailables/StatisticsReportNotify.php | template key: STATISTICS_REPORT_NOTIFICATION | scheduled-tasks | |
 | MAIL-submission-acknowledgement | SubmissionAcknowledgement | lib/pkp/classes/mail/mailables/SubmissionAcknowledgement.php | template key: SUBMISSION_ACK | | submission-wizard |
