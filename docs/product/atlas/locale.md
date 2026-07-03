@@ -193,10 +193,10 @@
 | LOC-submission-submission-citations | `submission.citations.*` | submission.po | 66 keys |  | |
 | LOC-submission-submission-event | `submission.event.*` | submission.po | 55 keys |  | |
 | LOC-submission-submission-wizard | `submission.wizard.*` | submission.po | 34 keys |  | submission-wizard |
-| LOC-submission-dashboard-reviewAssignment | `dashboard.reviewAssignment.*` | submission.po | 34 keys |  | |
+| LOC-submission-dashboard-reviewAssignment | `dashboard.reviewAssignment.*` | submission.po | 34 keys (reviewer-dashboard activity/actions strings) |  | editorial-dashboards |
 | LOC-submission-submission-list | `submission.list.*` | submission.po | 32 keys |  | |
 | LOC-submission-submission-layout | `submission.layout.*` | submission.po | 27 keys |  | |
-| LOC-submission-submission-dashboard | `submission.dashboard.*` | submission.po | 27 keys |  | |
+| LOC-submission-submission-dashboard | `submission.dashboard.*` | submission.po | 27 keys (dashboard view titles) |  | editorial-dashboards |
 | LOC-submission-publication-mediaFiles | `publication.mediaFiles.*` | submission.po | 27 keys |  | |
 | LOC-submission-submission-upload | `submission.upload.*` | submission.po | 22 keys |  | |
 | LOC-submission-submission-dataCitations | `submission.dataCitations.*` | submission.po | 20 keys |  | |

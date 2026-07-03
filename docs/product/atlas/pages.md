@@ -24,10 +24,10 @@
 | PAGE-catalog-category | PKPCatalogHandler::category | lib/pkp/pages/catalog/PKPCatalogHandler.php | Public catalog listing by category, reached via pages/catalog | | |
 | PAGE-catalog-fullsize | PKPCatalogHandler::fullSize | lib/pkp/pages/catalog/PKPCatalogHandler.php | Full-size catalog cover image | | |
 | PAGE-catalog-thumbnail | PKPCatalogHandler::thumbnail | lib/pkp/pages/catalog/PKPCatalogHandler.php | Thumbnail catalog cover image | | |
-| PAGE-dashboard-index | DashboardHandler::index (inherited) | pages/dashboard/DashboardHandler.php | Editorial/submissions dashboard, default view | editorial-dashboards.md | |
-| PAGE-dashboard-editorial | DashboardHandler::editorial (inherited) | pages/dashboard/DashboardHandler.php | Editorial-role dashboard view | editorial-dashboards.md | |
+| PAGE-dashboard-index | DashboardHandler::index (inherited) | pages/dashboard/DashboardHandler.php | `/dashboard` with no variant; live as a 302 to the role-priority dashboard (verified 2026-07-03) | editorial-dashboards.md | editorial-dashboards |
+| PAGE-dashboard-editorial | DashboardHandler::editorial (inherited) | pages/dashboard/DashboardHandler.php | Editorial-role dashboard view | editorial-dashboards.md | editorial-dashboards |
 | PAGE-dashboard-mysubmissions | DashboardHandler::mySubmissions (inherited) | pages/dashboard/DashboardHandler.php | Author's "my submissions" dashboard view | author-dashboard.md | author-dashboard |
-| PAGE-dashboard-reviewassignments | DashboardHandler::reviewAssignments (inherited) | pages/dashboard/DashboardHandler.php | Reviewer's assignments dashboard view | editorial-dashboards.md | |
+| PAGE-dashboard-reviewassignments | DashboardHandler::reviewAssignments (inherited) | pages/dashboard/DashboardHandler.php | Reviewer's assignments dashboard view (reviewer-only; no editor variant — verified 2026-07-03) | editorial-dashboards.md | editorial-dashboards |
 | PAGE-decision-record | DecisionHandler::record | lib/pkp/pages/decision/DecisionHandler.php | Record an editorial decision, reached via pages/decision | review-decisions.md | |
 | PAGE-dois-index | DoisHandler::index (inherited) | pages/dois/DoisHandler.php | DOI management listing page | doi-management.md | |
 | PAGE-dois-management | DoisHandler::management | pages/dois/index.php | In role list but not routed/implemented (dead) | | |
@@ -168,8 +168,8 @@
 | PAGE-orcid-about | OrcidHandler::about | lib/pkp/pages/orcid/OrcidHandler.php | ORCID integration info page | orcid.md | |
 | PAGE-orcid-updatescope | OrcidHandler::updateScope | lib/pkp/pages/orcid/OrcidHandler.php | Update granted ORCID API scope | orcid.md | |
 | PAGE-reviewresponse-requestauthorresponse | ReviewResponseHandler::requestAuthorResponse | lib/pkp/pages/reviewResponse/ReviewResponseHandler.php | Editor requests author's response to a review | reviewer-response.md | |
-| PAGE-submissions-index | DashboardHandler::index | lib/pkp/pages/dashboard/DashboardHandler.php | Editorial submissions-dashboard index, via pages/submissions | editorial-dashboards.md | |
-| PAGE-submissions-tasks | DashboardHandler::tasks | lib/pkp/pages/dashboard/DashboardHandler.php | Editorial task-list dashboard view | editorial-tasks.md | |
+| PAGE-submissions-index | DashboardHandler::index | lib/pkp/pages/dashboard/DashboardHandler.php | Legacy `/submissions`; live as a 302 to the role-priority dashboard (verified 2026-07-03) | editorial-dashboards.md | editorial-dashboards |
+| PAGE-submissions-tasks | DashboardHandler::tasks | lib/pkp/pages/dashboard/DashboardHandler.php | Legacy tasks popup; routed but 500s — template dashboard/tasks.tpl no longer exists (verified 2026-07-03; ledger row proposed) | editorial-dashboards.md | editorial-dashboards |
 
 ## Gaps
 - Ops referenced only as helper/private methods (prefixed `_`, e.g. `_createContextSitemap`, `_retrieveStep`) were excluded as non-routable.

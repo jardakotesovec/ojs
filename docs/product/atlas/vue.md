@@ -8,8 +8,8 @@
 |----|---------|---------|------------|------|------------|
 | VUE-accept-invitation-page | AcceptInvitationPage | lib/ui-library/src/pages/acceptInvitation/AcceptInvitationPage.vue | page: multi-step invitation acceptance wizard (roles, ORCID, account details) | user-invitations | |
 | VUE-counter-reports-page | CounterReportsPage | lib/ui-library/src/pages/counter/CounterReportsPage.vue | page: COUNTER usage report list/edit wrapper | usage-statistics | |
-| VUE-dashboard-page | DashboardPage | lib/ui-library/src/pages/dashboard/DashboardPage.vue | page: editorial/submissions dashboard shell (filters, table, modals) | editorial-dashboards | |
-| VUE-dashboard-table | DashboardTable | lib/ui-library/src/pages/dashboard/components/DashboardTable/DashboardTable.vue | component: submissions/review-assignments data table used by dashboard | editorial-dashboards | |
+| VUE-dashboard-page | DashboardPage | lib/ui-library/src/pages/dashboard/DashboardPage.vue | page: editorial/submissions dashboard shell (filters, table, modals) | editorial-dashboards | editorial-dashboards |
+| VUE-dashboard-table | DashboardTable | lib/ui-library/src/pages/dashboard/components/DashboardTable/DashboardTable.vue | component: submissions/review-assignments data table used by dashboard | editorial-dashboards | editorial-dashboards |
 | VUE-jobs-page | JobsPage | lib/ui-library/src/pages/jobs/JobsPage.vue | page: queued jobs list | jobs-queue | |
 | VUE-failed-jobs-page | FailedJobsPage | lib/ui-library/src/pages/jobs/FailedJobsPage.vue | page: failed jobs list | jobs-queue | |
 | VUE-failed-job-details-page | FailedJobDetailsPage | lib/ui-library/src/pages/jobs/FailedJobDetailsPage.vue | page: single failed job detail/trace view | jobs-queue | |
