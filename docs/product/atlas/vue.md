@@ -26,8 +26,8 @@
 | VUE-user-comments-table | UserCommentsTable | lib/ui-library/src/pages/userComments/UserCommentsTable.vue | component: table of all public discussion comments (moderation) | public-comments | |
 | VUE-user-comment-reports-table | UserCommentReportsTable | lib/ui-library/src/pages/userComments/UserCommentReportsTable.vue | component: table of user-reported comments (moderation queue) | public-comments | |
 | VUE-user-invitation-page | UserInvitationPage | lib/ui-library/src/pages/userInvitation/UserInvitationPage.vue | page: multi-step wizard to invite a new/existing user | user-invitations | |
-| VUE-workflow-page | WorkflowPage | lib/ui-library/src/pages/workflow/WorkflowPage.vue | page: generic submission workflow side-modal shell (title/stage/actions chrome) | submission-stage-actions | |
-| VUE-workflow-page-ojs | WorkflowPageOJS | lib/ui-library/src/pages/workflow/WorkflowPageOJS.vue | page: OJS-specific workflow mount wiring managers (file/reviewer/contributor/galley/etc.) into WorkflowPage | submission-stage-actions | |
+| VUE-workflow-page | WorkflowPage | lib/ui-library/src/pages/workflow/WorkflowPage.vue | page: generic submission workflow side-modal shell (title/stage/actions chrome) | submission-stage-actions | workflow-stage-navigation |
+| VUE-workflow-page-ojs | WorkflowPageOJS | lib/ui-library/src/pages/workflow/WorkflowPageOJS.vue | page: OJS-specific workflow mount wiring managers (file/reviewer/contributor/galley/etc.) into WorkflowPage | submission-stage-actions | workflow-stage-navigation |
 | VUE-category-manager | CategoryManager | lib/ui-library/src/managers/CategoryManager/CategoryManager.vue | manager: journal category tree CRUD; store categoryManagerStore.js | categories | |
 | VUE-chapter-manager | ChapterManager | lib/ui-library/src/managers/ChapterManager/ChapterManager.vue | manager: monograph chapter list CRUD; no store file | | |
 | VUE-citation-manager | CitationManager | lib/ui-library/src/managers/CitationManager/CitationManager.vue | manager: publication reference/citation list + metadata lookup; store citationManagerStore.js | | |

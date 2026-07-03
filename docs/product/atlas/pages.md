@@ -112,12 +112,12 @@
 | PAGE-user-register | RegistrationHandler::register | lib/pkp/pages/user/RegistrationHandler.php | User registration form page | registration-login.md | |
 | PAGE-user-registeruser | RegistrationHandler::registerUser | lib/pkp/pages/user/RegistrationHandler.php | Submit user registration form | registration-login.md | |
 | PAGE-user-activateuser | RegistrationHandler::activateUser | lib/pkp/pages/user/RegistrationHandler.php | Activate a newly registered account | registration-login.md | |
-| PAGE-workflow-access | WorkflowHandler::access (inherited) | pages/workflow/WorkflowHandler.php | Workflow entry access-check redirect | submission-stage-actions.md | |
-| PAGE-workflow-index | WorkflowHandler::index (inherited) | pages/workflow/WorkflowHandler.php | Workflow stage landing redirect | submission-stage-actions.md | |
-| PAGE-workflow-submission | WorkflowHandler::submission (inherited) | pages/workflow/WorkflowHandler.php | Submission stage workflow page | submission-stage-actions.md | |
-| PAGE-workflow-externalreview | WorkflowHandler::externalReview (inherited) | pages/workflow/WorkflowHandler.php | External review stage workflow page | review-rounds-revisions.md | |
-| PAGE-workflow-editorial | WorkflowHandler::editorial (inherited) | pages/workflow/WorkflowHandler.php | Copyediting stage workflow page | copyediting-stage.md | |
-| PAGE-workflow-production | WorkflowHandler::production (inherited) | pages/workflow/WorkflowHandler.php | Production stage workflow page | production-stage.md | |
+| PAGE-workflow-access | WorkflowHandler::access (inherited) | pages/workflow/WorkflowHandler.php | Workflow entry access-check redirect | submission-stage-actions.md | workflow-stage-navigation |
+| PAGE-workflow-index | WorkflowHandler::index (inherited) | pages/workflow/WorkflowHandler.php | Workflow stage landing redirect | submission-stage-actions.md | workflow-stage-navigation |
+| PAGE-workflow-submission | WorkflowHandler::submission (inherited) | pages/workflow/WorkflowHandler.php | Submission stage workflow page | submission-stage-actions.md | workflow-stage-navigation |
+| PAGE-workflow-externalreview | WorkflowHandler::externalReview (inherited) | pages/workflow/WorkflowHandler.php | External review stage workflow page | review-rounds-revisions.md | workflow-stage-navigation |
+| PAGE-workflow-editorial | WorkflowHandler::editorial (inherited) | pages/workflow/WorkflowHandler.php | Copyediting stage workflow page | copyediting-stage.md | workflow-stage-navigation |
+| PAGE-workflow-production | WorkflowHandler::production (inherited) | pages/workflow/WorkflowHandler.php | Production stage workflow page | production-stage.md | workflow-stage-navigation |
 | PAGE-admin-index | AdminHandler::index | lib/pkp/pages/admin/AdminHandler.php | Site administration landing page | site-administration.md | |
 | PAGE-admin-contexts | AdminHandler::contexts | lib/pkp/pages/admin/AdminHandler.php | Journal/context list for site admin | site-administration.md | |
 | PAGE-admin-settings | AdminHandler::settings | lib/pkp/pages/admin/AdminHandler.php | Site-wide settings page | site-settings.md | |
