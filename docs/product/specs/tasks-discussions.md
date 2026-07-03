@@ -270,12 +270,14 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
     them. <sup>s</sup>
 20. **Applying a template** in the add/edit form fills the form without saving
     anything: it sets the title, the task-or-discussion type, the description (with
-    variables substituted), a due date of today plus the template's due interval, and
-    pre-selects participants — the people currently holding the template's user groups
-    among the submission's stage assignments — with the current user as creator. The
-    template must belong to this journal and match the stage being worked on, or the
-    prefill is refused. If the user applies a template while editing an existing item,
-    the form warns first and then overwrites the current values on confirm. <sup>t</sup>
+    variables substituted), and a due date of today plus the template's due interval.
+    ⚠ It does **not** pre-select participants — the client prefill clears the responsible
+    assignee and leaves the participant list at its default (only the current user, as
+    creator), even though the `fromTemplate` endpoint returns the promoted participants;
+    the form simply ignores them. The template must belong to this journal and match the
+    stage being worked on, or the prefill is refused. If the user applies a template
+    while editing an existing item, the form warns first and then overwrites the current
+    values on confirm. <sup>t</sup>
 21. **Auto-add on stage entry**: a template can be marked to create its item
     automatically. When a submission is first submitted (into its starting stage) and
     each time it enters a stage through an editorial decision, every auto-add template
@@ -419,9 +421,10 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
    deleting it and re-entering the stage creates it again (rule 21); it can't be
    started until someone edits in participants and an owner.
 5. **Apply template prefill** — while adding an item, picking a template flips the form
-   to the template's type, prefills the title, description and due date, and
-   pre-selects participants from the template's user groups; nothing is saved until the
-   user submits the form.
+   to the template's type and prefills the title, description and due date; it does
+   **not** pre-select participants (⚠ the responsible assignee is cleared and the
+   participant list stays at its default, even though the template carries user groups —
+   see rule 20). Nothing is saved until the user submits the form.
 6. **Email opt-out both ways** — one participant blocks discussion emails in their
    profile: the next discussion still reaches their Tasks bell but not their inbox. A
    second participant instead follows the unsubscribe link in an email and confirms —
