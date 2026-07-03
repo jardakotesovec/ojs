@@ -71,10 +71,10 @@
 | DB-reviewer_recommendations | reviewer_recommendations | classes/migration/install/ReviewerRecommendationsMigration.php | Configurable reviewer-recommendation options (NOT reviewer suggestions — different feature) | review-settings | |
 | DB-reviewer_suggestion_settings | reviewer_suggestion_settings | lib/pkp/classes/migration/install/ReviewerSuggestionsMigration.php | Reviewer suggestion settings | | reviewer-suggestions |
 | DB-reviewer_suggestions | reviewer_suggestions | lib/pkp/classes/migration/install/ReviewerSuggestionsMigration.php | Suggested reviewers | reviewer-suggestions | reviewer-suggestions |
-| DB-review_form_element_settings | review_form_element_settings | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form element settings | | |
-| DB-review_form_elements | review_form_elements | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form fields | review-forms | |
-| DB-review_form_settings | review_form_settings | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form configuration | | |
-| DB-review_forms | review_forms | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review evaluation forms | review-forms | |
+| DB-review_form_element_settings | review_form_element_settings | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form element settings | | review-forms |
+| DB-review_form_elements | review_form_elements | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form fields | review-forms | review-forms |
+| DB-review_form_settings | review_form_settings | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form configuration | | review-forms |
+| DB-review_forms | review_forms | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review evaluation forms | review-forms | review-forms |
 | DB-review_round_author_response_authors | review_round_author_response_authors | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Response author mappings | | |
 | DB-review_round_author_response_settings | review_round_author_response_settings | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Author response settings | | |
 | DB-review_round_author_responses | review_round_author_responses | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Author revision responses | reviewer-response | |

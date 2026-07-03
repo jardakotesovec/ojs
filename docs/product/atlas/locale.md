@@ -150,11 +150,11 @@
 | LOC-manager-doi-editor | `doi.editor.*` | manager.po | 28 keys |  | |
 | LOC-manager-manager-statistics | `manager.statistics.*` | manager.po | 27 keys |  | |
 | LOC-manager-manager-emails | `manager.emails.*` | manager.po | 24 keys |  | |
-| LOC-manager-manager-reviewFormElements | `manager.reviewFormElements.*` | manager.po | 23 keys |  | |
+| LOC-manager-manager-reviewFormElements | `manager.reviewFormElements.*` | manager.po | 23 keys |  | review-forms |
 | LOC-manager-stats-dateRange | `stats.dateRange.*` | manager.po | 21 keys |  | |
 | LOC-manager-plugins-categories | `plugins.categories.*` | manager.po | 20 keys |  | |
 | LOC-manager-settings-roles | `settings.roles.*` | manager.po | 19 keys |  | |
-| LOC-manager-manager-reviewForms | `manager.reviewForms.*` | manager.po | 18 keys |  | |
+| LOC-manager-manager-reviewForms | `manager.reviewForms.*` | manager.po | 18 keys |  | review-forms |
 | LOC-manager-stats-name | `stats.name.*` | manager.po | 16 keys |  | |
 | LOC-manager-manager-contributorRoles | `manager.contributorRoles.*` | manager.po | 16 keys |  | |
 | LOC-manager-manager-settings | `manager.settings.*` | manager.po | 13 keys |  | |
