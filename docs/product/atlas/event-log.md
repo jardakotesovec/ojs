@@ -8,8 +8,8 @@
 |----|---------|---------|------------|------|------------|
 | EVLOG-SUBM-SUBMIT | SUBMISSION_LOG_SUBMISSION_SUBMIT | lib/pkp/classes/observers/listeners/LogSubmissionSubmitted.php:42 | Author submits manuscript | submission.event.submissionSubmitted; activity-log | submission-wizard |
 | EVLOG-SUBM-META-UPD | SUBMISSION_LOG_METADATA_UPDATE | lib/pkp/classes/publication/Repository.php | Publication metadata changed | submission.event.metadataUpdated | |
-| EVLOG-SUBM-ADD-PART | SUBMISSION_LOG_ADD_PARTICIPANT | lib/pkp/controllers/grid/users/stageParticipant/StageParticipantGridHandler.php | Stage participant added | submission.event.participantAdded; stage-participants | |
-| EVLOG-SUBM-REM-PART | SUBMISSION_LOG_REMOVE_PARTICIPANT | lib/pkp/controllers/grid/users/stageParticipant/StageParticipantGridHandler.php | Stage participant removed | submission.event.participantRemoved; stage-participants | |
+| EVLOG-SUBM-ADD-PART | SUBMISSION_LOG_ADD_PARTICIPANT | lib/pkp/controllers/grid/users/stageParticipant/StageParticipantGridHandler.php | Stage participant added | submission.event.participantAdded; stage-participants | stage-participants |
+| EVLOG-SUBM-REM-PART | SUBMISSION_LOG_REMOVE_PARTICIPANT | lib/pkp/controllers/grid/users/stageParticipant/StageParticipantGridHandler.php | Stage participant removed | submission.event.participantRemoved; stage-participants | stage-participants |
 | EVLOG-SUBM-META-PUB | SUBMISSION_LOG_METADATA_PUBLISH | lib/pkp/classes/publication/Repository.php | Metadata published | submission.event.metadataPublished | publication-versioning |
 | EVLOG-SUBM-META-UNPUB | SUBMISSION_LOG_METADATA_UNPUBLISH | lib/pkp/classes/publication/Repository.php | Metadata unpublished | submission.event.metadataUnpublished | publication-versioning |
 | EVLOG-SUBM-VER-CRT | SUBMISSION_LOG_CREATE_VERSION | lib/pkp/classes/publication/Repository.php | Publication version created | submission.event.versionCreated; publication-versioning | publication-versioning |

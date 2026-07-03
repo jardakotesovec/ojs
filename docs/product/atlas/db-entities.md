@@ -84,7 +84,7 @@
 | DB-review_form_responses | review_form_responses | lib/pkp/classes/migration/install/ReviewsMigration.php | Reviewer form responses | | |
 | DB-review_round_files | review_round_files | lib/pkp/classes/migration/install/ReviewsMigration.php | Review round attachments | | |
 | DB-review_rounds | review_rounds | lib/pkp/classes/migration/install/ReviewsMigration.php | Review workflow rounds | review-rounds-revisions | |
-| DB-stage_assignments | stage_assignments | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User stage role assignments | stage-participants | |
+| DB-stage_assignments | stage_assignments | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User stage role assignments | stage-participants | stage-participants |
 | DB-user_group_settings | user_group_settings | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User group settings | | |
 | DB-user_group_stage | user_group_stage | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | Group stage assignments | | |
 | DB-user_groups | user_groups | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | Role definitions | roles-permissions | |
@@ -111,7 +111,7 @@
 | DB-edit_task_templates | edit_task_templates | lib/pkp/classes/migration/install/SubmissionsMigration.php | Editorial task templates | editorial-tasks | tasks-discussions |
 | DB-edit_tasks | edit_tasks | lib/pkp/classes/migration/install/SubmissionsMigration.php | Individual editorial tasks | editorial-tasks | tasks-discussions |
 | DB-publication_settings | publication_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Publication metadata settings | | |
-| DB-subeditor_submission_group | subeditor_submission_group | lib/pkp/classes/migration/install/SubmissionsMigration.php | Subeditor assignment groups | | |
+| DB-subeditor_submission_group | subeditor_submission_group | lib/pkp/classes/migration/install/SubmissionsMigration.php | Subeditor assignment groups (section/category → sub-editor map; auto-assign source) | | stage-participants |
 | DB-submission_comments | submission_comments | lib/pkp/classes/migration/install/SubmissionsMigration.php | Comments on submissions | discussions | |
 | DB-submission_settings | submission_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Submission metadata settings | | |
 | DB-submissions | submissions | lib/pkp/classes/migration/install/SubmissionsMigration.php | Submission records | submission-drafts | submission-wizard |
