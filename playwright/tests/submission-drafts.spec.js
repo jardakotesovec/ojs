@@ -124,6 +124,13 @@ async function enableBulkDeleteSelection(page) {
 		.getByRole('button', {name: 'More Actions', exact: true})
 		.click();
 	await page.getByRole('menuitem', {name: BULK_DELETE_LABEL}).click();
+	// Selection mode is asynchronous — the per-row checkboxes mount a tick
+	// after the menu click. Wait for them so a later per-row check can't
+	// race the render (and so a search-settle that quietly reset selection
+	// surfaces here, not as a missing-checkbox failure downstream).
+	await expect(page.getByRole('checkbox').first()).toBeAttached({
+		timeout: 10_000,
+	});
 }
 
 /**
@@ -283,7 +290,7 @@ test.describe('Submission drafts', () => {
 			await expect(
 				dashboard.viewHeading(/Incomplete submissions/),
 			).toBeVisible({timeout: 20_000});
-			await dashboard.search(tag);
+			await searchAndSettle(page, dashboard, tag);
 
 			// Its own stage — "Incomplete" — with the Complete-submission
 			// action instead of stage activity, and no workflow View
@@ -332,7 +339,7 @@ test.describe('Submission drafts', () => {
 
 			const dashboard = new DashboardPage(page);
 			await dashboard.gotoMySubmissions({view: 'incomplete-submissions'});
-			await dashboard.search(tag);
+			await searchAndSettle(page, dashboard, tag);
 			await expect(dashboard.row(goneTitle)).toBeVisible({
 				timeout: 20_000,
 			});

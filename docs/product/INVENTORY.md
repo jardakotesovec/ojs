@@ -16,6 +16,7 @@ features are added here as atom clusters get named.
 | author-dashboard | My Submissions list (state views, search, filters, per-state rows) + the author's read-mostly tracking view of one submission; legacy authorDashboard redirect + readSubmissionEmail | pkp-lib | verified | 5 |
 | editorial-dashboards | Editor Dashboard (role-scoped state views, counts, filters, search, sort, table + row actions) + reviewer My-Assignments dashboard, shared DashboardPage machinery, legacy submissions/dashboard redirects | pkp-lib | verified | 16 |
 | workflow-stage-navigation | The workflow-modal shell for editorial roles: header/stage bubble, stage + publication menu (round sub-items), default-pane-per-state, stage-access matrix, workflowMenuKey deep links, legacy workflow/* redirect shims | pkp-lib | verified | 12 |
+| editorial-decisions | The decision engine: Record-Decision wizard, notify-author/reviewer/other-authors emails, attach-files, the decision→stage/status/round transition machine, decline & revert, request-revisions vs resubmit, recommend-only flow, Done-stage transitions | pkp-lib | verified | 41 |
 
 Pilot outcome (2026-07-02): both specs adversarially verified with live probes; verifier
 refuted 3 permission cells + 1 state rule in tasks-discussions pre-fix (all corrected),

@@ -28,7 +28,7 @@
 | PAGE-dashboard-editorial | DashboardHandler::editorial (inherited) | pages/dashboard/DashboardHandler.php | Editorial-role dashboard view | editorial-dashboards.md | editorial-dashboards |
 | PAGE-dashboard-mysubmissions | DashboardHandler::mySubmissions (inherited) | pages/dashboard/DashboardHandler.php | Author's "my submissions" dashboard view | author-dashboard.md | author-dashboard |
 | PAGE-dashboard-reviewassignments | DashboardHandler::reviewAssignments (inherited) | pages/dashboard/DashboardHandler.php | Reviewer's assignments dashboard view (reviewer-only; no editor variant — verified 2026-07-03) | editorial-dashboards.md | editorial-dashboards |
-| PAGE-decision-record | DecisionHandler::record | lib/pkp/pages/decision/DecisionHandler.php | Record an editorial decision, reached via pages/decision | review-decisions.md | |
+| PAGE-decision-record | DecisionHandler::record | lib/pkp/pages/decision/DecisionHandler.php | Record an editorial decision, reached via pages/decision | review-decisions.md | editorial-decisions |
 | PAGE-dois-index | DoisHandler::index (inherited) | pages/dois/DoisHandler.php | DOI management listing page | doi-management.md | |
 | PAGE-dois-management | DoisHandler::management | pages/dois/index.php | In role list but not routed/implemented (dead) | | |
 | PAGE-gateway-index | GatewayHandler::index | pages/gateway/GatewayHandler.php | Gateway plugin interaction entry page | | |

@@ -338,6 +338,52 @@ exports.EditorialWorkflowPage = class EditorialWorkflowPage extends BasePage {
 	}
 
 	/**
+	 * Reveal the CC/BCC fields on the current decision email step and fill
+	 * them. The "Add CC/BCC" link (Composer.vue `enableCC`) is only shown
+	 * before the fields are revealed; once clicked, the cc/bcc inputs
+	 * mount with ids `{stepId}-cc` / `{stepId}-bcc` (Composer.vue). Waits
+	 * for the template load first so the reveal isn't overwritten when the
+	 * default template arrives.
+	 *
+	 * @param {string} stepId  decision step id, e.g. 'notifyAuthors'
+	 * @param {{cc?: string, bcc?: string}} addresses
+	 */
+	async addCcBccToDecisionEmail(stepId, {cc, bcc} = {}) {
+		await this.awaitEmailTemplateLoaded();
+		await this.page
+			.getByRole('button', {name: 'Add CC/BCC', exact: true})
+			.click();
+		if (cc !== undefined) {
+			const ccInput = this.page.locator(`#${stepId}-cc`);
+			await expect(ccInput).toBeVisible({timeout: 10_000});
+			await ccInput.fill(cc);
+		}
+		if (bcc !== undefined) {
+			await this.page.locator(`#${stepId}-bcc`).fill(bcc);
+		}
+	}
+
+	/**
+	 * Click "Skip this email" on the current decision email step. The
+	 * footer skip link (`record.tpl` `.decision__skipStep`, label "Skip
+	 * this email") is rendered only for a skippable email step that hasn't
+	 * already been skipped; clicking it marks the step skipped so no email
+	 * is sent when the decision is recorded. `toggleSkippedStep` then
+	 * auto-advances to the next step when the email isn't the last step,
+	 * or flips the panel to the "skipped" notice on a last email step — in
+	 * both cases the footer skip link disappears, which we wait on.
+	 */
+	async skipDecisionEmail() {
+		await this.awaitEmailTemplateLoaded();
+		const skip = this.page.getByRole('button', {
+			name: 'Skip this email',
+			exact: true,
+		});
+		await skip.click();
+		await expect(skip).toHaveCount(0, {timeout: 10_000});
+	}
+
+	/**
 	 * Open a review-round panel from the workflow side nav. Round items
 	 * are labelled "Review Round {n}" (workflow.reviewRoundN) nested
 	 * under the "Review" stage item; when another stage is active the

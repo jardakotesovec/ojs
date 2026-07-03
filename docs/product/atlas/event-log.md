@@ -14,9 +14,9 @@
 | EVLOG-SUBM-META-UNPUB | SUBMISSION_LOG_METADATA_UNPUBLISH | lib/pkp/classes/publication/Repository.php | Metadata unpublished | submission.event.metadataUnpublished | publication-versioning |
 | EVLOG-SUBM-VER-CRT | SUBMISSION_LOG_CREATE_VERSION | lib/pkp/classes/publication/Repository.php | Publication version created | submission.event.versionCreated; publication-versioning | publication-versioning |
 | EVLOG-SUBM-COPY-AGR | SUBMISSION_LOG_COPYRIGHT_AGREED | lib/pkp/api/v1/submissions/PKPSubmissionController.php:267 | Author agrees to copyright notice | submission.event.copyrightNoticeAgreed | submission-wizard |
-| EVLOG-SUBM-ED-DEC | SUBMISSION_LOG_EDITOR_DECISION | lib/pkp/classes/decision/Repository.php | Editorial decision recorded | submission.event.editorDecision; review-decisions | |
-| EVLOG-SUBM-ED-REC | SUBMISSION_LOG_EDITOR_RECOMMENDATION | lib/pkp/classes/decision/Repository.php | Editor recommendation made | submission.event.editorRecommendation | |
-| EVLOG-SUBM-ED-EMAIL | SUBMISSION_LOG_DECISION_EMAIL_SENT | lib/pkp/classes/decision/types/traits/NotifyReviewers.php | Decision notification email sent | submission.event.decisionEmailSent; email-delivery | |
+| EVLOG-SUBM-ED-DEC | SUBMISSION_LOG_EDITOR_DECISION | lib/pkp/classes/decision/Repository.php | Editorial decision recorded | submission.event.editorDecision; review-decisions | editorial-decisions |
+| EVLOG-SUBM-ED-REC | SUBMISSION_LOG_EDITOR_RECOMMENDATION | lib/pkp/classes/decision/Repository.php | Editor recommendation made | submission.event.editorRecommendation | editorial-decisions |
+| EVLOG-SUBM-ED-EMAIL | SUBMISSION_LOG_DECISION_EMAIL_SENT | lib/pkp/classes/decision/types/traits/NotifyReviewers.php | Decision notification email sent | submission.event.decisionEmailSent; email-delivery | editorial-decisions |
 | EVLOG-REV-ASSIGN | SUBMISSION_LOG_REVIEW_ASSIGN | lib/pkp/classes/submission/action/EditorAction.php | Reviewer assigned to review | submission.event.reviewerAssigned; reviewer-assignment | |
 | EVLOG-REV-REIN | SUBMISSION_LOG_REVIEW_REINSTATED | lib/pkp/controllers/grid/users/reviewer/form/ReinstateReviewerForm.php | Review assignment reinstated | submission.event.reviewerReinstated | |
 | EVLOG-REV-ACCP | SUBMISSION_LOG_REVIEW_ACCEPT | lib/pkp/classes/submission/reviewer/ReviewerAction.php | Reviewer accepts review | submission.event.reviewerAccepted; reviewer-response | |
