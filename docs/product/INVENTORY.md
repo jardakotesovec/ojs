@@ -18,6 +18,7 @@ features are added here as atom clusters get named.
 | workflow-stage-navigation | The workflow-modal shell for editorial roles: header/stage bubble, stage + publication menu (round sub-items), default-pane-per-state, stage-access matrix, workflowMenuKey deep links, legacy workflow/* redirect shims | pkp-lib | verified | 12 |
 | editorial-decisions | The decision engine: Record-Decision wizard, notify-author/reviewer/other-authors emails, attach-files, the decision→stage/status/round transition machine, decline & revert, request-revisions vs resubmit, recommend-only flow, Done-stage transitions | pkp-lib | verified | 41 |
 | stage-participants | The per-stage Participants panel: add/edit/remove a participant (user + role, recommend-only/metadata flags, optional notify), assignment-grants-access effect, assistant read-only scoping, submission-time auto-assignment from subeditor_submission_group | pkp-lib | verified | 8 |
+| send-to-review | The Submission-stage (stage 1) workspace: incoming submission files, Desk Review discussions, participants, the "before any reviewer" state, and the three stage-1 exits (Send for Review / Accept and Skip Review / Decline) with the stage-1 UX + which files carry forward; decisions themselves referenced from editorial-decisions | pkp-lib | verified | 1 |
 
 Pilot outcome (2026-07-02): both specs adversarially verified with live probes; verifier
 refuted 3 permission cells + 1 state rule in tasks-discussions pre-fix (all corrected),

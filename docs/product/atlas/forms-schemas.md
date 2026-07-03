@@ -99,7 +99,7 @@
 | SCHEMA-issue | Schema | `schemas/issue.json` | Issue entity; sections/galleys/articles, DOI, cover image, publish status (31 props) | issue-management.md | |
 | SCHEMA-publication-ojs | Schema | `schemas/publication.json` | OJS-specific publication props (no title/entity name of its own): issueId/sectionId/pages/articleNumber/accessStatus (8 props) | publication-publish-flow.md | publication-versioning |
 | SCHEMA-section-ojs | Schema | `schemas/section.json` | Section entity; OJS-specific section props: abstractsNotRequired/reviewFormId/wordCount (10 props) | sections.md | |
-| SCHEMA-submission-ojs | Schema | `schemas/submission.json` | Submission entity; OJS-specific submission props: sectionId/issueToBePublished/reviewerSuggestions (4 props) | submission-settings.md | |
+| SCHEMA-submission-ojs | Schema | `schemas/submission.json` | Submission entity; OJS-specific submission props: sectionId/issueToBePublished/reviewerSuggestions (4 props) | submission-settings.md | send-to-review |
 | SCHEMA-affiliation | Schema | `lib/pkp/schemas/affiliation.json` | Affiliation entity; author institutional affiliation; ROR linkage (5 props) | contributors.md | |
 | SCHEMA-announcement | Schema | `lib/pkp/schemas/announcement.json` | Announcement entity; news item; dateExpire/datePosted/typeId/image props (12 props) | announcements.md | |
 | SCHEMA-author | Schema | `lib/pkp/schemas/author.json` | Author entity; publication contributor; ORCID auth/token props, credit/contributor roles (32 props) | contributors.md | |
