@@ -76,7 +76,7 @@
 | VUE-submissions-list-panel | SubmissionsListPanel | lib/ui-library/src/components/ListPanel/submissions/SubmissionsListPanel.vue | component: generic submissions list panel | author-dashboard | |
 | VUE-select-reviewer-list-panel | SelectReviewerListPanel | lib/ui-library/src/components/ListPanel/users/SelectReviewerListPanel.vue | component: reviewer picker list panel used when assigning reviewers | reviewer-assignment | assign-and-manage-reviewers |
 | VUE-pkp-comments | PkpComments | lib/ui-library/src/frontend/components/PkpComments/PkpComments.vue | component: reader-facing public discussion comments + reporting | public-comments | |
-| VUE-pkp-open-review | PkpOpenReview | lib/ui-library/src/frontend/components/PkpOpenReview/PkpOpenReview.vue | component: public display of open/transparent peer review history | review-anonymity | |
+| VUE-pkp-open-review | PkpOpenReview | lib/ui-library/src/frontend/components/PkpOpenReview/PkpOpenReview.vue | component: public display of open/transparent peer review history | review-anonymity | review-anonymity |
 | VUE-pkp-cite | PkpCiteBody | lib/ui-library/src/frontend/components/PkpCite/PkpCiteBody.vue | component: article "how to cite" citation-format display/download | | |
 | VUE-pkp-crossmark-button | PkpCrossmarkButton | lib/ui-library/src/frontend/components/PkpCrossmarkButton/PkpCrossmarkButton.vue | component: Crossref Crossmark status button on article page | | |
 | VUE-pkp-usage-chart | PkpUsageChart | lib/ui-library/src/frontend/components/PkpUsageChart/PkpUsageChart.vue | component: reader-facing article/issue usage stats chart | usage-statistics | |
