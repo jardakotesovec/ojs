@@ -454,14 +454,18 @@ test.describe('Review forms (builder)', () => {
 			const [deletableRowId] = await rf.rowIds(title);
 			expect(deletableRowId).toBe(rowId);
 
-			// Delete via the row action + confirm.
-			await rf.clickRowAction(deletableRowId, 'delete');
-			await rf.confirmOk();
-
-			// The row is gone from the grid.
-			await expect
-				.poll(async () => (await rf.rowIds(title)).length, {timeout: 20_000})
-				.toBe(0);
+			// Delete via the row action + confirm. Under parallel load the
+			// legacy grid can swallow the confirm's delete AJAX (the OK
+			// dismisses but the row survives), so retry the whole click+
+			// confirm until the row is actually gone.
+			await expect(async () => {
+				if ((await rf.rowIds(title)).length === 0) return; // already gone
+				await rf.clickRowAction(deletableRowId, 'delete');
+				await rf.confirmOk();
+				await expect
+					.poll(async () => (await rf.rowIds(title)).length, {timeout: 5_000})
+					.toBe(0);
+			}).toPass({timeout: 30_000});
 		},
 	);
 

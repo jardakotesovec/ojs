@@ -40,7 +40,7 @@
 | MAIL-payment-request | PaymentRequest | classes/mail/mailables/PaymentRequest.php | template key: PAYMENT_REQUEST_NOTIFICATION | | |
 | MAIL-publication-version-notify | PublicationVersionNotify | lib/pkp/classes/mail/mailables/PublicationVersionNotify.php | template key: VERSION_CREATED | notifications | publication-versioning |
 | MAIL-recommendation-notify-editors | RecommendationNotifyEditors | lib/pkp/classes/mail/mailables/RecommendationNotifyEditors.php | template key: EDITOR_RECOMMENDATION | notifications | editorial-decisions |
-| MAIL-request-review-round-author-response | RequestReviewRoundAuthorResponse | lib/pkp/classes/mail/mailables/RequestReviewRoundAuthorResponse.php | template key: REQUEST_REVIEW_ROUND_AUTHOR_RESPONSE | email-delivery | |
+| MAIL-request-review-round-author-response | RequestReviewRoundAuthorResponse | lib/pkp/classes/mail/mailables/RequestReviewRoundAuthorResponse.php | template key: REQUEST_REVIEW_ROUND_AUTHOR_RESPONSE | email-delivery | review-rounds-and-revisions |
 | MAIL-review-acknowledgement | ReviewAcknowledgement | lib/pkp/classes/mail/mailables/ReviewAcknowledgement.php | template key: REVIEW_ACK | email-delivery | reviewer-response |
 | MAIL-review-complete-notify-editors | ReviewCompleteNotifyEditors | lib/pkp/classes/mail/mailables/ReviewCompleteNotifyEditors.php | template key: REVIEW_COMPLETE | notifications | reviewer-response |
 | MAIL-review-confirm | ReviewConfirm | lib/pkp/classes/mail/mailables/ReviewConfirm.php | template key: REVIEW_CONFIRM | email-delivery | reviewer-response |

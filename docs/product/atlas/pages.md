@@ -167,7 +167,7 @@
 | PAGE-orcid-authorizeorcid | OrcidHandler::authorizeOrcid | lib/pkp/pages/orcid/OrcidHandler.php | Begin ORCID OAuth authorization redirect | orcid.md | |
 | PAGE-orcid-about | OrcidHandler::about | lib/pkp/pages/orcid/OrcidHandler.php | ORCID integration info page | orcid.md | |
 | PAGE-orcid-updatescope | OrcidHandler::updateScope | lib/pkp/pages/orcid/OrcidHandler.php | Update granted ORCID API scope | orcid.md | |
-| PAGE-reviewresponse-requestauthorresponse | ReviewResponseHandler::requestAuthorResponse | lib/pkp/pages/reviewResponse/ReviewResponseHandler.php | Editor requests author's response to a review | reviewer-response.md | |
+| PAGE-reviewresponse-requestauthorresponse | ReviewResponseHandler::requestAuthorResponse | lib/pkp/pages/reviewResponse/ReviewResponseHandler.php | Editor requests author's response to a review | reviewer-response.md | review-rounds-and-revisions |
 | PAGE-submissions-index | DashboardHandler::index | lib/pkp/pages/dashboard/DashboardHandler.php | Legacy `/submissions`; live as a 302 to the role-priority dashboard (verified 2026-07-03) | editorial-dashboards.md | editorial-dashboards |
 | PAGE-submissions-tasks | DashboardHandler::tasks | lib/pkp/pages/dashboard/DashboardHandler.php | Legacy tasks popup; routed but 500s — template dashboard/tasks.tpl no longer exists (verified 2026-07-03; ledger row proposed) | editorial-dashboards.md | editorial-dashboards |
 

@@ -75,15 +75,15 @@
 | DB-review_form_elements | review_form_elements | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form fields | review-forms | review-forms |
 | DB-review_form_settings | review_form_settings | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form configuration | | review-forms |
 | DB-review_forms | review_forms | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review evaluation forms | review-forms | review-forms |
-| DB-review_round_author_response_authors | review_round_author_response_authors | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Response author mappings | | |
-| DB-review_round_author_response_settings | review_round_author_response_settings | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Author response settings | | |
-| DB-review_round_author_responses | review_round_author_responses | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Author revision responses | reviewer-response | |
-| DB-review_round_settings | review_round_settings | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Review round configuration | | |
+| DB-review_round_author_response_authors | review_round_author_response_authors | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Response author mappings | | review-rounds-and-revisions |
+| DB-review_round_author_response_settings | review_round_author_response_settings | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Author response settings | | review-rounds-and-revisions |
+| DB-review_round_author_responses | review_round_author_responses | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Author revision responses | reviewer-response | review-rounds-and-revisions |
+| DB-review_round_settings | review_round_settings | lib/pkp/classes/migration/install/ReviewRoundAuthorResponse.php | Review round configuration | | review-rounds-and-revisions |
 | DB-review_assignments | review_assignments | lib/pkp/classes/migration/install/ReviewsMigration.php | Review assignments | reviewer-assignment | assign-and-manage-reviewers |
 | DB-review_files | review_files | lib/pkp/classes/migration/install/ReviewsMigration.php | Review attachments | | reviewer-response |
 | DB-review_form_responses | review_form_responses | lib/pkp/classes/migration/install/ReviewsMigration.php | Reviewer form responses | | reviewer-response |
-| DB-review_round_files | review_round_files | lib/pkp/classes/migration/install/ReviewsMigration.php | Review round attachments | | |
-| DB-review_rounds | review_rounds | lib/pkp/classes/migration/install/ReviewsMigration.php | Review workflow rounds | review-rounds-revisions | |
+| DB-review_round_files | review_round_files | lib/pkp/classes/migration/install/ReviewsMigration.php | Review round attachments | | review-rounds-and-revisions |
+| DB-review_rounds | review_rounds | lib/pkp/classes/migration/install/ReviewsMigration.php | Review workflow rounds | review-rounds-revisions | review-rounds-and-revisions |
 | DB-stage_assignments | stage_assignments | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User stage role assignments | stage-participants | stage-participants |
 | DB-user_group_settings | user_group_settings | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User group settings | | |
 | DB-user_group_stage | user_group_stage | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | Group stage assignments | | |
