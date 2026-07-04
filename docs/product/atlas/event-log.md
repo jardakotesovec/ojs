@@ -7,7 +7,7 @@
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
 | EVLOG-SUBM-SUBMIT | SUBMISSION_LOG_SUBMISSION_SUBMIT | lib/pkp/classes/observers/listeners/LogSubmissionSubmitted.php:42 | Author submits manuscript | submission.event.submissionSubmitted; activity-log | submission-wizard |
-| EVLOG-SUBM-META-UPD | SUBMISSION_LOG_METADATA_UPDATE | lib/pkp/classes/publication/Repository.php | Publication metadata changed | submission.event.metadataUpdated | |
+| EVLOG-SUBM-META-UPD | SUBMISSION_LOG_METADATA_UPDATE | lib/pkp/classes/publication/Repository.php | Publication metadata changed | submission.event.metadataUpdated | publication-metadata-references |
 | EVLOG-SUBM-ADD-PART | SUBMISSION_LOG_ADD_PARTICIPANT | lib/pkp/controllers/grid/users/stageParticipant/StageParticipantGridHandler.php | Stage participant added | submission.event.participantAdded; stage-participants | stage-participants |
 | EVLOG-SUBM-REM-PART | SUBMISSION_LOG_REMOVE_PARTICIPANT | lib/pkp/controllers/grid/users/stageParticipant/StageParticipantGridHandler.php | Stage participant removed | submission.event.participantRemoved; stage-participants | stage-participants |
 | EVLOG-SUBM-META-PUB | SUBMISSION_LOG_METADATA_PUBLISH | lib/pkp/classes/publication/Repository.php | Metadata published | submission.event.metadataPublished | publication-versioning |

@@ -127,8 +127,8 @@ atoms: FORM-title-abstract, API-submission-get-publication-titleAbstract-form, A
 ### contributors — contributor CRUD, ordering, primary contact, affiliations, CRediT roles on a publication (reused in the wizard)
 atoms: VUE-contributor-manager, VUE-contributor-role-manager, VUE-contributors-list-panel, FORM-contributor-form, DB-authors(+settings,affiliations), credit_contributor_roles/credit_roles, SCHEMA-author, PLUGIN-generic-credit (~12). ROR affiliation storage is Background (affiliations-ror).
 
-### publication-metadata-references — keywords/subjects/disciplines/agencies per-locale, categories, edit-permission gate, and the reference list (structured/raw citation edit)
-Merged-from: the metadata portion of publication-metadata + citations-references. Background PID/metadata enrichment of citations is Background (citation-enrichment-pipeline).
+### publication-metadata-references — keywords/subjects/disciplines/agencies per-locale + coverage/rights/source/type/funding, edit-permission gate, and the reference list (structured/raw citation edit)
+Merged-from: the metadata portion of publication-metadata + citations-references. Background PID/metadata enrichment of citations is Background (citation-enrichment-pipeline). NOTE (verifier 2026-07-04): categories are NOT on the Metadata tab — post-submission category assignment lives on the Issue tab (`IssueEntryForm`, owned by publication-issue-assignment, which claims DB-publication_categories); the "categories" scope was dropped from this line.
 atoms: FORM-{pkp-metadata,pkp-citations,citation-raw-edit,citation-structured-edit}, API-submission-get-publication-metadata-form, VUE-citation-manager, SCHEMA-citation, API-citation-* (getMany/get/edit/delete/reprocess), DB-publication_settings, DB-citations(+settings), EVLOG-SUBM-META-UPD (~20)
 
 ### galleys — galley create/edit/delete, file vs remote URL, labels, ordering, galley DOI; HTML/PDF/JATS/Lens render plugins

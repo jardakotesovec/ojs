@@ -6,7 +6,6 @@ status: verified
 e2e-plans: [submission-wizard-metadata.md]
 atlas-claims:
   - FORM-for-the-editors
-  - FORM-pkp-metadata-form
   - FORM-pkp-data-availability-form
   - FORM-pkp-metadata-settings-form
   - FORM-metadata-settings-form
@@ -297,11 +296,12 @@ External settings that change this feature's behaviour:
 
 ## Open questions
 
-1. **FORM-pkp-metadata-form dual listing**: FEATURE-MAP lists it under both this
-   feature and `publication-metadata-references` (the class is the shared parent of
-   the wizard's ForTheEditors and the workflow Metadata tab). Claimed here per
-   FEATURE-MAP's atom line for this feature; should grooming hand the base-form atom
-   to `publication-metadata-references` and keep only FORM-for-the-editors here?
+1. ~~**FORM-pkp-metadata-form dual listing**~~ **Resolved (2026-07-04):** the base
+   `PKPMetadataForm` is instantiated *directly* by the workflow Metadata tab (no OJS
+   override, no subclass), while this wizard step uses the `ForTheEditors` subclass — so
+   `FORM-pkp-metadata-form` was handed to `publication-metadata-references` (Publication-tab
+   use) and this spec keeps only `FORM-for-the-editors`. The base-class anchors on
+   `PKPMetadataForm::__construct()` in Fields remain as provenance for the shared field set.
 2. **FORM-pkp-data-availability-form seam**: the same form class serves the wizard's
    intake section (this spec) and the workflow tab fetched via
    `_components/dataAvailability` (feature `data-availability-citations`, whose
@@ -332,7 +332,7 @@ External settings that change this feature's behaviour:
 
 | Entry | Path | Atom |
 |-------|------|------|
-| For the Editors metadata form | wizard step 4 (`/{journal}/submission?id=N`), first section | FORM-for-the-editors (subclass of FORM-pkp-metadata-form, both claimed here — see Open questions 1) |
+| For the Editors metadata form | wizard step 4 (`/{journal}/submission?id=N`), first section | FORM-for-the-editors (subclass of FORM-pkp-metadata-form; this spec claims only the subclass — the base is owned by publication-metadata-references) |
 | Data availability intake section | wizard step 4, second section (when asked/required) | FORM-pkp-data-availability-form (seam — Open questions 2) |
 | Details-step Keywords field | wizard step 2 | — (FORM-details owned by submission-wizard; the keywords field is added by Details::__construct()) |
 | Metadata settings panel | Settings → Workflow → Submission → Metadata (`/{journal}/management/settings/workflow`) | FORM-pkp-metadata-settings-form, FORM-metadata-settings-form |

@@ -15,8 +15,8 @@
 | DB-categories | categories | lib/pkp/classes/migration/install/CategoriesMigration.php | Publication categories/research areas | browse-category-section | |
 | DB-category_settings | category_settings | lib/pkp/classes/migration/install/CategoriesMigration.php | Settings for categories | | |
 | DB-publication_categories | publication_categories | lib/pkp/classes/migration/install/CategoriesMigration.php | Publication-category mappings | | |
-| DB-citation_settings | citation_settings | lib/pkp/classes/migration/install/MetadataMigration.php | Settings for citations | | |
-| DB-citations | citations | lib/pkp/classes/migration/install/MetadataMigration.php | Extracted and formatted citations | | |
+| DB-citation_settings | citation_settings | lib/pkp/classes/migration/install/MetadataMigration.php | Settings for citations | | publication-metadata-references |
+| DB-citations | citations | lib/pkp/classes/migration/install/MetadataMigration.php | Extracted and formatted citations | | publication-metadata-references |
 | DB-data_citation_settings | data_citation_settings | lib/pkp/classes/migration/install/MetadataMigration.php | Settings for data citations | | |
 | DB-data_citations | data_citations | lib/pkp/classes/migration/install/MetadataMigration.php | Data set citations | | |
 | DB-filter_groups | filter_groups | lib/pkp/classes/migration/install/MetadataMigration.php | Filter processing groups | | |
@@ -110,7 +110,7 @@
 | DB-edit_task_template_user_groups | edit_task_template_user_groups | lib/pkp/classes/migration/install/SubmissionsMigration.php | Template task role assignments | | tasks-discussions |
 | DB-edit_task_templates | edit_task_templates | lib/pkp/classes/migration/install/SubmissionsMigration.php | Editorial task templates | editorial-tasks | tasks-discussions |
 | DB-edit_tasks | edit_tasks | lib/pkp/classes/migration/install/SubmissionsMigration.php | Individual editorial tasks | editorial-tasks | tasks-discussions |
-| DB-publication_settings | publication_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Publication metadata settings | | |
+| DB-publication_settings | publication_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Publication metadata settings | | publication-metadata-references |
 | DB-subeditor_submission_group | subeditor_submission_group | lib/pkp/classes/migration/install/SubmissionsMigration.php | Subeditor assignment groups (section/category → sub-editor map; auto-assign source) | | stage-participants |
 | DB-submission_comments | submission_comments | lib/pkp/classes/migration/install/SubmissionsMigration.php | Comments on submissions | discussions | |
 | DB-submission_settings | submission_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Submission metadata settings | | |
