@@ -1,8 +1,8 @@
 // @ts-check
-const {test, expect} = require('../support/fixtures.js');
-const {IssuePage} = require('../pages/IssuePage.js');
-const {waitForJQueryIdle} = require('../../lib/pkp/playwright/support/jquery.js');
-const {fixtureFilePath} = require('../../lib/pkp/playwright/pages/FileStagePanel.js');
+const {test, expect} = require('../../support/fixtures.js');
+const {IssuePage} = require('../../pages/IssuePage.js');
+const {waitForJQueryIdle} = require('../../../lib/pkp/playwright/support/jquery.js');
+const {fixtureFilePath} = require('../../../lib/pkp/playwright/pages/FileStagePanel.js');
 const {execFileSync} = require('child_process');
 const path = require('path');
 
@@ -62,7 +62,7 @@ const CONFIRM_DELETE = /Are you sure you wish to delete this item/i;
 const CONFIRM_SET_CURRENT = /Are you sure you want to set this issue as current/i;
 const CONFIRM_REMOVE_ARTICLE = /Are you sure you wish to remove this article from the issue/i;
 
-const REPO_ROOT = path.resolve(__dirname, '../..');
+const REPO_ROOT = path.resolve(__dirname, '../../..');
 
 /** A unique, hyphenless, alphanumeric tag (parallel isolation). */
 function uniqueTag() {

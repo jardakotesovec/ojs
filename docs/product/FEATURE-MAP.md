@@ -181,8 +181,13 @@ Open-review visibility follows review-anonymity (referenced).
 atoms: PAGE-article-{view,download,viewfile,downloadsuppfile}, VUE-pkp-{cite,crossmark-button,orcid-display,open-review}, PLUGIN-generic-{recommendByAuthor,recommendBySimilarity,dublinCoreMeta,googleScholar} (~10). References review-anonymity.
 
 ### article-recommendations — reader sees related articles (same author / similar keywords)
-Kept as a real feature (decision 8) — round-2 backlog plugins with a reader surface.
-atoms: PLUGIN-generic-{recommendByAuthor,recommendBySimilarity}
+**RESOLVED — merged into `article-landing` (article-landing verify, 2026-07-04).** Its only atoms are
+the two recommend-by reader footer blocks, which live on the article page and are now single-owned by
+`article-landing` (spec rule 13 + canonical scenario 10; atlas `plugins.md` claims them there). This
+stanza is retained for traceability only — **feature 39 is dropped as a standalone feature** (no
+INVENTORY row was ever created, so nothing to retire); re-split only if a dedicated config surface
+appears. Superseded the "kept as a real feature (decision 8)" note above.
+atoms: PLUGIN-generic-{recommendByAuthor,recommendBySimilarity} → **article-landing**
 
 ### issue-archive-toc — public archive listing, current issue, single-issue TOC, section grouping, issue-galley download
 atoms: PAGE-issue-{index,current,archive,view,download}, GRID-toc-grid, SCHEMA-issue, PLUGIN-catalog (~5)

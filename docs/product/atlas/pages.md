@@ -14,8 +14,8 @@
 | PAGE-about-contact | AboutContextHandler::contact | lib/pkp/pages/about/AboutContextHandler.php | Journal contact info page | | |
 | PAGE-about-privacy | AboutSiteHandler::privacy | lib/pkp/pages/about/AboutSiteHandler.php | Privacy statement page | | |
 | PAGE-about-aboutthispublishingsystem | AboutSiteHandler::aboutThisPublishingSystem | lib/pkp/pages/about/AboutSiteHandler.php | "About this publishing system" info page | | |
-| PAGE-article-view | ArticleHandler::view | pages/article/ArticleHandler.php | Article landing/abstract view page | article-landing.md | |
-| PAGE-article-viewfile | ArticleHandler::viewFile | pages/article/ArticleHandler.php | Legacy article file view URL | | |
+| PAGE-article-view | ArticleHandler::view | pages/article/ArticleHandler.php | Article landing/abstract view page | article-landing.md | article-landing |
+| PAGE-article-viewfile | ArticleHandler::viewFile | pages/article/ArticleHandler.php | Legacy article file view URL (301 → download) | | article-landing |
 | PAGE-article-downloadsuppfile | ArticleHandler::downloadSuppFile | pages/article/ArticleHandler.php | Legacy supplementary file download URL | galleys | galleys |
 | PAGE-article-download | ArticleHandler::download | pages/article/ArticleHandler.php | Article galley/file download | galleys.md | galleys |
 | PAGE-authordashboard-submission | AuthorDashboardHandler::submission (inherited) | pages/authorDashboard/AuthorDashboardHandler.php | Legacy author-dashboard URL; live as a 302 to dashboard/mySubmissions?workflowSubmissionId=N (verified 2026-07-03) | author-dashboard.md | author-dashboard |

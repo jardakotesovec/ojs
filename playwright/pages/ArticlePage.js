@@ -60,6 +60,35 @@ exports.ArticlePage = class ArticlePage extends BasePage {
 		this.dataAvailabilitySection = page.locator(
 			'section.item.dataAvailability#data-availability-statement',
 		);
+
+		// -- Plugin-injected reader blocks ----------------------------------
+		// How-to-cite block: the citationStyleLanguage plugin's server-rendered
+		// Blade `citation-block`, injected at the Templates::Article::Details
+		// hook (a `<div class="item citation">`). Present only when the plugin
+		// is enabled for the journal (publicknowledge enables it in bootstrap).
+		this.citationBlock = page.locator('.item.citation');
+		this.citationOutput = page.locator('.item.citation #citationOutput');
+		// Author ORCID links — raw template markup (`$author->getData('orcid')`),
+		// NOT the PkpOrcidDisplay Vue component (as-built note in the spec).
+		this.orcidLinks = page.locator(
+			'section.item.authors ul.authors li .orcid a',
+		);
+		// Crossmark button Vue island (crossref plugin, Crossmark option) — off
+		// by default, so absent on a stock journal.
+		this.crossmarkButton = page.locator('pkp-crossmark-button');
+	}
+
+	/**
+	 * A citation-export download link inside the how-to-cite block, matched by
+	 * its export op (`citationstylelanguage/download/{format}`), e.g. 'bibtex'
+	 * or 'ris'.
+	 *
+	 * @param {string} format
+	 */
+	citationDownloadLink(format) {
+		return this.citationBlock.locator(
+			`a[href*="citationstylelanguage/download/${format}"]`,
+		);
 	}
 
 	/**
