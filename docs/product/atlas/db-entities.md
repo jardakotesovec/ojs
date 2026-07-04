@@ -6,8 +6,8 @@
 
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
-| DB-author_affiliation_settings | author_affiliation_settings | lib/pkp/classes/migration/install/AffiliationsMigration.php | Settings for author affiliations | | |
-| DB-author_affiliations | author_affiliations | lib/pkp/classes/migration/install/AffiliationsMigration.php | Author institutional affiliations | contributors | |
+| DB-author_affiliation_settings | author_affiliation_settings | lib/pkp/classes/migration/install/AffiliationsMigration.php | Settings for author affiliations | affiliations-ror | contributor affiliation FIELD is in contributors.md; storage owned by affiliations-ror |
+| DB-author_affiliations | author_affiliations | lib/pkp/classes/migration/install/AffiliationsMigration.php | Author institutional affiliations | affiliations-ror | contributor affiliation FIELD is in contributors.md; storage owned by affiliations-ror |
 | DB-announcement_settings | announcement_settings | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Settings for announcements | | |
 | DB-announcement_type_settings | announcement_type_settings | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Settings for announcement types | | |
 | DB-announcement_types | announcement_types | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Announcement type definitions | | |
@@ -97,9 +97,9 @@
 | DB-submission_files | submission_files | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submitted document files | submission-files | submission-files |
 | DB-variant_groups | variant_groups | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | File variant groupings | | |
 | DB-submissions_fulltext | submissions_fulltext | lib/pkp/classes/migration/install/SubmissionSearchMigration.php | Full-text search index | site-search | |
-| DB-author_settings | author_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Author metadata settings | | |
+| DB-author_settings | author_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Author metadata settings | contributors | |
 | DB-authors | authors | lib/pkp/classes/migration/install/SubmissionsMigration.php | Publication authors | contributors | |
-| DB-contributor_role_settings | contributor_role_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Contributor role settings | | |
+| DB-contributor_role_settings | contributor_role_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Contributor role settings | contributors | |
 | DB-contributor_roles | contributor_roles | lib/pkp/classes/migration/install/SubmissionsMigration.php | Contributor role definitions | contributors | |
 | DB-credit_contributor_roles | credit_contributor_roles | lib/pkp/classes/migration/install/SubmissionsMigration.php | CRediT contribution types | contributors | |
 | DB-credit_roles | credit_roles | lib/pkp/classes/migration/install/SubmissionsMigration.php | CRediT taxonomy | contributors | |

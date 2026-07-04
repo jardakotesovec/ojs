@@ -37,7 +37,7 @@
 | LOC-api-api-files | `api.files.*` | api.po | 5 keys |  | |
 | LOC-api-api-emailTemplates | `api.emailTemplates.*` | api.po | 4 keys |  | |
 | LOC-api-api-emails | `api.emails.*` | api.po | 4 keys |  | |
-| LOC-api-api-contributorRole | `api.contributorRole.*` | api.po | 4 keys |  | |
+| LOC-api-api-contributorRole | `api.contributorRole.*` | api.po | 4 keys | contributors | |
 | LOC-api-misc | `(misc)` | api.po | 4 rarer prefixes | api.publications (3), api.reviewRound (3), api.highlights (3), api.categories (3) | |
 | LOC-author-author-submit | `author.submit.*` | author.po | 79 keys |  | |
 | LOC-author-author-submissions | `author.submissions.*` | author.po | 9 keys |  | |
@@ -87,7 +87,7 @@
 | LOC-grid-grid-action | `grid.action.*` | grid.po | 125 keys |  | |
 | LOC-grid-grid-user | `grid.user.*` | grid.po | 45 keys |  | |
 | LOC-grid-grid-userGroup | `grid.userGroup.*` | grid.po | 10 keys |  | |
-| LOC-grid-contributor-listPanel | `contributor.listPanel.*` | grid.po | 7 keys |  | |
+| LOC-grid-contributor-listPanel | `contributor.listPanel.*` | grid.po | 7 keys | contributors | |
 | LOC-grid-grid-libraryFiles | `grid.libraryFiles.*` | grid.po | 6 keys |  | document-library |
 | LOC-grid-grid-columns | `grid.columns.*` | grid.po | 6 keys |  | |
 | LOC-grid-grid-artworkFile | `grid.artworkFile.*` | grid.po | 6 keys |  | |
@@ -156,7 +156,7 @@
 | LOC-manager-settings-roles | `settings.roles.*` | manager.po | 19 keys |  | |
 | LOC-manager-manager-reviewForms | `manager.reviewForms.*` | manager.po | 18 keys |  | review-forms |
 | LOC-manager-stats-name | `stats.name.*` | manager.po | 16 keys |  | |
-| LOC-manager-manager-contributorRoles | `manager.contributorRoles.*` | manager.po | 16 keys |  | |
+| LOC-manager-manager-contributorRoles | `manager.contributorRoles.*` | manager.po | 16 keys | contributors | |
 | LOC-manager-manager-settings | `manager.settings.*` | manager.po | 13 keys |  | |
 | LOC-manager-manager-category | `manager.category.*` | manager.po | 13 keys |  | |
 | LOC-manager-grid-category | `grid.category.*` | manager.po | 13 keys |  | |
