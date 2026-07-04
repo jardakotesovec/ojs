@@ -53,7 +53,7 @@
 | VUE-composer | Composer | lib/ui-library/src/components/Composer/Composer.vue | component: rich email composer used across editorial email workflows | email-delivery | |
 | VUE-file-attacher | FileAttacher | lib/ui-library/src/components/FileAttacher/FileAttacher.vue | component: attach submission/review/library files to an email or message | submission-files | submission-files |
 | VUE-navigation-menu-editor | NavigationMenuEditor | lib/ui-library/src/components/NavigationMenuEditor/NavigationMenuEditor.vue | component: drag-and-drop navigation menu tree editor | navigation-menus | |
-| VUE-insert-summary-of-changes-modal | InsertSummaryOfChangesModal | lib/ui-library/src/components/InsertSummaryOfChanges/InsertSummaryOfChangesModal.vue | component: modal to log a change-summary note when editing published metadata | editor-metadata-editing | |
+| VUE-insert-summary-of-changes-modal | InsertSummaryOfChangesModal | lib/ui-library/src/components/InsertSummaryOfChanges/InsertSummaryOfChangesModal.vue | component: modal to log a change-summary note when editing published metadata | editor-metadata-editing | publication-amendments |
 | VUE-top-nav-actions | TopNavActions | lib/ui-library/src/components/TopNavActions/TopNavActions.vue | component: site header actions bar (help, tasks/notifications, user menu) | notifications | |
 | VUE-side-nav | SideNav | lib/ui-library/src/components/SideNav/SideNav.vue | component: app-wide left sidebar navigation | | |
 | VUE-theme-form | ThemeForm | lib/ui-library/src/components/Form/context/ThemeForm.vue | component: journal theme selection/appearance settings form | website-appearance | |

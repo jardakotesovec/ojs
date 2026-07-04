@@ -157,8 +157,8 @@ Renamed-from: publication-scheduling. The publish/unpublish transition triggers 
 atoms: GRID-modals-publish-publish-handler, FORM-publish-form, SCHEMA-publication (status/accessStatus), TASK-publishsubmissions, API-publications-publish/unpublish (~13). References editorial-decisions.
 
 ### publication-amendments — Summary-of-Changes + update type: author submits revisions to a published article, editor inserts them, versioned update types
-New 3.6 flow.
-atoms: VUE-insert-summary-of-changes-modal, DB-review_round_author_responses (published-version path), update-type props (~6)
+New 3.6 flow. Verified spec (`specs/publication-amendments.md`, status draft). SEAM RESOLVED (verifier 2026-07-04): this feature does NOT use `DB-review_round_author_responses` — that table is single-owned by review-rounds-and-revisions (the review-round written-response flow, a distinct feature). The amendment "author submits → editor inserts" path runs through the file-level `summaryOfChanges` on review-revision files + `publications.update_type`. Feature IS live in OJS 3.6 for editor-side capture (options wired via OJS DashboardHandler override, live-probed); reader-side public display is NOT implemented (⚠). The "update-type props" resolve to the schema props on SCHEMA-publication-{pkp,ojs} (owned by versioning) + `publications.update_type` (no separate atom) — only 2 atoms are actually claimable.
+atoms: VUE-insert-summary-of-changes-modal, LOC-submission-publication-updateType (NOT DB-review_round_author_responses — see seam note)
 
 ### data-availability-citations — data-set citations & the data-availability statement on a publication
 Kept as a real feature (decision 8) — has its own manager/edit surface.

@@ -206,7 +206,7 @@
 | LOC-submission-notification-type | `notification.type.*` | submission.po | 18 keys |  | |
 | LOC-submission-submission-notes | `submission.notes.*` | submission.po | 17 keys |  | |
 | LOC-submission-discussion-form | `discussion.form.*` | submission.po | 16 keys |  | tasks-discussions |
-| LOC-submission-publication-updateType | `publication.updateType.*` | submission.po | 14 keys |  | |
+| LOC-submission-publication-updateType | `publication.updateType.*` | submission.po | 14 keys |  | publication-amendments |
 | LOC-submission-submission-comments | `submission.comments.*` | submission.po | 13 keys |  | |
 | LOC-submission-publication-jats | `publication.jats.*` | submission.po | 13 keys |  | |
 | LOC-submission-publication-publish | `publication.publish.*` | submission.po | 12 keys |  | |
