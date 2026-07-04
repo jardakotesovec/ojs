@@ -224,7 +224,7 @@
 | LOC-submission-submission-page | `submission.page.*` | submission.po | 5 keys |  | |
 | LOC-submission-submission-informationCenter | `submission.informationCenter.*` | submission.po | 5 keys |  | |
 | LOC-submission-submission-howToCite | `submission.howToCite.*` | submission.po | 5 keys |  | |
-| LOC-submission-publication-bodyText | `publication.bodyText.*` | submission.po | 5 keys |  | |
+| LOC-submission-publication-bodyText | `publication.bodyText.*` | submission.po | 5 keys |  | publication-title-abstract-body |
 | LOC-submission-grid-action | `grid.action.*` | submission.po | 4 keys |  | |
 | LOC-submission-submission-form | `submission.form.*` | submission.po | 4 keys |  | |
 | LOC-submission-submission-email | `submission.email.*` | submission.po | 4 keys |  | |

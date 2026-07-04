@@ -17,7 +17,6 @@ atlas-claims:
   - FORM-reconfigure-submission-ojs
   - FORM-confirm-submission
   - FORM-details
-  - FORM-title-abstract-form
   - FORM-comments-for-the-editors
   - GRID-lib-pkp-wizard-file-upload-file-upload-wizard-handler
   - DB-submissions
@@ -448,7 +447,7 @@ All of these fire at final submit (they are event-driven off the submission even
 | Start form (config) | StartSubmission form, PKP base + OJS section field | FORM-start-submission-pkp, FORM-start-submission-ojs |
 | Wizard page (Vue) | `SubmissionWizardPage` (lib/ui-library Container) | — (no atom swept for the page component) |
 | Reconfigure modal | "Change" → `ReconfigureSubmissionModal` | VUE-reconfigure-submission-modal, FORM-reconfigure-submission-pkp, FORM-reconfigure-submission-ojs |
-| Details step forms | Details (OJS wizard) / TitleAbstractForm (base) | FORM-details, FORM-title-abstract-form |
+| Details step forms | Details (OJS wizard) / TitleAbstractForm (base) | FORM-details (the base `FORM-title-abstract-form` is owned by `publication-title-abstract-body` — the post-submission Title & Abstract tab; the wizard's Details step subclasses it) |
 | Comments for the editors | For-the-Editors step section | FORM-comments-for-the-editors |
 | Confirm step | Review step Confirmation section | FORM-confirm-submission |
 | Create draft API | `POST api/v1/submissions` | API-submission-add |
