@@ -35,7 +35,7 @@
 | VUE-contributor-role-manager | ContributorRoleManager | lib/ui-library/src/managers/ContributorRoleManager/ContributorRoleManager.vue | manager: CRediT contributor role settings CRUD; store contributorRoleManagerStore.js | contributors | |
 | VUE-data-citation-manager | DataCitationManager | lib/ui-library/src/managers/DataCitationManager/DataCitationManager.vue | manager: data availability citation list; store dataCitationManagerStore.js | | |
 | VUE-discussion-manager | DiscussionManager | lib/ui-library/src/managers/DiscussionManager/DiscussionManager.vue | manager: internal editorial discussion threads; store discussionManagerStore.js | discussions | tasks-discussions |
-| VUE-file-manager | FileManager | lib/ui-library/src/managers/FileManager/FileManager.vue | manager: submission file stage list; store fileManagerStore.js | submission-files | |
+| VUE-file-manager | FileManager | lib/ui-library/src/managers/FileManager/FileManager.vue | manager: submission file stage list; store fileManagerStore.js | submission-files | submission-files |
 | VUE-galley-manager | GalleyManager | lib/ui-library/src/managers/GalleyManager/GalleyManager.vue | manager: publication galley (format) list CRUD; store galleyManagerStore.js | galleys | |
 | VUE-media-file-manager | MediaFileManager | lib/ui-library/src/managers/MediaFileManager/MediaFileManager.vue | manager: publication media/supplementary file list; store mediaFileManagerStore.js | media-files | |
 | VUE-navigation-menu-manager-field | NavigationMenuManagerField | lib/ui-library/src/managers/NavigationMenuManager/NavigationMenuManagerField.vue | manager: form field for assigning navigation-menu items; no store file (uses useNavigationMenuManagerForm.js) | navigation-menus | |
@@ -51,7 +51,7 @@
 | VUE-user-access-manager | UserAccessManager | lib/ui-library/src/managers/UserAccessManager/UserAccessManager.vue | manager: user role/group access list; store UserAccessManagerStore.js | roles-permissions | |
 | VUE-user-invitation-manager | UserInvitationManager | lib/ui-library/src/managers/UserInvitationManager/UserInvitationManager.vue | manager: pending user invitation list; store UserInvitationManagerStore.js | user-invitations | |
 | VUE-composer | Composer | lib/ui-library/src/components/Composer/Composer.vue | component: rich email composer used across editorial email workflows | email-delivery | |
-| VUE-file-attacher | FileAttacher | lib/ui-library/src/components/FileAttacher/FileAttacher.vue | component: attach submission/review/library files to an email or message | submission-files | |
+| VUE-file-attacher | FileAttacher | lib/ui-library/src/components/FileAttacher/FileAttacher.vue | component: attach submission/review/library files to an email or message | submission-files | submission-files |
 | VUE-navigation-menu-editor | NavigationMenuEditor | lib/ui-library/src/components/NavigationMenuEditor/NavigationMenuEditor.vue | component: drag-and-drop navigation menu tree editor | navigation-menus | |
 | VUE-insert-summary-of-changes-modal | InsertSummaryOfChangesModal | lib/ui-library/src/components/InsertSummaryOfChanges/InsertSummaryOfChangesModal.vue | component: modal to log a change-summary note when editing published metadata | editor-metadata-editing | |
 | VUE-top-nav-actions | TopNavActions | lib/ui-library/src/components/TopNavActions/TopNavActions.vue | component: site header actions bar (help, tasks/notifications, user menu) | notifications | |
@@ -69,9 +69,9 @@
 | VUE-doi-list-panel-ojs | DoiListPanelOJS | lib/ui-library/src/components/ListPanel/doi/DoiListPanelOJS.vue | component: OJS-specific DOI list panel mount (issues+articles+galleys) | doi-management | |
 | VUE-highlights-list-panel | HighlightsListPanel | lib/ui-library/src/components/ListPanel/highlights/HighlightsListPanel.vue | component: homepage "highlights" carousel item list CRUD | journal-homepage | |
 | VUE-institutions-list-panel | InstitutionsListPanel | lib/ui-library/src/components/ListPanel/institutions/InstitutionsListPanel.vue | component: subscription-access institutions list CRUD | institutions | |
-| VUE-listing-files-list-panel | ListingFilesListPanel | lib/ui-library/src/components/ListPanel/listingFiles/ListingFilesListPanel.vue | component: read-only listing of files (e.g. dependent files) | submission-files | |
+| VUE-listing-files-list-panel | ListingFilesListPanel | lib/ui-library/src/components/ListPanel/listingFiles/ListingFilesListPanel.vue | component: read-only listing of files (e.g. dependent files) | submission-files | submission-files |
 | VUE-reviewer-suggestions-list-panel | ReviewerSuggestionsListPanel | lib/ui-library/src/components/ListPanel/reviewerSuggestions/ReviewerSuggestionsListPanel.vue | component: list panel of author-suggested reviewers | reviewer-suggestions | reviewer-suggestions |
-| VUE-submission-files-list-panel | SubmissionFilesListPanel | lib/ui-library/src/components/ListPanel/submissionFiles/SubmissionFilesListPanel.vue | component: submission files list panel with selection | submission-files | |
+| VUE-submission-files-list-panel | SubmissionFilesListPanel | lib/ui-library/src/components/ListPanel/submissionFiles/SubmissionFilesListPanel.vue | component: submission files list panel with selection | submission-files | submission-files |
 | VUE-catalog-list-panel | CatalogListPanel | lib/ui-library/src/components/ListPanel/submissions/CatalogListPanel.vue | component: published catalog entries list (OMP-oriented) | | |
 | VUE-submissions-list-panel | SubmissionsListPanel | lib/ui-library/src/components/ListPanel/submissions/SubmissionsListPanel.vue | component: generic submissions list panel | author-dashboard | |
 | VUE-select-reviewer-list-panel | SelectReviewerListPanel | lib/ui-library/src/components/ListPanel/users/SelectReviewerListPanel.vue | component: reviewer picker list panel used when assigning reviewers | reviewer-assignment | assign-and-manage-reviewers |

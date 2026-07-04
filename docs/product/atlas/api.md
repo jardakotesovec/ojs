@@ -6,7 +6,7 @@
 
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
-| API-temporary-files-upload-file | POST /temporaryFiles | lib/pkp/api/v1/temporaryFiles/PKPTemporaryFilesController.php:69 | Route handler PKPTemporaryFilesController::uploadFile() |  | |
+| API-temporary-files-upload-file | POST /temporaryFiles | lib/pkp/api/v1/temporaryFiles/PKPTemporaryFilesController.php:69 | Route handler PKPTemporaryFilesController::uploadFile() |  | submission-files |
 | API-institution-get-many | GET /institutions | lib/pkp/api/v1/institutions/PKPInstitutionController.php:70 | Route handler PKPInstitutionController::getMany() | institutions.md | |
 | API-institution-get | GET /institutions/{institutionId} | lib/pkp/api/v1/institutions/PKPInstitutionController.php:73 | Route handler PKPInstitutionController::get() | institutions.md | |
 | API-institution-add | POST /institutions | lib/pkp/api/v1/institutions/PKPInstitutionController.php:77 | Route handler PKPInstitutionController::add() | institutions.md | |
@@ -173,12 +173,12 @@
 | API-editorial-task-add-note | POST /submissions/{submissionId}/tasks/{taskId}/notes | lib/pkp/api/v1/submissions/tasks/EditorialTaskController.php:138 | Route handler EditorialTaskController::addNote() | editorial-tasks.md | tasks-discussions |
 | API-editorial-task-delete-note | DELETE /submissions/{submissionId}/tasks/{taskId}/notes/{noteId} | lib/pkp/api/v1/submissions/tasks/EditorialTaskController.php:142 | Route handler EditorialTaskController::deleteNote() | editorial-tasks.md | tasks-discussions |
 | API-editorial-task-get-participants | GET /submissions/{submissionId}/stages/{stageId}/tasks/participants | lib/pkp/api/v1/submissions/tasks/EditorialTaskController.php:146 | Route handler EditorialTaskController::getParticipants() | editorial-tasks.md | tasks-discussions |
-| API-submission-file-get-many | GET /submissions/{submissionId}/files | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:74 | Route handler PKPSubmissionFileController::getMany() | submission-files.md | |
-| API-submission-file-get | GET /submissions/{submissionId}/files/{submissionFileId} | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:77 | Route handler PKPSubmissionFileController::get() | submission-files.md | |
-| API-submission-file-add | POST /submissions/{submissionId}/files | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:81 | Route handler PKPSubmissionFileController::add() | submission-files.md | |
-| API-submission-file-edit | PUT /submissions/{submissionId}/files/{submissionFileId} | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:84 | Route handler PKPSubmissionFileController::edit() | submission-files.md | |
-| API-submission-file-delete | DELETE /submissions/{submissionId}/files/{submissionFileId} | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:88 | Route handler PKPSubmissionFileController::delete() | submission-files.md | |
-| API-submission-file-copy | PUT /submissions/{submissionId}/files/{submissionFileId}/copy | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:102 | Route handler PKPSubmissionFileController::copy() | submission-files.md | |
+| API-submission-file-get-many | GET /submissions/{submissionId}/files | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:74 | Route handler PKPSubmissionFileController::getMany() | submission-files.md | submission-files |
+| API-submission-file-get | GET /submissions/{submissionId}/files/{submissionFileId} | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:77 | Route handler PKPSubmissionFileController::get() | submission-files.md | submission-files |
+| API-submission-file-add | POST /submissions/{submissionId}/files | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:81 | Route handler PKPSubmissionFileController::add() | submission-files.md | submission-files |
+| API-submission-file-edit | PUT /submissions/{submissionId}/files/{submissionFileId} | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:84 | Route handler PKPSubmissionFileController::edit() | submission-files.md | submission-files |
+| API-submission-file-delete | DELETE /submissions/{submissionId}/files/{submissionFileId} | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:88 | Route handler PKPSubmissionFileController::delete() | submission-files.md | submission-files |
+| API-submission-file-copy | PUT /submissions/{submissionId}/files/{submissionFileId}/copy | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:102 | Route handler PKPSubmissionFileController::copy() | submission-files.md | submission-files |
 | API-site-get | GET /site | lib/pkp/api/v1/site/PKPSiteController.php:65 | Route handler PKPSiteController::get() | site-settings.md | |
 | API-site-get-theme | GET /site/theme | lib/pkp/api/v1/site/PKPSiteController.php:68 | Route handler PKPSiteController::getTheme() | site-settings.md | |
 | API-site-edit | PUT /site | lib/pkp/api/v1/site/PKPSiteController.php:71 | Route handler PKPSiteController::edit() | site-settings.md | |

@@ -89,7 +89,7 @@
 | FORM-comments-for-the-editors | Form | `lib/pkp/classes/components/forms/submission/CommentsForTheEditors.php` | CommentsForTheEditors: For the Editors step in the submission wizard; ~1 fields | submission-wizard-core.md | submission-wizard |
 | FORM-confirm-submission | Form | `lib/pkp/classes/components/forms/submission/ConfirmSubmission.php` | ConfirmSubmission: confirm step in the submission wizard; ~1 fields | submission-wizard-core.md | submission-wizard |
 | FORM-for-the-editors | Form | `lib/pkp/classes/components/forms/submission/ForTheEditors.php` | ForTheEditors: For the Editors step in the submission wizard (extends PKPMetadataForm); ~1 fields | submission-wizard-core.md | submission-wizard-metadata |
-| FORM-pkp-submission-file-form | Form | `lib/pkp/classes/components/forms/submission/PKPSubmissionFileForm.php` | PKPSubmissionFileForm: editing a submission file; ~1 fields | submission-files.md | |
+| FORM-pkp-submission-file-form | Form | `lib/pkp/classes/components/forms/submission/PKPSubmissionFileForm.php` | PKPSubmissionFileForm: editing a submission file; ~1 fields | submission-files.md | submission-files |
 | FORM-reviewer-suggestions-form | Form | `lib/pkp/classes/components/forms/submission/ReviewerSuggestionsForm.php` | ReviewerSuggestionsForm: submission's associated reviewer suggestions; ~6 fields | reviewer-suggestions.md | reviewer-suggestions |
 | FORM-start-submission-pkp | Form | `lib/pkp/classes/components/forms/submission/StartSubmission.php` | StartSubmission (PKP): begin the submission wizard (base); ~6 fields | submission-wizard-core.md | submission-wizard |
 | FORM-submission-guidance-settings | Form | `lib/pkp/classes/components/forms/submission/SubmissionGuidanceSettings.php` | SubmissionGuidanceSettings: submission wizard instruction settings; ~10 fields | submission-settings.md | |
@@ -124,7 +124,7 @@
 | SCHEMA-section-pkp | Schema | `lib/pkp/schemas/section.json` | Section entity; shared section/series entity; editorRestricted/isInactive (6 props) | sections.md | |
 | SCHEMA-site | Schema | `lib/pkp/schemas/site.json` | Site entity; overall site hosting contexts; stats/locales/email config (37 props) | site-settings.md | |
 | SCHEMA-submission-pkp | Schema | `lib/pkp/schemas/submission.json` | Submission entity; shared submission entity; participants/reviewRounds/decisions/status (32 props) | submission-settings.md | |
-| SCHEMA-submission-file | Schema | `lib/pkp/schemas/submissionFile.json` | Submission File entity; file + metadata; genre/fileStage/dependentFiles (43 props) | submission-files.md | |
+| SCHEMA-submission-file | Schema | `lib/pkp/schemas/submissionFile.json` | Submission File entity; file + metadata; genre/fileStage/dependentFiles (43 props) | submission-files.md | submission-files |
 | SCHEMA-user | Schema | `lib/pkp/schemas/user.json` | User entity; registered user; auth/API key/locales/gossip props (49 props) | user-management.md | |
 | SCHEMA-user-group | Schema | `lib/pkp/schemas/userGroup.json` | UserGroup entity; role-bound user group; permitSettings/masthead/roleId (14 props) | roles-permissions.md | |
 

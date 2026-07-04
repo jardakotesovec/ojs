@@ -43,7 +43,7 @@
 | DB-dois | dois | lib/pkp/classes/migration/install/DoiMigration.php | Digital object identifiers | publication-identifiers-license | |
 | DB-email_template_user_group_access | email_template_user_group_access | lib/pkp/classes/migration/install/EmailTemplateUserGroupAccessMigration.php | Template access by role | | |
 | DB-failed_jobs | failed_jobs | lib/pkp/classes/migration/install/FailedJobsMigration.php | Failed background job records | jobs-queue | |
-| DB-files | files | lib/pkp/classes/migration/install/FilesMigration.php | File storage metadata | | |
+| DB-files | files | lib/pkp/classes/migration/install/FilesMigration.php | File storage metadata | | submission-files |
 | DB-genre_settings | genre_settings | lib/pkp/classes/migration/install/GenresMigration.php | Settings for submission genres | | |
 | DB-genres | genres | lib/pkp/classes/migration/install/GenresMigration.php | File type genres | submission-files | |
 | DB-highlight_settings | highlight_settings | lib/pkp/classes/migration/install/HighlightsMigration.php | Settings for highlights | | |
@@ -92,9 +92,9 @@
 | DB-ror_settings | ror_settings | lib/pkp/classes/migration/install/RorsMigration.php | ROR identifier settings | | |
 | DB-rors | rors | lib/pkp/classes/migration/install/RorsMigration.php | Research organization ROR records | | |
 | DB-sessions | sessions | lib/pkp/classes/migration/install/SessionsMigration.php | User session data | login-as | |
-| DB-submission_file_revisions | submission_file_revisions | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submission file versions | | |
-| DB-submission_file_settings | submission_file_settings | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submission file settings | | |
-| DB-submission_files | submission_files | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submitted document files | submission-files | |
+| DB-submission_file_revisions | submission_file_revisions | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submission file versions | | submission-files |
+| DB-submission_file_settings | submission_file_settings | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submission file settings | | submission-files |
+| DB-submission_files | submission_files | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submitted document files | submission-files | submission-files |
 | DB-variant_groups | variant_groups | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | File variant groupings | | |
 | DB-submissions_fulltext | submissions_fulltext | lib/pkp/classes/migration/install/SubmissionSearchMigration.php | Full-text search index | site-search | |
 | DB-author_settings | author_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Author metadata settings | | |
@@ -115,7 +115,7 @@
 | DB-submission_comments | submission_comments | lib/pkp/classes/migration/install/SubmissionsMigration.php | Comments on submissions | discussions | |
 | DB-submission_settings | submission_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Submission metadata settings | | |
 | DB-submissions | submissions | lib/pkp/classes/migration/install/SubmissionsMigration.php | Submission records | submission-drafts | submission-wizard |
-| DB-temporary_files | temporary_files | lib/pkp/classes/migration/install/TemporaryFilesMigration.php | Temporary file uploads | | |
+| DB-temporary_files | temporary_files | lib/pkp/classes/migration/install/TemporaryFilesMigration.php | Temporary file uploads | | submission-files |
 | DB-data_object_tombstone_oai_set_objects | data_object_tombstone_oai_set_objects | lib/pkp/classes/migration/install/TombstoneMigration.php | OAI set tombstone mappings | | |
 | DB-data_object_tombstone_settings | data_object_tombstone_settings | lib/pkp/classes/migration/install/TombstoneMigration.php | Tombstone metadata | | |
 | DB-data_object_tombstones | data_object_tombstones | lib/pkp/classes/migration/install/TombstoneMigration.php | Deleted content record | | |

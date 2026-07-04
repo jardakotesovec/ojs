@@ -42,10 +42,10 @@
 | EVLOG-TASK-FILE-RM | SUBMISSION_LOG_TASK_FILE_REMOVED | lib/pkp/api/v1/submissions/tasks/EditorialTaskController.php | File removed from task | submission.event.taskFileRemoved; editorial-tasks | tasks-discussions |
 | EVLOG-TASK-PART-ADD | SUBMISSION_LOG_TASK_PARTICIPANTS_ADDED | lib/pkp/api/v1/submissions/tasks/EditorialTaskController.php | Participants added to task | submission.event.taskParticipantsAdded; editorial-tasks | tasks-discussions |
 | EVLOG-TASK-PART-REM | SUBMISSION_LOG_TASK_PARTICIPANTS_REMOVED | lib/pkp/api/v1/submissions/tasks/EditorialTaskController.php | Participants removed from task | submission.event.taskParticipantsRemoved; editorial-tasks | tasks-discussions |
-| EVLOG-FILE-UPLOAD | SUBMISSION_LOG_FILE_UPLOAD | lib/pkp/classes/submissionFile/Repository.php:line 435 | Submission file uploaded | submission.event.fileUploaded; submission-files | |
-| EVLOG-FILE-REV-UP | SUBMISSION_LOG_FILE_REVISION_UPLOAD | lib/pkp/classes/submissionFile/Repository.php:line 440 | File revision uploaded | submission.event.fileRevisionUploaded; submission-files | |
-| EVLOG-FILE-EDIT | SUBMISSION_LOG_FILE_EDIT | lib/pkp/classes/submissionFile/Repository.php | File metadata edited | submission.event.fileEdited; submission-files | |
-| EVLOG-FILE-DELETE | SUBMISSION_LOG_FILE_DELETE | lib/pkp/classes/submissionFile/Repository.php | Submission file deleted | submission.event.fileDeleted; submission-files | |
+| EVLOG-FILE-UPLOAD | SUBMISSION_LOG_FILE_UPLOAD | lib/pkp/classes/submissionFile/Repository.php:line 435 | Submission file uploaded | submission.event.fileUploaded; submission-files | submission-files |
+| EVLOG-FILE-REV-UP | SUBMISSION_LOG_FILE_REVISION_UPLOAD | lib/pkp/classes/submissionFile/Repository.php:line 440 | File revision uploaded | submission.event.fileRevisionUploaded; submission-files | submission-files |
+| EVLOG-FILE-EDIT | SUBMISSION_LOG_FILE_EDIT | lib/pkp/classes/submissionFile/Repository.php | File metadata edited | submission.event.fileEdited; submission-files | submission-files |
+| EVLOG-FILE-DELETE | SUBMISSION_LOG_FILE_DELETE | lib/pkp/classes/submissionFile/Repository.php | Submission file deleted | submission.event.fileDeleted; submission-files | submission-files |
 | EVLOG-EMAIL-AUTH-REV | AUTHOR_NOTIFY_REVISED_VERSION | lib/pkp/classes/log/SubmissionEmailLogEventType.php:24 | Author notified of revision request | lib.pkp.submission.event.authorNotifyRevisedVersion | email-delivery |
 | EVLOG-EMAIL-AUTH-ACK | AUTHOR_SUBMISSION_ACK | lib/pkp/classes/log/SubmissionEmailLogEventType.php:25 | Submission acknowledgement to author | lib.pkp.submission.event.authorSubmissionAck | email-delivery |
 | EVLOG-EMAIL-ED-AUTH-NOT | EDITOR_NOTIFY_AUTHOR | lib/pkp/classes/log/SubmissionEmailLogEventType.php:28 | Editor notifies author | lib.pkp.submission.event.editorNotifyAuthor | email-delivery |
