@@ -53,7 +53,7 @@
 | TASK-fileloader | lib/pkp/classes/task | FileLoader.php | Load static files into storage (setup) | ? |  |
 | TASK-pkpusagestatstloader | lib/pkp/classes/task | PKPUsageStatsLoader.php | Load usage stats log files (PKP) | ? |  |
 | TASK-processqueuejobs | lib/pkp/classes/task | ProcessQueueJobs.php | Drain job queue (scheduled task runner) | jobs-queue e2e |  |
-| TASK-publishsubmissions | lib/pkp/classes/task | PublishSubmissions.php | Auto-publish scheduled submissions | ? |  |
+| TASK-publishsubmissions | lib/pkp/classes/task | PublishSubmissions.php | Auto-publish scheduled submissions | publication-publish-flow | publication-publish-flow |
 | TASK-removeexpiredinvitations | lib/pkp/classes/task | RemoveExpiredInvitations.php | Clean up expired review invites | scheduled-tasks (out of scope) |  |
 | TASK-removefailedjobs | lib/pkp/classes/task | RemoveFailedJobs.php | Purge old failed job records | scheduled-tasks (out of scope) |  |
 | TASK-removeunvalidatedexpiredusers | lib/pkp/classes/task | RemoveUnvalidatedExpiredUsers.php | Delete unverified user accounts | ? |  |
