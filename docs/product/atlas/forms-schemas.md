@@ -65,7 +65,7 @@
 | FORM-select-revision-decision-form | Form | `lib/pkp/classes/components/forms/decision/SelectRevisionDecisionForm.php` | SelectRevisionDecisionForm: selecting between revisions or resubmit for review; ~1 fields | review-decisions.md | editorial-decisions |
 | FORM-select-revision-recommendation-form | Form | `lib/pkp/classes/components/forms/decision/SelectRevisionRecommendationForm.php` | SelectRevisionRecommendationForm: selecting between revisions or resubmit for review (recommendation); ~1 fields | review-decisions.md | editorial-decisions |
 | FORM-email-template-form | Form | `lib/pkp/classes/components/forms/emailTemplate/EmailTemplateForm.php` | EmailTemplateForm: adding/editing email templates; ~5 fields | email-templates-management.md | |
-| FORM-highlight-form | Form | `lib/pkp/classes/components/forms/highlight/HighlightForm.php` | HighlightForm: adding or editing a highlight; ~5 fields | journal-homepage.md | |
+| FORM-highlight-form | Form | `lib/pkp/classes/components/forms/highlight/HighlightForm.php` | HighlightForm: adding or editing a highlight; ~5 fields | journal-homepage.md | highlights-featured-content |
 | FORM-pkp-institution-form | Form | `lib/pkp/classes/components/forms/institution/PKPInstitutionForm.php` | PKPInstitutionForm: creating a new institution; ~3 fields | institutions.md | |
 | FORM-accept-user-details-form | Form | `lib/pkp/classes/components/forms/invitation/AcceptUserDetailsForm.php` | AcceptUserDetailsForm: accept-invitation user details form; ~4 fields | user-invitations.md | |
 | FORM-user-details-form | Form | `lib/pkp/classes/components/forms/invitation/UserDetailsForm.php` | UserDetailsForm: send-invitation user details form; ~4 fields | user-invitations.md | |
@@ -113,7 +113,7 @@
 | SCHEMA-email-log | Schema | `lib/pkp/schemas/emailLog.json` | Email Log entity; logged email re: a submission; recipients/eventType/body (11 props) | email-delivery.md | |
 | SCHEMA-email-template | Schema | `lib/pkp/schemas/emailTemplate.json` | Email Template entity; saved/customizable email message; assignedUserGroupIds/isUnrestricted (10 props) | email-templates-management.md | |
 | SCHEMA-event-log | Schema | `lib/pkp/schemas/eventLog.json` | Event Log entity; logged action re: submission; large prop set of event-specific fields (42 props) | activity-log.md | editorial-activity-log |
-| SCHEMA-highlight | Schema | `lib/pkp/schemas/highlight.json` | Highlight entity; site/context text+image+URL highlight widget (9 props) | journal-homepage.md | |
+| SCHEMA-highlight | Schema | `lib/pkp/schemas/highlight.json` | Highlight entity; site/context text+image+URL highlight widget (9 props) | journal-homepage.md | highlights-featured-content |
 | SCHEMA-institution | Schema | `lib/pkp/schemas/institution.json` | Institution entity; institution for usage stats/subscriptions; ipRanges/ror (7 props) | institutions.md | |
 | SCHEMA-navigation-menu | Schema | `lib/pkp/schemas/navigationMenu.json` | Navigation Menu entity; theme nav-area menu; menuTree/areaName (5 props) | navigation-menus.md | |
 | SCHEMA-navigation-menu-item | Schema | `lib/pkp/schemas/navigationMenuItem.json` | Navigation Menu Item entity; item assignable to nav menus; remoteUrl/path/type (12 props) | navigation-menus.md | |

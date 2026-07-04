@@ -188,12 +188,12 @@
 | API-citation-edit | PUT /citations/{citationId} | lib/pkp/api/v1/citations/PKPCitationController.php:84 | Route handler PKPCitationController::edit() | citation-style-language.md | publication-metadata-references |
 | API-citation-reprocess-citation | POST /citations/{citationId}/reprocessCitation | lib/pkp/api/v1/citations/PKPCitationController.php:88 | Route handler PKPCitationController::reprocessCitation() | citation-style-language.md | |
 | API-citation-delete | DELETE /citations/{citationId} | lib/pkp/api/v1/citations/PKPCitationController.php:92 | Route handler PKPCitationController::delete() | citation-style-language.md | publication-metadata-references |
-| API-highlight-get-many | GET /highlights | lib/pkp/api/v1/highlights/HighlightsController.php:69 | Route handler HighlightsController::getMany() |  | |
-| API-highlight-get | GET /highlights/{highlightId} | lib/pkp/api/v1/highlights/HighlightsController.php:72 | Route handler HighlightsController::get() |  | |
-| API-highlight-add | POST /highlights | lib/pkp/api/v1/highlights/HighlightsController.php:76 | Route handler HighlightsController::add() |  | |
-| API-highlight-edit | PUT /highlights/{highlightId} | lib/pkp/api/v1/highlights/HighlightsController.php:79 | Route handler HighlightsController::edit() |  | |
-| API-highlight-order | PUT /highlights/order | lib/pkp/api/v1/highlights/HighlightsController.php:83 | Route handler HighlightsController::order() |  | |
-| API-highlight-delete | DELETE /highlights/{highlightId} | lib/pkp/api/v1/highlights/HighlightsController.php:86 | Route handler HighlightsController::delete() |  | |
+| API-highlight-get-many | GET /highlights | lib/pkp/api/v1/highlights/HighlightsController.php:69 | Route handler HighlightsController::getMany() |  | highlights-featured-content |
+| API-highlight-get | GET /highlights/{highlightId} | lib/pkp/api/v1/highlights/HighlightsController.php:72 | Route handler HighlightsController::get() |  | highlights-featured-content (⚠ 500 in journal context — ledger 100) |
+| API-highlight-add | POST /highlights | lib/pkp/api/v1/highlights/HighlightsController.php:76 | Route handler HighlightsController::add() |  | highlights-featured-content |
+| API-highlight-edit | PUT /highlights/{highlightId} | lib/pkp/api/v1/highlights/HighlightsController.php:79 | Route handler HighlightsController::edit() |  | highlights-featured-content |
+| API-highlight-order | PUT /highlights/order | lib/pkp/api/v1/highlights/HighlightsController.php:83 | Route handler HighlightsController::order() |  | highlights-featured-content |
+| API-highlight-delete | DELETE /highlights/{highlightId} | lib/pkp/api/v1/highlights/HighlightsController.php:86 | Route handler HighlightsController::delete() |  | highlights-featured-content |
 | API-body-text-get | GET /submissions/{submissionId}/publications/{publicationId}/bodyText | lib/pkp/api/v1/bodyText/PKPBodyTextController.php:68 | Route handler PKPBodyTextController::get() |  | publication-title-abstract-body |
 | API-body-text-save | PUT /submissions/{submissionId}/publications/{publicationId}/bodyText | lib/pkp/api/v1/bodyText/PKPBodyTextController.php:71 | Route handler PKPBodyTextController::save() |  | publication-title-abstract-body |
 | API-body-text-delete | DELETE /submissions/{submissionId}/publications/{publicationId}/bodyText | lib/pkp/api/v1/bodyText/PKPBodyTextController.php:74 | Route handler PKPBodyTextController::delete() |  | publication-title-abstract-body |

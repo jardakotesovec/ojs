@@ -12,7 +12,6 @@ atlas-claims:
   - PLUGIN-blocks-languageToggle
   - PLUGIN-blocks-makeSubmission
   - PLUGIN-blocks-subscription
-  - VUE-highlights-list-panel
 ---
 
 # Journal home page (the reader landing page)
@@ -280,10 +279,11 @@ rule lives in one place.
   and **single-issue** pages. Seam: the home page's current-issue section (rule 3) is a **separate
   surface** that reuses the same issue-TOC object template; the *"View all issues"* link jumps to
   that feature's archive page. `SCHEMA-issue` and the reader `PAGE-issue-*` atoms stay there.
-- **highlights-featured-content** (feature 37, next) — owns highlight **CRUD/ordering** (the
-  `HighlightsListPanel` Vue management surface in Settings → Website). This spec owns the reader
-  **carousel render** (rule 6, the Smarty `highlights.tpl`). **Atom seam:** `VUE-highlights-list-panel`
-  is the *management* panel, not rendered on the anonymous home page — see Open questions.
+- **highlights-featured-content** (feature 37, written) — owns highlight **CRUD/ordering** (the
+  `HighlightsListPanel` Vue management surface in Settings → Website → Setup → Highlights). This spec owns the
+  reader **carousel render** (rule 6, the Smarty `highlights.tpl`). **Atom transferred:**
+  `VUE-highlights-list-panel` (the *management* panel, not rendered on the anonymous home page) is now owned by
+  `highlights-featured-content`; this spec keeps only the reader render (no atom for the Smarty template).
 - **announcements** (feature 64, not written) — owns announcement **content/management** and the
   reader announcement list/detail pages; this spec owns the home-page **announcements section**
   render (rule 9).
@@ -411,7 +411,9 @@ rule lives in one place.
    would leave the atom **unclaimed** (violating the atom-claim invariant). Correct resolution:
    **journal-homepage remains the interim owner with the transfer note in place** (atlas already tags
    it `journal-homepage (mgmt panel; seam → highlights-featured-content)`); the move happens when
-   feature 37 lands.
+   feature 37 lands. **RESOLVED 2026-07-04:** feature 37 (`highlights-featured-content`) is now written and has
+   **taken ownership** of `VUE-highlights-list-panel`; this spec's atlas-claims no longer list it and journal-homepage
+   retains only the reader carousel render (rule 6). The atlas `Claimed by` column now reads `highlights-featured-content`.
 4. **Atom seam — the block plugins render site-wide, not only on the home page.** `PLUGIN-blocks-*`
    render in the sidebar of **every** frontend page (via `footer.tpl`), yet are claimed here as the
    canonical reader surface. `PLUGIN-blocks-browse` is left to `browse-category-section` (its owner in

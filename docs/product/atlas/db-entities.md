@@ -46,8 +46,8 @@
 | DB-files | files | lib/pkp/classes/migration/install/FilesMigration.php | File storage metadata | | submission-files |
 | DB-genre_settings | genre_settings | lib/pkp/classes/migration/install/GenresMigration.php | Settings for submission genres | | |
 | DB-genres | genres | lib/pkp/classes/migration/install/GenresMigration.php | File type genres | submission-files | |
-| DB-highlight_settings | highlight_settings | lib/pkp/classes/migration/install/HighlightsMigration.php | Settings for highlights | | |
-| DB-highlights | highlights | lib/pkp/classes/migration/install/HighlightsMigration.php | Featured content highlights | | |
+| DB-highlight_settings | highlight_settings | lib/pkp/classes/migration/install/HighlightsMigration.php | Settings for highlights | | highlights-featured-content |
+| DB-highlights | highlights | lib/pkp/classes/migration/install/HighlightsMigration.php | Featured content highlights | | highlights-featured-content |
 | DB-institution_ip | institution_ip | lib/pkp/classes/migration/install/InstitutionsMigration.php | Institution IP ranges | institutions | |
 | DB-institution_settings | institution_settings | lib/pkp/classes/migration/install/InstitutionsMigration.php | Institution configuration | | |
 | DB-institutions | institutions | lib/pkp/classes/migration/install/InstitutionsMigration.php | Institutional records | institutions | |
