@@ -228,7 +228,7 @@
 | LOC-submission-grid-action | `grid.action.*` | submission.po | 4 keys |  | |
 | LOC-submission-submission-form | `submission.form.*` | submission.po | 4 keys |  | |
 | LOC-submission-submission-email | `submission.email.*` | submission.po | 4 keys |  | |
-| LOC-submission-publication-urlPath | `publication.urlPath.*` | submission.po | 4 keys |  | |
+| LOC-submission-publication-urlPath | `publication.urlPath.*` | submission.po | 4 keys |  | publication-identifiers |
 | LOC-submission-publication-scheduledForPublication | `publication.scheduledForPublication.*` | submission.po | 4 keys |  | |
 | LOC-submission-publication-revisionSignificance | `publication.revisionSignificance.*` | submission.po | 4 keys |  | |
 | LOC-submission-dashboard-submissions | `dashboard.submissions.*` | submission.po | 4 keys (all `dashboard.submissions.incomplete.bulkDelete.*`) | | submission-drafts |

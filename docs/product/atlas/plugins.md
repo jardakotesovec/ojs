@@ -46,7 +46,7 @@
 | PLUGIN-oaiMetadataFormats-rfc1807 | plugins/oaiMetadataFormats/rfc1807 | OAIMetadataFormatPlugin_RFC1807.php | OAI-PMH RFC1807 metadata format handler (site) | oai-sitemap-feeds e2e |  |
 | PLUGIN-paymethod-manual | plugins/paymethod/manual | ManualPaymentPlugin.php | Manual/offline payment method for fees (context) | payments e2e |  |
 | PLUGIN-paymethod-paypal | plugins/paymethod/paypal | PaypalPaymentPlugin.php | PayPal payment method for fees; has settings form (context) | payments e2e |  |
-| PLUGIN-pubIds-urn | plugins/pubIds/urn | URNPubIdPlugin.php | Assign URN public identifiers to objects; has settings form (context) | publication-identifiers-license e2e |  |
+| PLUGIN-pubIds-urn | plugins/pubIds/urn | URNPubIdPlugin.php | Assign URN public identifiers to objects; has settings form (context) | publication-identifiers e2e | publication-identifiers |
 | PLUGIN-reports-articles | plugins/reports/articles | ArticleReportPlugin.php | Generate CSV article metadata report (context) | usage-statistics e2e |  |
 | PLUGIN-reports-counter | plugins/reports/counter | CounterReportPlugin.php | Generate COUNTER usage statistics report (context) | usage-statistics e2e |  |
 | PLUGIN-reports-reviewReport | plugins/reports/reviewReport | ReviewReportPlugin.php | Generate CSV peer-review activity report (context) | review-decisions e2e |  |

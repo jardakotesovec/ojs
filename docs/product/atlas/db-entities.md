@@ -39,8 +39,8 @@
 | DB-controlled_vocab_entry_settings | controlled_vocab_entry_settings | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary entry settings | | submission-wizard-metadata |
 | DB-controlled_vocabs | controlled_vocabs | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary lists | | submission-wizard-metadata |
 | DB-user_interests | user_interests | lib/pkp/classes/migration/install/ControlledVocabMigration.php | User interest keywords | | |
-| DB-doi_settings | doi_settings | lib/pkp/classes/migration/install/DoiMigration.php | DOI configuration settings | publication-identifiers-license | |
-| DB-dois | dois | lib/pkp/classes/migration/install/DoiMigration.php | Digital object identifiers | publication-identifiers-license | |
+| DB-doi_settings | doi_settings | lib/pkp/classes/migration/install/DoiMigration.php | DOI configuration settings | doi-management | |
+| DB-dois | dois | lib/pkp/classes/migration/install/DoiMigration.php | Digital object identifiers | doi-management (DOI entity; publication-identifiers references it for read-only display) | |
 | DB-email_template_user_group_access | email_template_user_group_access | lib/pkp/classes/migration/install/EmailTemplateUserGroupAccessMigration.php | Template access by role | | |
 | DB-failed_jobs | failed_jobs | lib/pkp/classes/migration/install/FailedJobsMigration.php | Failed background job records | jobs-queue | |
 | DB-files | files | lib/pkp/classes/migration/install/FilesMigration.php | File storage metadata | | submission-files |
