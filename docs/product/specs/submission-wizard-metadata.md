@@ -302,12 +302,14 @@ External settings that change this feature's behaviour:
    `FORM-pkp-metadata-form` was handed to `publication-metadata-references` (Publication-tab
    use) and this spec keeps only `FORM-for-the-editors`. The base-class anchors on
    `PKPMetadataForm::__construct()` in Fields remain as provenance for the shared field set.
-2. **FORM-pkp-data-availability-form seam**: the same form class serves the wizard's
-   intake section (this spec) and the workflow tab fetched via
-   `_components/dataAvailability` (feature `data-availability-citations`, whose
-   FEATURE-MAP atoms also list it; `API-submission-get-publication-data-availability-form`
-   is still unclaimed). Claimed here per FEATURE-MAP + wave instruction; confirm the
-   split (intake question here, editorial/reader surfaces there) or move the atom.
+2. **FORM-pkp-data-availability-form seam — resolved (2026-07-04).** The same
+   `PKPDataAvailabilityForm` class serves the wizard's intake section (this spec, marked
+   required in require-mode) and the Publication → Data tab fetched via
+   `_components/dataAvailability` (feature `data-availability-citations`, never required
+   there). The split is confirmed: **this spec keeps the form atom**
+   `FORM-pkp-data-availability-form` (shared class), and `data-availability-citations`
+   references it and now **claims the publication-tab fetch endpoint**
+   `API-submission-get-publication-data-availability-form` (previously unclaimed).
 3. **FORM-metadata-settings / FORM-pkp-metadata-settings-form also appear in
    `workflow-settings`' FEATURE-MAP atom list**; claimed here because the map's entry
    for this feature says it "carries its own request/require config". The

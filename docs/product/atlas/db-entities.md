@@ -17,8 +17,8 @@
 | DB-publication_categories | publication_categories | lib/pkp/classes/migration/install/CategoriesMigration.php | Publication-category mappings | | publication-issue-assignment |
 | DB-citation_settings | citation_settings | lib/pkp/classes/migration/install/MetadataMigration.php | Settings for citations | | publication-metadata-references |
 | DB-citations | citations | lib/pkp/classes/migration/install/MetadataMigration.php | Extracted and formatted citations | | publication-metadata-references |
-| DB-data_citation_settings | data_citation_settings | lib/pkp/classes/migration/install/MetadataMigration.php | Settings for data citations | | |
-| DB-data_citations | data_citations | lib/pkp/classes/migration/install/MetadataMigration.php | Data set citations | | |
+| DB-data_citation_settings | data_citation_settings | lib/pkp/classes/migration/install/MetadataMigration.php | Settings for data citations | | data-availability-citations |
+| DB-data_citations | data_citations | lib/pkp/classes/migration/install/MetadataMigration.php | Data set citations | | data-availability-citations |
 | DB-filter_groups | filter_groups | lib/pkp/classes/migration/install/MetadataMigration.php | Filter processing groups | | |
 | DB-filter_settings | filter_settings | lib/pkp/classes/migration/install/MetadataMigration.php | Settings for filters | | |
 | DB-filters | filters | lib/pkp/classes/migration/install/MetadataMigration.php | Document processing filters | | |

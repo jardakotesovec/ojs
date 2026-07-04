@@ -54,6 +54,12 @@ exports.ArticlePage = class ArticlePage extends BasePage {
 			.filter({has: page.getByRole('heading', {name: 'Section', exact: true})})
 			.locator('.value');
 		this.licenseBlock = page.locator('.item.copyright');
+		// Data Availability Statement section (article_details.tpl renders it
+		// whenever the publication carries a `dataAvailability` value; there is
+		// NO data-citation counterpart — data citations have no reader display).
+		this.dataAvailabilitySection = page.locator(
+			'section.item.dataAvailability#data-availability-statement',
+		);
 	}
 
 	/**

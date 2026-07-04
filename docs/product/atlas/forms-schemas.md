@@ -60,7 +60,7 @@
 | FORM-pkp-user-access-form | Form | `lib/pkp/classes/components/forms/context/PKPUserAccessForm.php` | PKPUserAccessForm: user access settings on the Users & Roles page; ~2 fields | roles-permissions.md | |
 | FORM-pkp-counter-report-form | Form | `lib/pkp/classes/components/forms/counter/PKPCounterReportForm.php` | PKPCounterReportForm: setting a COUNTER R5 report (abstract base); ~0 fields | usage-statistics.md | |
 | FORM-pkp-submission-filters | Form | `lib/pkp/classes/components/forms/dashboard/PKPSubmissionFilters.php` | PKPSubmissionFilters: add/remove filters in the submissions dashboard; ~4 fields | editorial-dashboards.md | editorial-dashboards |
-| FORM-data-citation-edit-form | Form | `lib/pkp/classes/components/forms/dataCitation/DataCitationEditForm.php` | DataCitationEditForm: publication's single data citation; ~8 fields | citation-style-language.md | |
+| FORM-data-citation-edit-form | Form | `lib/pkp/classes/components/forms/dataCitation/DataCitationEditForm.php` | DataCitationEditForm: publication's single data citation; ~8 fields | citation-style-language.md | data-availability-citations |
 | FORM-log-reviewer-response-form | Form | `lib/pkp/classes/components/forms/decision/LogReviewerResponseForm.php` | LogReviewerResponseForm: accept/decline a review request on behalf of a reviewer; ~1 fields | reviewer-response.md | |
 | FORM-select-revision-decision-form | Form | `lib/pkp/classes/components/forms/decision/SelectRevisionDecisionForm.php` | SelectRevisionDecisionForm: selecting between revisions or resubmit for review; ~1 fields | review-decisions.md | editorial-decisions |
 | FORM-select-revision-recommendation-form | Form | `lib/pkp/classes/components/forms/decision/SelectRevisionRecommendationForm.php` | SelectRevisionRecommendationForm: selecting between revisions or resubmit for review (recommendation); ~1 fields | review-decisions.md | editorial-decisions |
@@ -107,7 +107,7 @@
 | SCHEMA-citation | Schema | `lib/pkp/schemas/citation.json` | Citation entity; reference in a publication; DOI/arxiv/openAlex/wikidata lookup props (27 props) | citation-style-language.md | publication-metadata-references |
 | SCHEMA-context-pkp | Schema | `lib/pkp/schemas/context.json` | Context entity; shared journal/press entity; huge prop set incl. DOI, submission checklist (131 props) | journal-setup.md | |
 | SCHEMA-contributor-role | Schema | `lib/pkp/schemas/contributorRole.json` | ContributorRole entity; CRediT-style contributor role definitions (5 props) | contributors.md | |
-| SCHEMA-data-citation | Schema | `lib/pkp/schemas/dataCitation.json` | DataCitation entity; identifier/identifierType/repository (11 props) | citation-style-language.md | |
+| SCHEMA-data-citation | Schema | `lib/pkp/schemas/dataCitation.json` | DataCitation entity; identifier/identifierType/repository (11 props) | citation-style-language.md | data-availability-citations |
 | SCHEMA-decision | Schema | `lib/pkp/schemas/decision.json` | Editorial Decision entity; accept/decline/revise decision; stageId/reviewRoundId/actions (12 props) | review-decisions.md | editorial-decisions |
 | SCHEMA-doi | Schema | `lib/pkp/schemas/doi.json` | DOI entity; persistent identifier record; status/registrationAgency/resolvingUrl (6 props) | doi-management.md | |
 | SCHEMA-email-log | Schema | `lib/pkp/schemas/emailLog.json` | Email Log entity; logged email re: a submission; recipients/eventType/body (11 props) | email-delivery.md | |

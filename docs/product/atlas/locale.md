@@ -199,7 +199,7 @@
 | LOC-submission-submission-dashboard | `submission.dashboard.*` | submission.po | 27 keys (dashboard view titles) |  | editorial-dashboards |
 | LOC-submission-publication-mediaFiles | `publication.mediaFiles.*` | submission.po | 27 keys |  | media-files |
 | LOC-submission-submission-upload | `submission.upload.*` | submission.po | 22 keys |  | |
-| LOC-submission-submission-dataCitations | `submission.dataCitations.*` | submission.po | 20 keys |  | |
+| LOC-submission-submission-dataCitations | `submission.dataCitations.*` | submission.po | 20 keys |  | data-availability-citations |
 | LOC-submission-submission-query | `submission.query.*` | submission.po | 19 keys |  | tasks-discussions |
 | LOC-submission-submission-license | `submission.license.*` | submission.po | 19 keys |  | publication-license |
 | LOC-submission-submission-task | `submission.task.*` | submission.po | 18 keys |  | tasks-discussions |
