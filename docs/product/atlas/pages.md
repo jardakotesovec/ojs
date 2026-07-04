@@ -16,8 +16,8 @@
 | PAGE-about-aboutthispublishingsystem | AboutSiteHandler::aboutThisPublishingSystem | lib/pkp/pages/about/AboutSiteHandler.php | "About this publishing system" info page | | |
 | PAGE-article-view | ArticleHandler::view | pages/article/ArticleHandler.php | Article landing/abstract view page | article-landing.md | |
 | PAGE-article-viewfile | ArticleHandler::viewFile | pages/article/ArticleHandler.php | Legacy article file view URL | | |
-| PAGE-article-downloadsuppfile | ArticleHandler::downloadSuppFile | pages/article/ArticleHandler.php | Legacy supplementary file download URL | | |
-| PAGE-article-download | ArticleHandler::download | pages/article/ArticleHandler.php | Article galley/file download | galleys.md | |
+| PAGE-article-downloadsuppfile | ArticleHandler::downloadSuppFile | pages/article/ArticleHandler.php | Legacy supplementary file download URL | galleys | galleys |
+| PAGE-article-download | ArticleHandler::download | pages/article/ArticleHandler.php | Article galley/file download | galleys.md | galleys |
 | PAGE-authordashboard-submission | AuthorDashboardHandler::submission (inherited) | pages/authorDashboard/AuthorDashboardHandler.php | Legacy author-dashboard URL; live as a 302 to dashboard/mySubmissions?workflowSubmissionId=N (verified 2026-07-03) | author-dashboard.md | author-dashboard |
 | PAGE-authordashboard-readsubmissionemail | AuthorDashboardHandler::readSubmissionEmail (inherited) | pages/authorDashboard/AuthorDashboardHandler.php | Renders a notify-author email as JSON for the author's Notifications listing (nothing is marked read; verified 2026-07-03) | author-dashboard.md | author-dashboard |
 | PAGE-authordashboard-reviewroundinfo | AuthorDashboardHandler::reviewRoundInfo | pages/authorDashboard/index.php | Op routed in switch; no matching handler method found (dead) | | |

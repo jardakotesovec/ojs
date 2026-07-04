@@ -36,7 +36,7 @@
 | VUE-data-citation-manager | DataCitationManager | lib/ui-library/src/managers/DataCitationManager/DataCitationManager.vue | manager: data availability citation list; store dataCitationManagerStore.js | | |
 | VUE-discussion-manager | DiscussionManager | lib/ui-library/src/managers/DiscussionManager/DiscussionManager.vue | manager: internal editorial discussion threads; store discussionManagerStore.js | discussions | tasks-discussions |
 | VUE-file-manager | FileManager | lib/ui-library/src/managers/FileManager/FileManager.vue | manager: submission file stage list; store fileManagerStore.js | submission-files | submission-files |
-| VUE-galley-manager | GalleyManager | lib/ui-library/src/managers/GalleyManager/GalleyManager.vue | manager: publication galley (format) list CRUD; store galleyManagerStore.js | galleys | |
+| VUE-galley-manager | GalleyManager | lib/ui-library/src/managers/GalleyManager/GalleyManager.vue | manager: publication galley (format) list CRUD; store galleyManagerStore.js | galleys | galleys |
 | VUE-media-file-manager | MediaFileManager | lib/ui-library/src/managers/MediaFileManager/MediaFileManager.vue | manager: publication media/supplementary file list; store mediaFileManagerStore.js | media-files | |
 | VUE-navigation-menu-manager-field | NavigationMenuManagerField | lib/ui-library/src/managers/NavigationMenuManager/NavigationMenuManagerField.vue | manager: form field for assigning navigation-menu items; no store file (uses useNavigationMenuManagerForm.js) | navigation-menus | |
 | VUE-participant-manager | ParticipantManager | lib/ui-library/src/managers/ParticipantManager/ParticipantManager.vue | manager: stage participant assignment list; store participantManagerStore.js | stage-participants | stage-participants |

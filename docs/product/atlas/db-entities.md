@@ -131,8 +131,8 @@
 | DB-issue_galleys | issue_galleys | classes/migration/install/OJSMigration.php | Issue presentation formats | galleys | |
 | DB-issue_settings | issue_settings | classes/migration/install/OJSMigration.php | Issue metadata settings | issue-management | |
 | DB-issues | issues | classes/migration/install/OJSMigration.php | Journal issues | issue-archive-toc | |
-| DB-publication_galley_settings | publication_galley_settings | classes/migration/install/OJSMigration.php | Publication format settings | | |
-| DB-publication_galleys | publication_galleys | classes/migration/install/OJSMigration.php | Article publication formats | galleys | |
+| DB-publication_galley_settings | publication_galley_settings | classes/migration/install/OJSMigration.php | Publication format settings | galleys | galleys |
+| DB-publication_galleys | publication_galleys | classes/migration/install/OJSMigration.php | Article publication formats | galleys | galleys |
 | DB-publications | publications | classes/migration/install/OJSMigration.php | Article publication records | publication-publish-flow | publication-versioning |
 | DB-queued_payments | queued_payments | classes/migration/install/OJSMigration.php | Pending payment records | payments | |
 | DB-section_settings | section_settings | classes/migration/install/OJSMigration.php | Section configuration | sections | |

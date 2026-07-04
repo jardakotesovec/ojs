@@ -23,10 +23,10 @@
 | PLUGIN-generic-dublinCoreMeta | plugins/generic/dublinCoreMeta | DublinCoreMetaPlugin.php | Inject Dublin Core meta tags for indexing; no settings form (context) | ? |  |
 | PLUGIN-generic-googleAnalytics | plugins/generic/googleAnalytics | GoogleAnalyticsPlugin.php | Insert Google Analytics tracking code; has settings form (context) | usage-statistics e2e |  |
 | PLUGIN-generic-googleScholar | plugins/generic/googleScholar | GoogleScholarPlugin.php | Inject Google Scholar meta tags for indexing; no settings form (context) | site-search e2e |  |
-| PLUGIN-generic-htmlArticleGalley | plugins/generic/htmlArticleGalley | HtmlArticleGalleyPlugin.php | Display HTML galley content with image support; no settings form (context) | galleys e2e |  |
-| PLUGIN-generic-jatsTemplate | plugins/generic/jatsTemplate | JatsTemplatePlugin.php | Generate/attach JATS XML galley template; no settings form (context) | galleys e2e |  |
-| PLUGIN-generic-lensGalley | plugins/generic/lensGalley | LensGalleyPlugin.php | Display galleys via eLife Lens reader viewer; no settings form (context) | galleys e2e |  |
-| PLUGIN-generic-pdfJsViewer | plugins/generic/pdfJsViewer | PdfJsViewerPlugin.php | Embed pdf.js viewer for in-browser PDF display; no settings form (context) | galleys e2e |  |
+| PLUGIN-generic-htmlArticleGalley | plugins/generic/htmlArticleGalley | HtmlArticleGalleyPlugin.php | Display HTML galley content with image support; no settings form (context) | galleys e2e | galleys |
+| PLUGIN-generic-jatsTemplate | plugins/generic/jatsTemplate | JatsTemplatePlugin.php | Generate/attach JATS XML galley template; no settings form (context) | galleys e2e | galleys (render plugin; JATS content-API + oaiJats seam → jats-content-api) |
+| PLUGIN-generic-lensGalley | plugins/generic/lensGalley | LensGalleyPlugin.php | Display galleys via eLife Lens reader viewer; no settings form (context) | galleys e2e | galleys |
+| PLUGIN-generic-pdfJsViewer | plugins/generic/pdfJsViewer | PdfJsViewerPlugin.php | Embed pdf.js viewer for in-browser PDF display; no settings form (context) | galleys e2e | galleys |
 | PLUGIN-generic-pflPlugin | plugins/generic/pflPlugin | PflPlugin.php | Generate Publication Facts Label for articles; has settings form (context) | ? |  |
 | PLUGIN-generic-pluginTemplate | plugins/generic/pluginTemplate | PluginTemplatePlugin.php | Starter template/example for new generic plugins; has settings form (context) | ? |  |
 | PLUGIN-generic-recommendByAuthor | plugins/generic/recommendByAuthor | RecommendByAuthorPlugin.php | Recommend other articles by same author; no settings form (context) | article-landing e2e |  |

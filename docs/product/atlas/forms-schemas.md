@@ -95,7 +95,7 @@
 | FORM-submission-guidance-settings | Form | `lib/pkp/classes/components/forms/submission/SubmissionGuidanceSettings.php` | SubmissionGuidanceSettings: submission wizard instruction settings; ~10 fields | submission-settings.md | |
 | FORM-reconfigure-submission-pkp | Form | `lib/pkp/classes/components/forms/submission/ReconfigureSubmission.php` | ReconfigureSubmission (PKP): configure submission wizard sections (abstract base); ~1 fields | submission-wizard-core.md | submission-wizard |
 | SCHEMA-context-ojs | Schema | `schemas/context.json` | Journal entity; adds OJS-specific props to shared context schema (55 props) | journal-setup.md | |
-| SCHEMA-galley | Schema | `schemas/galley.json` | Galley entity; published file representation (PDF/HTML); doiId/urlPath/urlRemote/file props (14 props) | galleys.md | |
+| SCHEMA-galley | Schema | `schemas/galley.json` | Galley entity; published file representation (PDF/HTML); doiId/urlPath/urlRemote/file props (14 props) | galleys.md | galleys |
 | SCHEMA-issue | Schema | `schemas/issue.json` | Issue entity; sections/galleys/articles, DOI, cover image, publish status (31 props) | issue-management.md | |
 | SCHEMA-publication-ojs | Schema | `schemas/publication.json` | OJS-specific publication props (no title/entity name of its own): issueId/sectionId/pages/articleNumber/accessStatus (8 props) | publication-publish-flow.md | publication-versioning |
 | SCHEMA-section-ojs | Schema | `schemas/section.json` | Section entity; OJS-specific section props: abstractsNotRequired/reviewFormId/wordCount (10 props) | sections.md | |
