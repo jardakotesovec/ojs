@@ -217,12 +217,13 @@ unpublish. *Anchors: publication.json `versionMajor`/`versionMinor`/`versionStag
     deleting one all trigger this recompute (`lib/pkp/classes/publication/Repository::unpublish()`).
 23. A submission left with **zero** versions derives the status Declined — the recompute treats an
     empty submission as mid-deletion (`lib/pkp/classes/submission/Repository::getStatusByPublications()`).
-24. ⚠ **Known mismatch**: the publish *endpoint* skips that recompute and hard-codes the submission to
-    Published even when the version only became Scheduled — so a UI-scheduled article lands in the
-    dashboard "Published" view and never in "Scheduled" (`PKPSubmissionController::publishPublication()`;
-    [app-changes §2 row 18](../../e2e/app-changes.md)). Seed and CLI paths that go through the
-    publication publish method alone (`Repo::publication()->publish()`) compute both the version and the
-    submission as Scheduled correctly.
+24. ~~⚠ **Known mismatch**: the publish *endpoint* hard-codes the submission to Published even when the
+    version only became Scheduled.~~ **FIXED** (pkp/pkp-lib#12799, commit `d52aa4c84b`, 2026-06-28 —
+    landed after this spec's 2026-07-02 verification): `PKPSubmissionController::publishPublication()` now
+    calls `Repo::submission()->updateStatus($submission)` (recompute) + `updateCurrentPublication()`
+    instead of `updateStatus($submission, STATUS_PUBLISHED)`, so a UI-scheduled article correctly
+    computes **Scheduled** and files under the dashboard "Scheduled" view — matching the seed/CLI path
+    (`Repo::publication()->publish()`). [app-changes §2 row 18](../../e2e/app-changes.md) marked FIXED.
 25. OJS also keeps OAI tombstones in step as the submission's status flips — clearing them when it
     becomes Published and creating them when it leaves Published, so OAI harvesters see the change
     (`classes/submission/Repository::updateStatus()`).
@@ -325,10 +326,11 @@ unpublish. *Anchors: publication.json `versionMajor`/`versionMinor`/`versionStag
    Review Publishing Details (stage Version of Record, "schedule into a future issue") → Confirm → the
    final modal says it will be scheduled → the version becomes Scheduled with Preview and Unschedule
    buttons, and readers still get a not-found page. Publishing the issue then flips it to Published with
-   the issue's date. ⚠ The dashboard wrongly files the submission under "Published" the whole time
-   (row 18).
+   the issue's date. (Note: the dashboard now correctly files the scheduled submission under
+   "Scheduled" — the former row-18 mis-file was FIXED by pkp/pkp-lib#12799, see rule 24.)
 3. **Roll back the latest version** — Editor: unpublishes the second version (confirm dialog) → it
-   returns to the draft state (shown as "Unscheduled", since it is no longer current), the current
+   returns to the draft state (shown as "Unpublished" — a non-current queued version reads "Unpublished";
+   "Unscheduled" is used only when a queued version is *also* the current one, per rule 4), the current
    pointer falls back to the first version, the reader page shows that first version with no notice, and
    the rolled-back one vanishes from the version list; unpublishing the first version too makes the
    article not-found for readers and re-creates its OAI tombstone.
@@ -350,8 +352,8 @@ unpublish. *Anchors: publication.json `versionMajor`/`versionMinor`/`versionStag
 
 ## Known deviations (as-built ≠ intent)
 
-- ⚠ Rule 24 — publish endpoint hard-codes submission status PUBLISHED while the publication is
-  SCHEDULED: [app-changes §2 row 18](../../e2e/app-changes.md).
+- ~~⚠ Rule 24 — publish endpoint hard-codes submission status PUBLISHED while the publication is
+  SCHEDULED~~ — **FIXED** (pkp/pkp-lib#12799, 2026-06-28): [app-changes §2 row 18](../../e2e/app-changes.md).
 - ⚠ Rule 13 — published galley "View" opens an editable form: [row 22b](../../e2e/app-changes.md).
 - ⚠ Rule 17/18 — declined submissions keep the Schedule button; Confirm persists issueId+status
   pre-validation; late fetch can overwrite the issue radio: [row 23](../../e2e/app-changes.md).
