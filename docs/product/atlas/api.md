@@ -107,7 +107,7 @@
 | API-backend-submissions-reviews | GET /_submissions/reviews | lib/pkp/api/v1/_submissions/PKPBackendSubmissionsController.php:111 | Route handler PKPBackendSubmissionsController::reviews() — review-state dashboard views | submission-drafts.md | editorial-dashboards |
 | API-backend-submissions-get-views-count | GET /_submissions/viewsCount | lib/pkp/api/v1/_submissions/PKPBackendSubmissionsController.php:122 | Route handler PKPBackendSubmissionsController::getViewsCount() — per-view counts for all three dashboards | submission-drafts.md | editorial-dashboards |
 | API-backend-submissions-get-review-assignments | GET /_submissions/reviewerAssignments | lib/pkp/api/v1/_submissions/PKPBackendSubmissionsController.php:134 | Route handler PKPBackendSubmissionsController::getReviewAssignments() — reviewer dashboard; ignores all list params (ledger §2 row 2/15) | submission-drafts.md | editorial-dashboards |
-| API-library-get-library | GET /_library | lib/pkp/api/v1/_library/PKPLibraryController.php:68 | Route handler PKPLibraryController::getLibrary() |  | |
+| API-library-get-library | GET /_library | lib/pkp/api/v1/_library/PKPLibraryController.php:68 | Route handler PKPLibraryController::getLibrary() |  | document-library |
 | API-mailable-get-many | GET /mailables | lib/pkp/api/v1/mailables/PKPMailableController.php:61 | Route handler PKPMailableController::getMany() | email-templates-management.md | |
 | API-mailable-get | GET /mailables/{id} | lib/pkp/api/v1/mailables/PKPMailableController.php:64 | Route handler PKPMailableController::get() | email-templates-management.md | |
 | API-email-compose-create | POST /_email | lib/pkp/api/v1/_email/PKPEmailController.php:64 | Route handler PKPEmailController::create() | email-delivery.md | |

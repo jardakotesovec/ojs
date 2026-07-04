@@ -145,8 +145,8 @@
 | PAGE-invitation-confirmdecline | InvitationHandler::confirmDecline | lib/pkp/pages/invitation/InvitationHandler.php | Confirm invitation decline page | user-invitations.md | |
 | PAGE-invitation-create | InitializeInvitationUIHandler::create | lib/pkp/pages/invitation/InitializeInvitationUIHandler.php | Initialize invitation-creation UI | user-invitations.md | |
 | PAGE-invitation-edit | InitializeInvitationUIHandler::edit | lib/pkp/pages/invitation/InitializeInvitationUIHandler.php | Initialize invitation-edit UI | user-invitations.md | |
-| PAGE-libraryfiles-downloadpublic | LibraryFileHandler::downloadPublic | lib/pkp/pages/libraryFiles/LibraryFileHandler.php | Download a public library file | media-files.md | |
-| PAGE-libraryfiles-downloadlibraryfile | LibraryFileHandler::downloadLibraryFile | lib/pkp/pages/libraryFiles/LibraryFileHandler.php | Download a restricted library file | media-files.md | |
+| PAGE-libraryfiles-downloadpublic | LibraryFileHandler::downloadPublic | lib/pkp/pages/libraryFiles/LibraryFileHandler.php | Download a public library file | media-files.md | document-library |
+| PAGE-libraryfiles-downloadlibraryfile | LibraryFileHandler::downloadLibraryFile | lib/pkp/pages/libraryFiles/LibraryFileHandler.php | Download a restricted library file | media-files.md | document-library |
 | PAGE-login-index | LoginHandler::index | lib/pkp/pages/login/LoginHandler.php | Login form page | registration-login.md | |
 | PAGE-login-signin | LoginHandler::signIn | lib/pkp/pages/login/LoginHandler.php | Process login form submission | registration-login.md | |
 | PAGE-login-signout | LoginHandler::signOut | lib/pkp/pages/login/LoginHandler.php | Log the current user out | registration-login.md | |

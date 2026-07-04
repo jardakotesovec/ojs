@@ -54,8 +54,8 @@
 | DB-invitations | invitations | lib/pkp/classes/migration/install/InvitationsMigration.php | User invitation tokens | user-invitations | |
 | DB-job_batches | job_batches | lib/pkp/classes/migration/install/JobsMigration.php | Job batch groupings | jobs-queue | |
 | DB-jobs | jobs | lib/pkp/classes/migration/install/JobsMigration.php | Background job queue | jobs-queue | |
-| DB-library_file_settings | library_file_settings | lib/pkp/classes/migration/install/LibraryFilesMigration.php | Library file settings | | |
-| DB-library_files | library_files | lib/pkp/classes/migration/install/LibraryFilesMigration.php | Library document collections | | |
+| DB-library_file_settings | library_file_settings | lib/pkp/classes/migration/install/LibraryFilesMigration.php | Library file settings | | document-library |
+| DB-library_files | library_files | lib/pkp/classes/migration/install/LibraryFilesMigration.php | Library document collections | | document-library |
 | DB-email_log | email_log | lib/pkp/classes/migration/install/LogMigration.php | Email transmission log | email-delivery | |
 | DB-email_log_users | email_log_users | lib/pkp/classes/migration/install/LogMigration.php | Email log user recipients | | |
 | DB-event_log | event_log | lib/pkp/classes/migration/install/LogMigration.php | Editorial activity log | activity-log | editorial-activity-log |

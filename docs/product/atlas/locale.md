@@ -88,7 +88,7 @@
 | LOC-grid-grid-user | `grid.user.*` | grid.po | 45 keys |  | |
 | LOC-grid-grid-userGroup | `grid.userGroup.*` | grid.po | 10 keys |  | |
 | LOC-grid-contributor-listPanel | `contributor.listPanel.*` | grid.po | 7 keys |  | |
-| LOC-grid-grid-libraryFiles | `grid.libraryFiles.*` | grid.po | 6 keys |  | |
+| LOC-grid-grid-libraryFiles | `grid.libraryFiles.*` | grid.po | 6 keys |  | document-library |
 | LOC-grid-grid-columns | `grid.columns.*` | grid.po | 6 keys |  | |
 | LOC-grid-grid-artworkFile | `grid.artworkFile.*` | grid.po | 6 keys |  | |
 | LOC-grid-author-users | `author.users.*` | grid.po | 6 keys |  | |
@@ -162,7 +162,7 @@
 | LOC-manager-grid-category | `grid.category.*` | manager.po | 13 keys |  | |
 | LOC-manager-manager-announcementTypes | `manager.announcementTypes.*` | manager.po | 12 keys |  | |
 | LOC-manager-manager-language | `manager.language.*` | manager.po | 10 keys |  | |
-| LOC-manager-settings-libraryFiles | `settings.libraryFiles.*` | manager.po | 10 keys |  | |
+| LOC-manager-settings-libraryFiles | `settings.libraryFiles.*` | manager.po | 10 keys |  | document-library |
 | LOC-manager-manager-groups | `manager.groups.*` | manager.po | 10 keys |  | |
 | LOC-manager-stats-issues | `stats.issues.*` | manager.po | 9 keys |  | |
 | LOC-manager-manager-distribution | `manager.distribution.*` | manager.po | 8 keys |  | |
