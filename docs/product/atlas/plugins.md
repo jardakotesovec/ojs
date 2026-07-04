@@ -6,12 +6,12 @@
 
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
-| PLUGIN-blocks-browse | plugins/blocks/browse | BrowseBlockPlugin.php | Sidebar block: browse by issue/section/author | website-appearance e2e |  |
-| PLUGIN-blocks-developedBy | plugins/blocks/developedBy | DevelopedByBlockPlugin.php | Sidebar block: "developed by PKP" credit | website-appearance e2e |  |
-| PLUGIN-blocks-information | plugins/blocks/information | InformationBlockPlugin.php | Sidebar block: for readers/authors/librarians info | website-appearance e2e |  |
-| PLUGIN-blocks-languageToggle | plugins/blocks/languageToggle | LanguageToggleBlockPlugin.php | Sidebar block: UI language selector | languages-locales e2e |  |
-| PLUGIN-blocks-makeSubmission | plugins/blocks/makeSubmission | MakeSubmissionBlockPlugin.php | Sidebar block: "make a submission" link | website-appearance e2e |  |
-| PLUGIN-blocks-subscription | plugins/blocks/subscription | SubscriptionBlockPlugin.php | Sidebar block: subscription status/info | subscription-access e2e |  |
+| PLUGIN-blocks-browse | plugins/blocks/browse | BrowseBlockPlugin.php | Sidebar block: browse by issue/section/author | website-appearance e2e | *(→ browse-category-section; sidebar render on homepage)* |
+| PLUGIN-blocks-developedBy | plugins/blocks/developedBy | DevelopedByBlockPlugin.php | Sidebar block: "developed by PKP" credit | website-appearance e2e | journal-homepage |
+| PLUGIN-blocks-information | plugins/blocks/information | InformationBlockPlugin.php | Sidebar block: for readers/authors/librarians info | website-appearance e2e | journal-homepage |
+| PLUGIN-blocks-languageToggle | plugins/blocks/languageToggle | LanguageToggleBlockPlugin.php | Sidebar block: UI language selector | languages-locales e2e | journal-homepage |
+| PLUGIN-blocks-makeSubmission | plugins/blocks/makeSubmission | MakeSubmissionBlockPlugin.php | Sidebar block: "make a submission" link | website-appearance e2e | journal-homepage |
+| PLUGIN-blocks-subscription | plugins/blocks/subscription | SubscriptionBlockPlugin.php | Sidebar block: subscription status/info | subscription-access e2e | journal-homepage |
 | PLUGIN-generic-announcementFeed | plugins/generic/announcementFeed | AnnouncementFeedPlugin.php | RSS/Atom feed for journal announcements; has settings form (context) | announcements e2e |  |
 | PLUGIN-generic-citationStyleLanguage | plugins/generic/citationStyleLanguage | CitationStyleLanguagePlugin.php | Citation Style Language export (APA/MLA/etc.); has settings form (context) | citation-style-language e2e |  |
 | PLUGIN-generic-credit | plugins/generic/credit | CreditPlugin.php | NISO CRediT contributor role vocabulary; has settings form (context) | contributors e2e |  |

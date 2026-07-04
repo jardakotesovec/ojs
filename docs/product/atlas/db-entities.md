@@ -141,7 +141,7 @@
 | DB-subscription_types | subscription_types | classes/migration/install/OJSMigration.php | Subscription type definitions | subscriptions-management | |
 | DB-subscriptions | subscriptions | classes/migration/install/OJSMigration.php | User subscriptions | subscription-access | |
 | DB-journal_settings | journal_settings | classes/migration/install/JournalsMigration.php | Journal configuration | journal-setup | |
-| DB-journals | journals | classes/migration/install/JournalsMigration.php | Journal/publication instances | journal-homepage | |
+| DB-journals | journals | classes/migration/install/JournalsMigration.php | Journal/publication instances | journal-homepage | journal-homepage (homepage-display aspect; seam → journal-setup/masthead) |
 | DB-metrics_context | metrics_context | classes/migration/install/MetricsMigration.php | Metrics context data | | |
 | DB-metrics_counter_submission_daily | metrics_counter_submission_daily | classes/migration/install/MetricsMigration.php | Daily submission metrics | usage-statistics | |
 | DB-metrics_counter_submission_institution_daily | metrics_counter_submission_institution_daily | classes/migration/install/MetricsMigration.php | Daily institution metrics | | |

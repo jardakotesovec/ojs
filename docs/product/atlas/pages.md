@@ -35,7 +35,7 @@
 | PAGE-gateway-lockss | GatewayHandler::lockss | pages/gateway/GatewayHandler.php | LOCKSS preservation gateway manifest | | |
 | PAGE-gateway-clockss | GatewayHandler::clockss | pages/gateway/GatewayHandler.php | CLOCKSS preservation gateway manifest | | |
 | PAGE-gateway-plugin | GatewayHandler::plugin | pages/gateway/GatewayHandler.php | Dispatch gateway request to a named plugin | plugin-management.md | |
-| PAGE-index-index | IndexHandler::index (inherited) | pages/index/IndexHandler.php | Site/journal home page | journal-homepage.md | |
+| PAGE-index-index | IndexHandler::index (inherited) | pages/index/IndexHandler.php | Site/journal home page | journal-homepage.md | journal-homepage (site-index branch → site-settings) |
 | PAGE-information-index | InformationHandler::index | pages/information/InformationHandler.php | Information landing page | | |
 | PAGE-information-readers | InformationHandler::readers | pages/information/InformationHandler.php | "For readers" info page | | |
 | PAGE-information-authors | InformationHandler::authors | pages/information/InformationHandler.php | "For authors" info page | | |
