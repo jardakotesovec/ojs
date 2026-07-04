@@ -276,12 +276,12 @@
 | API-doi-mark-issues-unregistered | PUT /dois/issues/markUnregistered | api/v1/dois/DoiController.php:52 | Route handler DoiController::markIssuesUnregistered() | doi-management.md | |
 | API-doi-mark-issues-stale | PUT /dois/issues/markStale | api/v1/dois/DoiController.php:55 | Route handler DoiController::markIssuesStale() | doi-management.md | |
 | API-backend-submissions-payment | PUT /_submissions/{submissionId}/payment | api/v1/_submissions/BackendSubmissionsController.php:43 | Route handler BackendSubmissionsController::payment() | submission-drafts.md | |
-| API-submission-get-publication-issue-form | GET /submissions/{submissionId}/publications/{publicationId}/_components/issue | api/v1/submissions/SubmissionController.php:87 | Route handler SubmissionController::getPublicationIssueForm() |  | |
+| API-submission-get-publication-issue-form | GET /submissions/{submissionId}/publications/{publicationId}/_components/issue | api/v1/submissions/SubmissionController.php:87 | Route handler SubmissionController::getPublicationIssueForm() |  | publication-issue-assignment |
 | API-submission-get-submission-payment-form | GET /submissions/{submissionId}/publications/{publicationId}/_components/submissionPayment | api/v1/submissions/SubmissionController.php:88 | Route handler SubmissionController::getSubmissionPaymentForm() |  | |
 | API-issue-get-many | GET /issues | api/v1/issues/IssueController.php:81 | Route handler IssueController::getMany() | issue-management.md | |
 | API-issue-get-current | GET /issues/current | api/v1/issues/IssueController.php:84 | Route handler IssueController::getCurrent() | issue-management.md | |
 | API-issue-get | GET /issues/{issueId} | api/v1/issues/IssueController.php:87 | Route handler IssueController::get() | issue-management.md | |
-| API-issue-get-assignment-options | GET /issues/assignmentOptions | api/v1/issues/IssueController.php:91 | Route handler IssueController::getAssignmentOptions() | issue-management.md | |
+| API-issue-get-assignment-options | GET /issues/assignmentOptions | api/v1/issues/IssueController.php:91 | Route handler IssueController::getAssignmentOptions() | issue-management.md | publication-issue-assignment |
 | API-stats-sushi-get-reports-tr | GET /stats/sushi/reports/tr | api/v1/stats/sushi/StatsSushiController.php:38 | Route handler StatsSushiController::getReportsTR() | usage-statistics.md | |
 | API-stats-sushi-get-reports-trj3 | GET /stats/sushi/reports/tr_j3 | api/v1/stats/sushi/StatsSushiController.php:41 | Route handler StatsSushiController::getReportsTRJ3() | usage-statistics.md | |
 | API-stats-sushi-get-reports-ir | GET /stats/sushi/reports/ir | api/v1/stats/sushi/StatsSushiController.php:44 | Route handler StatsSushiController::getReportsIR() | usage-statistics.md | |
@@ -290,7 +290,7 @@
 | API-stats-issue-get | GET /stats/issues/{issueId} | api/v1/stats/issues/StatsIssueController.php:72 | Route handler StatsIssueController::get() | usage-statistics.md | |
 | API-stats-issue-get-timeline | GET /stats/issues/{issueId}/timeline | api/v1/stats/issues/StatsIssueController.php:76 | Route handler StatsIssueController::getTimeline() | usage-statistics.md | |
 | API-stats-issue-get-many | GET /stats/issues | api/v1/stats/issues/StatsIssueController.php:80 | Route handler StatsIssueController::getMany() | usage-statistics.md | |
-| API-submission-get-issue-assignment-status | GET /submissions/{submissionId}/publications/{publicationId}/issueAssignmentStatus | api/v1/submissions/SubmissionController.php:81 | Route handler SubmissionController::getIssueAssignmentStatus() |  | |
+| API-submission-get-issue-assignment-status | GET /submissions/{submissionId}/publications/{publicationId}/issueAssignmentStatus | api/v1/submissions/SubmissionController.php:81 | Route handler SubmissionController::getIssueAssignmentStatus() |  | publication-issue-assignment |
 
 ## Gaps
 - Excluded `lib/pkp/api/v1/_test/` (JournalScenarioController, SubmissionScenarioController): test-harness scenario-seeding endpoints, not product surface.
