@@ -110,7 +110,7 @@ atoms: full `specs/tasks-discussions.md` claim-set — DB-edit_tasks/edit_task_*
 ### submission-files — per-stage file upload, revisions, dependent files, non-ASCII filenames, downloads, file attachers
 atoms: VUE-file-manager, VUE-{submission-files,listing-files}-list-panel, VUE-file-attacher, GRID files/* (~25 grids, several base/dead), DB-submission_files(+revisions,settings), files, temporary_files, SCHEMA-submission-file, EVLOG-FILE-* (~10). file-genres config lives in workflow-settings.
 
-### editorial-activity-log — the submission event-log surface (per-item + per-submission history modal); information-center notes/history/email tabs
+### editorial-activity-log — the submission event-log surface (per-item + per-submission history modal); information-center Notes + History tabs (emails are merged INTO History — there is no separate Email tab)
 atoms: GRID-{submission,file}-event-log, GRID-information-center-*, SCHEMA-event-log, DB-event_log(+settings), the EVLOG-* corpus (~36 submission/file types) rendered here (~10). Individual EVLOG-* are co-claimed by the feature that fires them; this owns the log surface.
 
 ### document-library — context & submission library files (review templates, marketing/permissions docs), distinct from per-submission media

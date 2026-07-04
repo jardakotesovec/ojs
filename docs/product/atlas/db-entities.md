@@ -58,8 +58,8 @@
 | DB-library_files | library_files | lib/pkp/classes/migration/install/LibraryFilesMigration.php | Library document collections | | |
 | DB-email_log | email_log | lib/pkp/classes/migration/install/LogMigration.php | Email transmission log | email-delivery | |
 | DB-email_log_users | email_log_users | lib/pkp/classes/migration/install/LogMigration.php | Email log user recipients | | |
-| DB-event_log | event_log | lib/pkp/classes/migration/install/LogMigration.php | Editorial activity log | activity-log | |
-| DB-event_log_settings | event_log_settings | lib/pkp/classes/migration/install/LogMigration.php | Activity log settings | | |
+| DB-event_log | event_log | lib/pkp/classes/migration/install/LogMigration.php | Editorial activity log | activity-log | editorial-activity-log |
+| DB-event_log_settings | event_log_settings | lib/pkp/classes/migration/install/LogMigration.php | Activity log settings | activity-log | editorial-activity-log |
 | DB-navigation_menu_item_assignment_settings | navigation_menu_item_assignment_settings | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Menu item assignment settings | | |
 | DB-navigation_menu_item_assignments | navigation_menu_item_assignments | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Menu item context assignments | | |
 | DB-navigation_menu_item_settings | navigation_menu_item_settings | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Navigation menu item settings | navigation-menus | |

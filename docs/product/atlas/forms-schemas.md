@@ -112,7 +112,7 @@
 | SCHEMA-doi | Schema | `lib/pkp/schemas/doi.json` | DOI entity; persistent identifier record; status/registrationAgency/resolvingUrl (6 props) | doi-management.md | |
 | SCHEMA-email-log | Schema | `lib/pkp/schemas/emailLog.json` | Email Log entity; logged email re: a submission; recipients/eventType/body (11 props) | email-delivery.md | |
 | SCHEMA-email-template | Schema | `lib/pkp/schemas/emailTemplate.json` | Email Template entity; saved/customizable email message; assignedUserGroupIds/isUnrestricted (10 props) | email-templates-management.md | |
-| SCHEMA-event-log | Schema | `lib/pkp/schemas/eventLog.json` | Event Log entity; logged action re: submission; large prop set of event-specific fields (42 props) | activity-log.md | |
+| SCHEMA-event-log | Schema | `lib/pkp/schemas/eventLog.json` | Event Log entity; logged action re: submission; large prop set of event-specific fields (42 props) | activity-log.md | editorial-activity-log |
 | SCHEMA-highlight | Schema | `lib/pkp/schemas/highlight.json` | Highlight entity; site/context text+image+URL highlight widget (9 props) | journal-homepage.md | |
 | SCHEMA-institution | Schema | `lib/pkp/schemas/institution.json` | Institution entity; institution for usage stats/subscriptions; ipRanges/ror (7 props) | institutions.md | |
 | SCHEMA-navigation-menu | Schema | `lib/pkp/schemas/navigationMenu.json` | Navigation Menu entity; theme nav-area menu; menuTree/areaName (5 props) | navigation-menus.md | |
