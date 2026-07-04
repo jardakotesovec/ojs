@@ -201,7 +201,7 @@
 | LOC-submission-submission-upload | `submission.upload.*` | submission.po | 22 keys |  | |
 | LOC-submission-submission-dataCitations | `submission.dataCitations.*` | submission.po | 20 keys |  | |
 | LOC-submission-submission-query | `submission.query.*` | submission.po | 19 keys |  | tasks-discussions |
-| LOC-submission-submission-license | `submission.license.*` | submission.po | 19 keys |  | |
+| LOC-submission-submission-license | `submission.license.*` | submission.po | 19 keys |  | publication-license |
 | LOC-submission-submission-task | `submission.task.*` | submission.po | 18 keys |  | tasks-discussions |
 | LOC-submission-notification-type | `notification.type.*` | submission.po | 18 keys |  | |
 | LOC-submission-submission-notes | `submission.notes.*` | submission.po | 17 keys |  | |
