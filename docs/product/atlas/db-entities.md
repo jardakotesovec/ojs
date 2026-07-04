@@ -127,10 +127,10 @@
 | DB-custom_section_orders | custom_section_orders | classes/migration/install/OJSMigration.php | Custom section ordering | sections | |
 | DB-institutional_subscriptions | institutional_subscriptions | classes/migration/install/OJSMigration.php | Institutional subscriptions | subscriptions-management | |
 | DB-issue_files | issue_files | classes/migration/install/OJSMigration.php | Issue supplementary files | issue-management | |
-| DB-issue_galley_settings | issue_galley_settings | classes/migration/install/OJSMigration.php | Issue galley settings | | |
-| DB-issue_galleys | issue_galleys | classes/migration/install/OJSMigration.php | Issue presentation formats | galleys | |
+| DB-issue_galley_settings | issue_galley_settings | classes/migration/install/OJSMigration.php | Issue galley settings | issue-management | |
+| DB-issue_galleys | issue_galleys | classes/migration/install/OJSMigration.php | Issue presentation formats | issue-management | issue-level galleys (galleys spec defers here) |
 | DB-issue_settings | issue_settings | classes/migration/install/OJSMigration.php | Issue metadata settings | issue-management | |
-| DB-issues | issues | classes/migration/install/OJSMigration.php | Journal issues | issue-archive-toc | |
+| DB-issues | issues | classes/migration/install/OJSMigration.php | Journal issues | issue-management | issue entity (reader pages = issue-archive-toc) |
 | DB-publication_galley_settings | publication_galley_settings | classes/migration/install/OJSMigration.php | Publication format settings | galleys | galleys |
 | DB-publication_galleys | publication_galleys | classes/migration/install/OJSMigration.php | Article publication formats | galleys | galleys |
 | DB-publications | publications | classes/migration/install/OJSMigration.php | Article publication records | publication-publish-flow | publication-versioning |

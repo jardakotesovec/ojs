@@ -31,7 +31,7 @@
 | MAIL-edit-review-notify | EditReviewNotify | lib/pkp/classes/mail/mailables/EditReviewNotify.php | template key: REVIEW_EDIT | notifications | |
 | MAIL-editor-assigned | EditorAssigned | lib/pkp/classes/mail/mailables/EditorAssigned.php | template key: EDITOR_ASSIGN | email-delivery | |
 | MAIL-editorial-reminder | EditorialReminder | lib/pkp/classes/mail/mailables/EditorialReminder.php | template key: EDITORIAL_REMINDER | scheduled-tasks | |
-| MAIL-issue-published-notify | IssuePublishedNotify | classes/mail/mailables/IssuePublishedNotify.php | template key: ISSUE_PUBLISH_NOTIFY | notifications | |
+| MAIL-issue-published-notify | IssuePublishedNotify | classes/mail/mailables/IssuePublishedNotify.php | template key: ISSUE_PUBLISH_NOTIFY | issue-management | |
 | MAIL-open-access-notify | OpenAccessNotify | classes/mail/mailables/OpenAccessNotify.php | template key: OPEN_ACCESS_NOTIFY | notifications | |
 | MAIL-orcid-collect-author-id | OrcidCollectAuthorId | lib/pkp/classes/mail/mailables/OrcidCollectAuthorId.php | template key: ORCID_COLLECT_AUTHOR_ID | | |
 | MAIL-orcid-request-author-authorization | OrcidRequestAuthorAuthorization | lib/pkp/classes/mail/mailables/OrcidRequestAuthorAuthorization.php | template key: ORCID_REQUEST_AUTHOR_AUTHORIZATION | | |

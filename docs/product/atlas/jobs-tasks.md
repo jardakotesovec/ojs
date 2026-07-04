@@ -35,7 +35,7 @@
 | JOB-testjobfailure | lib/pkp/jobs/testJobs | TestJobFailure.php | Test job that fails (e2e harness) | jobs-queue e2e |  |
 | JOB-testjobsuccess | lib/pkp/jobs/testJobs | TestJobSuccess.php | Test job that succeeds (e2e harness) | jobs-queue e2e |  |
 | JOB-depositissue | jobs/doi | DepositIssue.php | Deposit issue DOI metadata to registry | ? |  |
-| JOB-issuepublishednotifyusers | jobs/notifications | IssuePublishedNotifyUsers.php | Notify subscribers when issue published | notifications e2e |  |
+| JOB-issuepublishednotifyusers | jobs/notifications | IssuePublishedNotifyUsers.php | Notify subscribers when issue published | issue-management |  |
 | JOB-openaccessmailusers | jobs/notifications | OpenAccessMailUsers.php | Notify users when article is open access | notifications e2e |  |
 | JOB-depositorcidreview | jobs/orcid | DepositOrcidReview.php | Deposit peer review activity to ORCID | ? |  |
 | JOB-reconcileorcidreviewputcode | jobs/orcid | ReconcileOrcidReviewPutCode.php | Sync review put-codes with ORCID | ? |  |

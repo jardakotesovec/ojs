@@ -281,7 +281,7 @@
 | API-issue-get-many | GET /issues | api/v1/issues/IssueController.php:81 | Route handler IssueController::getMany() | issue-management.md | |
 | API-issue-get-current | GET /issues/current | api/v1/issues/IssueController.php:84 | Route handler IssueController::getCurrent() | issue-management.md | |
 | API-issue-get | GET /issues/{issueId} | api/v1/issues/IssueController.php:87 | Route handler IssueController::get() | issue-management.md | |
-| API-issue-get-assignment-options | GET /issues/assignmentOptions | api/v1/issues/IssueController.php:91 | Route handler IssueController::getAssignmentOptions() | issue-management.md | publication-issue-assignment |
+| API-issue-get-assignment-options | GET /issues/assignmentOptions | api/v1/issues/IssueController.php:91 | Route handler IssueController::getAssignmentOptions() | publication-issue-assignment | drives the publication issue-assignment radio (not issue CRUD); issue-management owns get-many/current/get |
 | API-stats-sushi-get-reports-tr | GET /stats/sushi/reports/tr | api/v1/stats/sushi/StatsSushiController.php:38 | Route handler StatsSushiController::getReportsTR() | usage-statistics.md | |
 | API-stats-sushi-get-reports-trj3 | GET /stats/sushi/reports/tr_j3 | api/v1/stats/sushi/StatsSushiController.php:41 | Route handler StatsSushiController::getReportsTRJ3() | usage-statistics.md | |
 | API-stats-sushi-get-reports-ir | GET /stats/sushi/reports/ir | api/v1/stats/sushi/StatsSushiController.php:44 | Route handler StatsSushiController::getReportsIR() | usage-statistics.md | |

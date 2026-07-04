@@ -274,6 +274,58 @@ exports.IssuePage = class IssuePage extends BasePage {
 	}
 
 	/**
+	 * Enter the Back Issues grid's ordering mode. The Back grid uses the
+	 * (non-category) `OrderGridItemsFeature`; its grid-level "Order" link
+	 * (`a.pkp_linkaction_orderItems`) toggles the rows into jQuery-UI
+	 * sortables and slides down the Done/Cancel finish controls. The Back
+	 * tab must already be open (see `openBackTab`). Waits for the Done
+	 * control so a following `dragRowAbove` doesn't race the slideDown.
+	 */
+	async startBackOrdering() {
+		await this.backGrid.locator('a.pkp_linkaction_orderItems').first().click();
+		await expect(
+			this.backGrid.locator('.order_finish_controls a.saveButton'),
+		).toBeVisible({timeout: 15_000});
+	}
+
+	/**
+	 * Commit the Back Issues order: the "Done" link POSTs the serialized row
+	 * order to `BackIssueGridHandler::saveSequence` → `moveCustomIssueOrder`,
+	 * writing the per-journal `custom_issue_orders`. Resolves once the POST
+	 * returns and jQuery settles.
+	 */
+	async finishBackOrdering() {
+		const saved = this.page.waitForResponse(
+			(res) =>
+				/save-?sequence/i.test(res.url()) &&
+				res.request().method() === 'POST',
+			{timeout: 15_000},
+		);
+		await this.backGrid
+			.locator('.order_finish_controls a.saveButton')
+			.click();
+		await saved;
+		await waitForJQueryIdle(this.page);
+	}
+
+	/**
+	 * The identification strings of the Back Issues grid rows, in display
+	 * order — used to assert the custom order (`custom_issue_orders`)
+	 * overrides the default date order. The Back tab must be open.
+	 *
+	 * @returns {Promise<string[]>}
+	 */
+	async backRowIdentifications() {
+		const rows = this.backGrid.locator('tr.gridRow');
+		const count = await rows.count();
+		const out = [];
+		for (let i = 0; i < count; i++) {
+			out.push((await rows.nth(i).innerText()).replace(/\s+/g, ' ').trim());
+		}
+		return out;
+	}
+
+	/**
 	 * Open the Edit Issue modal on the given row and switch to the
 	 * "Issue Data" tab (lazy-loaded IssueForm). Returns the form locator.
 	 *
