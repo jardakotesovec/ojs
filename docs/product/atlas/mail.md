@@ -36,7 +36,7 @@
 | MAIL-orcid-collect-author-id | OrcidCollectAuthorId | lib/pkp/classes/mail/mailables/OrcidCollectAuthorId.php | template key: ORCID_COLLECT_AUTHOR_ID | | |
 | MAIL-orcid-request-author-authorization | OrcidRequestAuthorAuthorization | lib/pkp/classes/mail/mailables/OrcidRequestAuthorAuthorization.php | template key: ORCID_REQUEST_AUTHOR_AUTHORIZATION | | |
 | MAIL-orcid-request-update-scope | OrcidRequestUpdateScope | lib/pkp/classes/mail/mailables/OrcidRequestUpdateScope.php | template key: ORCID_REQUEST_UPDATE_SCOPE | | |
-| MAIL-password-reset-requested | PasswordResetRequested | lib/pkp/classes/mail/mailables/PasswordResetRequested.php | template key: PASSWORD_RESET_CONFIRM | | |
+| MAIL-password-reset-requested | PasswordResetRequested | lib/pkp/classes/mail/mailables/PasswordResetRequested.php | template key: PASSWORD_RESET_CONFIRM | | password-flows |
 | MAIL-payment-request | PaymentRequest | classes/mail/mailables/PaymentRequest.php | template key: PAYMENT_REQUEST_NOTIFICATION | | |
 | MAIL-publication-version-notify | PublicationVersionNotify | lib/pkp/classes/mail/mailables/PublicationVersionNotify.php | template key: VERSION_CREATED | notifications | publication-versioning |
 | MAIL-recommendation-notify-editors | RecommendationNotifyEditors | lib/pkp/classes/mail/mailables/RecommendationNotifyEditors.php | template key: EDITOR_RECOMMENDATION | notifications | editorial-decisions |

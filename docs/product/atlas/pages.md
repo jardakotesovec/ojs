@@ -150,12 +150,12 @@
 | PAGE-login-index | LoginHandler::index | lib/pkp/pages/login/LoginHandler.php | Login form page | registration-login.md | registration-login |
 | PAGE-login-signin | LoginHandler::signIn | lib/pkp/pages/login/LoginHandler.php | Process login form submission | registration-login.md | registration-login |
 | PAGE-login-signout | LoginHandler::signOut | lib/pkp/pages/login/LoginHandler.php | Log the current user out | registration-login.md | registration-login |
-| PAGE-login-lostpassword | LoginHandler::lostPassword | lib/pkp/pages/login/LoginHandler.php | Lost-password request form | password-flows.md | |
-| PAGE-login-requestresetpassword | LoginHandler::requestResetPassword | lib/pkp/pages/login/LoginHandler.php | Submit password-reset request | password-flows.md | |
-| PAGE-login-resetpassword | LoginHandler::resetPassword | lib/pkp/pages/login/LoginHandler.php | Password reset form page | password-flows.md | |
-| PAGE-login-updateresetpassword | LoginHandler::updateResetPassword | lib/pkp/pages/login/LoginHandler.php | Submit new password after reset | password-flows.md | |
-| PAGE-login-changepassword | LoginHandler::changePassword | lib/pkp/pages/login/LoginHandler.php | Forced password-change form | password-flows.md | |
-| PAGE-login-savepassword | LoginHandler::savePassword | lib/pkp/pages/login/LoginHandler.php | Submit forced password change | password-flows.md | |
+| PAGE-login-lostpassword | LoginHandler::lostPassword | lib/pkp/pages/login/LoginHandler.php | Lost-password request form | password-flows.md | password-flows |
+| PAGE-login-requestresetpassword | LoginHandler::requestResetPassword | lib/pkp/pages/login/LoginHandler.php | Submit password-reset request | password-flows.md | password-flows |
+| PAGE-login-resetpassword | LoginHandler::resetPassword | lib/pkp/pages/login/LoginHandler.php | Password reset form page | password-flows.md | password-flows |
+| PAGE-login-updateresetpassword | LoginHandler::updateResetPassword | lib/pkp/pages/login/LoginHandler.php | Submit new password after reset | password-flows.md | password-flows |
+| PAGE-login-changepassword | LoginHandler::changePassword | lib/pkp/pages/login/LoginHandler.php | Forced password-change form | password-flows.md | password-flows |
+| PAGE-login-savepassword | LoginHandler::savePassword | lib/pkp/pages/login/LoginHandler.php | Submit forced password change | password-flows.md | password-flows |
 | PAGE-login-signinasuser | LoginHandler::signInAsUser | lib/pkp/pages/login/LoginHandler.php | Admin "login as" another user | login-as.md | |
 | PAGE-login-signoutasuser | LoginHandler::signOutAsUser | lib/pkp/pages/login/LoginHandler.php | Return from "login as" impersonation | login-as.md | |
 | PAGE-navigationmenu-index | NavigationMenuItemHandler::index | lib/pkp/pages/navigationMenu/NavigationMenuItemHandler.php | Custom navigation menu item content page | navigation-menus.md | |
