@@ -85,8 +85,8 @@
 | DB-review_round_files | review_round_files | lib/pkp/classes/migration/install/ReviewsMigration.php | Review round attachments | | review-rounds-and-revisions |
 | DB-review_rounds | review_rounds | lib/pkp/classes/migration/install/ReviewsMigration.php | Review workflow rounds | review-rounds-revisions | review-rounds-and-revisions |
 | DB-stage_assignments | stage_assignments | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User stage role assignments | stage-participants | stage-participants |
-| DB-user_group_settings | user_group_settings | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User group settings | | |
-| DB-user_group_stage | user_group_stage | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | Group stage assignments | | |
+| DB-user_group_settings | user_group_settings | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User group settings | roles-permissions | localized name/abbrev of a user group (claimed with DB-user_groups 2026-07-05) |
+| DB-user_group_stage | user_group_stage | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | Group stage assignments | roles-permissions | which workflow stages a group works in (claimed with DB-user_groups 2026-07-05) |
 | DB-user_groups | user_groups | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | Role definitions | roles-permissions | |
 | DB-user_user_groups | user_user_groups | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User role memberships | user-management | |
 | DB-ror_settings | ror_settings | lib/pkp/classes/migration/install/RorsMigration.php | ROR identifier settings | | |
