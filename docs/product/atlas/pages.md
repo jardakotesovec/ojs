@@ -109,9 +109,9 @@
 | PAGE-user-payrenewsubscription | UserHandler::payRenewSubscription | pages/user/UserHandler.php | Pay to renew an existing subscription | subscription-access.md | |
 | PAGE-user-paymembership | UserHandler::payMembership | pages/user/UserHandler.php | Pay membership dues | subscription-access.md | |
 | PAGE-user-profile | ProfileHandler::profile | lib/pkp/pages/user/ProfileHandler.php | User profile edit page, via pages/user fallback | user-profile.md | |
-| PAGE-user-register | RegistrationHandler::register | lib/pkp/pages/user/RegistrationHandler.php | User registration form page | registration-login.md | |
-| PAGE-user-registeruser | RegistrationHandler::registerUser | lib/pkp/pages/user/RegistrationHandler.php | Submit user registration form | registration-login.md | |
-| PAGE-user-activateuser | RegistrationHandler::activateUser | lib/pkp/pages/user/RegistrationHandler.php | Activate a newly registered account | registration-login.md | |
+| PAGE-user-register | RegistrationHandler::register | lib/pkp/pages/user/RegistrationHandler.php | User registration form page | registration-login.md | registration-login |
+| PAGE-user-registeruser | RegistrationHandler::registerUser | lib/pkp/pages/user/RegistrationHandler.php | Submit user registration form (backward-compat alias for register) | registration-login.md | registration-login |
+| PAGE-user-activateuser | RegistrationHandler::activateUser | lib/pkp/pages/user/RegistrationHandler.php | Activate a newly registered account (invitation-based; live only when require_validation on) | registration-login.md | registration-login |
 | PAGE-workflow-access | WorkflowHandler::access (inherited) | pages/workflow/WorkflowHandler.php | Workflow entry access-check redirect | submission-stage-actions.md | workflow-stage-navigation |
 | PAGE-workflow-index | WorkflowHandler::index (inherited) | pages/workflow/WorkflowHandler.php | Workflow stage landing redirect | submission-stage-actions.md | workflow-stage-navigation |
 | PAGE-workflow-submission | WorkflowHandler::submission (inherited) | pages/workflow/WorkflowHandler.php | Submission stage workflow page | submission-stage-actions.md | workflow-stage-navigation |
@@ -147,9 +147,9 @@
 | PAGE-invitation-edit | InitializeInvitationUIHandler::edit | lib/pkp/pages/invitation/InitializeInvitationUIHandler.php | Initialize invitation-edit UI | user-invitations.md | |
 | PAGE-libraryfiles-downloadpublic | LibraryFileHandler::downloadPublic | lib/pkp/pages/libraryFiles/LibraryFileHandler.php | Download a public library file | media-files.md | document-library |
 | PAGE-libraryfiles-downloadlibraryfile | LibraryFileHandler::downloadLibraryFile | lib/pkp/pages/libraryFiles/LibraryFileHandler.php | Download a restricted library file | media-files.md | document-library |
-| PAGE-login-index | LoginHandler::index | lib/pkp/pages/login/LoginHandler.php | Login form page | registration-login.md | |
-| PAGE-login-signin | LoginHandler::signIn | lib/pkp/pages/login/LoginHandler.php | Process login form submission | registration-login.md | |
-| PAGE-login-signout | LoginHandler::signOut | lib/pkp/pages/login/LoginHandler.php | Log the current user out | registration-login.md | |
+| PAGE-login-index | LoginHandler::index | lib/pkp/pages/login/LoginHandler.php | Login form page | registration-login.md | registration-login |
+| PAGE-login-signin | LoginHandler::signIn | lib/pkp/pages/login/LoginHandler.php | Process login form submission | registration-login.md | registration-login |
+| PAGE-login-signout | LoginHandler::signOut | lib/pkp/pages/login/LoginHandler.php | Log the current user out | registration-login.md | registration-login |
 | PAGE-login-lostpassword | LoginHandler::lostPassword | lib/pkp/pages/login/LoginHandler.php | Lost-password request form | password-flows.md | |
 | PAGE-login-requestresetpassword | LoginHandler::requestResetPassword | lib/pkp/pages/login/LoginHandler.php | Submit password-reset request | password-flows.md | |
 | PAGE-login-resetpassword | LoginHandler::resetPassword | lib/pkp/pages/login/LoginHandler.php | Password reset form page | password-flows.md | |

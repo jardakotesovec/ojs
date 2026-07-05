@@ -33,7 +33,7 @@
 | DB-site | site | lib/pkp/classes/migration/install/CommonMigration.php | Site configuration | site-administration | |
 | DB-site_settings | site_settings | lib/pkp/classes/migration/install/CommonMigration.php | Site-level settings | site-settings | |
 | DB-user_settings | user_settings | lib/pkp/classes/migration/install/CommonMigration.php | User preferences and settings | user-profile | |
-| DB-users | users | lib/pkp/classes/migration/install/CommonMigration.php | User accounts | user-management | |
+| DB-users | users | lib/pkp/classes/migration/install/CommonMigration.php | User accounts (created at self-registration; CRUD/disable/merge in user-management) | user-management | registration-login |
 | DB-versions | versions | lib/pkp/classes/migration/install/CommonMigration.php | System version history | | |
 | DB-controlled_vocab_entries | controlled_vocab_entries | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Controlled vocabulary entries | | submission-wizard-metadata |
 | DB-controlled_vocab_entry_settings | controlled_vocab_entry_settings | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary entry settings | | submission-wizard-metadata |
@@ -91,7 +91,7 @@
 | DB-user_user_groups | user_user_groups | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User role memberships | user-management | |
 | DB-ror_settings | ror_settings | lib/pkp/classes/migration/install/RorsMigration.php | ROR identifier settings | | |
 | DB-rors | rors | lib/pkp/classes/migration/install/RorsMigration.php | Research organization ROR records | | |
-| DB-sessions | sessions | lib/pkp/classes/migration/install/SessionsMigration.php | User session data | login-as | |
+| DB-sessions | sessions | lib/pkp/classes/migration/install/SessionsMigration.php | User session data (created at login; migrated by login-as impersonation) | login-as | registration-login |
 | DB-submission_file_revisions | submission_file_revisions | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submission file versions | | submission-files |
 | DB-submission_file_settings | submission_file_settings | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submission file settings | | submission-files |
 | DB-submission_files | submission_files | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submitted document files | submission-files | submission-files |
