@@ -7,13 +7,13 @@
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
 | PAGE-about-subscriptions | AboutHandler::subscriptions | pages/about/AboutHandler.php | Journal subscriptions info page (OJS override) | subscription-access.md | |
-| PAGE-about-index | AboutContextHandler::index | lib/pkp/pages/about/AboutContextHandler.php | About-journal landing page, via pages/about fallback | | |
-| PAGE-about-editorialmasthead | AboutContextHandler::editorialMasthead | lib/pkp/pages/about/AboutContextHandler.php | Editorial masthead/team listing page | editorial-masthead.md | |
-| PAGE-about-editorialhistory | AboutContextHandler::editorialHistory | lib/pkp/pages/about/AboutContextHandler.php | Editorial history page | editorial-masthead.md | |
-| PAGE-about-submissions | AboutContextHandler::submissions | lib/pkp/pages/about/AboutContextHandler.php | Author submission guidelines info page | | |
-| PAGE-about-contact | AboutContextHandler::contact | lib/pkp/pages/about/AboutContextHandler.php | Journal contact info page | | |
-| PAGE-about-privacy | AboutSiteHandler::privacy | lib/pkp/pages/about/AboutSiteHandler.php | Privacy statement page | | |
-| PAGE-about-aboutthispublishingsystem | AboutSiteHandler::aboutThisPublishingSystem | lib/pkp/pages/about/AboutSiteHandler.php | "About this publishing system" info page | | |
+| PAGE-about-index | AboutContextHandler::index | lib/pkp/pages/about/AboutContextHandler.php | About-journal landing page, via pages/about fallback | | about-pages |
+| PAGE-about-editorialmasthead | AboutContextHandler::editorialMasthead | lib/pkp/pages/about/AboutContextHandler.php | Editorial masthead/team listing page | editorial-masthead.md | about-pages (public page; config → editorial-masthead) |
+| PAGE-about-editorialhistory | AboutContextHandler::editorialHistory | lib/pkp/pages/about/AboutContextHandler.php | Editorial history page | editorial-masthead.md | about-pages |
+| PAGE-about-submissions | AboutContextHandler::submissions | lib/pkp/pages/about/AboutContextHandler.php | Author submission guidelines info page | | about-pages |
+| PAGE-about-contact | AboutContextHandler::contact | lib/pkp/pages/about/AboutContextHandler.php | Journal contact info page | | about-pages |
+| PAGE-about-privacy | AboutSiteHandler::privacy | lib/pkp/pages/about/AboutSiteHandler.php | Privacy statement page | | about-pages |
+| PAGE-about-aboutthispublishingsystem | AboutSiteHandler::aboutThisPublishingSystem | lib/pkp/pages/about/AboutSiteHandler.php | "About this publishing system" info page | | about-pages |
 | PAGE-article-view | ArticleHandler::view | pages/article/ArticleHandler.php | Article landing/abstract view page | article-landing.md | article-landing |
 | PAGE-article-viewfile | ArticleHandler::viewFile | pages/article/ArticleHandler.php | Legacy article file view URL (301 → download) | | article-landing |
 | PAGE-article-downloadsuppfile | ArticleHandler::downloadSuppFile | pages/article/ArticleHandler.php | Legacy supplementary file download URL | galleys | galleys |
@@ -36,12 +36,12 @@
 | PAGE-gateway-clockss | GatewayHandler::clockss | pages/gateway/GatewayHandler.php | CLOCKSS preservation gateway manifest | | |
 | PAGE-gateway-plugin | GatewayHandler::plugin | pages/gateway/GatewayHandler.php | Dispatch gateway request to a named plugin | plugin-management.md | |
 | PAGE-index-index | IndexHandler::index (inherited) | pages/index/IndexHandler.php | Site/journal home page | journal-homepage.md | journal-homepage (site-index branch → site-settings) |
-| PAGE-information-index | InformationHandler::index | pages/information/InformationHandler.php | Information landing page | | |
-| PAGE-information-readers | InformationHandler::readers | pages/information/InformationHandler.php | "For readers" info page | | |
-| PAGE-information-authors | InformationHandler::authors | pages/information/InformationHandler.php | "For authors" info page | | |
-| PAGE-information-librarians | InformationHandler::librarians | pages/information/InformationHandler.php | "For librarians" info page | | |
-| PAGE-information-competinginterestguidelines | InformationHandler::competingInterestGuidelines | pages/information/InformationHandler.php | Competing interest guidelines page | | |
-| PAGE-information-samplecopyrightwording | InformationHandler::sampleCopyrightWording | pages/information/InformationHandler.php | Sample copyright wording page | | |
+| PAGE-information-index | InformationHandler::index | pages/information/InformationHandler.php | Information landing page (unknown/no sub-page → redirect home) | | about-pages |
+| PAGE-information-readers | InformationHandler::readers | pages/information/InformationHandler.php | "For readers" info page | | about-pages |
+| PAGE-information-authors | InformationHandler::authors | pages/information/InformationHandler.php | "For authors" info page | | about-pages |
+| PAGE-information-librarians | InformationHandler::librarians | pages/information/InformationHandler.php | "For librarians" info page | | about-pages |
+| PAGE-information-competinginterestguidelines | InformationHandler::competingInterestGuidelines | pages/information/InformationHandler.php | Competing interest guidelines page | | about-pages |
+| PAGE-information-samplecopyrightwording | InformationHandler::sampleCopyrightWording | pages/information/InformationHandler.php | Sample copyright wording page | | about-pages |
 | PAGE-issue-index | IssueHandler::index | pages/issue/IssueHandler.php | Issue archive/table-of-contents landing | issue-archive-toc.md | |
 | PAGE-issue-current | IssueHandler::current | pages/issue/IssueHandler.php | Current issue table of contents | issue-archive-toc.md | |
 | PAGE-issue-archive | IssueHandler::archive | pages/issue/IssueHandler.php | Back-issue archive listing | issue-archive-toc.md | |
