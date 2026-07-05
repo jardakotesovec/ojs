@@ -62,7 +62,7 @@
 | PAGE-management-settings-institutions | ManagementHandler::institutions | lib/pkp/pages/management/ManagementHandler.php | Institutions settings sub-page | institutions.md | |
 | PAGE-management-settings-user | ManagementHandler::editUser | lib/pkp/pages/management/ManagementHandler.php | Edit-user sub-page under settings | user-management.md | |
 | PAGE-management-settings-usercomments | ManagementHandler::userComments | lib/pkp/pages/management/ManagementHandler.php | Public comments moderation sub-page | public-comments.md | public-comments |
-| PAGE-management-access | SettingsHandler::access (site-admin op) | pages/management/SettingsHandler.php | Site-admin-only direct access op | site-access-restrictions.md | |
+| PAGE-management-access | SettingsHandler::access (site-admin op) | pages/management/SettingsHandler.php | Site-admin-only direct access op | site-access-restrictions.md | site-access-restrictions (URL-only alias of settings/access — no UI link; see spec Open question 4) |
 | PAGE-management-tools | PKPToolsHandler::tools | lib/pkp/pages/management/PKPToolsHandler.php | Admin tools landing page | | |
 | PAGE-management-importexport | PKPToolsHandler::importexport | lib/pkp/pages/management/PKPToolsHandler.php | Import/export tools page | native-xml-import-export.md | |
 | PAGE-management-permissions | PKPToolsHandler::permissions | lib/pkp/pages/management/PKPToolsHandler.php | Permissions tool page | roles-permissions.md | |
