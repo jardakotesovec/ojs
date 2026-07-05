@@ -91,7 +91,7 @@
 | DB-user_user_groups | user_user_groups | lib/pkp/classes/migration/install/RolesAndUserGroupsMigration.php | User role memberships | user-management | |
 | DB-ror_settings | ror_settings | lib/pkp/classes/migration/install/RorsMigration.php | ROR identifier settings | | |
 | DB-rors | rors | lib/pkp/classes/migration/install/RorsMigration.php | Research organization ROR records | | |
-| DB-sessions | sessions | lib/pkp/classes/migration/install/SessionsMigration.php | User session data (created at login; migrated by login-as impersonation) | login-as | registration-login |
+| DB-sessions | sessions | lib/pkp/classes/migration/install/SessionsMigration.php | User session data (created at login; migrated by login-as impersonation) | registration-login | Owned by registration-login as the base session (created at login). login-as REFERENCES it for the impersonation stash (the `signedInAs` session var) + the session-id migration on sign-in-as/sign-out-as — referenced, not claimed. |
 | DB-submission_file_revisions | submission_file_revisions | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submission file versions | | submission-files |
 | DB-submission_file_settings | submission_file_settings | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submission file settings | | submission-files |
 | DB-submission_files | submission_files | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submitted document files | submission-files | submission-files |

@@ -132,8 +132,8 @@
 | PAGE-admin-jobs | AdminHandler::jobs | lib/pkp/pages/admin/AdminHandler.php | Job queue monitoring page | jobs-queue.md | |
 | PAGE-admin-failedjobs | AdminHandler::failedJobs | lib/pkp/pages/admin/AdminHandler.php | Failed job queue listing page | jobs-queue.md | |
 | PAGE-admin-failedjobdetails | AdminHandler::failedJobDetails | lib/pkp/pages/admin/AdminHandler.php | Failed job detail view | jobs-queue.md | |
-| PAGE-admin-confirmaccesssubmit | AdminHandler::confirmAccessSubmit | lib/pkp/pages/admin/AdminHandler.php | Submit login-as-user confirmation | login-as.md | |
-| PAGE-admin-confirmaccess | AdminHandler::confirmAccess | lib/pkp/pages/admin/AdminHandler.php | Confirm login-as-user request page | login-as.md | |
+| PAGE-admin-confirmaccesssubmit | AdminHandler::confirmAccessSubmit | lib/pkp/pages/admin/AdminHandler.php | Submit the Administration-area re-authentication (password re-confirm); starts the elevated session. NOT a login-as confirmation — impersonation has no reauth (see login-as.md) | login-as.md | |
+| PAGE-admin-confirmaccess | AdminHandler::confirmAccess | lib/pkp/pages/admin/AdminHandler.php | Administration-area re-authentication page (re-enter your own password before the admin area). NOT a login-as confirmation — impersonation has no reauth (see login-as.md) | login-as.md | |
 | PAGE-announcement-index | AnnouncementHandler::index | lib/pkp/pages/announcement/AnnouncementHandler.php | Public announcements listing page | announcements.md | |
 | PAGE-announcement-view | AnnouncementHandler::view | lib/pkp/pages/announcement/AnnouncementHandler.php | Single announcement detail page | announcements.md | |
 | PAGE-install-index | InstallHandler::index | lib/pkp/pages/install/InstallHandler.php | Installer landing page | test-infrastructure.md | |
