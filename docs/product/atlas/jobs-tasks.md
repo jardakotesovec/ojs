@@ -31,7 +31,7 @@
 | JOB-compilesubmissionmetrics | lib/pkp/jobs/statistics | CompileSubmissionMetrics.php | Aggregate metrics per article | ? |  |
 | JOB-pkpprocessusagestattslogfile | lib/pkp/jobs/statistics | PKPProcessUsageStatsLogFile.php | Parse usage event logs (PKP core) | ? |  |
 | JOB-removedoubleclicks | lib/pkp/jobs/statistics | RemoveDoubleClicks.php | Filter duplicate usage events | ? |  |
-| JOB-updatesubmissionsearchjob | lib/pkp/jobs/submissions | UpdateSubmissionSearchJob.php | Re-index article for search | ? |  |
+| JOB-updatesubmissionsearchjob | lib/pkp/jobs/submissions | UpdateSubmissionSearchJob.php | Re-index article for search | site-search | site-search |
 | JOB-testjobfailure | lib/pkp/jobs/testJobs | TestJobFailure.php | Test job that fails (e2e harness) | jobs-queue e2e |  |
 | JOB-testjobsuccess | lib/pkp/jobs/testJobs | TestJobSuccess.php | Test job that succeeds (e2e harness) | jobs-queue e2e |  |
 | JOB-depositissue | jobs/doi | DepositIssue.php | Deposit issue DOI metadata to registry | ? |  |

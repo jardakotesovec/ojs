@@ -193,7 +193,7 @@ atoms: PLUGIN-generic-{recommendByAuthor,recommendBySimilarity} → **article-la
 atoms: PAGE-issue-{index,current,archive,view,download}, GRID-toc-grid, SCHEMA-issue, PLUGIN-catalog (~5)
 
 ### site-search — front-end search, filters, no-result behaviour, index maintenance
-atoms: PAGE-search-{index,search}, FORM-pkp-search-indexing-form, DB-submissions_fulltext, JOB-updatesubmissionsearchjob (~6)
+atoms: PAGE-search-{index,search}, DB-submissions_fulltext, JOB-updatesubmissionsearchjob (4) — VERIFIED 2026-07-05. NB: `FORM-pkp-search-indexing-form` is the Distribution "Search Engine Indexing" SEO form (NOT the fulltext index); released to distribution-settings, which already lists it below.
 
 ### browse-category-section — category/section browse landing pages and the browse sidebar block
 atoms: PAGE-catalog-{category,fullsize,thumbnail}, PLUGIN-blocks-browse, DB-categories/sections (browse hook) (~4)

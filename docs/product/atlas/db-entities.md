@@ -96,7 +96,7 @@
 | DB-submission_file_settings | submission_file_settings | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submission file settings | | submission-files |
 | DB-submission_files | submission_files | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | Submitted document files | submission-files | submission-files |
 | DB-variant_groups | variant_groups | lib/pkp/classes/migration/install/SubmissionFilesMigration.php | File variant groupings (web ↔ high-res media pairs; the `submission_files.variant_group_id`/`variant_type` columns ride along) | media-files | media-files |
-| DB-submissions_fulltext | submissions_fulltext | lib/pkp/classes/migration/install/SubmissionSearchMigration.php | Full-text search index | site-search | |
+| DB-submissions_fulltext | submissions_fulltext | lib/pkp/classes/migration/install/SubmissionSearchMigration.php | Full-text search index (single table, one row per submission/publication/locale; title/abstract/body/authors) | site-search | site-search |
 | DB-author_settings | author_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Author metadata settings | contributors | |
 | DB-authors | authors | lib/pkp/classes/migration/install/SubmissionsMigration.php | Publication authors | contributors | |
 | DB-contributor_role_settings | contributor_role_settings | lib/pkp/classes/migration/install/SubmissionsMigration.php | Contributor role settings | contributors | |

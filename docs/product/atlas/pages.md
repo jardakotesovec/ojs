@@ -85,8 +85,8 @@
 | PAGE-reviewer-showdeclinereview | ReviewerHandler::showDeclineReview | pages/reviewer/ReviewerHandler.php | Show decline-review confirmation form | reviewer-response.md | reviewer-response |
 | PAGE-reviewer-savedeclinereview | ReviewerHandler::saveDeclineReview | pages/reviewer/ReviewerHandler.php | Submit decline-review form | reviewer-response.md | reviewer-response |
 | PAGE-reviewer-downloadfile | ReviewerHandler::downloadFile | pages/reviewer/ReviewerHandler.php | In role list but not routed/implemented (dead) | | |
-| PAGE-search-index | SearchHandler::index (inherited) | pages/search/SearchHandler.php | Site/journal search landing page | site-search.md | |
-| PAGE-search-search | SearchHandler::search (inherited) | pages/search/SearchHandler.php | Search results page | site-search.md | |
+| PAGE-search-index | SearchHandler::index (inherited) | pages/search/SearchHandler.php | Site/journal search landing page | site-search.md | site-search |
+| PAGE-search-search | SearchHandler::search (inherited) | pages/search/SearchHandler.php | Search results page | site-search.md | site-search |
 | PAGE-search-similardocuments | SearchHandler::similarDocuments | pages/search/index.php | Op routed in switch; no matching handler method found (dead) | | |
 | PAGE-sitemap-index | SitemapHandler::index (inherited) | pages/sitemap/SitemapHandler.php | XML sitemap generation endpoint | oai-sitemap-feeds.md | |
 | PAGE-stats-issues | StatsHandler::issues | pages/stats/StatsHandler.php | Issue-level usage statistics page | usage-statistics.md | |
