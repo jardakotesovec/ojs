@@ -20,6 +20,7 @@ maintainer deliverable (cleanup candidates), reviewed at campaign end.
 
 | Atom | Evidence of unreachability | Superseded by | Date |
 |------|---------------------------|---------------|------|
+| VUE-catalog-list-panel (CatalogListPanel) | OMP-oriented "published catalog entries" list panel. No mount/reference anywhere OJS renders: grep for `CatalogListPanel`/`catalog-list-panel` across `pages/`, `templates/`, `lib/pkp/templates/`, `js/`, `plugins/` returns **zero** hits — the component exists only in `lib/ui-library/src/`. The OJS reader category page (`PKPCatalogHandler::category` → `frontend/pages/catalogCategory.tpl`) renders Smarty `article_summary.tpl` rows, **not** this Vue panel. Dead in OJS (browse-category-section spec, 2026-07-05) | OMP monograph catalog (no OJS surface) | 2026-07-05 |
 | GRID-grid-pub-ids-pub-id-export-issues-list-grid-handler | No component-path/extends/`new` reference anywhere in templates/, lib/pkp/templates/, lib/ui-library/src/, pages/, classes/, controllers/, plugins/ (checked via combined grep across those trees) | VUE-doi-list-panel-ojs | 2026-07-02 |
 | GRID-grid-pub-ids-pub-id-export-representations-list-grid-handler | Same as above — no reference found in any tree | VUE-doi-list-panel-ojs | 2026-07-02 |
 | GRID-grid-pub-ids-pub-id-export-submissions-list-grid-handler | Same as above — no reference found in any tree | VUE-doi-list-panel-ojs | 2026-07-02 |

@@ -6,7 +6,7 @@
 
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
-| PLUGIN-blocks-browse | plugins/blocks/browse | BrowseBlockPlugin.php | Sidebar block: browse by issue/section/author | website-appearance e2e | *(→ browse-category-section; sidebar render on homepage)* |
+| PLUGIN-blocks-browse | plugins/blocks/browse | BrowseBlockPlugin.php | Sidebar block: browse by **category** only in 3.6 (the docblock's issue/author/series links are stale — code assigns only the category tree); links to `/catalog/category/{path}`. Not enabled by default (no settings.xml). Live-verified 2026-07-05 (transferred from journal-homepage) | website-appearance e2e | browse-category-section |
 | PLUGIN-blocks-developedBy | plugins/blocks/developedBy | DevelopedByBlockPlugin.php | Sidebar block: "developed by PKP" credit | website-appearance e2e | journal-homepage |
 | PLUGIN-blocks-information | plugins/blocks/information | InformationBlockPlugin.php | Sidebar block: for readers/authors/librarians info | website-appearance e2e | journal-homepage |
 | PLUGIN-blocks-languageToggle | plugins/blocks/languageToggle | LanguageToggleBlockPlugin.php | Sidebar block: UI language selector | languages-locales e2e | journal-homepage |
