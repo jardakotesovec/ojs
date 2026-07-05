@@ -88,7 +88,7 @@
 | PAGE-search-index | SearchHandler::index (inherited) | pages/search/SearchHandler.php | Site/journal search landing page | site-search.md | site-search |
 | PAGE-search-search | SearchHandler::search (inherited) | pages/search/SearchHandler.php | Search results page | site-search.md | site-search |
 | PAGE-search-similardocuments | SearchHandler::similarDocuments | pages/search/index.php | Op routed in switch; no matching handler method found (dead) | | |
-| PAGE-sitemap-index | SitemapHandler::index (inherited) | pages/sitemap/SitemapHandler.php | XML sitemap generation endpoint | oai-sitemap-feeds.md | |
+| PAGE-sitemap-index | SitemapHandler::index (inherited) | pages/sitemap/SitemapHandler.php | XML sitemap generation endpoint; always-on core (no enable toggle). `/{journal}/sitemap` → urlset of pages/issues/published-articles/galleys; `/index/sitemap` → sitemapindex. Live-verified 2026-07-05 | oai-sitemap-feeds.md | web-feeds-syndication |
 | PAGE-stats-issues | StatsHandler::issues | pages/stats/StatsHandler.php | Issue-level usage statistics page | usage-statistics.md | |
 | PAGE-stats-editorial | StatsHandler::editorial (inherited) | pages/stats/StatsHandler.php | Editorial statistics dashboard | usage-statistics.md | |
 | PAGE-stats-publications | StatsHandler::publications (inherited) | pages/stats/StatsHandler.php | Publication-level usage statistics page | usage-statistics.md | |
