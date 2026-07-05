@@ -25,8 +25,8 @@
 | DB-email_templates | email_templates | lib/pkp/classes/migration/install/CommonMigration.php | Email message templates | email-templates-management | |
 | DB-email_templates_default_data | email_templates_default_data | lib/pkp/classes/migration/install/CommonMigration.php | Default template content | | |
 | DB-email_templates_settings | email_templates_settings | lib/pkp/classes/migration/install/CommonMigration.php | Settings for templates | | |
-| DB-notification_settings | notification_settings | lib/pkp/classes/migration/install/CommonMigration.php | User notification preferences | | |
-| DB-notification_subscription_settings | notification_subscription_settings | lib/pkp/classes/migration/install/CommonMigration.php | Notification subscriptions | notifications | |
+| DB-notification_settings | notification_settings | lib/pkp/classes/migration/install/CommonMigration.php | Per-notification-object settings (keyed by notification_id) — delivery-side, NOT the user prefs | | notifications feature (delivery); the profile prefs live in notification_subscription_settings |
+| DB-notification_subscription_settings | notification_subscription_settings | lib/pkp/classes/migration/install/CommonMigration.php | Per-user notification preferences: blocked_notification / blocked_emailed_notification (keyed by user_id + context_id) | user-profile | edited by the profile Notifications tab; registration seeds email-consent; notifications feature reads it for delivery |
 | DB-notifications | notifications | lib/pkp/classes/migration/install/CommonMigration.php | User notification records | notifications | |
 | DB-oai_resumption_tokens | oai_resumption_tokens | lib/pkp/classes/migration/install/CommonMigration.php | OAI-PMH resumption tokens | oai-sitemap-feeds | oai-pmh |
 | DB-plugin_settings | plugin_settings | lib/pkp/classes/migration/install/CommonMigration.php | Plugin configuration settings | plugin-management | |
@@ -38,7 +38,7 @@
 | DB-controlled_vocab_entries | controlled_vocab_entries | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Controlled vocabulary entries | | submission-wizard-metadata |
 | DB-controlled_vocab_entry_settings | controlled_vocab_entry_settings | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary entry settings | | submission-wizard-metadata |
 | DB-controlled_vocabs | controlled_vocabs | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary lists | | submission-wizard-metadata |
-| DB-user_interests | user_interests | lib/pkp/classes/migration/install/ControlledVocabMigration.php | User interest keywords | | |
+| DB-user_interests | user_interests | lib/pkp/classes/migration/install/ControlledVocabMigration.php | User interest keywords | user-profile | reviewer-interests field on the profile Roles tab |
 | DB-doi_settings | doi_settings | lib/pkp/classes/migration/install/DoiMigration.php | DOI configuration settings | doi-management | |
 | DB-dois | dois | lib/pkp/classes/migration/install/DoiMigration.php | Digital object identifiers | doi-management (DOI entity; publication-identifiers references it for read-only display) | |
 | DB-email_template_user_group_access | email_template_user_group_access | lib/pkp/classes/migration/install/EmailTemplateUserGroupAccessMigration.php | Template access by role | | |

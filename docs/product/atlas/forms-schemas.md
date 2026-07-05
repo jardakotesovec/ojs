@@ -125,7 +125,7 @@
 | SCHEMA-site | Schema | `lib/pkp/schemas/site.json` | Site entity; overall site hosting contexts; stats/locales/email config (37 props) | site-settings.md | |
 | SCHEMA-submission-pkp | Schema | `lib/pkp/schemas/submission.json` | Submission entity; shared submission entity; participants/reviewRounds/decisions/status (32 props) | submission-settings.md | |
 | SCHEMA-submission-file | Schema | `lib/pkp/schemas/submissionFile.json` | Submission File entity; file + metadata; genre/fileStage/dependentFiles (43 props) | submission-files.md | submission-files |
-| SCHEMA-user | Schema | `lib/pkp/schemas/user.json` | User entity; registered user; auth/API key/locales/gossip props (49 props) | user-management.md | |
+| SCHEMA-user | Schema | `lib/pkp/schemas/user.json` | User entity; registered user; auth/API key/locales/gossip props (49 props) | user-profile.md | self-editable field schema; registration-login owns DB-users (creation), user-management owns admin lifecycle |
 | SCHEMA-user-group | Schema | `lib/pkp/schemas/userGroup.json` | UserGroup entity; role-bound user group; permitSettings/masthead/roleId (14 props) | roles-permissions.md | |
 
 ## Gaps

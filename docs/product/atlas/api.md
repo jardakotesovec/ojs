@@ -47,7 +47,7 @@
 | API-edit-task-template-delete | DELETE /editTaskTemplates/{templateId} | lib/pkp/api/v1/editTaskTemplates/PKPEditTaskTemplateController.php:60 | Route handler PKPEditTaskTemplateController::delete() | editorial-tasks.md | tasks-discussions |
 | API-edit-task-template-get-variables | GET /editTaskTemplates/variables | lib/pkp/api/v1/editTaskTemplates/PKPEditTaskTemplateController.php:61 | Route handler PKPEditTaskTemplateController::getVariables() | editorial-tasks.md | tasks-discussions |
 | API-edit-task-template-get-many | GET /editTaskTemplates | lib/pkp/api/v1/editTaskTemplates/PKPEditTaskTemplateController.php:74 | Route handler PKPEditTaskTemplateController::getMany() | editorial-tasks.md | tasks-discussions |
-| API-interest-get-many | GET /vocabs/interests | lib/pkp/api/v1/vocabs/PKPInterestController.php:56 | Route handler PKPInterestController::getMany() |  | |
+| API-interest-get-many | GET /vocabs/interests | lib/pkp/api/v1/vocabs/PKPInterestController.php:56 | Route handler PKPInterestController::getMany() | user-profile | public autocomplete for the reviewer-interests field |
 | API-vocab-get-many | GET /vocabs | lib/pkp/api/v1/vocabs/PKPVocabController.php:70 | Route handler PKPVocabController::getMany() |  | submission-wizard-metadata |
 | API-navigation-menu-get-all-items | GET /navigationMenus/items | lib/pkp/api/v1/navigationMenus/PKPNavigationMenuController.php:68 | Route handler PKPNavigationMenuController::getAllItems() | navigation-menus.md | |
 | API-navigation-menu-get-areas | GET /navigationMenus/areas | lib/pkp/api/v1/navigationMenus/PKPNavigationMenuController.php:72 | Route handler PKPNavigationMenuController::getAreas() | navigation-menus.md | |
