@@ -28,7 +28,7 @@
 | DB-notification_settings | notification_settings | lib/pkp/classes/migration/install/CommonMigration.php | User notification preferences | | |
 | DB-notification_subscription_settings | notification_subscription_settings | lib/pkp/classes/migration/install/CommonMigration.php | Notification subscriptions | notifications | |
 | DB-notifications | notifications | lib/pkp/classes/migration/install/CommonMigration.php | User notification records | notifications | |
-| DB-oai_resumption_tokens | oai_resumption_tokens | lib/pkp/classes/migration/install/CommonMigration.php | OAI-PMH resumption tokens | oai-sitemap-feeds | |
+| DB-oai_resumption_tokens | oai_resumption_tokens | lib/pkp/classes/migration/install/CommonMigration.php | OAI-PMH resumption tokens | oai-sitemap-feeds | oai-pmh |
 | DB-plugin_settings | plugin_settings | lib/pkp/classes/migration/install/CommonMigration.php | Plugin configuration settings | plugin-management | |
 | DB-site | site | lib/pkp/classes/migration/install/CommonMigration.php | Site configuration | site-administration | |
 | DB-site_settings | site_settings | lib/pkp/classes/migration/install/CommonMigration.php | Site-level settings | site-settings | |

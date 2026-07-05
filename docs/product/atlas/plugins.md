@@ -19,7 +19,7 @@
 | PLUGIN-generic-customBlockManager | plugins/generic/customBlockManager | CustomBlockPlugin.php / CustomBlockManagerPlugin.php | Manage custom sidebar text/HTML blocks; has per-block form (context) | website-appearance e2e |  |
 | PLUGIN-generic-datacite | plugins/generic/datacite | DatacitePlugin.php | Deposit DOIs/metadata to DataCite registration agency; no dedicated settings form (context) | doi-management e2e |  |
 | PLUGIN-generic-doaj | plugins/generic/doaj | DOAJPlugin.php | Register articles/versions with DOAJ; has settings form (context) | doi-management e2e |  |
-| PLUGIN-generic-driver | plugins/generic/driver | DRIVERPlugin.php | Inject DRIVER guidelines metadata tags; no settings form (context) | oai-sitemap-feeds e2e |  |
+| PLUGIN-generic-driver | plugins/generic/driver | DRIVERPlugin.php | Inject DRIVER guidelines metadata tags; no settings form (context) | oai-sitemap-feeds e2e | oai-pmh (adds the `driver` OAI set; off by default) |
 | PLUGIN-generic-dublinCoreMeta | plugins/generic/dublinCoreMeta | DublinCoreMetaPlugin.php | Inject Dublin Core meta tags for indexing; no settings form (context) | ? | *(→ indexing-meta-tags; injects DC.* <meta> tags into the article-landing page head, on by default — seam resolved by article-landing: the page is article-landing's, the meta tags are indexing-meta-tags')* |
 | PLUGIN-generic-googleAnalytics | plugins/generic/googleAnalytics | GoogleAnalyticsPlugin.php | Insert Google Analytics tracking code; has settings form (context) | usage-statistics e2e |  |
 | PLUGIN-generic-googleScholar | plugins/generic/googleScholar | GoogleScholarPlugin.php | Inject Google Scholar meta tags for indexing; no settings form (context) | site-search e2e | *(→ indexing-meta-tags; injects citation_* <meta> tags into the article-landing page head, on by default — seam resolved by article-landing: the page is article-landing's, the meta tags are indexing-meta-tags')* |
@@ -39,11 +39,11 @@
 | PLUGIN-importexport-pubmed | plugins/importexport/pubmed | PubMedExportPlugin.php | Export article metadata as PubMed/MEDLINE XML; has settings form (context) | native-xml-import-export e2e |  |
 | PLUGIN-importexport-users | plugins/importexport/users | UserImportExportPlugin.php | Bulk XML import/export of user accounts (context) | user-management e2e |  |
 | PLUGIN-metadata-dc11 | plugins/metadata/dc11 | Dc11Plugin.php | Dublin Core 1.1 metadata field mapping plugin (context) | ? |  |
-| PLUGIN-oaiMetadataFormats-dc | plugins/oaiMetadataFormats/dc | OAIMetadataFormatPlugin_DC.php | OAI-PMH Dublin Core metadata format handler (site) | oai-sitemap-feeds e2e |  |
-| PLUGIN-oaiMetadataFormats-marc | plugins/oaiMetadataFormats/marc | OAIMetadataFormatPlugin_MARC.php | OAI-PMH MARC metadata format handler (site) | oai-sitemap-feeds e2e |  |
-| PLUGIN-oaiMetadataFormats-marcxml | plugins/oaiMetadataFormats/marcxml | OAIMetadataFormatPlugin_MARC21.php | OAI-PMH MARCXML (MARC21) metadata format handler (site) | oai-sitemap-feeds e2e |  |
-| PLUGIN-oaiMetadataFormats-oaiJats | plugins/oaiMetadataFormats/oaiJats | OAIMetadataFormatPlugin_JATS.php | OAI-PMH JATS metadata format; has settings form (site) | oai-sitemap-feeds e2e |  |
-| PLUGIN-oaiMetadataFormats-rfc1807 | plugins/oaiMetadataFormats/rfc1807 | OAIMetadataFormatPlugin_RFC1807.php | OAI-PMH RFC1807 metadata format handler (site) | oai-sitemap-feeds e2e |  |
+| PLUGIN-oaiMetadataFormats-dc | plugins/oaiMetadataFormats/dc | OAIMetadataFormatPlugin_DC.php | OAI-PMH Dublin Core metadata format handler (site) | oai-sitemap-feeds e2e | oai-pmh (`oai_dc`, always on) |
+| PLUGIN-oaiMetadataFormats-marc | plugins/oaiMetadataFormats/marc | OAIMetadataFormatPlugin_MARC.php | OAI-PMH MARC metadata format handler (site) | oai-sitemap-feeds e2e | oai-pmh (`oai_marc`, always on) |
+| PLUGIN-oaiMetadataFormats-marcxml | plugins/oaiMetadataFormats/marcxml | OAIMetadataFormatPlugin_MARC21.php | OAI-PMH MARCXML (MARC21) metadata format handler (site) | oai-sitemap-feeds e2e | oai-pmh (`marcxml`, always on) |
+| PLUGIN-oaiMetadataFormats-oaiJats | plugins/oaiMetadataFormats/oaiJats | OAIMetadataFormatPlugin_JATS.php | OAI-PMH JATS metadata format; has settings form (site) | oai-sitemap-feeds e2e | oai-pmh (`jats`, off by default) |
+| PLUGIN-oaiMetadataFormats-rfc1807 | plugins/oaiMetadataFormats/rfc1807 | OAIMetadataFormatPlugin_RFC1807.php | OAI-PMH RFC1807 metadata format handler (site) | oai-sitemap-feeds e2e | DEAD-CODE — removed in 3.6 by I12948_RemoveRFC1807Plugin; no plugin dir on disk (see UNASSIGNED.md) |
 | PLUGIN-paymethod-manual | plugins/paymethod/manual | ManualPaymentPlugin.php | Manual/offline payment method for fees (context) | payments e2e |  |
 | PLUGIN-paymethod-paypal | plugins/paymethod/paypal | PaypalPaymentPlugin.php | PayPal payment method for fees; has settings form (context) | payments e2e |  |
 | PLUGIN-pubIds-urn | plugins/pubIds/urn | URNPubIdPlugin.php | Assign URN public identifiers to objects; has settings form (context) | publication-identifiers e2e | publication-identifiers |
@@ -56,7 +56,7 @@
 | PLUGIN-libpkp-importexport-native | lib/pkp/plugins/importexport/native | PKPNativeImportExportPlugin.php | Abstract base native XML import/export plugin (extended by app plugin) | native-xml-import-export e2e |  |
 | PLUGIN-libpkp-importexport-users | lib/pkp/plugins/importexport/users | PKPUserImportExportPlugin.php | Abstract base user XML import/export plugin (extended by app plugin) | user-management e2e |  |
 | PLUGIN-libpkp-metadata-dc11 | lib/pkp/plugins/metadata/dc11 | PKPDc11MetadataPlugin.php | Abstract base Dublin Core 1.1 metadata plugin (extended by app plugin) | ? |  |
-| PLUGIN-libpkp-oaiMetadataFormats-dc | lib/pkp/plugins/oaiMetadataFormats/dc | PKPOAIMetadataFormatPlugin_DC.php | Abstract base OAI-PMH Dublin Core format plugin (extended by app plugin) | oai-sitemap-feeds e2e |  |
+| PLUGIN-libpkp-oaiMetadataFormats-dc | lib/pkp/plugins/oaiMetadataFormats/dc | PKPOAIMetadataFormatPlugin_DC.php | Abstract base OAI-PMH Dublin Core format plugin (extended by app plugin) | oai-sitemap-feeds e2e | oai-pmh (base of the `oai_dc` app plugin) |
 
 ## Gaps
 - `plugins/gateways/` category is empty in this checkout (only `.gitkeep`) — no gateway plugins bundled; category exists in the plugin-type taxonomy but has zero atoms.

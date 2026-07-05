@@ -68,7 +68,7 @@
 | PAGE-management-permissions | PKPToolsHandler::permissions | lib/pkp/pages/management/PKPToolsHandler.php | Permissions tool page | roles-permissions.md | |
 | PAGE-management-statistics | (unresolved) | pages/management/index.php | Op routed in switch; no matching handler method found (dead) | | |
 | PAGE-management-resetpermissions | PKPToolsHandler::resetPermissions | lib/pkp/pages/management/PKPToolsHandler.php | Reset default submission permissions | roles-permissions.md | |
-| PAGE-oai-index | OAIHandler::index | pages/oai/OAIHandler.php | OAI-PMH protocol request entry point | oai-sitemap-feeds.md | |
+| PAGE-oai-index | OAIHandler::index | pages/oai/OAIHandler.php | OAI-PMH protocol request entry point | oai-sitemap-feeds.md | oai-pmh |
 | PAGE-payment-plugin | PaymentHandler::plugin | pages/payment/PaymentHandler.php | Dispatch payment request to a named plugin | payments.md | |
 | PAGE-payment-pay | PaymentHandler::pay | pages/payment/PaymentHandler.php | Generic payment initiation page | payments.md | |
 | PAGE-payments-index | PaymentsHandler::index | pages/payments/PaymentsHandler.php | Payment management landing page | payments.md | |
