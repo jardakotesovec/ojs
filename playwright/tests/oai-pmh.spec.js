@@ -299,7 +299,35 @@ test.describe('OAI-PMH harvesting endpoint (anonymous)', () => {
 	test(
 		'ListRecords pages the corpus with a resumption token',
 		{tag: ['@smoke', '@regression']},
-		async ({request}) => {
+		async ({request, pkpApi}) => {
+			// Resumption tokens only appear when the corpus exceeds one page
+			// (oai_max_records=100). A FRESH DB seeds publicknowledge with ~67
+			// published records — under a page — so this test must guarantee its
+			// own >100-record condition rather than lean on warm-DB accumulation
+			// (which is how this once passed at ~174 but failed on a fresh reset).
+			// If we are already over a page (warm DB), skip straight to the assert.
+			const probe = await oai(request, {query: 'verb=ListRecords&metadataPrefix=oai_dc'});
+			expect(probe.status).toBe(200);
+			const probeSize = completeListSize(probe.body);
+			const onePage = countRecords(probe.body); // capped at 100 when a token is present
+			const alreadyOverPage = (probeSize ?? onePage) > 100;
+			if (!alreadyOverPage) {
+				test.slow(); // seeding the delta is the slow path (fresh DB only)
+				const have = onePage; // < 100 here (no token ⇒ full corpus on one page)
+				const target = 110;
+				const delta = target - have;
+				const seedTag = uniqueTag();
+				// Lightweight published records (no galley ⇒ no file upload); each
+				// is a live OAI record immediately (OAI reads publications directly).
+				const specs = Array.from({length: delta}, (_, i) =>
+					publishedSpec({tag: `${seedTag}${i}`, title: `Resumption ${seedTag} ${i}`, galleys: []}),
+				);
+				// Seed concurrently in bounded batches to cross the page boundary fast.
+				for (let i = 0; i < specs.length; i += 6) {
+					await Promise.all(specs.slice(i, i + 6).map((s) => pkpApi.createSubmission(s)));
+				}
+			}
+
 			const p1 = await oai(request, {query: 'verb=ListRecords&metadataPrefix=oai_dc'});
 			expect(p1.status).toBe(200);
 
@@ -307,8 +335,8 @@ test.describe('OAI-PMH harvesting endpoint (anonymous)', () => {
 			expect(first, 'page 1 has records').toBeGreaterThan(0);
 			const size = completeListSize(p1.body);
 			expect(size, 'completeListSize present').not.toBeNull();
-			// A token only appears when the corpus exceeds one page — the
-			// publicknowledge baseline (~174) is comfortably over 100.
+			// A token only appears when the corpus exceeds one page — guaranteed
+			// above (warm DB already over 100, or freshly seeded to 110+).
 			expect(size, 'corpus exceeds one page').toBeGreaterThan(100);
 			expect(p1.body).toMatch(/cursor="0"/);
 
