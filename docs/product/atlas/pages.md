@@ -52,7 +52,7 @@
 | PAGE-manager-legacy | (no-op) | pages/manager/index.php | Legacy router with empty switch-case bodies for subscription ops (dead) | | |
 | PAGE-management-index | SettingsHandler::index (via settings()) | pages/management/SettingsHandler.php | Management settings entry op | site-settings.md | |
 | PAGE-management-settings | ManagementHandler::settings | lib/pkp/pages/management/ManagementHandler.php | Sub-router dispatching settings/{path} args | site-settings.md | |
-| PAGE-management-settings-context | ManagementHandler::context | lib/pkp/pages/management/ManagementHandler.php | Journal context settings sub-page | journal-setup.md | |
+| PAGE-management-settings-context | ManagementHandler::context | lib/pkp/pages/management/ManagementHandler.php | Journal context settings sub-page | journal-setup.md | journal-masthead-settings (page owner; the page also hosts the Sections + Categories tabs → sections/categories specs) |
 | PAGE-management-settings-website | ManagementHandler::website | lib/pkp/pages/management/ManagementHandler.php | Website appearance settings sub-page | website-appearance.md | |
 | PAGE-management-settings-workflow | SettingsHandler::workflow (override) | pages/management/SettingsHandler.php | Workflow settings sub-page | submission-settings.md | |
 | PAGE-management-settings-manageemails | ManagementHandler::manageEmails | lib/pkp/pages/management/ManagementHandler.php | Email templates management sub-page | email-templates-management.md | |

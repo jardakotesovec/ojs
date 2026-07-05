@@ -251,10 +251,12 @@ Settings-menu features (decision 6): the per-form split collapses into ~5 featur
 ### journal-masthead-settings — the Settings › Journal › "Masthead" tab: journal identity (name/acronym/about) plus contact, privacy and information settings that surface publicly
 Renamed-from: journal-setup. The UI tab is literally "Masthead" (journal identity, `PKPMastheadForm`) — not the editorial-team roster, which is editorial-masthead (Website settings). Owns the journal-identity Masthead form (moved here from editorial-masthead).
 atoms: PAGE-management-settings-context, FORM-{masthead,pkp-masthead,context,pkp-contact,pkp-privacy,pkp-information}, SCHEMA-context-{ojs,pkp}, DB-journals/journal_settings (~6)
+Spec-time corrections (2026-07-05/06, spec verified): FORM-context-form + FORM-pkp-context-form → site-administration (AdminHandler-only, not the Masthead tab); DB-journals stays journal-homepage. Final claim: 9 atoms (see atlas).
 
 ### website-appearance-settings — theme options, logo/homepage image uploads, custom CSS, date/time formats, info/list pagination
 Renamed-from: website-appearance.
 atoms: PAGE-management-settings-website, VUE-theme-form, VUE-date-time-form, FORM-{appearance-setup,appearance-advanced,pkp-theme,pkp-date-time,pkp-lists}, PLUGIN-themes-default, PLUGIN-generic-customBlockManager (~8)
+Seam (2026-07-06): the Privacy + Information forms that also sit on Settings→Website's Setup tab (FORM-pkp-privacy-form, FORM-pkp-information-form) are already owned by journal-masthead-settings — do not re-claim; this feature owns the page atom and the remaining tabs/forms.
 
 ### workflow-settings — Settings › Workflow: submission checklist/guidelines, components/genres, metadata request/require toggles, disable-submissions, default review mode/deadlines/reminders/guidance, review-recommendation options, and email-notification config
 Merged-from: submission-settings + review-settings, folding in metadata-settings, file-genres and email-notification config (decision 6).
