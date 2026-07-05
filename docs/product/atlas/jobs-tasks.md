@@ -17,7 +17,7 @@
 | JOB-depositpeerreview | lib/pkp/jobs/doi | DepositPeerReview.php | Deposit peer review DOI metadata to registration agency | doi-management |  |
 | JOB-editorialreminder | lib/pkp/jobs/email | EditorialReminder.php | Queue editorial reminder emails | scheduled-tasks e2e |  |
 | JOB-reviewreminder | lib/pkp/jobs/email | ReviewReminder.php | Queue peer review reminder emails | scheduled-tasks e2e |  |
-| JOB-removeexpiredinvitationsjob | lib/pkp/jobs/invitations | RemoveExpiredInvitationsJob.php | Clean up expired review invitations | ? |  |
+| JOB-removeexpiredinvitationsjob | lib/pkp/jobs/invitations | RemoveExpiredInvitationsJob.php | Clean up expired review invitations | user-invitations | claimed 2026-07-05; deletes rows via InvitationModel::expired(). Dispatched by TASK-removeexpiredinvitations, which IS wired daily in PKPScheduler (scheduled-tasks owns the scheduler entry). |
 | JOB-newannouncementnotifyusers | lib/pkp/jobs/notifications | NewAnnouncementNotifyUsers.php | Notify users of new announcements | ? |  |
 | JOB-statisticsreportmail | lib/pkp/jobs/notifications | StatisticsReportMail.php | Queue statistics report email delivery | ? |  |
 | JOB-statisticsreportnotify | lib/pkp/jobs/notifications | StatisticsReportNotify.php | Notify admins of ready statistics reports | ? |  |
