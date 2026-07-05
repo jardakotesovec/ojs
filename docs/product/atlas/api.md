@@ -116,7 +116,7 @@
 | API-user-get | GET /users/{userId} | lib/pkp/api/v1/users/PKPUserController.php:82 | Route handler PKPUserController::get() | user-management.md | |
 | API-user-get-many | GET /users | lib/pkp/api/v1/users/PKPUserController.php:86 | Route handler PKPUserController::getMany() | user-management.md | |
 | API-user-end-role | PUT /users/{userId}/endRole/{userGroupId} | lib/pkp/api/v1/users/PKPUserController.php:89 | Route handler PKPUserController::endRole() | user-management.md | |
-| API-user-masthead | PUT /users/{userId}/masthead/{userUserGroupId} | lib/pkp/api/v1/users/PKPUserController.php:93 | Route handler PKPUserController::masthead() | user-management.md | |
+| API-user-masthead | PUT /users/{userId}/masthead/{userUserGroupId} | lib/pkp/api/v1/users/PKPUserController.php:93 | Route handler PKPUserController::masthead() | user-management.md | owned by user-management (the per-user masthead flip; ledger row 114 for the sub-editor/no-scope gap); it fires MAIL-user-role-masthead-update-notify, which is claimed by editorial-masthead. Referenced by editorial-masthead 2026-07-05. |
 | API-submission-get-many | GET /submissions | lib/pkp/api/v1/submissions/PKPSubmissionController.php:198 | Route handler PKPSubmissionController::getMany() |  | |
 | API-submission-get | GET /submissions/{submissionId} | lib/pkp/api/v1/submissions/PKPSubmissionController.php:201 | Route handler PKPSubmissionController::get() |  | |
 | API-submission-get-publications | GET /submissions/{submissionId}/publications | lib/pkp/api/v1/submissions/PKPSubmissionController.php:205 | Route handler PKPSubmissionController::getPublications() |  | |
