@@ -15,17 +15,17 @@
 | API-ror-get | GET /rors/{rorId} | lib/pkp/api/v1/rors/PKPRorController.php:73 | Route handler PKPRorController::get() | institutions.md | |
 | API-ror-get-many | GET /rors | lib/pkp/api/v1/rors/PKPRorController.php:77 | Route handler PKPRorController::getMany() | institutions.md | |
 | API-ror-add-or-edit | POST /rors | lib/pkp/api/v1/rors/PKPRorController.php:80 | Route handler PKPRorController::addOrEdit() | institutions.md | |
-| API-comment-get-many-public-comments | GET /comments/public | lib/pkp/api/v1/comments/UserCommentController.php:60 | Route handler UserCommentController::getManyPublicComments() | public-comments.md | |
-| API-comment-submit | POST /comments | lib/pkp/api/v1/comments/UserCommentController.php:67 | Route handler UserCommentController::submit() | public-comments.md | |
-| API-comment-delete | DELETE /comments/{commentId} | lib/pkp/api/v1/comments/UserCommentController.php:70 | Route handler UserCommentController::delete() | public-comments.md | |
-| API-comment-submit-report | POST /comments/{commentId}/reports | lib/pkp/api/v1/comments/UserCommentController.php:74 | Route handler UserCommentController::submitReport() | public-comments.md | |
-| API-comment-get-many | GET /comments | lib/pkp/api/v1/comments/UserCommentController.php:85 | Route handler UserCommentController::getMany() | public-comments.md | |
-| API-comment-get | GET /comments/{commentId} | lib/pkp/api/v1/comments/UserCommentController.php:88 | Route handler UserCommentController::get() | public-comments.md | |
-| API-comment-set-approval | PUT /comments/{commentId}/setApproval | lib/pkp/api/v1/comments/UserCommentController.php:92 | Route handler UserCommentController::setApproval() | public-comments.md | |
-| API-comment-delete-report | DELETE /comments/{commentId}/reports/{reportId} | lib/pkp/api/v1/comments/UserCommentController.php:96 | Route handler UserCommentController::deleteReport() | public-comments.md | |
-| API-comment-get-report | GET /comments/{commentId}/reports/{reportId} | lib/pkp/api/v1/comments/UserCommentController.php:101 | Route handler UserCommentController::getReport() | public-comments.md | |
-| API-comment-get-reports | GET /comments/{commentId}/reports | lib/pkp/api/v1/comments/UserCommentController.php:106 | Route handler UserCommentController::getReports() | public-comments.md | |
-| API-comment-delete-reports | DELETE /comments/{commentId}/reports | lib/pkp/api/v1/comments/UserCommentController.php:110 | Route handler UserCommentController::deleteReports() | public-comments.md | |
+| API-comment-get-many-public-comments | GET /comments/public | lib/pkp/api/v1/comments/UserCommentController.php:60 | Route handler UserCommentController::getManyPublicComments() | public-comments.md | public-comments |
+| API-comment-submit | POST /comments | lib/pkp/api/v1/comments/UserCommentController.php:67 | Route handler UserCommentController::submit() | public-comments.md | public-comments |
+| API-comment-delete | DELETE /comments/{commentId} | lib/pkp/api/v1/comments/UserCommentController.php:70 | Route handler UserCommentController::delete() | public-comments.md | public-comments |
+| API-comment-submit-report | POST /comments/{commentId}/reports | lib/pkp/api/v1/comments/UserCommentController.php:74 | Route handler UserCommentController::submitReport() | public-comments.md | public-comments |
+| API-comment-get-many | GET /comments | lib/pkp/api/v1/comments/UserCommentController.php:85 | Route handler UserCommentController::getMany() | public-comments.md | public-comments |
+| API-comment-get | GET /comments/{commentId} | lib/pkp/api/v1/comments/UserCommentController.php:88 | Route handler UserCommentController::get() | public-comments.md | public-comments |
+| API-comment-set-approval | PUT /comments/{commentId}/setApproval | lib/pkp/api/v1/comments/UserCommentController.php:92 | Route handler UserCommentController::setApproval() | public-comments.md | public-comments |
+| API-comment-delete-report | DELETE /comments/{commentId}/reports/{reportId} | lib/pkp/api/v1/comments/UserCommentController.php:96 | Route handler UserCommentController::deleteReport() | public-comments.md | public-comments |
+| API-comment-get-report | GET /comments/{commentId}/reports/{reportId} | lib/pkp/api/v1/comments/UserCommentController.php:101 | Route handler UserCommentController::getReport() | public-comments.md | public-comments |
+| API-comment-get-reports | GET /comments/{commentId}/reports | lib/pkp/api/v1/comments/UserCommentController.php:106 | Route handler UserCommentController::getReports() | public-comments.md | public-comments |
+| API-comment-delete-reports | DELETE /comments/{commentId}/reports | lib/pkp/api/v1/comments/UserCommentController.php:110 | Route handler UserCommentController::deleteReports() | public-comments.md | public-comments |
 | API-section-get-many | GET /sections | lib/pkp/api/v1/sections/SectionController.php:68 | Route handler SectionController::getMany() | sections.md | |
 | API-section-get | GET /sections/{sectionId} | lib/pkp/api/v1/sections/SectionController.php:71 | Route handler SectionController::get() | sections.md | |
 | API-contributor-role-get | GET /contributorRoles/{roleId} | lib/pkp/api/v1/contributorRoles/ContributorRoleController.php:71 | Route handler ContributorRoleController::get() | contributors.md | |

@@ -30,7 +30,7 @@
 | FORM-citation-raw-edit-form | Form | `lib/pkp/classes/components/forms/citation/CitationRawEditForm.php` | CitationRawEditForm: publication's single citation, raw text; ~1 fields | citation-style-language.md | publication-metadata-references |
 | FORM-citation-structured-edit-form | Form | `lib/pkp/classes/components/forms/citation/CitationStructuredEditForm.php` | CitationStructuredEditForm: publication's single citation, structured fields; ~19 fields | citation-style-language.md | publication-metadata-references |
 | FORM-category-form | Form | `lib/pkp/classes/components/forms/context/CategoryForm.php` | CategoryForm: adding and editing categories; ~6 fields | categories.md | |
-| FORM-content-comments-form | Form | `lib/pkp/classes/components/forms/context/ContentCommentsForm.php` | ContentCommentsForm: website content public comment settings; ~1 fields | public-comments.md | |
+| FORM-content-comments-form | Form | `lib/pkp/classes/components/forms/context/ContentCommentsForm.php` | ContentCommentsForm: website content public comment settings; ~1 fields | public-comments.md | public-comments |
 | FORM-orcid-settings-form | Form | `lib/pkp/classes/components/forms/context/OrcidSettingsForm.php` | OrcidSettingsForm: context-level ORCID integration settings; ~11 fields | orcid.md | |
 | FORM-pkp-announcement-settings-form | Form | `lib/pkp/classes/components/forms/context/PKPAnnouncementSettingsForm.php` | PKPAnnouncementSettingsForm: enable/configure announcements; ~3 fields | announcements.md | |
 | FORM-pkp-appearance-advanced-form | Form | `lib/pkp/classes/components/forms/context/PKPAppearanceAdvancedForm.php` | PKPAppearanceAdvancedForm: advanced settings under website appearance tab; ~3 fields | website-appearance.md | |

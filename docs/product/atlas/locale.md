@@ -26,7 +26,7 @@
 | LOC-api-api-dois | `api.dois.*` | api.po | 16 keys |  | |
 | LOC-api-api-400 | `api.400.*` | api.po | 11 keys |  | |
 | LOC-api-api-submissions | `api.submissions.*` | api.po | 9 keys |  | |
-| LOC-api-api-userComments | `api.userComments.*` | api.po | 9 keys |  | |
+| LOC-api-api-userComments | `api.userComments.*` | api.po | 9 keys | public-comments | public-comments |
 | LOC-api-api-jobs | `api.jobs.*` | api.po | 8 keys |  | |
 | LOC-api-api-contexts | `api.contexts.*` | api.po | 7 keys |  | |
 | LOC-api-api-stats | `api.stats.*` | api.po | 7 keys |  | |
@@ -144,7 +144,7 @@
 | LOC-manager-manager-people | `manager.people.*` | manager.po | 41 keys |  | |
 | LOC-manager-manager-subscriptionPolicies | `manager.subscriptionPolicies.*` | manager.po | 39 keys |  | |
 | LOC-manager-manager-payment | `manager.payment.*` | manager.po | 38 keys |  | |
-| LOC-manager-manager-userComment | `manager.userComment.*` | manager.po | 34 keys |  | |
+| LOC-manager-manager-userComment | `manager.userComment.*` | manager.po | 34 keys | public-comments | public-comments |
 | LOC-manager-doi-manager | `doi.manager.*` | manager.po | 30 keys |  | |
 | LOC-manager-manager-announcements | `manager.announcements.*` | manager.po | 30 keys |  | |
 | LOC-manager-doi-editor | `doi.editor.*` | manager.po | 28 keys |  | |

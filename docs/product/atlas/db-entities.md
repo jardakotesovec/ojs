@@ -119,9 +119,9 @@
 | DB-data_object_tombstone_oai_set_objects | data_object_tombstone_oai_set_objects | lib/pkp/classes/migration/install/TombstoneMigration.php | OAI set tombstone mappings | | |
 | DB-data_object_tombstone_settings | data_object_tombstone_settings | lib/pkp/classes/migration/install/TombstoneMigration.php | Tombstone metadata | | |
 | DB-data_object_tombstones | data_object_tombstones | lib/pkp/classes/migration/install/TombstoneMigration.php | Deleted content record | | |
-| DB-user_comment_reports | user_comment_reports | lib/pkp/classes/migration/install/UserCommentsMigration.php | Comment moderation reports | public-comments | |
-| DB-user_comment_settings | user_comment_settings | lib/pkp/classes/migration/install/UserCommentsMigration.php | Comment settings | | |
-| DB-user_comments | user_comments | lib/pkp/classes/migration/install/UserCommentsMigration.php | Public user comments | public-comments | |
+| DB-user_comment_reports | user_comment_reports | lib/pkp/classes/migration/install/UserCommentsMigration.php | Comment moderation reports | public-comments | public-comments |
+| DB-user_comment_settings | user_comment_settings | lib/pkp/classes/migration/install/UserCommentsMigration.php | Comment settings | public-comments | public-comments |
+| DB-user_comments | user_comments | lib/pkp/classes/migration/install/UserCommentsMigration.php | Public user comments | public-comments | public-comments |
 | DB-completed_payments | completed_payments | classes/migration/install/OJSMigration.php | Completed payment records | payments | |
 | DB-custom_issue_orders | custom_issue_orders | classes/migration/install/OJSMigration.php | Custom issue ordering | issue-management | |
 | DB-custom_section_orders | custom_section_orders | classes/migration/install/OJSMigration.php | Custom section ordering | sections | |

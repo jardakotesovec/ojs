@@ -76,6 +76,45 @@ exports.ArticlePage = class ArticlePage extends BasePage {
 		// Crossmark button Vue island (crossref plugin, Crossmark option) — off
 		// by default, so absent on a stock journal.
 		this.crossmarkButton = page.locator('pkp-crossmark-button');
+
+		// -- Public comments island (#public-comments) ----------------------
+		// The reader-facing comment island (lib/pkp `PkpComments`), mounted by
+		// article_details.tpl only when the journal enables public comments.
+		// Owned by the `public-comments` feature; these accessors let its spec
+		// (and future ones) drive the compose box / login gate / comment cards.
+		this.commentsSection = page.locator('#public-comments');
+		// The compose box (`PkpCommentsNew` → `PkpCommentsNewInput` textarea)
+		// renders ONLY for a logged-in reader on the LATEST published version.
+		this.commentComposeBox = this.commentsSection.locator('textarea');
+		// The compose Submit button (label = form.submit); disabled until text.
+		this.commentSubmitButton = this.commentsSection.getByRole('button', {
+			name: 'Submit',
+			exact: true,
+		});
+		// The anonymous gate — a "Log in to comment" button in place of the box.
+		this.commentLoginButton = this.commentsSection.getByRole('button', {
+			name: 'Log in to comment',
+		});
+		// Each rendered comment is an <article> inside the section.
+		this.commentMessages = this.commentsSection.locator('article');
+		// The author's own still-unapproved comment carries this notice.
+		this.awaitingApprovalNotice = this.commentsSection.getByText(
+			'Your comment will be visible when the editor approves it',
+		);
+	}
+
+	/** A single rendered comment card (an <article>) scoped by its text. */
+	commentCard(text) {
+		return this.commentMessages.filter({hasText: text});
+	}
+
+	/**
+	 * The per-comment "More Options" dropdown trigger (an icon-only button
+	 * with no accessible name — it is the sole button inside the card).
+	 * @param {string} text
+	 */
+	commentActionsTrigger(text) {
+		return this.commentCard(text).getByRole('button');
 	}
 
 	/**
