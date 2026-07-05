@@ -33,7 +33,7 @@
 | DB-site | site | lib/pkp/classes/migration/install/CommonMigration.php | Site configuration | site-administration | |
 | DB-site_settings | site_settings | lib/pkp/classes/migration/install/CommonMigration.php | Site-level settings | site-settings | |
 | DB-user_settings | user_settings | lib/pkp/classes/migration/install/CommonMigration.php | User preferences and settings | user-profile | |
-| DB-users | users | lib/pkp/classes/migration/install/CommonMigration.php | User accounts (created at self-registration; CRUD/disable/merge in user-management) | user-management | registration-login |
+| DB-users | users | lib/pkp/classes/migration/install/CommonMigration.php | User accounts (created at self-registration; CRUD/disable/merge in user-management) | registration-login | user-management references it (disable/merge/report mutations); user-profile owns SCHEMA-user — single-owner resolved to the creation point 2026-07-05 |
 | DB-versions | versions | lib/pkp/classes/migration/install/CommonMigration.php | System version history | | |
 | DB-controlled_vocab_entries | controlled_vocab_entries | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Controlled vocabulary entries | | submission-wizard-metadata |
 | DB-controlled_vocab_entry_settings | controlled_vocab_entry_settings | lib/pkp/classes/migration/install/ControlledVocabMigration.php | Vocabulary entry settings | | submission-wizard-metadata |

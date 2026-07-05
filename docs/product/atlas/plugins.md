@@ -37,7 +37,7 @@
 | PLUGIN-generic-webFeed | plugins/generic/webFeed | WebFeedPlugin.php (+ WebFeedGatewayPlugin, WebFeedBlockPlugin) | RSS 1.0/RSS 2.0/Atom feed of current-issue (default) or recent published articles via `gateway/plugin/WebFeedGatewayPlugin/{format}`; adds `<head>` autodiscovery links + sidebar block; has settings form (context). **Enabled by default** (overrides `getContextSpecificPluginSettingsFile` → installs `enabled=true` per journal). Live-verified 2026-07-05 (all 3 formats 200) | oai-sitemap-feeds e2e | web-feeds-syndication |
 | PLUGIN-importexport-native | plugins/importexport/native | NativeImportExportPlugin.php | Native OJS XML import/export of submissions/issues (context) | native-xml-import-export e2e |  |
 | PLUGIN-importexport-pubmed | plugins/importexport/pubmed | PubMedExportPlugin.php | Export article metadata as PubMed/MEDLINE XML; has settings form (context) | native-xml-import-export e2e |  |
-| PLUGIN-importexport-users | plugins/importexport/users | UserImportExportPlugin.php | Bulk XML import/export of user accounts (context) | user-management e2e |  |
+| PLUGIN-importexport-users | plugins/importexport/users | UserImportExportPlugin.php | Bulk XML import/export of user accounts (context) | user-import-export | Area-8 bulk user XML feature — distinct from user-management's CSV report + per-user CRUD (reassigned from the stale "user-management e2e" hint 2026-07-05) |
 | PLUGIN-metadata-dc11 | plugins/metadata/dc11 | Dc11Plugin.php | Dublin Core 1.1 metadata field mapping plugin (context) | ? |  |
 | PLUGIN-oaiMetadataFormats-dc | plugins/oaiMetadataFormats/dc | OAIMetadataFormatPlugin_DC.php | OAI-PMH Dublin Core metadata format handler (site) | oai-sitemap-feeds e2e | oai-pmh (`oai_dc`, always on) |
 | PLUGIN-oaiMetadataFormats-marc | plugins/oaiMetadataFormats/marc | OAIMetadataFormatPlugin_MARC.php | OAI-PMH MARC metadata format handler (site) | oai-sitemap-feeds e2e | oai-pmh (`oai_marc`, always on) |
@@ -54,7 +54,7 @@
 | PLUGIN-themes-default | plugins/themes/default | DefaultThemePlugin.php | Default OJS theme with typography/colour options; has settings/options form (context) | website-appearance e2e |  |
 | PLUGIN-libpkp-generic-usageEvent | lib/pkp/plugins/generic/usageEvent | PKPUsageEventPlugin.php | Abstract base class for usage-event plugin (extended by app plugin) | usage-statistics e2e |  |
 | PLUGIN-libpkp-importexport-native | lib/pkp/plugins/importexport/native | PKPNativeImportExportPlugin.php | Abstract base native XML import/export plugin (extended by app plugin) | native-xml-import-export e2e |  |
-| PLUGIN-libpkp-importexport-users | lib/pkp/plugins/importexport/users | PKPUserImportExportPlugin.php | Abstract base user XML import/export plugin (extended by app plugin) | user-management e2e |  |
+| PLUGIN-libpkp-importexport-users | lib/pkp/plugins/importexport/users | PKPUserImportExportPlugin.php | Abstract base user XML import/export plugin (extended by app plugin) | user-import-export | base of the Area-8 bulk user XML feature (reassigned from the stale "user-management e2e" hint 2026-07-05) |
 | PLUGIN-libpkp-metadata-dc11 | lib/pkp/plugins/metadata/dc11 | PKPDc11MetadataPlugin.php | Abstract base Dublin Core 1.1 metadata plugin (extended by app plugin) | ? |  |
 | PLUGIN-libpkp-oaiMetadataFormats-dc | lib/pkp/plugins/oaiMetadataFormats/dc | PKPOAIMetadataFormatPlugin_DC.php | Abstract base OAI-PMH Dublin Core format plugin (extended by app plugin) | oai-sitemap-feeds e2e | oai-pmh (base of the `oai_dc` app plugin) |
 

@@ -57,7 +57,7 @@
 | VUE-top-nav-actions | TopNavActions | lib/ui-library/src/components/TopNavActions/TopNavActions.vue | component: site header actions bar (help, tasks/notifications, user menu) | notifications | |
 | VUE-side-nav | SideNav | lib/ui-library/src/components/SideNav/SideNav.vue | component: app-wide left sidebar navigation | | |
 | VUE-theme-form | ThemeForm | lib/ui-library/src/components/Form/context/ThemeForm.vue | component: journal theme selection/appearance settings form | website-appearance | |
-| VUE-notify-users-form | NotifyUsersForm | lib/ui-library/src/components/Form/context/NotifyUsersForm.vue | component: bulk "notify users" email form with recipient counts | email-delivery | |
+| VUE-notify-users-form | NotifyUsersForm | lib/ui-library/src/components/Form/context/NotifyUsersForm.vue | component: bulk "notify users" email form with recipient counts | user-management | surface on Settings → Users & Roles → Notify tab; email-delivery owns the _email bulk-send job + composer (claimed by user-management 2026-07-05) |
 | VUE-date-time-form | DateTimeForm | lib/ui-library/src/components/Form/context/DateTimeForm.vue | component: date/time settings form (extends base Form) | | |
 | VUE-doi-registration-settings-form | DoiRegistrationSettingsForm | lib/ui-library/src/components/Form/context/DoiRegistrationSettingsForm.vue | component: DOI registration agency settings form | doi-management | |
 | VUE-doi-setup-settings-form | DoiSetupSettingsForm | lib/ui-library/src/components/Form/context/DoiSetupSettingsForm.vue | component: DOI prefix/suffix setup settings form | doi-management | |

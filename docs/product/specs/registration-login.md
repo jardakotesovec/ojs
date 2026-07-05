@@ -11,7 +11,6 @@ atlas-claims:
   - PAGE-login-index
   - PAGE-login-signin
   - PAGE-login-signout
-  - MAIL-user-created
   - MAIL-validate-email-context
   - MAIL-validate-email-site
   - DB-users
@@ -203,8 +202,8 @@ site's primary locale).
 - **Emails.** During **self-registration** the *only* possible email is the **Validate Email** (context or site), and
   **only when `require_validation` is on**; with validation off, self-registration sends **no email**. The **User
   Created** welcome-with-password email (`USER_REGISTER`) is **not** part of self-registration — it is sent when a
-  **manager creates an account for someone** from the Users grid (owned by `user-management`); it is claimed here as the
-  registration-family mailable but its trigger lives in that feature.
+  **manager creates an account for someone** from the Users grid; it is **owned by `user-management`** (its trigger),
+  and only cross-referenced here as a registration-family mailable (atom reassigned 2026-07-05).
 - **No manager notification** — a public self-registration does not notify editors/managers (unlike, e.g., a new
   comment).
 

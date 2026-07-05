@@ -69,9 +69,9 @@
 | MAIL-subscription-purchase-institutional | SubscriptionPurchaseInstitutional | classes/mail/mailables/SubscriptionPurchaseInstitutional.php | template key: SUBSCRIPTION_PURCHASE_INSTL | | |
 | MAIL-subscription-renew-individual | SubscriptionRenewIndividual | classes/mail/mailables/SubscriptionRenewIndividual.php | template key: SUBSCRIPTION_RENEW_INDL | | |
 | MAIL-subscription-renew-institutional | SubscriptionRenewInstitutional | classes/mail/mailables/SubscriptionRenewInstitutional.php | template key: SUBSCRIPTION_RENEW_INSTL | | |
-| MAIL-user-created | UserCreated | lib/pkp/classes/mail/mailables/UserCreated.php | template key: USER_REGISTER; sent when a MANAGER adds a user (UserDetailsForm), NOT on self-registration | | registration-login |
+| MAIL-user-created | UserCreated | lib/pkp/classes/mail/mailables/UserCreated.php | template key: USER_REGISTER; sent when a MANAGER adds a user (UserDetailsForm), NOT on self-registration | user-management | registration-login references it (trigger is the manager add-user form; claimed by user-management 2026-07-05) |
 | MAIL-user-role-assignment-invitation-notify | UserRoleAssignmentInvitationNotify | lib/pkp/classes/mail/mailables/UserRoleAssignmentInvitationNotify.php | template key: USER_ROLE_ASSIGNMENT_INVITATION | notifications | |
-| MAIL-user-role-end-notify | UserRoleEndNotify | lib/pkp/classes/mail/mailables/UserRoleEndNotify.php | template key: USER_ROLE_END | notifications | |
+| MAIL-user-role-end-notify | UserRoleEndNotify | lib/pkp/classes/mail/mailables/UserRoleEndNotify.php | template key: USER_ROLE_END | user-management | fired by API-user-end-role (claimed by user-management 2026-07-05) |
 | MAIL-user-role-masthead-update-notify | UserRoleMastheadUpdateNotify | lib/pkp/classes/mail/mailables/UserRoleMastheadUpdateNotify.php | template key: USER_ROLE_MASTHEAD_UPDATE | notifications | |
 | MAIL-validate-email-context | ValidateEmailContext | lib/pkp/classes/mail/mailables/ValidateEmailContext.php | template key: USER_VALIDATE_CONTEXT; sent on context self-registration only when require_validation on | | registration-login |
 | MAIL-validate-email-site | ValidateEmailSite | lib/pkp/classes/mail/mailables/ValidateEmailSite.php | template key: USER_VALIDATE_SITE; sent on site self-registration only when require_validation on | | registration-login |
