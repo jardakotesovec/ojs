@@ -105,9 +105,9 @@ when a spec is split between plans, both plans record the split in **Absorbs**.
 The ~69 Playwright specs written during the 1:1 Cypress migration are raw material. Each
 plan row that an existing spec already satisfies records it under **Absorbs**; during
 implementation the spec is moved/refit into the new taxonomy (or rewritten if it doesn't
-hold up) and counts toward the 500. The legacy Cypress suite is retired only at the final
-cross-check, using §4 of `docs/e2e-playwright-migration.md` as the coverage map: every
-Cypress assertion maps to a new test or a recorded "intentionally dropped" reason.
+hold up) and counts toward the 500. The legacy Cypress suite was retired at the final
+cross-check (round 1 complete, 2026-07-01): every Cypress assertion mapped to a new test
+or a recorded "intentionally dropped" reason.
 
 ## Bootstrap data policy
 
@@ -147,9 +147,12 @@ in `docs/scenario-processor-audit.md` instead.
 ## Related documents
 
 - `.claude/skills/ojs-playwright-tests/` — developer guide: users, app map, patterns, scenarios
-- `docs/e2e/feature-inventory.md` — all features, budgets, status rollup (source of truth)
-- `docs/e2e/plans/` — per-feature test plans (source of truth for individual tests)
-- `docs/e2e-playwright-migration.md` — legacy migration roadmap; §4 Cypress coverage map
-  remains the reference for the final cross-check
 - `docs/scenario-processor-audit.md` — Processor parity audit ledger
 - `.env.playwright.example` — local environment setup
+
+> Note (2026-07-06): the round-1 planning docs this file used to reference —
+> `docs/e2e/feature-inventory.md`, `docs/e2e/plans/`, and
+> `docs/e2e-playwright-migration.md` — were retired once round 1 completed and the
+> spec-driven build (atoms → features → specs, under `docs/product/`) took over. This
+> file is kept for its still-current test-suite principles (esp. the serial-project
+> rules 8–9 referenced by `lib/pkp/playwright/config-factory.js`).
