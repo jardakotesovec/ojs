@@ -63,7 +63,7 @@
 | VUE-doi-setup-settings-form | DoiSetupSettingsForm | lib/ui-library/src/components/Form/context/DoiSetupSettingsForm.vue | component: DOI prefix/suffix setup settings form | doi-management | |
 | VUE-add-context-form | AddContextForm | lib/ui-library/src/components/Form/context/AddContextForm.vue | component: create-new-journal(context) form | site-administration | |
 | VUE-start-submission-form | StartSubmissionForm | lib/ui-library/src/components/Form/submission/StartSubmissionForm.vue | component: initial "start submission" title form | submission-wizard-core | submission-wizard |
-| VUE-announcements-list-panel | AnnouncementsListPanel | lib/ui-library/src/components/ListPanel/announcements/AnnouncementsListPanel.vue | component: journal announcements list CRUD | announcements | |
+| VUE-announcements-list-panel | AnnouncementsListPanel | lib/ui-library/src/components/ListPanel/announcements/AnnouncementsListPanel.vue | component: journal announcements list CRUD | announcements | announcements (claimed 2026-07-06) |
 | VUE-contributors-list-panel | ContributorsListPanel | lib/ui-library/src/components/ListPanel/contributors/ContributorsListPanel.vue | component: publication contributors list panel (display/preview variant) | contributors | |
 | VUE-doi-list-panel | DoiListPanel | lib/ui-library/src/components/ListPanel/doi/DoiListPanel.vue | component: generic DOI assignment/registration list panel | doi-management | |
 | VUE-doi-list-panel-ojs | DoiListPanelOJS | lib/ui-library/src/components/ListPanel/doi/DoiListPanelOJS.vue | component: OJS-specific DOI list panel mount (issues+articles+galleys) | doi-management | |

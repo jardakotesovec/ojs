@@ -8,10 +8,10 @@
 |----|---------|---------|------------|------|------------|
 | DB-author_affiliation_settings | author_affiliation_settings | lib/pkp/classes/migration/install/AffiliationsMigration.php | Settings for author affiliations | affiliations-ror | contributor affiliation FIELD is in contributors.md; storage owned by affiliations-ror |
 | DB-author_affiliations | author_affiliations | lib/pkp/classes/migration/install/AffiliationsMigration.php | Author institutional affiliations | affiliations-ror | contributor affiliation FIELD is in contributors.md; storage owned by affiliations-ror |
-| DB-announcement_settings | announcement_settings | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Settings for announcements | | |
-| DB-announcement_type_settings | announcement_type_settings | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Settings for announcement types | | |
-| DB-announcement_types | announcement_types | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Announcement type definitions | | |
-| DB-announcements | announcements | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Announcements displayed to users | announcements | |
+| DB-announcement_settings | announcement_settings | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Settings for announcements | | announcements (claimed 2026-07-06) |
+| DB-announcement_type_settings | announcement_type_settings | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Settings for announcement types | | announcements (claimed 2026-07-06) |
+| DB-announcement_types | announcement_types | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Announcement type definitions | | announcements (claimed 2026-07-06) |
+| DB-announcements | announcements | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Announcements displayed to users | announcements | announcements (claimed 2026-07-06) |
 | DB-categories | categories | lib/pkp/classes/migration/install/CategoriesMigration.php | Publication categories/research areas | browse-category-section | categories (transferred from browse-category-section interim claim 2026-07-06; reader browse references, management owns) |
 | DB-category_settings | category_settings | lib/pkp/classes/migration/install/CategoriesMigration.php | Settings for categories | | categories (claimed 2026-07-06) |
 | DB-publication_categories | publication_categories | lib/pkp/classes/migration/install/CategoriesMigration.php | Publication-category mappings | | publication-issue-assignment |

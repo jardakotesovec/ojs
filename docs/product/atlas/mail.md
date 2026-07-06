@@ -6,7 +6,7 @@
 
 | ID | Surface | Pointer | What it is | Hint | Claimed by |
 |----|---------|---------|------------|------|------------|
-| MAIL-announcement-notify | AnnouncementNotify | lib/pkp/classes/mail/mailables/AnnouncementNotify.php | template key: ANNOUNCEMENT | notifications | |
+| MAIL-announcement-notify | AnnouncementNotify | lib/pkp/classes/mail/mailables/AnnouncementNotify.php | template key: ANNOUNCEMENT | notifications | announcements (claimed 2026-07-06) |
 | MAIL-change-profile-email-invitation-notify | ChangeProfileEmailInvitationNotify | lib/pkp/classes/mail/mailables/ChangeProfileEmailInvitationNotify.php | template key: CHANGE_EMAIL | notifications | |
 | MAIL-decision-accept-notify-author | DecisionAcceptNotifyAuthor | lib/pkp/classes/mail/mailables/DecisionAcceptNotifyAuthor.php | template key: EDITOR_DECISION_ACCEPT | notifications | editorial-decisions |
 | MAIL-decision-back-from-copyediting-notify-author | DecisionBackFromCopyeditingNotifyAuthor | lib/pkp/classes/mail/mailables/DecisionBackFromCopyeditingNotifyAuthor.php | template key: EDITOR_DECISION_BACK_FROM_COPYEDITING | notifications | editorial-decisions |

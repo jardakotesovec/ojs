@@ -146,7 +146,7 @@
 | LOC-manager-manager-payment | `manager.payment.*` | manager.po | 38 keys |  | |
 | LOC-manager-manager-userComment | `manager.userComment.*` | manager.po | 34 keys | public-comments | public-comments |
 | LOC-manager-doi-manager | `doi.manager.*` | manager.po | 30 keys |  | |
-| LOC-manager-manager-announcements | `manager.announcements.*` | manager.po | 30 keys |  | |
+| LOC-manager-manager-announcements | `manager.announcements.*` | manager.po | 30 keys |  | announcements (claimed 2026-07-06) |
 | LOC-manager-doi-editor | `doi.editor.*` | manager.po | 28 keys |  | |
 | LOC-manager-manager-statistics | `manager.statistics.*` | manager.po | 27 keys |  | |
 | LOC-manager-manager-emails | `manager.emails.*` | manager.po | 24 keys |  | email-templates-management (claimed 2026-07-06) |
@@ -160,7 +160,7 @@
 | LOC-manager-manager-settings | `manager.settings.*` | manager.po | 13 keys |  | |
 | LOC-manager-manager-category | `manager.category.*` | manager.po | 13 keys |  | categories (claimed 2026-07-06) |
 | LOC-manager-grid-category | `grid.category.*` | manager.po | 13 keys |  | categories (claimed 2026-07-06) |
-| LOC-manager-manager-announcementTypes | `manager.announcementTypes.*` | manager.po | 12 keys |  | |
+| LOC-manager-manager-announcementTypes | `manager.announcementTypes.*` | manager.po | 12 keys |  | announcements (claimed 2026-07-06) |
 | LOC-manager-manager-language | `manager.language.*` | manager.po | 10 keys |  | |
 | LOC-manager-settings-libraryFiles | `settings.libraryFiles.*` | manager.po | 10 keys |  | document-library |
 | LOC-manager-manager-groups | `manager.groups.*` | manager.po | 10 keys |  | |

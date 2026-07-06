@@ -58,7 +58,7 @@
 | PAGE-management-settings-manageemails | ManagementHandler::manageEmails | lib/pkp/pages/management/ManagementHandler.php | Email templates management sub-page | email-templates-management.md | email-templates-management (claimed 2026-07-06) |
 | PAGE-management-settings-distribution | ManagementHandler::distribution | lib/pkp/pages/management/ManagementHandler.php | Distribution settings sub-page | distribution-settings.md | distribution-settings (claimed 2026-07-06 — page owner; DOIs + Statistics tabs hosted for doi-management / usage-statistics) |
 | PAGE-management-settings-access | ManagementHandler::access | lib/pkp/pages/management/ManagementHandler.php | Roles/access settings sub-page | roles-permissions.md | |
-| PAGE-management-settings-announcements | ManagementHandler::announcements | lib/pkp/pages/management/ManagementHandler.php | Announcements settings sub-page | announcements.md | |
+| PAGE-management-settings-announcements | ManagementHandler::announcements | lib/pkp/pages/management/ManagementHandler.php | Announcements settings sub-page | announcements.md | announcements (claimed 2026-07-06) |
 | PAGE-management-settings-institutions | ManagementHandler::institutions | lib/pkp/pages/management/ManagementHandler.php | Institutions settings sub-page | institutions.md | |
 | PAGE-management-settings-user | ManagementHandler::editUser | lib/pkp/pages/management/ManagementHandler.php | Edit-user sub-page under settings | user-management.md | |
 | PAGE-management-settings-usercomments | ManagementHandler::userComments | lib/pkp/pages/management/ManagementHandler.php | Public comments moderation sub-page | public-comments.md | public-comments |
@@ -134,8 +134,8 @@
 | PAGE-admin-failedjobdetails | AdminHandler::failedJobDetails | lib/pkp/pages/admin/AdminHandler.php | Failed job detail view | jobs-queue.md | |
 | PAGE-admin-confirmaccesssubmit | AdminHandler::confirmAccessSubmit | lib/pkp/pages/admin/AdminHandler.php | Submit the Administration-area re-authentication (password re-confirm); starts the elevated session. NOT a login-as confirmation — impersonation has no reauth (see login-as.md) | login-as.md | |
 | PAGE-admin-confirmaccess | AdminHandler::confirmAccess | lib/pkp/pages/admin/AdminHandler.php | Administration-area re-authentication page (re-enter your own password before the admin area). NOT a login-as confirmation — impersonation has no reauth (see login-as.md) | login-as.md | |
-| PAGE-announcement-index | AnnouncementHandler::index | lib/pkp/pages/announcement/AnnouncementHandler.php | Public announcements listing page | announcements.md | |
-| PAGE-announcement-view | AnnouncementHandler::view | lib/pkp/pages/announcement/AnnouncementHandler.php | Single announcement detail page | announcements.md | |
+| PAGE-announcement-index | AnnouncementHandler::index | lib/pkp/pages/announcement/AnnouncementHandler.php | Public announcements listing page | announcements.md | announcements (claimed 2026-07-06) |
+| PAGE-announcement-view | AnnouncementHandler::view | lib/pkp/pages/announcement/AnnouncementHandler.php | Single announcement detail page | announcements.md | announcements (claimed 2026-07-06) |
 | PAGE-install-index | InstallHandler::index | lib/pkp/pages/install/InstallHandler.php | Installer landing page | test-infrastructure.md | |
 | PAGE-install-install | InstallHandler::install | lib/pkp/pages/install/InstallHandler.php | Run the installation process | test-infrastructure.md | |
 | PAGE-install-upgrade | InstallHandler::upgrade | lib/pkp/pages/install/InstallHandler.php | Upgrade confirmation page | test-infrastructure.md | |
