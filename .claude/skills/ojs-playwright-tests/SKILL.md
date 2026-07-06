@@ -1,6 +1,6 @@
 ---
 name: ojs-playwright-tests
-description: Use when writing or modifying Playwright tests for OJS (Open Journal Systems). Covers the two test folders (OJS-specific vs shared pkp-lib), the asUser helper, seeded test users by role, the publicknowledge journal context, and an application map of key screens. The legacy Cypress suite was retired 2026-07-01 (see docs/e2e/cypress-crosscheck.md); skip this skill only for non-test OJS work.
+description: Use when writing or modifying Playwright tests for OJS (Open Journal Systems). Covers the two test folders (OJS-specific vs shared pkp-lib), the asUser helper, seeded test users by role, the publicknowledge journal context, and an application map of key screens. The legacy Cypress suite was retired 2026-07-01; skip this skill only for non-test OJS work.
 ---
 
 # OJS Playwright Tests
