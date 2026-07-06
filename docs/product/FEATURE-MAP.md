@@ -266,6 +266,7 @@ Spec-time corrections (2026-07-06, spec drafted): final claim is **26 atoms** �
 
 ### distribution-settings — default license/copyright, indexing metadata, archiving display (LOCKSS/CLOCKSS), publishing mode (open vs subscription), payments enable
 atoms: PAGE-management-settings-distribution, FORM-{archiving-lockss,pkp-search-indexing,pkp-license}, PAGE-gateway-{lockss,clockss}, publishing-mode config (~6)
+Spec-time corrections (2026-07-06, spec drafted): final claim is **9 atoms** — the ~6 above made concrete: the "publishing-mode config" is **FORM-access-form** (OJS AccessForm on Distribution → Access: publishingMode + delayedOpenAccessDuration + **enableOai** — the OAI toggle lives here, not on the SEO form), PLUS **FORM-license-form** (the OJS journal-default LicenseForm override adding copyrightYearBasis — both license-form atoms' stale `publication-identifiers-license` hints fixed; the per-publication form stays publication-license) and **LOC-manager-manager-distribution**. NOT claimed: FORM-pkp-payment-settings-form + API-backend-payments-edit stay **payments** (77 — this spec owns only the enable-toggle's location/persistence + the nav-link effect); DOIs/Statistics tabs hosted for doi-management/usage-statistics; API-context-edit stays journal-setup. New ledger row **126** (delayedOpenAccessDuration 1–60 bound client-only; API stores 999/-5).
 
 ### email-templates-management — the Manage Emails UI: enable/disable mailables, edit/add/reset templates, role-based access; plus the bulk-email restriction setup
 Stays standalone (decision 6).

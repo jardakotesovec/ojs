@@ -165,7 +165,7 @@
 | LOC-manager-settings-libraryFiles | `settings.libraryFiles.*` | manager.po | 10 keys |  | document-library |
 | LOC-manager-manager-groups | `manager.groups.*` | manager.po | 10 keys |  | |
 | LOC-manager-stats-issues | `stats.issues.*` | manager.po | 9 keys |  | |
-| LOC-manager-manager-distribution | `manager.distribution.*` | manager.po | 8 keys |  | |
+| LOC-manager-manager-distribution | `manager.distribution.*` | manager.po | 8 keys |  | distribution-settings (claimed 2026-07-06) |
 | LOC-manager-manager-mailables | `manager.mailables.*` | manager.po | 8 keys |  | |
 | LOC-manager-manager-institutions | `manager.institutions.*` | manager.po | 8 keys |  | |
 | LOC-manager-manager-highlights | `manager.highlights.*` | manager.po | 8 keys |  | |

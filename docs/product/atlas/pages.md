@@ -32,8 +32,8 @@
 | PAGE-dois-index | DoisHandler::index (inherited) | pages/dois/DoisHandler.php | DOI management listing page | doi-management.md | |
 | PAGE-dois-management | DoisHandler::management | pages/dois/index.php | In role list but not routed/implemented (dead) | | |
 | PAGE-gateway-index | GatewayHandler::index | pages/gateway/GatewayHandler.php | Gateway plugin interaction entry page | | |
-| PAGE-gateway-lockss | GatewayHandler::lockss | pages/gateway/GatewayHandler.php | LOCKSS preservation gateway manifest | | |
-| PAGE-gateway-clockss | GatewayHandler::clockss | pages/gateway/GatewayHandler.php | CLOCKSS preservation gateway manifest | | |
+| PAGE-gateway-lockss | GatewayHandler::lockss | pages/gateway/GatewayHandler.php | LOCKSS preservation gateway manifest | | distribution-settings (claimed 2026-07-06 — the public archiving-display surface; flag-gated, off → 302 to journal home) |
+| PAGE-gateway-clockss | GatewayHandler::clockss | pages/gateway/GatewayHandler.php | CLOCKSS preservation gateway manifest | | distribution-settings (claimed 2026-07-06) |
 | PAGE-gateway-plugin | GatewayHandler::plugin | pages/gateway/GatewayHandler.php | Dispatch gateway request to a named plugin | plugin-management.md | |
 | PAGE-index-index | IndexHandler::index (inherited) | pages/index/IndexHandler.php | Site/journal home page | journal-homepage.md | journal-homepage (site-index branch → site-settings) |
 | PAGE-information-index | InformationHandler::index | pages/information/InformationHandler.php | Information landing page (unknown/no sub-page → redirect home) | | about-pages |
@@ -56,7 +56,7 @@
 | PAGE-management-settings-website | ManagementHandler::website | lib/pkp/pages/management/ManagementHandler.php | Website appearance settings sub-page | website-appearance.md | website-appearance-settings (claimed 2026-07-06) — owns the page; Privacy/Information forms on it → journal-masthead-settings, Editorial Masthead tab → editorial-masthead, Highlights → highlights-featured-content, Languages → languages-locales, Navigation → navigation-menus, Announcements → announcements, Plugins tab → plugin-management, Comments → public-comments |
 | PAGE-management-settings-workflow | SettingsHandler::workflow (override) | pages/management/SettingsHandler.php | Workflow settings sub-page | submission-settings.md | workflow-settings |
 | PAGE-management-settings-manageemails | ManagementHandler::manageEmails | lib/pkp/pages/management/ManagementHandler.php | Email templates management sub-page | email-templates-management.md | |
-| PAGE-management-settings-distribution | ManagementHandler::distribution | lib/pkp/pages/management/ManagementHandler.php | Distribution settings sub-page | distribution-settings.md | |
+| PAGE-management-settings-distribution | ManagementHandler::distribution | lib/pkp/pages/management/ManagementHandler.php | Distribution settings sub-page | distribution-settings.md | distribution-settings (claimed 2026-07-06 — page owner; DOIs + Statistics tabs hosted for doi-management / usage-statistics) |
 | PAGE-management-settings-access | ManagementHandler::access | lib/pkp/pages/management/ManagementHandler.php | Roles/access settings sub-page | roles-permissions.md | |
 | PAGE-management-settings-announcements | ManagementHandler::announcements | lib/pkp/pages/management/ManagementHandler.php | Announcements settings sub-page | announcements.md | |
 | PAGE-management-settings-institutions | ManagementHandler::institutions | lib/pkp/pages/management/ManagementHandler.php | Institutions settings sub-page | institutions.md | |
