@@ -158,8 +158,8 @@
 | LOC-manager-stats-name | `stats.name.*` | manager.po | 16 keys |  | |
 | LOC-manager-manager-contributorRoles | `manager.contributorRoles.*` | manager.po | 16 keys | contributors | |
 | LOC-manager-manager-settings | `manager.settings.*` | manager.po | 13 keys |  | |
-| LOC-manager-manager-category | `manager.category.*` | manager.po | 13 keys |  | |
-| LOC-manager-grid-category | `grid.category.*` | manager.po | 13 keys |  | |
+| LOC-manager-manager-category | `manager.category.*` | manager.po | 13 keys |  | categories (claimed 2026-07-06) |
+| LOC-manager-grid-category | `grid.category.*` | manager.po | 13 keys |  | categories (claimed 2026-07-06) |
 | LOC-manager-manager-announcementTypes | `manager.announcementTypes.*` | manager.po | 12 keys |  | |
 | LOC-manager-manager-language | `manager.language.*` | manager.po | 10 keys |  | |
 | LOC-manager-settings-libraryFiles | `settings.libraryFiles.*` | manager.po | 10 keys |  | document-library |

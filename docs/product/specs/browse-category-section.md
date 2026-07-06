@@ -9,7 +9,7 @@ atlas-claims:
   - PAGE-catalog-fullsize
   - PAGE-catalog-thumbnail
   - PLUGIN-blocks-browse
-  - DB-categories
+# DB-categories: interim claim transferred to `categories` on 2026-07-06 (that spec now owns the entity; see its Cross-feature interactions)
 ---
 
 # Browse by category (the Browse block & category landing pages)
@@ -227,12 +227,11 @@ Every knob below is configured elsewhere and only **read** here:
 
 ## Cross-feature interactions
 
-- **categories** (feature 76, not written) — **owns category MANAGEMENT** (CRUD, nesting, assigned
-  editors, cover-image upload, the *Sort by* setting, wizard exposure) and the category **entity/schema**
-  (`SCHEMA-category`). This spec owns the **reader browse** of that taxonomy. **Seam:** `DB-categories`
-  is **interim-claimed here** (the reader browse reads the taxonomy) — ownership should **transfer to
-  `categories`** when that spec is written (mirrors the journal-homepage interim-owner pattern);
-  `SCHEMA-category`, `DB-category_settings` and `DB-publication_categories` are **not** claimed here.
+- **categories** (feature 63, written 2026-07-06) — **owns category MANAGEMENT** (CRUD, nesting,
+  assigned editors, cover-image upload, the *Sort by* setting, wizard exposure) and the category
+  **entity/schema** (`SCHEMA-category`, `DB-categories`, `DB-category_settings` — the `DB-categories`
+  interim claim here **transferred to it 2026-07-06**). This spec owns the **reader browse** of that
+  taxonomy; `DB-publication_categories` is `publication-issue-assignment`'s.
 - **site-search** (feature 42, verified) — **owns the fulltext index + the `SubmissionSearchResult` /
   `DatabaseEngine` builder** this listing resolves through (rules 4–6). The category page reuses that
   builder with a `categoryIds` filter; the published-only gate, the async-index dependency, and the
@@ -328,11 +327,10 @@ Every knob below is configured elsewhere and only **read** here:
    abstracts only), unlike the issue pages which the must-publish policy locks entirely. Confirm
    whether this inconsistency is intended or the category page should also be must-publish-gated.
    (Not probed on a `NONE` journal live; code-derived from the policy list.)
-2. **Atom seam — `DB-categories` interim ownership.** This spec interim-claims `DB-categories` (the
-   reader browse reads the taxonomy) because the `categories` **management** spec is not yet written;
-   ownership should **transfer to `categories`** when it lands, with this spec retaining only the
-   reader browse. Confirm at grooming. `SCHEMA-category` / `DB-category_settings` /
-   `DB-publication_categories` are already not claimed here.
+2. **RESOLVED (2026-07-06) — Atom seam: `DB-categories` ownership transferred.** The `categories`
+   management spec is now written and owns `DB-categories` (+ `SCHEMA-category`,
+   `DB-category_settings`); this spec retains only the reader browse and references the taxonomy.
+   `DB-publication_categories` stays with `publication-issue-assignment`.
 3. **Is the category *Sort by* setting meant to work in OJS at all, or is it OMP-only?** Rule 6 shows
    it is inert on the OJS reader page. If the intent is OMP-only (OJS categories are unordered
    research-area filters), the setting should perhaps be hidden in OJS category management rather than
@@ -350,7 +348,7 @@ Every knob below is configured elsewhere and only **read** here:
 | Category cover — full size | `GET /{journal}/catalog/fullSize?type=category&id={id}` → `PKPCatalogHandler::fullSize()` | PAGE-catalog-fullsize |
 | Category cover — thumbnail | `GET /{journal}/catalog/thumbnail?type=category&id={id}` → `PKPCatalogHandler::thumbnail()` | PAGE-catalog-thumbnail |
 | Browse sidebar block | `plugins/blocks/browse` → `BrowseBlockPlugin::getContents()` → `block.tpl` (rendered via the sidebar mechanism) | PLUGIN-blocks-browse |
-| Category taxonomy entity (interim) | `categories` (+ `category_settings`, read here) | DB-categories *(seam → `categories`)* |
+| Category taxonomy entity (referenced) | `categories` (+ `category_settings`, read here) | *(DB-categories — owned by `categories` since 2026-07-06)* |
 | Article↔category mapping (referenced) | `publication_categories` | *(DB-publication_categories — owned by `publication-issue-assignment`)* |
 | Section policies on `/about/submissions` (NOT here) | `about-pages` | *(cross-reference; e2e plan test 4)* |
 | OMP catalog list panel (dead in OJS) | `CatalogListPanel.vue` — no OJS mount | *(VUE-catalog-list-panel — UNASSIGNED §Dead-code)* |

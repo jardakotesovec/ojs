@@ -283,6 +283,8 @@ atoms: GRID-grid-settings-sections-section-grid-handler, SCHEMA-section-{pkp,ojs
 ### categories — content categories CRUD incl. nesting, assigned editors, wizard exposure, front-end browse hook
 atoms: VUE-category-manager, FORM-category-form, SCHEMA-category, DB-categories(+settings), publication_categories, API-category-* (5) (~5)
 
+Spec-time corrections (2026-07-06, spec drafted): final claim is **12 atoms** — VUE-category-manager, FORM-category-form, SCHEMA-category, DB-categories (transferred in from browse-category-section's interim claim), DB-category_settings, the 5 API-category-* routes (API-category-get-category-form-component is a registered-but-handlerless DEAD ROUTE, always 500 — ledger row 139), plus LOC-manager-{manager,grid}-category. **DB-publication_categories stays with publication-issue-assignment** (feature 30 owns the per-publication assignment; this hint over-reached). New ledger rows 138 (title-less API POST bricks the Categories tab), 139 (dead route), 140 (static expand/collapse a11y label); row 135's category leg live-confirmed via the real wizard (no duplicate row).
+
 ### announcements — announcement CRUD, types, expiry, enable toggle; reader listing/detail page + notification + feed
 atoms: VUE-announcements-list-panel, GRID-announcement-type-grid, FORM-{pkp-announcement,pkp-announcement-settings}, DB-announcements(+settings,types), PAGE-announcement-{index,view}, API-announcement-* (5), NOTIF-new-announcement, JOB-newannouncementnotifyusers, MAIL-announcement-notify (~8)
 

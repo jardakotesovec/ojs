@@ -12,8 +12,8 @@
 | DB-announcement_type_settings | announcement_type_settings | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Settings for announcement types | | |
 | DB-announcement_types | announcement_types | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Announcement type definitions | | |
 | DB-announcements | announcements | lib/pkp/classes/migration/install/AnnouncementsMigration.php | Announcements displayed to users | announcements | |
-| DB-categories | categories | lib/pkp/classes/migration/install/CategoriesMigration.php | Publication categories/research areas | browse-category-section | browse-category-section *(interim: reader browse reads the taxonomy; MANAGEMENT owner is the future `categories` spec — transfer on write; seam noted in spec)* |
-| DB-category_settings | category_settings | lib/pkp/classes/migration/install/CategoriesMigration.php | Settings for categories | | |
+| DB-categories | categories | lib/pkp/classes/migration/install/CategoriesMigration.php | Publication categories/research areas | browse-category-section | categories (transferred from browse-category-section interim claim 2026-07-06; reader browse references, management owns) |
+| DB-category_settings | category_settings | lib/pkp/classes/migration/install/CategoriesMigration.php | Settings for categories | | categories (claimed 2026-07-06) |
 | DB-publication_categories | publication_categories | lib/pkp/classes/migration/install/CategoriesMigration.php | Publication-category mappings | | publication-issue-assignment |
 | DB-citation_settings | citation_settings | lib/pkp/classes/migration/install/MetadataMigration.php | Settings for citations | | publication-metadata-references |
 | DB-citations | citations | lib/pkp/classes/migration/install/MetadataMigration.php | Extracted and formatted citations | | publication-metadata-references |

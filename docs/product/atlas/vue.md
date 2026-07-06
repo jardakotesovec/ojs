@@ -28,7 +28,7 @@
 | VUE-user-invitation-page | UserInvitationPage | lib/ui-library/src/pages/userInvitation/UserInvitationPage.vue | page: multi-step wizard to invite a new/existing user | user-invitations | |
 | VUE-workflow-page | WorkflowPage | lib/ui-library/src/pages/workflow/WorkflowPage.vue | page: generic submission workflow side-modal shell (title/stage/actions chrome) | submission-stage-actions | workflow-stage-navigation |
 | VUE-workflow-page-ojs | WorkflowPageOJS | lib/ui-library/src/pages/workflow/WorkflowPageOJS.vue | page: OJS-specific workflow mount wiring managers (file/reviewer/contributor/galley/etc.) into WorkflowPage | submission-stage-actions | workflow-stage-navigation |
-| VUE-category-manager | CategoryManager | lib/ui-library/src/managers/CategoryManager/CategoryManager.vue | manager: journal category tree CRUD; store categoryManagerStore.js | categories | |
+| VUE-category-manager | CategoryManager | lib/ui-library/src/managers/CategoryManager/CategoryManager.vue | manager: journal category tree CRUD; store categoryManagerStore.js | categories | categories (claimed 2026-07-06) |
 | VUE-chapter-manager | ChapterManager | lib/ui-library/src/managers/ChapterManager/ChapterManager.vue | manager: monograph chapter list CRUD; no store file | | |
 | VUE-citation-manager | CitationManager | lib/ui-library/src/managers/CitationManager/CitationManager.vue | manager: publication reference/citation list + metadata lookup; store citationManagerStore.js | | publication-metadata-references |
 | VUE-contributor-manager | ContributorManager | lib/ui-library/src/managers/ContributorManager/ContributorManager.vue | manager: submission author/contributor list CRUD; store contributorManagerStore.js | contributors | |
