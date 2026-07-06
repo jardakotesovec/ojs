@@ -278,7 +278,7 @@ Spec-time corrections (2026-07-06, spec drafted): final claim is **21 atoms** �
 atoms: VUE-navigation-menu-{editor,manager-field}, GRID-navigation-menus-*, PAGE-navigationmenu-{index,view,preview}, DB-navigation_menus/items(+settings,assignments), API-navigation-menu-* (5 routes — getAllItems/getAreas/getItems/add/edit; no DELETE)
 
 ### sections — journal sections CRUD: ordering, editor restrictions, inactivation, review-form default, word count
-atoms: GRID-section-grid, SCHEMA-section-{pkp,ojs}, DB-sections(+settings), custom_section_orders, API-section-* (~6)
+atoms: GRID-grid-settings-sections-section-grid-handler, SCHEMA-section-{pkp,ojs}, DB-{sections,section_settings,custom_section_orders}, API-section-{get-many,get} (read-only — 2 GET routes, writes via the legacy grid), LOC-manager-manager-sections, LOC-default-misc (10)
 
 ### categories — content categories CRUD incl. nesting, assigned editors, wizard exposure, front-end browse hook
 atoms: VUE-category-manager, FORM-category-form, SCHEMA-category, DB-categories(+settings), publication_categories, API-category-* (5) (~5)

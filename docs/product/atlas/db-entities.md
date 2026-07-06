@@ -124,7 +124,7 @@
 | DB-user_comments | user_comments | lib/pkp/classes/migration/install/UserCommentsMigration.php | Public user comments | public-comments | public-comments |
 | DB-completed_payments | completed_payments | classes/migration/install/OJSMigration.php | Completed payment records | payments | |
 | DB-custom_issue_orders | custom_issue_orders | classes/migration/install/OJSMigration.php | Custom issue ordering | issue-management | |
-| DB-custom_section_orders | custom_section_orders | classes/migration/install/OJSMigration.php | Custom section ordering | sections | |
+| DB-custom_section_orders | custom_section_orders | classes/migration/install/OJSMigration.php | Custom section ordering | sections | sections (claimed 2026-07-06 — per-ISSUE section order override; written by issue-management's TocGridHandler, seam noted in spec) |
 | DB-institutional_subscriptions | institutional_subscriptions | classes/migration/install/OJSMigration.php | Institutional subscriptions | subscriptions-management | |
 | DB-issue_files | issue_files | classes/migration/install/OJSMigration.php | Issue supplementary files | issue-management | |
 | DB-issue_galley_settings | issue_galley_settings | classes/migration/install/OJSMigration.php | Issue galley settings | issue-management | |
@@ -135,8 +135,8 @@
 | DB-publication_galleys | publication_galleys | classes/migration/install/OJSMigration.php | Article publication formats | galleys | galleys |
 | DB-publications | publications | classes/migration/install/OJSMigration.php | Article publication records | publication-publish-flow | publication-versioning |
 | DB-queued_payments | queued_payments | classes/migration/install/OJSMigration.php | Pending payment records | payments | |
-| DB-section_settings | section_settings | classes/migration/install/OJSMigration.php | Section configuration | sections | |
-| DB-sections | sections | classes/migration/install/OJSMigration.php | Journal sections/categories | sections | |
+| DB-section_settings | section_settings | classes/migration/install/OJSMigration.php | Section configuration | sections | sections (claimed 2026-07-06) |
+| DB-sections | sections | classes/migration/install/OJSMigration.php | Journal sections/categories | sections | sections (claimed 2026-07-06) |
 | DB-subscription_type_settings | subscription_type_settings | classes/migration/install/OJSMigration.php | Subscription type settings | | |
 | DB-subscription_types | subscription_types | classes/migration/install/OJSMigration.php | Subscription type definitions | subscriptions-management | |
 | DB-subscriptions | subscriptions | classes/migration/install/OJSMigration.php | User subscriptions | subscription-access | |

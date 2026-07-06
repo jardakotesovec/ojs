@@ -219,6 +219,52 @@ exports.SectionsSettingsPage = class SectionsSettingsPage extends BasePage {
 	}
 
 	/**
+	 * The row's Inactive-column checkbox (selectStatusCell.tpl). Checked
+	 * = the section is inactive. The checkbox is wired to a
+	 * RemoteActionConfirmationModal LinkAction, so its rendered state is
+	 * only authoritative after the grid refresh that follows the
+	 * activate/deactivate POST.
+	 *
+	 * @param {string} title
+	 */
+	inactiveCheckbox(title) {
+		return this.rowByTitle(title)
+			.first()
+			.locator('input[type="checkbox"]');
+	}
+
+	/**
+	 * Click the Inactive checkbox of the section matching `title` and
+	 * confirm the "Are you sure you wish to (de)activate this section?"
+	 * dialog. Waits for the (kebab-cased) activate-section /
+	 * deactivate-section POST and the DataChangedEvent grid refresh to
+	 * settle. Makes NO claim about the outcome — the deactivate guard
+	 * ("at least one section must be active") responds with a
+	 * DataChangedEvent too; callers assert the checkbox state (or
+	 * server state) afterwards.
+	 *
+	 * @param {string} title
+	 */
+	async toggleInactive(title) {
+		await this.inactiveCheckbox(title).click();
+		const dialog = this.page
+			.locator('[data-cy="dialog"]')
+			.filter({hasText: /Are you sure you wish to (de)?activate this section\?/})
+			.first();
+		await expect(dialog).toBeVisible({timeout: 10_000});
+		const toggled = this.page.waitForResponse(
+			(res) =>
+				/(de)?activate-section/i.test(res.url()) &&
+				res.request().method() === 'POST',
+			{timeout: 15_000},
+		);
+		await dialog.getByRole('button', {name: 'OK', exact: true}).click();
+		await toggled;
+		await expect(dialog).toBeHidden({timeout: 10_000});
+		await waitForJQueryIdle(this.page);
+	}
+
+	/**
 	 * Click Delete on the section matching `title` and confirm the
 	 * RemoteActionConfirmationModal. Waits for the `delete-section` POST
 	 * to settle. Makes NO claim about the outcome — SectionGridHandler

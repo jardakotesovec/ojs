@@ -69,7 +69,7 @@
 | LOC-default-default-contextSettings | `default.contextSettings.*` | default.po | 9 keys |  | |
 | LOC-default-default-submission | `default.submission.*` | default.po | 7 keys |  | |
 | LOC-default-default-genres | `default.genres.*` | default.po | 4 keys |  | workflow-settings |
-| LOC-default-misc | `(misc)` | default.po | 1 rarer prefixes | section.default (3) | |
+| LOC-default-misc | `(misc)` | default.po | 1 rarer prefixes | section.default (3) | sections (claimed 2026-07-06 — the bundle is exactly the section.default.* keys: the auto-created Articles section) |
 | LOC-editor-editor-issues | `editor.issues.*` | editor.po | 76 keys |  | |
 | LOC-editor-editor-review | `editor.review.*` | editor.po | 74 keys |  | |
 | LOC-editor-editor-submission | `editor.submission.*` | editor.po | 67 keys |  | |
@@ -171,7 +171,7 @@
 | LOC-manager-manager-highlights | `manager.highlights.*` | manager.po | 8 keys |  | |
 | LOC-manager-manager-publication | `manager.publication.*` | manager.po | 7 keys |  | |
 | LOC-manager-manager-files | `manager.files.*` | manager.po | 7 keys |  | |
-| LOC-manager-manager-sections | `manager.sections.*` | manager.po | 6 keys |  | |
+| LOC-manager-manager-sections | `manager.sections.*` | manager.po | 6 keys |  | sections (claimed 2026-07-06) |
 | LOC-manager-grid-action | `grid.action.*` | manager.po | 6 keys |  | |
 | LOC-manager-manager-reviewerRecommendations | `manager.reviewerRecommendations.*` | manager.po | 5 keys |  | |
 | LOC-manager-stats-context | `stats.context.*` | manager.po | 5 keys |  | |

@@ -26,8 +26,8 @@
 | API-comment-get-report | GET /comments/{commentId}/reports/{reportId} | lib/pkp/api/v1/comments/UserCommentController.php:101 | Route handler UserCommentController::getReport() | public-comments.md | public-comments |
 | API-comment-get-reports | GET /comments/{commentId}/reports | lib/pkp/api/v1/comments/UserCommentController.php:106 | Route handler UserCommentController::getReports() | public-comments.md | public-comments |
 | API-comment-delete-reports | DELETE /comments/{commentId}/reports | lib/pkp/api/v1/comments/UserCommentController.php:110 | Route handler UserCommentController::deleteReports() | public-comments.md | public-comments |
-| API-section-get-many | GET /sections | lib/pkp/api/v1/sections/SectionController.php:68 | Route handler SectionController::getMany() | sections.md | |
-| API-section-get | GET /sections/{sectionId} | lib/pkp/api/v1/sections/SectionController.php:71 | Route handler SectionController::get() | sections.md | |
+| API-section-get-many | GET /sections | lib/pkp/api/v1/sections/SectionController.php:68 | Route handler SectionController::getMany() | sections.md | sections (claimed 2026-07-06 — the sections API is READ-ONLY, manager/site-admin; FEATURE-MAP's "~6" was wrong, these 2 GET routes are all that exist; writes go through the legacy grid) |
+| API-section-get | GET /sections/{sectionId} | lib/pkp/api/v1/sections/SectionController.php:71 | Route handler SectionController::get() | sections.md | sections (claimed 2026-07-06) |
 | API-contributor-role-get | GET /contributorRoles/{roleId} | lib/pkp/api/v1/contributorRoles/ContributorRoleController.php:71 | Route handler ContributorRoleController::get() | contributors.md | |
 | API-contributor-role-get-many | GET /contributorRoles | lib/pkp/api/v1/contributorRoles/ContributorRoleController.php:81 | Route handler ContributorRoleController::getMany() | contributors.md | |
 | API-contributor-role-get-identifiers | GET /contributorRoles/identifiers | lib/pkp/api/v1/contributorRoles/ContributorRoleController.php:83 | Route handler ContributorRoleController::getIdentifiers() | contributors.md | |

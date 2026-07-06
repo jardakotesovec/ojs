@@ -98,7 +98,7 @@
 | SCHEMA-galley | Schema | `schemas/galley.json` | Galley entity; published file representation (PDF/HTML); doiId/urlPath/urlRemote/file props (14 props) | galleys.md | galleys |
 | SCHEMA-issue | Schema | `schemas/issue.json` | Issue entity; sections/galleys/articles, DOI, cover image, publish status (31 props) | issue-management.md | |
 | SCHEMA-publication-ojs | Schema | `schemas/publication.json` | OJS-specific publication props (no title/entity name of its own): issueId/sectionId/pages/articleNumber/accessStatus (8 props) | publication-publish-flow.md | publication-versioning |
-| SCHEMA-section-ojs | Schema | `schemas/section.json` | Section entity; OJS-specific section props: abstractsNotRequired/reviewFormId/wordCount (10 props) | sections.md | |
+| SCHEMA-section-ojs | Schema | `schemas/section.json` | Section entity; OJS-specific section props: abstractsNotRequired/reviewFormId/wordCount (10 props) | sections.md | sections (claimed 2026-07-06) |
 | SCHEMA-submission-ojs | Schema | `schemas/submission.json` | Submission entity; OJS-specific submission props: sectionId/issueToBePublished/reviewerSuggestions (4 props) | submission-settings.md | send-to-review |
 | SCHEMA-affiliation | Schema | `lib/pkp/schemas/affiliation.json` | Affiliation entity; author institutional affiliation; ROR linkage (5 props) | affiliations-ror | contributor affiliation FIELD is in contributors.md; storage/ROR schema owned by affiliations-ror |
 | SCHEMA-announcement | Schema | `lib/pkp/schemas/announcement.json` | Announcement entity; news item; dateExpire/datePosted/typeId/image props (12 props) | announcements.md | |
@@ -121,7 +121,7 @@
 | SCHEMA-review-assignment | Schema | `lib/pkp/schemas/reviewAssignment.json` | Review Assignment entity; reviewer's assignment; date* lifecycle props, ORCID put-code (42 props) | reviewer-assignment.md | assign-and-manage-reviewers |
 | SCHEMA-review-round | Schema | `lib/pkp/schemas/reviewRound.json` | Review Round entity; round of review assignments; status/round/stageId (7 props) | review-rounds-revisions.md | review-rounds-and-revisions |
 | SCHEMA-ror | Schema | `lib/pkp/schemas/ror.json` | Ror entity; cached ror.org institution registry record (7 props) | | |
-| SCHEMA-section-pkp | Schema | `lib/pkp/schemas/section.json` | Section entity; shared section/series entity; editorRestricted/isInactive (6 props) | sections.md | |
+| SCHEMA-section-pkp | Schema | `lib/pkp/schemas/section.json` | Section entity; shared section/series entity; editorRestricted/isInactive (6 props) | sections.md | sections (claimed 2026-07-06) |
 | SCHEMA-site | Schema | `lib/pkp/schemas/site.json` | Site entity; overall site hosting contexts; stats/locales/email config (37 props) | site-settings.md | |
 | SCHEMA-submission-pkp | Schema | `lib/pkp/schemas/submission.json` | Submission entity; shared submission entity; participants/reviewRounds/decisions/status (32 props) | submission-settings.md | |
 | SCHEMA-submission-file | Schema | `lib/pkp/schemas/submissionFile.json` | Submission File entity; file + metadata; genre/fileStage/dependentFiles (43 props) | submission-files.md | submission-files |
