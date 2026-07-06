@@ -22,9 +22,9 @@
 | DB-filter_groups | filter_groups | lib/pkp/classes/migration/install/MetadataMigration.php | Filter processing groups | | |
 | DB-filter_settings | filter_settings | lib/pkp/classes/migration/install/MetadataMigration.php | Settings for filters | | |
 | DB-filters | filters | lib/pkp/classes/migration/install/MetadataMigration.php | Document processing filters | | |
-| DB-email_templates | email_templates | lib/pkp/classes/migration/install/CommonMigration.php | Email message templates | email-templates-management | |
-| DB-email_templates_default_data | email_templates_default_data | lib/pkp/classes/migration/install/CommonMigration.php | Default template content | | |
-| DB-email_templates_settings | email_templates_settings | lib/pkp/classes/migration/install/CommonMigration.php | Settings for templates | | |
+| DB-email_templates | email_templates | lib/pkp/classes/migration/install/CommonMigration.php | Email message templates | email-templates-management | email-templates-management (claimed 2026-07-06) |
+| DB-email_templates_default_data | email_templates_default_data | lib/pkp/classes/migration/install/CommonMigration.php | Default template content | | email-templates-management (claimed 2026-07-06) |
+| DB-email_templates_settings | email_templates_settings | lib/pkp/classes/migration/install/CommonMigration.php | Settings for templates | | email-templates-management (claimed 2026-07-06) |
 | DB-notification_settings | notification_settings | lib/pkp/classes/migration/install/CommonMigration.php | Per-notification-object settings (keyed by notification_id) — delivery-side, NOT the user prefs | | notifications feature (delivery); the profile prefs live in notification_subscription_settings |
 | DB-notification_subscription_settings | notification_subscription_settings | lib/pkp/classes/migration/install/CommonMigration.php | Per-user notification preferences: blocked_notification / blocked_emailed_notification (keyed by user_id + context_id) | user-profile | edited by the profile Notifications tab; registration seeds email-consent; notifications feature reads it for delivery |
 | DB-notifications | notifications | lib/pkp/classes/migration/install/CommonMigration.php | User notification records | notifications | |
@@ -41,7 +41,7 @@
 | DB-user_interests | user_interests | lib/pkp/classes/migration/install/ControlledVocabMigration.php | User interest keywords | user-profile | reviewer-interests field on the profile Roles tab |
 | DB-doi_settings | doi_settings | lib/pkp/classes/migration/install/DoiMigration.php | DOI configuration settings | doi-management | |
 | DB-dois | dois | lib/pkp/classes/migration/install/DoiMigration.php | Digital object identifiers | doi-management (DOI entity; publication-identifiers references it for read-only display) | |
-| DB-email_template_user_group_access | email_template_user_group_access | lib/pkp/classes/migration/install/EmailTemplateUserGroupAccessMigration.php | Template access by role | | |
+| DB-email_template_user_group_access | email_template_user_group_access | lib/pkp/classes/migration/install/EmailTemplateUserGroupAccessMigration.php | Template access by role | | email-templates-management (claimed 2026-07-06) |
 | DB-failed_jobs | failed_jobs | lib/pkp/classes/migration/install/FailedJobsMigration.php | Failed background job records | jobs-queue | |
 | DB-files | files | lib/pkp/classes/migration/install/FilesMigration.php | File storage metadata | | submission-files |
 | DB-genre_settings | genre_settings | lib/pkp/classes/migration/install/GenresMigration.php | Settings for submission genres | | workflow-settings |

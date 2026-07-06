@@ -13,8 +13,8 @@
 | VUE-jobs-page | JobsPage | lib/ui-library/src/pages/jobs/JobsPage.vue | page: queued jobs list | jobs-queue | |
 | VUE-failed-jobs-page | FailedJobsPage | lib/ui-library/src/pages/jobs/FailedJobsPage.vue | page: failed jobs list | jobs-queue | |
 | VUE-failed-job-details-page | FailedJobDetailsPage | lib/ui-library/src/pages/jobs/FailedJobDetailsPage.vue | page: single failed job detail/trace view | jobs-queue | |
-| VUE-edit-mailable-modal | EditMailableModal | lib/ui-library/src/pages/manageEmails/EditMailableModal.vue | page/modal: enable/disable + configure a system mailable | email-templates-management | |
-| VUE-edit-template-modal | EditTemplateModal | lib/ui-library/src/pages/manageEmails/EditTemplateModal.vue | page/modal: edit an email template's subject/body | email-templates-management | |
+| VUE-edit-mailable-modal | EditMailableModal | lib/ui-library/src/pages/manageEmails/EditMailableModal.vue | page/modal: a mailable's template list (default + alternates; add/edit/reset/remove) — NO enable/disable toggle in 3.6 (sweep description was stale; disabling is the workflow-settings email toggles) | email-templates-management | email-templates-management (claimed 2026-07-06) |
+| VUE-edit-template-modal | EditTemplateModal | lib/ui-library/src/pages/manageEmails/EditTemplateModal.vue | page/modal: edit an email template's subject/body | email-templates-management | email-templates-management (claimed 2026-07-06) |
 | VUE-request-review-round-author-response | RequestReviewRoundAuthorResponse | lib/ui-library/src/pages/requestReviewRoundAuthorResponse/RequestReviewRoundAuthorResponse.vue | page: editor requests author response to a review round | review-rounds-revisions | review-rounds-and-revisions |
 | VUE-reviewer-submission-page | ReviewerSubmissionPage | lib/ui-library/src/pages/reviewerSubmission/ReviewerSubmissionPage.vue | page: reviewer-facing submission review workspace | reviewer-response | reviewer-response |
 | VUE-context-download-report-modal | ContextDownloadReportModal | lib/ui-library/src/pages/statsContext/ContextDownloadReportModal.vue | page/modal: download journal-level usage stats report | usage-statistics | |

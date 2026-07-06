@@ -134,7 +134,7 @@
 | LOC-locale-misc | `(misc)` | locale.po | 11 rarer prefixes | user.reviewerPrompt (3), user.profile (3), payment.subscription (3), payment.membership (3), manager.setup (3), log.layout (3), layoutEditor.galley (3), doi.issue (3), copyeditor.article (3), article.comments (3), about.subscriptions (3) | |
 | LOC-manager-manager-setup | `manager.setup.*` | manager.po | 207 keys |  | |
 | LOC-manager-manager-subscriptions | `manager.subscriptions.*` | manager.po | 77 keys |  | |
-| LOC-manager-emailTemplate-variable | `emailTemplate.variable.*` | manager.po | 67 keys |  | |
+| LOC-manager-emailTemplate-variable | `emailTemplate.variable.*` | manager.po | 67 keys |  | email-templates-management (claimed 2026-07-06) |
 | LOC-manager-manager-plugins | `manager.plugins.*` | manager.po | 65 keys |  | |
 | LOC-manager-manager-dois | `manager.dois.*` | manager.po | 58 keys |  | |
 | LOC-manager-manager-navigationMenus | `manager.navigationMenus.*` | manager.po | 52 keys |  | |
@@ -149,7 +149,7 @@
 | LOC-manager-manager-announcements | `manager.announcements.*` | manager.po | 30 keys |  | |
 | LOC-manager-doi-editor | `doi.editor.*` | manager.po | 28 keys |  | |
 | LOC-manager-manager-statistics | `manager.statistics.*` | manager.po | 27 keys |  | |
-| LOC-manager-manager-emails | `manager.emails.*` | manager.po | 24 keys |  | |
+| LOC-manager-manager-emails | `manager.emails.*` | manager.po | 24 keys |  | email-templates-management (claimed 2026-07-06) |
 | LOC-manager-manager-reviewFormElements | `manager.reviewFormElements.*` | manager.po | 23 keys |  | review-forms |
 | LOC-manager-stats-dateRange | `stats.dateRange.*` | manager.po | 21 keys |  | |
 | LOC-manager-plugins-categories | `plugins.categories.*` | manager.po | 20 keys |  | |
