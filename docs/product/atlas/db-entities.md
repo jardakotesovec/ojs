@@ -44,8 +44,8 @@
 | DB-email_template_user_group_access | email_template_user_group_access | lib/pkp/classes/migration/install/EmailTemplateUserGroupAccessMigration.php | Template access by role | | |
 | DB-failed_jobs | failed_jobs | lib/pkp/classes/migration/install/FailedJobsMigration.php | Failed background job records | jobs-queue | |
 | DB-files | files | lib/pkp/classes/migration/install/FilesMigration.php | File storage metadata | | submission-files |
-| DB-genre_settings | genre_settings | lib/pkp/classes/migration/install/GenresMigration.php | Settings for submission genres | | |
-| DB-genres | genres | lib/pkp/classes/migration/install/GenresMigration.php | File type genres | submission-files | |
+| DB-genre_settings | genre_settings | lib/pkp/classes/migration/install/GenresMigration.php | Settings for submission genres | | workflow-settings |
+| DB-genres | genres | lib/pkp/classes/migration/install/GenresMigration.php | File type genres | submission-files | workflow-settings |
 | DB-highlight_settings | highlight_settings | lib/pkp/classes/migration/install/HighlightsMigration.php | Settings for highlights | | highlights-featured-content |
 | DB-highlights | highlights | lib/pkp/classes/migration/install/HighlightsMigration.php | Featured content highlights | | highlights-featured-content |
 | DB-institution_ip | institution_ip | lib/pkp/classes/migration/install/InstitutionsMigration.php | Institution IP ranges | institutions | |
@@ -67,8 +67,8 @@
 | DB-navigation_menus | navigation_menus | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Navigation menu structures | navigation-menus | |
 | DB-notes | notes | lib/pkp/classes/migration/install/NotesMigration.php | Editor/reviewer notes | | tasks-discussions |
 | DB-review_assignment_settings | review_assignment_settings | lib/pkp/classes/migration/install/ReviewAssignmentSettingsMigration.php | Review assignment settings | | assign-and-manage-reviewers |
-| DB-reviewer_recommendation_settings | reviewer_recommendation_settings | classes/migration/install/ReviewerRecommendationsMigration.php | Reviewer recommendation settings (multilingual labels of the options) | workflow-settings | |
-| DB-reviewer_recommendations | reviewer_recommendations | classes/migration/install/ReviewerRecommendationsMigration.php | Configurable REVIEWER-recommendation options — the vocabulary a reviewer picks at review completion (table comment "selected by reviewer"), stored on review_assignments.reviewer_recommendation_id; a Settings→Workflow config, NOT the recommend-only editor's recommendation and NOT reviewer suggestions | workflow-settings | |
+| DB-reviewer_recommendation_settings | reviewer_recommendation_settings | classes/migration/install/ReviewerRecommendationsMigration.php | Reviewer recommendation settings (multilingual labels of the options) | workflow-settings | workflow-settings |
+| DB-reviewer_recommendations | reviewer_recommendations | classes/migration/install/ReviewerRecommendationsMigration.php | Configurable REVIEWER-recommendation options — the vocabulary a reviewer picks at review completion (table comment "selected by reviewer"), stored on review_assignments.reviewer_recommendation_id; a Settings→Workflow config, NOT the recommend-only editor's recommendation and NOT reviewer suggestions | workflow-settings | workflow-settings |
 | DB-reviewer_suggestion_settings | reviewer_suggestion_settings | lib/pkp/classes/migration/install/ReviewerSuggestionsMigration.php | Reviewer suggestion settings | | reviewer-suggestions |
 | DB-reviewer_suggestions | reviewer_suggestions | lib/pkp/classes/migration/install/ReviewerSuggestionsMigration.php | Suggested reviewers | reviewer-suggestions | reviewer-suggestions |
 | DB-review_form_element_settings | review_form_element_settings | lib/pkp/classes/migration/install/ReviewFormsMigration.php | Review form element settings | | review-forms |

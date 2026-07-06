@@ -68,7 +68,7 @@
 | LOC-default-default-groups | `default.groups.*` | default.po | 41 keys |  | |
 | LOC-default-default-contextSettings | `default.contextSettings.*` | default.po | 9 keys |  | |
 | LOC-default-default-submission | `default.submission.*` | default.po | 7 keys |  | |
-| LOC-default-default-genres | `default.genres.*` | default.po | 4 keys |  | |
+| LOC-default-default-genres | `default.genres.*` | default.po | 4 keys |  | workflow-settings |
 | LOC-default-misc | `(misc)` | default.po | 1 rarer prefixes | section.default (3) | |
 | LOC-editor-editor-issues | `editor.issues.*` | editor.po | 76 keys |  | |
 | LOC-editor-editor-review | `editor.review.*` | editor.po | 74 keys |  | |
