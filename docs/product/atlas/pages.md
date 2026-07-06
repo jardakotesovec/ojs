@@ -158,9 +158,9 @@
 | PAGE-login-savepassword | LoginHandler::savePassword | lib/pkp/pages/login/LoginHandler.php | Submit forced password change | password-flows.md | password-flows |
 | PAGE-login-signinasuser | LoginHandler::signInAsUser | lib/pkp/pages/login/LoginHandler.php | Admin "login as" another user | login-as.md | |
 | PAGE-login-signoutasuser | LoginHandler::signOutAsUser | lib/pkp/pages/login/LoginHandler.php | Return from "login as" impersonation | login-as.md | |
-| PAGE-navigationmenu-index | NavigationMenuItemHandler::index | lib/pkp/pages/navigationMenu/NavigationMenuItemHandler.php | Custom navigation menu item content page | navigation-menus.md | |
-| PAGE-navigationmenu-view | NavigationMenuItemHandler::view | lib/pkp/pages/navigationMenu/NavigationMenuItemHandler.php | View a custom navigation menu page | navigation-menus.md | |
-| PAGE-navigationmenu-preview | NavigationMenuItemHandler::preview | lib/pkp/pages/navigationMenu/NavigationMenuItemHandler.php | Preview a custom navigation menu page | navigation-menus.md | |
+| PAGE-navigationmenu-index | NavigationMenuItemHandler::index | lib/pkp/pages/navigationMenu/NavigationMenuItemHandler.php | Custom navigation menu item content page | navigation-menus.md | navigation-menus (claimed 2026-07-06) |
+| PAGE-navigationmenu-view | NavigationMenuItemHandler::view | lib/pkp/pages/navigationMenu/NavigationMenuItemHandler.php | View a custom navigation menu page | navigation-menus.md | navigation-menus (claimed 2026-07-06) — reached via LoadHandler path interception at {journalUrl}/{path}, not a literal /navigationMenu/view URL |
+| PAGE-navigationmenu-preview | NavigationMenuItemHandler::preview | lib/pkp/pages/navigationMenu/NavigationMenuItemHandler.php | Preview a custom navigation menu page | navigation-menus.md | navigation-menus (claimed 2026-07-06) |
 | PAGE-notification-fetchnotification | NotificationHandler::fetchNotification | lib/pkp/pages/notification/NotificationHandler.php | Fetch a notification's rendered content | notifications.md | |
 | PAGE-notification-unsubscribe | NotificationHandler::unsubscribe | lib/pkp/pages/notification/NotificationHandler.php | Unsubscribe from a notification type via emailed link | notifications.md | |
 | PAGE-orcid-verify | OrcidHandler::verify | lib/pkp/pages/orcid/OrcidHandler.php | ORCID OAuth verification callback | orcid.md | |

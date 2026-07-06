@@ -60,11 +60,11 @@
 | DB-email_log_users | email_log_users | lib/pkp/classes/migration/install/LogMigration.php | Email log user recipients | | |
 | DB-event_log | event_log | lib/pkp/classes/migration/install/LogMigration.php | Editorial activity log | activity-log | editorial-activity-log |
 | DB-event_log_settings | event_log_settings | lib/pkp/classes/migration/install/LogMigration.php | Activity log settings | activity-log | editorial-activity-log |
-| DB-navigation_menu_item_assignment_settings | navigation_menu_item_assignment_settings | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Menu item assignment settings | | |
-| DB-navigation_menu_item_assignments | navigation_menu_item_assignments | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Menu item context assignments | | |
-| DB-navigation_menu_item_settings | navigation_menu_item_settings | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Navigation menu item settings | navigation-menus | |
-| DB-navigation_menu_items | navigation_menu_items | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Menu item definitions | navigation-menus | |
-| DB-navigation_menus | navigation_menus | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Navigation menu structures | navigation-menus | |
+| DB-navigation_menu_item_assignment_settings | navigation_menu_item_assignment_settings | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Menu item assignment settings | | navigation-menus (claimed 2026-07-06) — per-placement title overrides; read by renderer/editor, no 3.6 writer (spec OQ1) |
+| DB-navigation_menu_item_assignments | navigation_menu_item_assignments | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Menu item context assignments | | navigation-menus (claimed 2026-07-06) |
+| DB-navigation_menu_item_settings | navigation_menu_item_settings | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Navigation menu item settings | navigation-menus | navigation-menus (claimed 2026-07-06) |
+| DB-navigation_menu_items | navigation_menu_items | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Menu item definitions | navigation-menus | navigation-menus (claimed 2026-07-06) |
+| DB-navigation_menus | navigation_menus | lib/pkp/classes/migration/install/NavigationMenusMigration.php | Navigation menu structures | navigation-menus | navigation-menus (claimed 2026-07-06) |
 | DB-notes | notes | lib/pkp/classes/migration/install/NotesMigration.php | Editor/reviewer notes | | tasks-discussions |
 | DB-review_assignment_settings | review_assignment_settings | lib/pkp/classes/migration/install/ReviewAssignmentSettingsMigration.php | Review assignment settings | | assign-and-manage-reviewers |
 | DB-reviewer_recommendation_settings | reviewer_recommendation_settings | classes/migration/install/ReviewerRecommendationsMigration.php | Reviewer recommendation settings (multilingual labels of the options) | workflow-settings | workflow-settings |

@@ -115,8 +115,8 @@
 | SCHEMA-event-log | Schema | `lib/pkp/schemas/eventLog.json` | Event Log entity; logged action re: submission; large prop set of event-specific fields (42 props) | activity-log.md | editorial-activity-log |
 | SCHEMA-highlight | Schema | `lib/pkp/schemas/highlight.json` | Highlight entity; site/context text+image+URL highlight widget (9 props) | journal-homepage.md | highlights-featured-content |
 | SCHEMA-institution | Schema | `lib/pkp/schemas/institution.json` | Institution entity; institution for usage stats/subscriptions; ipRanges/ror (7 props) | institutions.md | |
-| SCHEMA-navigation-menu | Schema | `lib/pkp/schemas/navigationMenu.json` | Navigation Menu entity; theme nav-area menu; menuTree/areaName (5 props) | navigation-menus.md | |
-| SCHEMA-navigation-menu-item | Schema | `lib/pkp/schemas/navigationMenuItem.json` | Navigation Menu Item entity; item assignable to nav menus; remoteUrl/path/type (12 props) | navigation-menus.md | |
+| SCHEMA-navigation-menu | Schema | `lib/pkp/schemas/navigationMenu.json` | Navigation Menu entity; theme nav-area menu; menuTree/areaName (5 props) | navigation-menus.md | navigation-menus (claimed 2026-07-06) |
+| SCHEMA-navigation-menu-item | Schema | `lib/pkp/schemas/navigationMenuItem.json` | Navigation Menu Item entity; item assignable to nav menus; remoteUrl/path/type (12 props) | navigation-menus.md | navigation-menus (claimed 2026-07-06) |
 | SCHEMA-publication-pkp | Schema | `lib/pkp/schemas/publication.json` | Publication entity; shared published-version entity; status/version/DOI/authors/citations (51 props) | publication-publish-flow.md | publication-versioning |
 | SCHEMA-review-assignment | Schema | `lib/pkp/schemas/reviewAssignment.json` | Review Assignment entity; reviewer's assignment; date* lifecycle props, ORCID put-code (42 props) | reviewer-assignment.md | assign-and-manage-reviewers |
 | SCHEMA-review-round | Schema | `lib/pkp/schemas/reviewRound.json` | Review Round entity; round of review assignments; status/round/stageId (7 props) | review-rounds-revisions.md | review-rounds-and-revisions |

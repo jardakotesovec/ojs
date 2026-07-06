@@ -137,7 +137,7 @@
 | LOC-manager-emailTemplate-variable | `emailTemplate.variable.*` | manager.po | 67 keys |  | email-templates-management (claimed 2026-07-06) |
 | LOC-manager-manager-plugins | `manager.plugins.*` | manager.po | 65 keys |  | |
 | LOC-manager-manager-dois | `manager.dois.*` | manager.po | 58 keys |  | |
-| LOC-manager-manager-navigationMenus | `manager.navigationMenus.*` | manager.po | 52 keys |  | |
+| LOC-manager-manager-navigationMenus | `manager.navigationMenus.*` | manager.po | 52 keys |  | navigation-menus (claimed 2026-07-06) |
 | LOC-manager-manager-subscriptionTypes | `manager.subscriptionTypes.*` | manager.po | 46 keys |  | |
 | LOC-manager-plugins-importexport | `plugins.importexport.*` | manager.po | 46 keys |  | |
 | LOC-manager-mailable-decision | `mailable.decision.*` | manager.po | 42 keys |  | |
@@ -180,7 +180,7 @@
 | LOC-manager-manager-paymentMethod | `manager.paymentMethod.*` | manager.po | 5 keys |  | |
 | LOC-manager-stats-publications | `stats.publications.*` | manager.po | 4 keys |  | |
 | LOC-manager-manager-submissionAck | `manager.submissionAck.*` | manager.po | 4 keys |  | |
-| LOC-manager-manager-navigationMenu | `manager.navigationMenu.*` | manager.po | 4 keys |  | |
+| LOC-manager-manager-navigationMenu | `manager.navigationMenu.*` | manager.po | 4 keys |  | navigation-menus (claimed 2026-07-06) |
 | LOC-manager-manager-editorialStatistics | `manager.editorialStatistics.*` | manager.po | 4 keys |  | |
 | LOC-manager-misc | `(misc)` | manager.po | 6 rarer prefixes | manager.languages (3), grid.genres (3), api.issue (3), stats.timeline (3), stats.description (3), manager.submitWithCategories (3) | |
 | LOC-reviewer-reviewer-submission | `reviewer.submission.*` | reviewer.po | 39 keys |  | |
