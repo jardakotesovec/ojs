@@ -31,10 +31,10 @@
 | PAGE-decision-record | DecisionHandler::record | lib/pkp/pages/decision/DecisionHandler.php | Record an editorial decision, reached via pages/decision | review-decisions.md | editorial-decisions |
 | PAGE-dois-index | DoisHandler::index (inherited) | pages/dois/DoisHandler.php | DOI management listing page | doi-management.md | |
 | PAGE-dois-management | DoisHandler::management | pages/dois/index.php | In role list but not routed/implemented (dead) | | |
-| PAGE-gateway-index | GatewayHandler::index | pages/gateway/GatewayHandler.php | Gateway plugin interaction entry page | | |
+| PAGE-gateway-index | GatewayHandler::index | pages/gateway/GatewayHandler.php | Gateway plugin interaction entry page (bare /gateway → redirect to journal home, live-verified) | | plugin-management (claimed 2026-07-06) |
 | PAGE-gateway-lockss | GatewayHandler::lockss | pages/gateway/GatewayHandler.php | LOCKSS preservation gateway manifest | | distribution-settings (claimed 2026-07-06 — the public archiving-display surface; flag-gated, off → 302 to journal home) |
 | PAGE-gateway-clockss | GatewayHandler::clockss | pages/gateway/GatewayHandler.php | CLOCKSS preservation gateway manifest | | distribution-settings (claimed 2026-07-06) |
-| PAGE-gateway-plugin | GatewayHandler::plugin | pages/gateway/GatewayHandler.php | Dispatch gateway request to a named plugin | plugin-management.md | |
+| PAGE-gateway-plugin | GatewayHandler::plugin | pages/gateway/GatewayHandler.php | Dispatch gateway request to a named plugin | plugin-management.md | plugin-management (claimed 2026-07-06) |
 | PAGE-index-index | IndexHandler::index (inherited) | pages/index/IndexHandler.php | Site/journal home page | journal-homepage.md | journal-homepage (site-index branch → site-settings) |
 | PAGE-information-index | InformationHandler::index | pages/information/InformationHandler.php | Information landing page (unknown/no sub-page → redirect home) | | about-pages |
 | PAGE-information-readers | InformationHandler::readers | pages/information/InformationHandler.php | "For readers" info page | | about-pages |

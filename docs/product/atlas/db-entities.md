@@ -29,7 +29,7 @@
 | DB-notification_subscription_settings | notification_subscription_settings | lib/pkp/classes/migration/install/CommonMigration.php | Per-user notification preferences: blocked_notification / blocked_emailed_notification (keyed by user_id + context_id) | user-profile | edited by the profile Notifications tab; registration seeds email-consent; notifications feature reads it for delivery |
 | DB-notifications | notifications | lib/pkp/classes/migration/install/CommonMigration.php | User notification records | notifications | |
 | DB-oai_resumption_tokens | oai_resumption_tokens | lib/pkp/classes/migration/install/CommonMigration.php | OAI-PMH resumption tokens | oai-sitemap-feeds | oai-pmh |
-| DB-plugin_settings | plugin_settings | lib/pkp/classes/migration/install/CommonMigration.php | Plugin configuration settings | plugin-management | |
+| DB-plugin_settings | plugin_settings | lib/pkp/classes/migration/install/CommonMigration.php | Plugin configuration settings | plugin-management | plugin-management (claimed 2026-07-06 — context row per journal, NULL context = site scope) |
 | DB-site | site | lib/pkp/classes/migration/install/CommonMigration.php | Site configuration | site-administration | site-settings (claimed 2026-07-06) — hint said site-administration, but FEATURE-MAP f66 lists DB-site/site_settings; f67 keeps DB-journals |
 | DB-site_settings | site_settings | lib/pkp/classes/migration/install/CommonMigration.php | Site-level settings | site-settings | site-settings (claimed 2026-07-06) |
 | DB-user_settings | user_settings | lib/pkp/classes/migration/install/CommonMigration.php | User preferences and settings | user-profile | |
