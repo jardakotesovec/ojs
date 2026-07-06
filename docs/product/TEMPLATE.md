@@ -1,11 +1,36 @@
 # Spec template
 
 Copy this file to `specs/<feature>.md` and fill every section (or mark it `N/A —
-<reason>`). Keep the body in business language; code anchors are provenance footnotes
-on rules, not the content. Anchor to a STABLE SYMBOL — `ClassName::method()`, a
-constant, a route path, a form field, a Vue composable/function — never a line number
-(line numbers drift on any edit above them; symbols survive and are greppable). HTML
-comments are guidance — delete them in the real spec.
+<reason>`). HTML comments are guidance — delete them in the real spec.
+
+**These specs are read by a PRODUCT OWNER / QA person, not an engineer.** The reference
+exemplars are `specs/tasks-discussions.md` (gold standard) and `specs/media-files.md`
+(the calibrated example) — read them before writing, and match their voice. The
+non-negotiable rules, enforced in every section:
+
+1. **Business-language bodies, code in footnotes.** No section BODY (Purpose, Actors,
+   Fields, Rules & state, Side effects, Scenarios) may contain a class/method name, a
+   REST route or endpoint, a Vue component/composable, a DB table/column, a constant
+   (`SUBMISSION_FILE_*`), or an HTTP status code. Describe only what a user OBSERVES or
+   DOES. Every code symbol is PROVENANCE and lives ONLY in a `<sup>x</sup>` footnote on
+   the rule/row + the `## Reference — code anchors` block. (Known deviations, Open
+   questions and the Reference blocks may keep technical detail — that's where
+   developers look.) Anchor to a STABLE SYMBOL (`ClassName::method()`, a constant, a
+   route path, a form field, a Vue function) — never a line number.
+2. **Concrete role names, never umbrellas.** Anywhere you name who-can-do-something,
+   use the actual OJS roles by name: **Site Administrator, Journal Manager, Section
+   Editor** (a.k.a. sub-editor), **Assistant, Author, Reviewer, Reader.** NEVER write
+   "editorial staff", "editorial roles", "editors", "editorial roles with X access", or
+   "the full manager". If several roles qualify, LIST them; if it's assignment-based,
+   say so ("a Section Editor or Assistant assigned to this submission's production
+   stage"); if scope-based, say it ("Site Administrator" vs "Journal Manager"). Use the
+   same canonical name for a role everywhere in the spec.
+3. **One home for permissions.** Actors & permissions is the SINGLE source of who-may.
+   Rules & state is about behavior and state — it must NOT restate the permission
+   matrix. Where a rule is permission-adjacent, describe the STATE/behavior and defer
+   the who to Actors (don't re-enumerate roles). A ⚠ permission *deviation* (e.g. a
+   screen-vs-server divergence) may live in Rules/Known-deviations as a behavior anomaly
+   but references roles minimally, not a full re-listing.
 
 ---
 
@@ -15,7 +40,6 @@ name: <feature-slug>
 scope: <one-line: the user job this feature serves>
 shared: pkp-lib | no        # implemented in lib/pkp (OMP/OPS share it) or OJS-only
 status: draft | verified    # verified = adversarial pass findings resolved
-e2e-plans: [<docs/e2e/plans/*.md basenames that test this feature>]
 atlas-claims: [<atom IDs this spec owns>]
 ---
 
@@ -82,18 +106,31 @@ atlas-claims: [<atom IDs this spec owns>]
      createdBy...). State validation in plain terms (required?, limits, task-vs-
      discussion differences, multilingual?). DROP purely server-set fields
      (createdBy/assocType/assocId/stageId and the like) — they're invisible to the
-     user; if one matters, mention it in a sentence, don't table it. Put the internal
-     attribute name in the Anchor column only, as provenance. Columns:
-     Field (UI label) | Required? | Rules | Anchor. -->
+     user; if one matters, mention it in a sentence, don't table it.
 
-| Field (UI label) | Required? | Rules | Anchor |
-|------------------|-----------|-------|--------|
+     ANCHORS AS FOOTNOTES, NOT A COLUMN (same as Actors and the gold standard): keep the
+     table THREE columns and hang the internal attribute name / validator off a
+     `<sup>x</sup>` marker at the end of each row's Rules cell, collected in a
+     de-emphasized `<sup>x</sup> attribute; Validator::rule()` block directly below the
+     table. Do NOT add an "Anchor" column. -->
+
+| Field (UI label) | Required? | Rules |
+|------------------|-----------|-------|
 
 ## Rules & state
 
 <!-- The heart. State machine (states, transitions, who triggers, guards),
      invariants, computed behavior, ordering/timing rules. Numbered rules,
-     each with an anchor. ⚠-flag as-built oddities with a ledger link.
+     each with a `<sup>` footnote anchor (NOT an inline parenthetical code list).
+     ⚠-flag as-built oddities with a ledger link.
+
+     DO NOT RESTATE PERMISSIONS HERE. Who-may-do-what lives once, in Actors &
+     permissions. A rule that just re-lists which roles can do X is redundant — cut it.
+     When a rule's behavior depends on a role, name the STATE/behavior and defer the who
+     to Actors (e.g. "On a published article, media stays editable for anyone with
+     production-stage management access" — not a re-enumeration of Site Administrator /
+     Journal Manager / Section Editor / Assistant). Use concrete role names (never
+     "editorial staff / roles / editors") on the rare occasion a role must be named.
 
      Even here — the most technical PO-facing section — name states and fields as the
      UI shows them ("Yet to begin", "In progress", "Closed"), not by their internal

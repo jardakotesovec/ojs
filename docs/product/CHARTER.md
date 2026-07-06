@@ -167,6 +167,3 @@ grep, not a judgment call.
   seeded users are read-only; never `clearAll()` Mailpit; test key
   `X-Test-Key: playwright-test-key` against servers on ports 8000+ (env facts in
   `.claude/skills/ojs-playwright-tests/`).
-- Cross-links: e2e plans (`docs/e2e/plans/`) are the *test-side* view of a feature and
-  often name the same feature — specs cite them, but the spec is about the product,
-  not the tests.
