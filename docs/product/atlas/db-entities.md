@@ -30,8 +30,8 @@
 | DB-notifications | notifications | lib/pkp/classes/migration/install/CommonMigration.php | User notification records | notifications | |
 | DB-oai_resumption_tokens | oai_resumption_tokens | lib/pkp/classes/migration/install/CommonMigration.php | OAI-PMH resumption tokens | oai-sitemap-feeds | oai-pmh |
 | DB-plugin_settings | plugin_settings | lib/pkp/classes/migration/install/CommonMigration.php | Plugin configuration settings | plugin-management | |
-| DB-site | site | lib/pkp/classes/migration/install/CommonMigration.php | Site configuration | site-administration | |
-| DB-site_settings | site_settings | lib/pkp/classes/migration/install/CommonMigration.php | Site-level settings | site-settings | |
+| DB-site | site | lib/pkp/classes/migration/install/CommonMigration.php | Site configuration | site-administration | site-settings (claimed 2026-07-06) — hint said site-administration, but FEATURE-MAP f66 lists DB-site/site_settings; f67 keeps DB-journals |
+| DB-site_settings | site_settings | lib/pkp/classes/migration/install/CommonMigration.php | Site-level settings | site-settings | site-settings (claimed 2026-07-06) |
 | DB-user_settings | user_settings | lib/pkp/classes/migration/install/CommonMigration.php | User preferences and settings | user-profile | |
 | DB-users | users | lib/pkp/classes/migration/install/CommonMigration.php | User accounts (created at self-registration; CRUD/disable/merge in user-management) | registration-login | user-management references it (disable/merge/report mutations); user-profile owns SCHEMA-user — single-owner resolved to the creation point 2026-07-05 |
 | DB-versions | versions | lib/pkp/classes/migration/install/CommonMigration.php | System version history | | |

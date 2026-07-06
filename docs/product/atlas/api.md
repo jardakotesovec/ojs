@@ -179,10 +179,10 @@
 | API-submission-file-edit | PUT /submissions/{submissionId}/files/{submissionFileId} | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:84 | Route handler PKPSubmissionFileController::edit() | submission-files.md | submission-files |
 | API-submission-file-delete | DELETE /submissions/{submissionId}/files/{submissionFileId} | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:88 | Route handler PKPSubmissionFileController::delete() | submission-files.md | submission-files |
 | API-submission-file-copy | PUT /submissions/{submissionId}/files/{submissionFileId}/copy | lib/pkp/api/v1/submissions/PKPSubmissionFileController.php:102 | Route handler PKPSubmissionFileController::copy() | submission-files.md | submission-files |
-| API-site-get | GET /site | lib/pkp/api/v1/site/PKPSiteController.php:65 | Route handler PKPSiteController::get() | site-settings.md | |
-| API-site-get-theme | GET /site/theme | lib/pkp/api/v1/site/PKPSiteController.php:68 | Route handler PKPSiteController::getTheme() | site-settings.md | |
-| API-site-edit | PUT /site | lib/pkp/api/v1/site/PKPSiteController.php:71 | Route handler PKPSiteController::edit() | site-settings.md | |
-| API-site-edit-theme | PUT /site/theme | lib/pkp/api/v1/site/PKPSiteController.php:74 | Route handler PKPSiteController::editTheme() | site-settings.md | |
+| API-site-get | GET /site | lib/pkp/api/v1/site/PKPSiteController.php:65 | Route handler PKPSiteController::get() | site-settings.md | site-settings (claimed 2026-07-06) |
+| API-site-get-theme | GET /site/theme | lib/pkp/api/v1/site/PKPSiteController.php:68 | Route handler PKPSiteController::getTheme() | site-settings.md | site-settings (claimed 2026-07-06) — missing-return 500 on absent theme: ledger row 151(a) |
+| API-site-edit | PUT /site | lib/pkp/api/v1/site/PKPSiteController.php:71 | Route handler PKPSiteController::edit() | site-settings.md | site-settings (claimed 2026-07-06) — required-props gap: ledger row 149 |
+| API-site-edit-theme | PUT /site/theme | lib/pkp/api/v1/site/PKPSiteController.php:74 | Route handler PKPSiteController::editTheme() | site-settings.md | site-settings (claimed 2026-07-06) |
 | API-citation-get-many | GET /citations | lib/pkp/api/v1/citations/PKPCitationController.php:77 | Route handler PKPCitationController::getMany() | citation-style-language.md | publication-metadata-references |
 | API-citation-get | GET /citations/{citationId} | lib/pkp/api/v1/citations/PKPCitationController.php:80 | Route handler PKPCitationController::get() | citation-style-language.md | publication-metadata-references |
 | API-citation-edit | PUT /citations/{citationId} | lib/pkp/api/v1/citations/PKPCitationController.php:84 | Route handler PKPCitationController::edit() | citation-style-language.md | publication-metadata-references |
