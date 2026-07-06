@@ -11,7 +11,7 @@
 | LOC-admin-admin-scheduledTask | `admin.scheduledTask.*` | admin.po | 43 keys |  | |
 | LOC-admin-admin-job | `admin.job.*` | admin.po | 20 keys |  | |
 | LOC-admin-admin-jobs | `admin.jobs.*` | admin.po | 17 keys |  | |
-| LOC-admin-admin-languages | `admin.languages.*` | admin.po | 14 keys |  | |
+| LOC-admin-admin-languages | `admin.languages.*` | admin.po | 14 keys |  | languages-locales (claimed 2026-07-06) |
 | LOC-admin-admin-error | `admin.error.*` | admin.po | 14 keys |  | |
 | LOC-admin-admin-journals | `admin.journals.*` | admin.po | 10 keys |  | |
 | LOC-admin-admin-version | `admin.version.*` | admin.po | 8 keys |  | |
@@ -161,7 +161,7 @@
 | LOC-manager-manager-category | `manager.category.*` | manager.po | 13 keys |  | categories (claimed 2026-07-06) |
 | LOC-manager-grid-category | `grid.category.*` | manager.po | 13 keys |  | categories (claimed 2026-07-06) |
 | LOC-manager-manager-announcementTypes | `manager.announcementTypes.*` | manager.po | 12 keys |  | announcements (claimed 2026-07-06) |
-| LOC-manager-manager-language | `manager.language.*` | manager.po | 10 keys |  | |
+| LOC-manager-manager-language | `manager.language.*` | manager.po | 10 keys |  | languages-locales (claimed 2026-07-06) |
 | LOC-manager-settings-libraryFiles | `settings.libraryFiles.*` | manager.po | 10 keys |  | document-library |
 | LOC-manager-manager-groups | `manager.groups.*` | manager.po | 10 keys |  | |
 | LOC-manager-stats-issues | `stats.issues.*` | manager.po | 9 keys |  | |

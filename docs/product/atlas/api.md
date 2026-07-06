@@ -197,7 +197,7 @@
 | API-body-text-get | GET /submissions/{submissionId}/publications/{publicationId}/bodyText | lib/pkp/api/v1/bodyText/PKPBodyTextController.php:68 | Route handler PKPBodyTextController::get() |  | publication-title-abstract-body |
 | API-body-text-save | PUT /submissions/{submissionId}/publications/{publicationId}/bodyText | lib/pkp/api/v1/bodyText/PKPBodyTextController.php:71 | Route handler PKPBodyTextController::save() |  | publication-title-abstract-body |
 | API-body-text-delete | DELETE /submissions/{submissionId}/publications/{publicationId}/bodyText | lib/pkp/api/v1/bodyText/PKPBodyTextController.php:74 | Route handler PKPBodyTextController::delete() |  | publication-title-abstract-body |
-| API-i18n-get-translations | GET /_i18n/ui.js | lib/pkp/api/v1/_i18n/I18nController.php:51 | Route handler I18nController::getTranslations() | languages-locales.md | |
+| API-i18n-get-translations | GET /_i18n/ui.js | lib/pkp/api/v1/_i18n/I18nController.php:51 | Route handler I18nController::getTranslations() | languages-locales.md | languages-locales (claimed 2026-07-06) |
 | API-job-get-jobs | GET /jobs/all | lib/pkp/api/v1/jobs/PKPJobController.php:64 | Route handler PKPJobController::getJobs() | jobs-queue.md | |
 | API-job-get-failed-jobs | GET /jobs/failed/all | lib/pkp/api/v1/jobs/PKPJobController.php:67 | Route handler PKPJobController::getFailedJobs() | jobs-queue.md | |
 | API-job-redispatch-all-failed-job | POST /jobs/redispatch/all | lib/pkp/api/v1/jobs/PKPJobController.php:70 | Route handler PKPJobController::redispatchAllFailedJob() | jobs-queue.md | |
