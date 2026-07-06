@@ -176,6 +176,87 @@ exports.AdminContextsPage = class AdminContextsPage extends BasePage {
 	}
 
 	/**
+	 * Enter the grid's ordering mode (OrderGridItemsFeature — jQuery-UI
+	 * sortable on the rows). The "Done"/"Cancel" finish controls become
+	 * visible once ordering is active.
+	 */
+	async startOrdering() {
+		await this.gridContainer
+			.locator('a[id*="-orderItems-button-"]')
+			.first()
+			.click();
+		await expect(
+			this.gridContainer.locator('.order_finish_controls a.saveButton'),
+		).toBeVisible({timeout: 10_000});
+	}
+
+	/**
+	 * Drag one grid row to sit above another via raw mouse events.
+	 * jQuery-UI sortable needs real mousemove sequences — Playwright's
+	 * dragTo issues too few moves for the sortable to re-sort reliably.
+	 * Mirrors SectionsSettingsPage#dragRowAbove (same sortable plumbing).
+	 * Only meaningful while ordering mode is active (`startOrdering`).
+	 *
+	 * @param {import('@playwright/test').Locator} source  row to move
+	 * @param {import('@playwright/test').Locator} target  row to land above
+	 */
+	async dragRowAbove(source, target) {
+		await source.hover(); // auto-waits for visibility + stability
+		const sourceBox = await source.boundingBox();
+		const targetBox = await target.boundingBox();
+		if (!sourceBox || !targetBox) {
+			throw new Error('dragRowAbove: row has no bounding box');
+		}
+		const startX = sourceBox.x + sourceBox.width / 2;
+		const startY = sourceBox.y + sourceBox.height / 2;
+		await this.page.mouse.move(startX, startY);
+		await this.page.mouse.down();
+		// First small move exceeds the sortable's start distance…
+		await this.page.mouse.move(startX, startY - 5);
+		// …then walk to just inside the target's top edge so the
+		// placeholder inserts BEFORE it (tolerance: 'pointer').
+		await this.page.mouse.move(
+			targetBox.x + targetBox.width / 2,
+			targetBox.y + 3,
+			{steps: 12},
+		);
+		await this.page.mouse.up();
+	}
+
+	/**
+	 * Commit the new order: click the finish-controls "Done" link, which
+	 * POSTs the serialized row order to ContextGridHandler::saveSequence
+	 * (`…/save-sequence`, kebab-cased by the component router) and
+	 * refreshes the grid via the DataChangedEvent. Resolves once the
+	 * POST returns and jQuery settles.
+	 */
+	async finishOrdering() {
+		const saved = this.page.waitForResponse(
+			(res) =>
+				/save-sequence/i.test(res.url()) &&
+				res.request().method() === 'POST',
+			{timeout: 15_000},
+		);
+		await this.gridContainer
+			.locator('.order_finish_controls a.saveButton')
+			.click();
+		await saved;
+		await waitForJQueryIdle(this.page);
+	}
+
+	/**
+	 * The grid rows' element ids in current DOM order
+	 * (`component-grid-admin-context-contextgrid-row-{contextId}`).
+	 *
+	 * @returns {Promise<string[]>}
+	 */
+	async rowIdsInOrder() {
+		const rows = this.gridContainer.locator('tr.gridRow');
+		await expect(rows.first()).toBeVisible({timeout: 15_000});
+		return rows.evaluateAll((els) => els.map((el) => el.id));
+	}
+
+	/**
 	 * Open the per-row Edit modal (same #editContext container as the
 	 * create flow, but a plain pkp-form that stays open and shows a
 	 * "Saved" [role=status] after a successful PUT).

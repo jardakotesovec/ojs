@@ -118,10 +118,10 @@
 | PAGE-workflow-externalreview | WorkflowHandler::externalReview (inherited) | pages/workflow/WorkflowHandler.php | External review stage workflow page | review-rounds-revisions.md | workflow-stage-navigation |
 | PAGE-workflow-editorial | WorkflowHandler::editorial (inherited) | pages/workflow/WorkflowHandler.php | Copyediting stage workflow page | copyediting-stage.md | workflow-stage-navigation |
 | PAGE-workflow-production | WorkflowHandler::production (inherited) | pages/workflow/WorkflowHandler.php | Production stage workflow page | production-stage.md | workflow-stage-navigation |
-| PAGE-admin-index | AdminHandler::index | lib/pkp/pages/admin/AdminHandler.php | Site administration landing page | site-administration.md | |
-| PAGE-admin-contexts | AdminHandler::contexts | lib/pkp/pages/admin/AdminHandler.php | Journal/context list for site admin | site-administration.md | |
+| PAGE-admin-index | AdminHandler::index | lib/pkp/pages/admin/AdminHandler.php | Site administration landing page | site-administration.md | site-administration (claimed 2026-07-06) — index page owned here; its system panels' behavior → site-maintenance, Site Settings link → site-settings |
+| PAGE-admin-contexts | AdminHandler::contexts | lib/pkp/pages/admin/AdminHandler.php | Journal/context list for site admin | site-administration.md | site-administration (claimed 2026-07-06) |
 | PAGE-admin-settings | AdminHandler::settings | lib/pkp/pages/admin/AdminHandler.php | Site-wide settings page | site-settings.md | site-settings (claimed 2026-07-06) — page shell owned here; mounted tabs owned by their features (Languages→languages-locales, Navigation→navigation-menus, Highlights→highlights-featured-content, Bulk Emails→email-templates-management, ORCID→orcid, Announcements→announcements, Plugins→plugin-management) |
-| PAGE-admin-wizard | AdminHandler::wizard | lib/pkp/pages/admin/AdminHandler.php | Create-context wizard page | journal-setup.md | |
+| PAGE-admin-wizard | AdminHandler::wizard | lib/pkp/pages/admin/AdminHandler.php | Create-context wizard page | journal-setup.md | site-administration (claimed 2026-07-06) — NOT a create wizard: the per-journal Settings Wizard for an EXISTING context (`admin/wizard/{id}`; creation happens in the grid modal); tab contents owned by their features |
 | PAGE-admin-systeminfo | AdminHandler::systemInfo | lib/pkp/pages/admin/AdminHandler.php | System information page | site-administration.md | |
 | PAGE-admin-phpinfo | AdminHandler::phpinfo | lib/pkp/pages/admin/AdminHandler.php | PHP info diagnostic page | site-administration.md | |
 | PAGE-admin-expiresessions | AdminHandler::expireSessions | lib/pkp/pages/admin/AdminHandler.php | Force-expire all user sessions | site-administration.md | |

@@ -6,7 +6,6 @@ status: verified
 e2e-plans: [journal-homepage]
 atlas-claims:
   - PAGE-index-index
-  - DB-journals
   - PLUGIN-blocks-information
   - PLUGIN-blocks-developedBy
   - PLUGIN-blocks-languageToggle
@@ -430,13 +429,12 @@ rule lives in one place.
    is correctly *unclaimed here* (atlas tag `→ browse-category-section`). The homepage is the canonical
    reader surface for the block *render*; the sidebar *config* stays with `website-appearance-settings`
    (rule 12). Interim home is fine until feature 57 lands.
-5. **Atom ownership — `DB-journals`.** The `journals` entity is claimed here for the homepage-display
-   aspect (the settings this page reads), but `journal-setup` / `journal-masthead-settings` may be a
-   more natural owner of the core journal entity. Confirm at grooming; `DB-journal_settings` stays with
-   `journal-setup`. **Verifier (2026-07-04):** atlas already carries the seam tag `journal-homepage
-   (homepage-display aspect; seam → journal-setup/masthead)` and `DB-journal_settings` is *not* claimed
-   here — the split is clean. Interim ownership retained pending a `journal-setup`/`journal-masthead-settings`
-   spec.
+5. **Atom ownership — `DB-journals` (RESOLVED, reassigned away 2026-07-06).** The `journals` entity is
+   **no longer claimed here** — the core journal create/delete/enable/seq lifecycle belongs to
+   `site-administration` (feature 67), which now owns `DB-journals`; `journal_settings` stays with
+   `journal-masthead-settings`. This page merely *reads* the entity for homepage display, so it is
+   referenced, not claimed. (Earlier interim ownership by journal-homepage was retired when the
+   site-administration spec landed; atlas `db-entities.md` reassigned the atom the same day.)
 
 ---
 
@@ -458,7 +456,7 @@ rule lives in one place.
 | Subscription block | `plugins/blocks/subscription` — subscription status/info | PLUGIN-blocks-subscription |
 | Developed-by block (disabled by default) | `plugins/blocks/developedBy` — PKP credit | PLUGIN-blocks-developedBy |
 | Browse block (atom owned by `browse-category-section`) | `plugins/blocks/browse` — browse by issue/section/author | *(PLUGIN-blocks-browse — not claimed here)* |
-| Journal entity (homepage-display settings) | `journals` (+ `journal_settings`, read here) | DB-journals |
+| Journal entity (homepage-display settings) | `journals` (+ `journal_settings`, read here) | *(DB-journals — owned by `site-administration`; read here, not claimed)* |
 
 ## Reference — code anchors
 
