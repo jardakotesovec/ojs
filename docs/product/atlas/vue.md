@@ -56,9 +56,9 @@
 | VUE-insert-summary-of-changes-modal | InsertSummaryOfChangesModal | lib/ui-library/src/components/InsertSummaryOfChanges/InsertSummaryOfChangesModal.vue | component: modal to log a change-summary note when editing published metadata | editor-metadata-editing | publication-amendments |
 | VUE-top-nav-actions | TopNavActions | lib/ui-library/src/components/TopNavActions/TopNavActions.vue | component: site header actions bar (help, tasks/notifications, user menu) | notifications | |
 | VUE-side-nav | SideNav | lib/ui-library/src/components/SideNav/SideNav.vue | component: app-wide left sidebar navigation | | |
-| VUE-theme-form | ThemeForm | lib/ui-library/src/components/Form/context/ThemeForm.vue | component: journal theme selection/appearance settings form | website-appearance | |
+| VUE-theme-form | ThemeForm | lib/ui-library/src/components/Form/context/ThemeForm.vue | component: journal theme selection/appearance settings form | website-appearance | website-appearance-settings (claimed 2026-07-06) |
 | VUE-notify-users-form | NotifyUsersForm | lib/ui-library/src/components/Form/context/NotifyUsersForm.vue | component: bulk "notify users" email form with recipient counts | user-management | surface on Settings → Users & Roles → Notify tab; email-delivery owns the _email bulk-send job + composer (claimed by user-management 2026-07-05) |
-| VUE-date-time-form | DateTimeForm | lib/ui-library/src/components/Form/context/DateTimeForm.vue | component: date/time settings form (extends base Form) | | |
+| VUE-date-time-form | DateTimeForm | lib/ui-library/src/components/Form/context/DateTimeForm.vue | component: date/time settings form (extends base Form) | | website-appearance-settings (claimed 2026-07-06) |
 | VUE-doi-registration-settings-form | DoiRegistrationSettingsForm | lib/ui-library/src/components/Form/context/DoiRegistrationSettingsForm.vue | component: DOI registration agency settings form | doi-management | |
 | VUE-doi-setup-settings-form | DoiSetupSettingsForm | lib/ui-library/src/components/Form/context/DoiSetupSettingsForm.vue | component: DOI prefix/suffix setup settings form | doi-management | |
 | VUE-add-context-form | AddContextForm | lib/ui-library/src/components/Form/context/AddContextForm.vue | component: create-new-journal(context) form | site-administration | |

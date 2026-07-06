@@ -257,6 +257,7 @@ Spec-time corrections (2026-07-05/06, spec verified): FORM-context-form + FORM-p
 Renamed-from: website-appearance.
 atoms: PAGE-management-settings-website, VUE-theme-form, VUE-date-time-form, FORM-{appearance-setup,appearance-advanced,pkp-theme,pkp-date-time,pkp-lists}, PLUGIN-themes-default, PLUGIN-generic-customBlockManager (~8)
 Seam (2026-07-06): the Privacy + Information forms that also sit on Settings→Website's Setup tab (FORM-pkp-privacy-form, FORM-pkp-information-form) are already owned by journal-masthead-settings — do not re-claim; this feature owns the page atom and the remaining tabs/forms.
+Spec-time corrections (2026-07-06, spec drafted): final claim is 14 atoms — the ~8 above plus the PKP/APP form pairs counted separately and API-context-{get,edit}-theme (the Theme tab's own endpoint, previously hinted journal-setup). Two new ledger rows: 121 (custom-block delete 500s on Postgres — `plugin_Name` typo in `PluginSettingsDAO::deleteSetting`) and 122 (the makeSubmission block's `enabled=true` settings.xml never installs — missing `getContextSpecificPluginSettingsFile()`; journal-homepage rule 13's "ships enabled" needs a grooming fix).
 
 ### workflow-settings — Settings › Workflow: submission checklist/guidelines, components/genres, metadata request/require toggles, disable-submissions, default review mode/deadlines/reminders/guidance, review-recommendation options, and email-notification config
 Merged-from: submission-settings + review-settings, folding in metadata-settings, file-genres and email-notification config (decision 6).

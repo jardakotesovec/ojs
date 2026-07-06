@@ -36,9 +36,9 @@
 | API-contributor-role-delete | DELETE /contributorRoles/{roleId} | lib/pkp/api/v1/contributorRoles/ContributorRoleController.php:90 | Route handler ContributorRoleController::delete() | contributors.md | |
 | API-context-get-many | GET /contexts | lib/pkp/api/v1/contexts/PKPContextController.php:78 | Route handler PKPContextController::getMany() | journal-setup.md | |
 | API-context-get | GET /contexts/{contextId} | lib/pkp/api/v1/contexts/PKPContextController.php:81 | Route handler PKPContextController::get() | journal-setup.md | |
-| API-context-get-theme | GET /contexts/{contextId}/theme | lib/pkp/api/v1/contexts/PKPContextController.php:85 | Route handler PKPContextController::getTheme() | journal-setup.md | |
+| API-context-get-theme | GET /contexts/{contextId}/theme | lib/pkp/api/v1/contexts/PKPContextController.php:85 | Route handler PKPContextController::getTheme() | journal-setup.md | website-appearance-settings (claimed 2026-07-06) |
 | API-context-edit | PUT /contexts/{contextId} | lib/pkp/api/v1/contexts/PKPContextController.php:89 | Route handler PKPContextController::edit() | journal-setup.md | |
-| API-context-edit-theme | PUT /contexts/{contextId}/theme | lib/pkp/api/v1/contexts/PKPContextController.php:93 | Route handler PKPContextController::editTheme() | journal-setup.md | |
+| API-context-edit-theme | PUT /contexts/{contextId}/theme | lib/pkp/api/v1/contexts/PKPContextController.php:93 | Route handler PKPContextController::editTheme() | journal-setup.md | website-appearance-settings (claimed 2026-07-06) |
 | API-context-edit-doi-registration-agency-plugin | PUT /contexts/{contextId}/registrationAgency | lib/pkp/api/v1/contexts/PKPContextController.php:97 | Route handler PKPContextController::editDoiRegistrationAgencyPlugin() | journal-setup.md | |
 | API-context-add | POST /contexts | lib/pkp/api/v1/contexts/PKPContextController.php:106 | Route handler PKPContextController::add() | journal-setup.md | |
 | API-context-delete | DELETE /contexts/{contextId} | lib/pkp/api/v1/contexts/PKPContextController.php:109 | Route handler PKPContextController::delete() | journal-setup.md | |

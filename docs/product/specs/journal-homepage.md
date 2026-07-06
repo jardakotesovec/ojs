@@ -209,8 +209,13 @@ and toggles a few. No state is written.
       `readerInformation`/`authorInformation`/`librarianInformation` — the fields are owned by `journal-setup`)*
     - **Language toggle** — a UI-language selector; only meaningful on a **multilingual** journal.
       Ships **enabled**. *(anchor: `LanguageToggleBlockPlugin`)*
-    - **Make a submission** — a call-to-action link to the submission page. Ships **enabled**.
-      *(anchor: `MakeSubmissionBlockPlugin`)*
+    - **Make a submission** — a call-to-action link to the submission page. Its `settings.xml` sets
+      `enabled=true`, but that default **never installs** (the plugin is the only stock block missing
+      the `getContextSpecificPluginSettingsFile()` override), so on every journal it starts **disabled**
+      and never renders until a manager enables it by hand — ⚠ the shipped "enabled" default is dead
+      (ledger row 122; live-verified by `website-appearance-settings`). *(anchor:
+      `MakeSubmissionBlockPlugin` (no override — contrast `InformationBlockPlugin`);
+      `plugins/blocks/makeSubmission/settings.xml` (`enabled=true`, never read))*
     - **Subscription** — subscription status / how-to-subscribe info; only meaningful on a
       **subscription** journal. Ships **enabled**. *(anchor: `SubscriptionBlockPlugin`; the
       subscription model is owned by `subscriptions`)*
@@ -392,7 +397,8 @@ rule lives in one place.
    ⚠ bar — a plain rule + this intent question, no ledger row.
 2. **Do fresh OJS journals ship a default sidebar, or is empty-by-default intended?** Every journal in
    the test DB has **no `sidebar` setting**, so no sidebar renders — even though *Information*,
-   *Language toggle*, *Make a submission* and *Subscription* blocks ship `enabled=true`. A manager may
+   *Language toggle* and *Subscription* install `enabled=true` (*Make a submission* nominally ships
+   `enabled=true` too but its default never installs — rule 13 / ledger row 122). A manager may
    reasonably expect "enabled" blocks to appear. Confirm whether an install should seed a default
    sidebar array or whether an empty sidebar (blocks added manually) is the intended default.
    **Verifier (2026-07-04): kept as OQ, not ⚠.** The Sidebar-management control (`PKPAppearanceSetupForm`,

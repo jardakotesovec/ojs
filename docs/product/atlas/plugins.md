@@ -16,7 +16,7 @@
 | PLUGIN-generic-citationStyleLanguage | plugins/generic/citationStyleLanguage | CitationStyleLanguagePlugin.php | Citation Style Language export (APA/MLA/etc.); has settings form (context) | citation-style-language e2e |  |
 | PLUGIN-generic-credit | plugins/generic/credit | CreditPlugin.php | NISO CRediT contributor role vocabulary; has settings form (context) | contributors e2e |  |
 | PLUGIN-generic-crossref | plugins/generic/crossref | CrossrefPlugin.php | Deposit DOIs/metadata to Crossref registration agency; no dedicated settings form (uses core DOI settings) (context) | crossref-deposit e2e |  |
-| PLUGIN-generic-customBlockManager | plugins/generic/customBlockManager | CustomBlockPlugin.php / CustomBlockManagerPlugin.php | Manage custom sidebar text/HTML blocks; has per-block form (context) | website-appearance e2e |  |
+| PLUGIN-generic-customBlockManager | plugins/generic/customBlockManager | CustomBlockPlugin.php / CustomBlockManagerPlugin.php | Manage custom sidebar text/HTML blocks; has per-block form (context) | website-appearance e2e | website-appearance-settings (claimed 2026-07-06) — grid CRUD + minted blocks in the sidebar picker; ⚠ delete 500s on Postgres (ledger row 121) |
 | PLUGIN-generic-datacite | plugins/generic/datacite | DatacitePlugin.php | Deposit DOIs/metadata to DataCite registration agency; no dedicated settings form (context) | doi-management e2e |  |
 | PLUGIN-generic-doaj | plugins/generic/doaj | DOAJPlugin.php | Register articles/versions with DOAJ; has settings form (context) | doi-management e2e |  |
 | PLUGIN-generic-driver | plugins/generic/driver | DRIVERPlugin.php | Inject DRIVER guidelines metadata tags; no settings form (context) | oai-sitemap-feeds e2e | oai-pmh (adds the `driver` OAI set; off by default) |
@@ -51,7 +51,7 @@
 | PLUGIN-reports-counter | plugins/reports/counter | CounterReportPlugin.php | Generate COUNTER usage statistics report (context) | usage-statistics e2e |  |
 | PLUGIN-reports-reviewReport | plugins/reports/reviewReport | ReviewReportPlugin.php | Generate CSV peer-review activity report (context) | review-decisions e2e |  |
 | PLUGIN-reports-subscriptions | plugins/reports/subscriptions | SubscriptionReportPlugin.php | Generate CSV subscriptions report (context) | subscriptions-management e2e |  |
-| PLUGIN-themes-default | plugins/themes/default | DefaultThemePlugin.php | Default OJS theme with typography/colour options; has settings/options form (context) | website-appearance e2e |  |
+| PLUGIN-themes-default | plugins/themes/default | DefaultThemePlugin.php | Default OJS theme with typography/colour options; has settings/options form (context) | website-appearance e2e | website-appearance-settings (claimed 2026-07-06) — theme options + LESS/render; theme enablement → plugin-management |
 | PLUGIN-libpkp-generic-usageEvent | lib/pkp/plugins/generic/usageEvent | PKPUsageEventPlugin.php | Abstract base class for usage-event plugin (extended by app plugin) | usage-statistics e2e |  |
 | PLUGIN-libpkp-importexport-native | lib/pkp/plugins/importexport/native | PKPNativeImportExportPlugin.php | Abstract base native XML import/export plugin (extended by app plugin) | native-xml-import-export e2e |  |
 | PLUGIN-libpkp-importexport-users | lib/pkp/plugins/importexport/users | PKPUserImportExportPlugin.php | Abstract base user XML import/export plugin (extended by app plugin) | user-import-export | base of the Area-8 bulk user XML feature (reassigned from the stale "user-management e2e" hint 2026-07-05) |
