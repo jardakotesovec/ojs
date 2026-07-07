@@ -230,6 +230,7 @@
 		<migration class="PKP\migration\upgrade\v3_6_0\I12584_AddPublicationUpdateType" />
         <migration class="PKP\migration\upgrade\v3_6_0\I12800_ReviewPublicationAssociationNullable" />
         <migration class="PKP\migration\upgrade\v3_6_0\I12799_MovePublishedSubmissionsToDone"/>
+        <migration class="PKP\migration\upgrade\v3_6_0\I12XXX_ReviewAssignmentCompetingInterestsDeclared"/>
 		<migration class="APP\migration\upgrade\v3_6_0\I12948_RemoveRFC1807Plugin" />
 		<migration class="PKP\migration\upgrade\v3_5_0\I12133_FixCategorySort"/>
 		<code function="rebuildSearchIndex" />
