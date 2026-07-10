@@ -19,7 +19,9 @@ files=("$@")
 [ ${#files[@]} -eq 0 ] && files=(specs/*.md)
 
 # Seeded test users + test journal — scenarios name ROLES, not accounts.
-USERS='rvaca|dbarnes|dbuskins|sberardo|minoue|jjanssen|phudson|amccrae|agallego|mfritz|svogt|gcox|shellier|cturner|skumar|atester|publicknowledge'
+# Both rosters are flagged: the current role-keyed accounts (2026-07-10) AND
+# the retired legacy usernames, so stale names can't sneak into future specs.
+USERS='manager[.]maya|editor[.]diana|sectioneditor[.]ana|sectioneditor[.]ravi|sectioneditor[.]omar|reviewer[.]julia|reviewer[.]paul|reviewer[.]amara|reviewer[.]adam|copyeditor[.]carla|copyeditor[.]sam|layouteditor[.]leo|proofreader[.]pia|author[.]alex|author[.]bea|assistant[.]rita|reader[.]rosa|rvaca|dbarnes|dbuskins|sberardo|minoue|jjanssen|phudson|amccrae|agallego|mfritz|svogt|gcox|shellier|cturner|skumar|atester|publicknowledge'
 
 total=0
 for f in "${files[@]}"; do
@@ -39,7 +41,9 @@ for f in "${files[@]}"; do
       else if ($0 ~ /live[- ]probed?/) hit=1                     # probe evidence
       else if ($0 ~ /\?[a-zA-Z]+=/) hit=1                        # query params
       else if ($0 ~ /`\/[a-zA-Z{]/) hit=1                        # `/url/path`
-      else if ($0 ~ ("\\<(" USERS ")\\>")) hit=1                 # seeded accounts
+      # seeded accounts — portable word boundary: BSD awk (macOS) lacks \< \>,
+      # which silently disabled this check when written as "\\<(" USERS ")\\>".
+      else if ($0 ~ ("(^|[^[:alnum:]._-])(" USERS ")($|[^[:alnum:]._-])")) hit=1
       else if ($0 ~ /\.(php|vue|tpl)\>/) hit=1                   # file names
       else if ($0 ~ /`[a-z]+[A-Z][a-zA-Z]*`?/) hit=1             # `camelCase`
       # Settings section legitimately names config vars / toggles:

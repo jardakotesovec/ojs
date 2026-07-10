@@ -95,15 +95,15 @@ under anonymous review modes even the read-type actions. <sup>a</sup>
 | **Send a confirmed review to the reviewer's ORCID record** | • Journal Manager, Section Editor — manual re-send for a reviewer with a verified ORCID<br>• Assistant — ⚠ offered but refused server-side; ⚠ also offered before the review is even accepted (Known deviations) <sup>k</sup> |
 
 <sup>a</sup> PKPReviewerGridHandler::__construct() (role assignments incl. SITE_ADMIN), authorize() (`_isCurrentUserAssignedAuthor`, `_getAuthorDeniedOps()`, `_getAuthorDeniedAnonymousOps()`); reviewers/authors reach the grid only via the author variant; live-probed 2026-07-10 (scratch amrv5, a submitter enrolled in both the author and section-editor groups): all four management ops refused at the operation level, read-review/review-history/gossip allowed on the completed open review and refused on the completed double-anonymous one; a pure section-editor control account was allowed throughout ·
-<sup>b</sup> workflowConfigEditorialOJS.js / workflowConfigAuthorOJS.js (ReviewerManager mount; author: `redactedForAuthors` + open-and-completed gate); live-probed 2026-07-10: dbarnes/dbuskins full panel; funding-group assistant full panel on scratch journal; atester saw the 3-column redacted panel only on the seeded open-completed submission, no panel otherwise ·
-<sup>c</sup> useReviewerManagerConfig() getTopItems(); PKPReviewerGridHandler::_getReviewRoundOps() incl. ASSISTANT; live-probed: Add Reviewer button present for dbarnes, dbuskins, and the scratch assistant ·
-<sup>d</sup> AdvancedSearchReviewerForm::fetch() (links only for MANAGER/SUB_EDITOR); PKPReviewerGridHandler::__construct() (createReviewer/enrollReviewer removed from ASSISTANT ops); live-probed: links present for dbarnes+dbuskins, absent for the scratch assistant ·
+<sup>b</sup> workflowConfigEditorialOJS.js / workflowConfigAuthorOJS.js (ReviewerManager mount; author: `redactedForAuthors` + open-and-completed gate); live-probed 2026-07-10: senior-editor/section-editor accounts full panel; funding-group assistant full panel on scratch journal; the author account saw the 3-column redacted panel only on the seeded open-completed submission, no panel otherwise ·
+<sup>c</sup> useReviewerManagerConfig() getTopItems(); PKPReviewerGridHandler::_getReviewRoundOps() incl. ASSISTANT; live-probed: Add Reviewer button present for the senior-editor and section-editor accounts and the scratch assistant ·
+<sup>d</sup> AdvancedSearchReviewerForm::fetch() (links only for MANAGER/SUB_EDITOR); PKPReviewerGridHandler::__construct() (createReviewer/enrollReviewer removed from ASSISTANT ops); live-probed: links present for the senior-editor + section-editor accounts, absent for the scratch assistant ·
 <sup>e</sup> SelectReviewerListItem.vue (`warnOnAssignment`/`isWarningBypassed`); AdvancedSearchReviewerForm::fetch() (warn list = assigned users + managers/admins); live-probed: manager-cum-reviewer on scratch journal showed the locked notice, Unlock exposed Select ·
-<sup>f</sup> PKPReviewerGridHandler::_getReviewAssignmentOps() (all granted to MANAGER/SITE_ADMIN/SUB_EDITOR/ASSISTANT); useReviewerManagerConfig() getItemActions(); live-probed action menus 2026-07-10 as dbarnes, dbuskins, scratch assistant across invited/accepted/declined/cancelled/overdue/complete/thanked rows ·
+<sup>f</sup> PKPReviewerGridHandler::_getReviewAssignmentOps() (all granted to MANAGER/SITE_ADMIN/SUB_EDITOR/ASSISTANT); useReviewerManagerConfig() getItemActions(); live-probed action menus 2026-07-10 as the senior-editor, section-editor and scratch-assistant accounts across invited/accepted/declined/cancelled/overdue/complete/thanked rows ·
 <sup>g</sup> useReviewerManagerConfig() getItemActions() (`!dateConfirmed`); PKPReviewController::getGroupRoutes() confirmReview roleAuthorizer (SITE_ADMIN/MANAGER/SUB_EDITOR); live-probed: scratch assistant saw Log Response, submit → PUT confirmReview 401 ·
-<sup>h</sup> PKPReviewerGridHandler::readReview(), reviewRead(); APP ReviewerGridHandler::reviewRead() (recommendation by proxy); AuthorReviewerGridHandler (author read modal, open reviews only — documented in review-anonymity); live-probed: dbarnes confirm+rate+set recommendation; atester opened the author read modal ·
-<sup>i</sup> PKPReviewerGridHandler::__construct() (gossip removed for ASSISTANT), gossip() + Repo::user()->canCurrentUserGossip(); live-probed: Editorial Notes in dbarnes+dbuskins menus, absent for scratch assistant ·
-<sup>j</sup> submission maps Schema.php (`canLoginAs` via Validation::canUserLoginAs()); useReviewerManagerConfig() getItemActions(); live-probed: Login As present for dbarnes and the scratch journal manager, absent for dbuskins and the assistant ·
+<sup>h</sup> PKPReviewerGridHandler::readReview(), reviewRead(); APP ReviewerGridHandler::reviewRead() (recommendation by proxy); AuthorReviewerGridHandler (author read modal, open reviews only — documented in review-anonymity); live-probed: the senior-editor account confirm+rate+set recommendation; the author account opened the author read modal ·
+<sup>i</sup> PKPReviewerGridHandler::__construct() (gossip removed for ASSISTANT), gossip() + Repo::user()->canCurrentUserGossip(); live-probed: Editorial Notes in the senior-editor + section-editor menus, absent for scratch assistant ·
+<sup>j</sup> submission maps Schema.php (`canLoginAs` via Validation::canUserLoginAs()); useReviewerManagerConfig() getItemActions(); live-probed: Login As present for the senior-editor account and the scratch journal manager, absent for the section-editor account and the assistant ·
 <sup>k</sup> useReviewerManagerConfig() getItemActions() (`reviewerHasOrcid && pkp.const.REVIEW_ASSIGNMENT_STATUS_COMPLETE` — constant always truthy); PKPReviewController::getGroupRoutes() sendToOrcid roleAuthorizer; live-probed: verified-ORCID reviewer, action shown on a "Request Sent" row to editor AND assistant; assistant POST → 401
 
 ## Fields & validation
@@ -475,19 +475,19 @@ ordering rule. <sup>k</sup>
     redacted panel appears with just the reviewer, the type and Read
     Review. <sup>s13</sup>
 
-<sup>s1</sup> seed a submission in external review via the submission scenario (participants dbarnes/dbuskins; spare seeded reviewers unassigned); probed 2026-07-10 on submission 11 (agallego) ·
+<sup>s1</sup> seed a submission in external review via the submission scenario (participants: a senior editor + a section editor; spare seeded reviewers unassigned); probed 2026-07-10 on submission 11 (a seeded reviewer account as submitter) ·
 <sup>s2</sup> probed on scratch journal amrj2 (manager-reviewer target, Mailpit count 0) ·
 <sup>s3</sup> needs a reviewer who also holds a managerial role — scenario users with roles editor+reviewer on a scratch journal ·
 <sup>s4</sup> probed as amred1 (created "Nova Probe"; two Mailpit messages) and amrasst1 (funding-group assistant; options absent) ·
 <sup>s5</sup> seed decisions sendExternalReview→requestRevisions→newExternalRound with a completed round-1 reviewer; probed on submission 15 ·
-<sup>s6</sup> probed on submissions 10 (phudson deleted, "Request for Review Cancelled" email) and 10/11 (accepted/declined rows offer Cancel) ·
-<sup>s7</sup> probed on submission 11 (amccrae cancelled→accepted) ·
+<sup>s6</sup> probed on submissions 10 (the invited reviewer's row deleted, "Request for Review Cancelled" email) and 10/11 (accepted/declined rows offer Cancel) ·
+<sup>s7</sup> probed on submission 11 (a seeded reviewer cancelled→accepted) ·
 <sup>s8</sup> probed on submissions 10 + 14 (declined seeded via reviewer status) ·
-<sup>s9</sup> probed on submission 10 (agallego; event-log rows for proxy recommendation + unconsider) ·
+<sup>s9</sup> probed on submission 10 (a seeded reviewer; event-log rows for proxy recommendation + unconsider) ·
 <sup>s10</sup> probed on submission 10 ("Thank you for your review" in Mailpit) ·
-<sup>s11</sup> probed on submission 10 (jjanssen; "Your review assignment has been changed…") ·
+<sup>s11</sup> probed on submission 10 (a seeded reviewer; "Your review assignment has been changed…") ·
 <sup>s12</sup> probed on submission 11 (overdue seeded via past due dates; "A reminder to please complete your review") ·
-<sup>s13</sup> probed as atester on submission 12 (one open completed + one double-anonymous completed + one open accepted; only the first is listed)
+<sup>s13</sup> probed as the author account on submission 12 (one open completed + one double-anonymous completed + one open accepted; only the first is listed)
 
 ## Known deviations (as-built ≠ intent)
 

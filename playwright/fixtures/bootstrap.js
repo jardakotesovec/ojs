@@ -6,10 +6,10 @@
  * `pkpApi.bootstrap`, which is a thin wrapper around the same
  * journal-scenario endpoint that per-test scratch journals use).
  *
- * Mirrors the `publicknowledge` journal the Cypress suite has used for
- * years (cypress/tests/data/10-ApplicationSetup/*) so existing muscle
- * memory — user names, journal path, section abbreviations — carries
- * over.
+ * Seeds the `publicknowledge` journal with the role-keyed baseline
+ * roster from lib/pkp/playwright/data/users.js (usernames say the role,
+ * `role.firstname` form) plus the sections, categories and issues the
+ * suite has always used.
  *
  * The single-endpoint surface accepts either flavour: per-test specs
  * usually omit `sections` / `categories` / `issues` and pass users
@@ -57,7 +57,7 @@ module.exports = {
 	primaryLocale: 'en',
 	supportedLocales: ['en', 'fr_CA'],
 	country: 'IS',
-	contact: {name: 'Ramiro Vaca', email: 'rvaca@mailinator.com'},
+	contact: {name: 'Maya Manager', email: 'manager.maya@mailinator.com'},
 	onlineIssn: '0378-5955',
 	printIssn: '0378-5955',
 
@@ -92,14 +92,14 @@ module.exports = {
 			abbrev: {en: 'ART'},
 			title: {en: 'Articles'},
 			wordCount: 500,
-			sectionEditors: ['dbarnes', 'dbuskins', 'sberardo'],
+			sectionEditors: ['editor.diana', 'sectioneditor.ana', 'sectioneditor.omar'],
 		},
 		{
 			abbrev: {en: 'REV'},
 			title: {en: 'Reviews'},
 			identifyType: {en: 'Review Article'},
 			abstractsNotRequired: true,
-			sectionEditors: ['dbarnes', 'minoue'],
+			sectionEditors: ['editor.diana', 'sectioneditor.ravi'],
 		},
 	],
 

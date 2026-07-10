@@ -70,9 +70,9 @@ The baseline `publicknowledge` journal is seeded with enriched defaults (see `pl
 
 Co-located at `playwright/fixtures/scenarios/`. Each is a function returning the spec payload, with sensible defaults plus an override surface. Use these instead of hand-rolling specs:
 
-- **`submission-draft.js`** — stage 1, no decisions. Default participant cast: dbarnes editor + dbuskins + minoue section editors. For Discussion Manager tests.
-- **`submission-in-review.js`** — stage 3 with reviewers. Defaults to one invited (phudson) + one accepted (jjanssen). Accepts `submitter`, `participants`, `reviewers` overrides.
-- **`submission-in-round-2.js`** — multi-round; round 1 closed with `pendingRevisions` recommendation, round 2 has jjanssen invited. Decision chain: sendExternalReview → requestRevisions → newExternalRound.
+- **`submission-draft.js`** — stage 1, no decisions. Default participant cast: editor.diana editor + sectioneditor.ana + sectioneditor.ravi section editors. For Discussion Manager tests.
+- **`submission-in-review.js`** — stage 3 with reviewers. Defaults to one invited (reviewer.paul) + one accepted (reviewer.julia). Accepts `submitter`, `participants`, `reviewers` overrides.
+- **`submission-in-round-2.js`** — multi-round; round 1 closed with `pendingRevisions` recommendation, round 2 has reviewer.julia invited. Decision chain: sendExternalReview → requestRevisions → newExternalRound.
 - **`submission-published.js`** — VoR published with issue assignment. Defaults to bootstrap's published Vol 1, No 2, 2014. Accepts `journal` override (use it for E0 scratch journals).
 
 Fixture functions throw if `tag` is missing — every override callsite needs one.

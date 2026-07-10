@@ -399,7 +399,7 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
 
 ## Canonical scenarios
 
-1. **Copyeditor task lifecycle** — an editor (dbarnes) on the Copyediting panel creates
+1. **Copyeditor task lifecycle** — an editor on the Copyediting panel creates
    a task with the copyeditor as responsible participant, a future due date, and
    "Create, but don't start"; it appears under **Yet to begin**. The editor later
    starts it, moving it to **In progress**; the copyeditor completes it, moving it to
@@ -409,10 +409,11 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
    editorial team as participants. The author replies from their own view, and every
    participant gets a Tasks-bell notification and a stage-discussion email whose footer
    links back to the thread.
-3. **Permission boundary** — dbarnes creates a task with dbuskins as responsible
-   participant and minoue as a plain participant: dbuskins sees the row actions and can
-   edit and complete the task; minoue sees it read-only; a sub-editor who is not a
-   participant doesn't see the item at all; a manager sees everything.
+3. **Permission boundary** — a manager creates a task with one section editor as
+   responsible participant and a second as a plain participant: the responsible
+   section editor sees the row actions and can edit and complete the task; the plain
+   participant sees it read-only; a sub-editor who is not a participant doesn't see
+   the item at all; a manager sees everything.
 4. **Auto-add on stage entry** — a manager saves a Copyediting template with auto-add
    on and a two-week due interval; recording Accept and Skip Review lands the
    submission in Copyediting, and a participant-less **Yet to begin** task appears once.

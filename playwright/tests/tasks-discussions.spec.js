@@ -43,14 +43,14 @@ const ROLE_ID_SUB_EDITOR = 17;
 // Seeded users: display names (for participant checkboxes) + mailinator
 // addresses (for Mailpit scoping).
 const USER = {
-	dbarnes: {name: 'Daniel Barnes', email: 'dbarnes@mailinator.com'},
-	dbuskins: {name: 'David Buskins', email: 'dbuskins@mailinator.com'},
-	minoue: {name: 'Minoti Inoue', email: 'minoue@mailinator.com'},
-	sberardo: {name: 'Stephanie Berardo', email: 'sberardo@mailinator.com'},
-	mfritz: {name: 'Maria Fritz', email: 'mfritz@mailinator.com'},
-	svogt: {name: 'Sarah Vogt', email: 'svogt@mailinator.com'},
-	shellier: {name: 'Stephen Hellier', email: 'shellier@mailinator.com'},
-	atester: {name: 'Author Tester', email: 'atester@mailinator.com'},
+	diana: {name: 'Diana Editor', email: 'editor.diana@mailinator.com'},
+	ana: {name: 'Ana SectionEditor', email: 'sectioneditor.ana@mailinator.com'},
+	ravi: {name: 'Ravi SectionEditor', email: 'sectioneditor.ravi@mailinator.com'},
+	omar: {name: 'Omar SectionEditor', email: 'sectioneditor.omar@mailinator.com'},
+	carla: {name: 'Carla Copyeditor', email: 'copyeditor.carla@mailinator.com'},
+	sam: {name: 'Sam Copyeditor', email: 'copyeditor.sam@mailinator.com'},
+	pia: {name: 'Pia Proofreader', email: 'proofreader.pia@mailinator.com'},
+	alex: {name: 'Alex Author', email: 'author.alex@mailinator.com'},
 };
 
 /** A unique, hyphenless, alphanumeric tag (parallel isolation + mail scoping). */
@@ -91,7 +91,7 @@ function submissionStageSpec({
 	return {
 		tag,
 		journal,
-		submitter: 'atester',
+		submitter: 'author.alex',
 		section: 'ART',
 		locale: 'en',
 		submitted: true,
@@ -106,12 +106,12 @@ function copyeditingSpec({tag, title, journal = 'publicknowledge', participants}
 	return {
 		tag,
 		journal,
-		submitter: 'atester',
+		submitter: 'author.alex',
 		section: 'ART',
 		locale: 'en',
 		submitted: true,
 		participants,
-		decisions: [{type: 'skipExternalReview', by: 'dbarnes'}],
+		decisions: [{type: 'skipExternalReview', by: 'editor.diana'}],
 		publications: [{metadata: {title: {en: title}}}],
 	};
 }
@@ -162,7 +162,7 @@ async function userGroupIdForRole(page, journalPath, roleId) {
 	return items[0].id;
 }
 
-test.use({user: 'dbarnes'}); // editor + publicknowledge manager (verified wave 11)
+test.use({user: 'editor.diana'}); // editor + publicknowledge manager (verified wave 11)
 
 test.describe('Editorial Tasks & Discussions', () => {
 	// Canonical scenario 1 — an editor on the Copyediting panel creates a task
@@ -183,13 +183,13 @@ test.describe('Editorial Tasks & Discussions', () => {
 					tag,
 					title: `Lifecycle sub ${tag}`,
 					participants: [
-						{user: 'dbarnes', role: 'editor'},
-						{user: 'mfritz', role: 'copyeditor'},
+						{user: 'editor.diana', role: 'editor'},
+						{user: 'copyeditor.carla', role: 'copyeditor'},
 					],
 				}),
 			);
 
-			// --- Editor (dbarnes): create the task, don't start it. ---
+			// --- Editor (editor.diana): create the task, don't start it. ---
 			const workflow = new EditorialWorkflowPage(page);
 			await workflow.goto(submission.id);
 			await expect(
@@ -205,10 +205,10 @@ test.describe('Editorial Tasks & Discussions', () => {
 			const form = await dm.openAdd();
 			await form.fillTitle(taskTitle);
 			await form.fillDescription(`<p>Please copyedit — ${tag}</p>`);
-			await form.checkParticipant(USER.mfritz.name);
+			await form.checkParticipant(USER.carla.name);
 			await form.enableTaskInfo();
 			await form.setDateDue(isoDate(14));
-			await form.setResponsibleAssignee(USER.mfritz.name);
+			await form.setResponsibleAssignee(USER.carla.name);
 			await form.setShouldStart('false'); // "Create, but don't start"
 			await form.save();
 
@@ -223,23 +223,23 @@ test.describe('Editorial Tasks & Discussions', () => {
 			await view.close();
 			await dm.expectInGroup(taskTitle, 'In progress');
 
-			// --- Copyeditor (mfritz): the responsible participant completes it. ---
-			const mfritzCtx = await asUser('mfritz');
-			const mfritzPage = await mfritzCtx.newPage();
-			await mfritzPage.goto(editorialLink(submission.id), {waitUntil: 'commit'});
+			// --- Copyeditor (copyeditor.carla): the responsible participant completes it. ---
+			const carlaCtx = await asUser('copyeditor.carla');
+			const carlaPage = await carlaCtx.newPage();
+			await carlaPage.goto(editorialLink(submission.id), {waitUntil: 'commit'});
 			await expect(
-				mfritzPage.getByRole('heading', {name: 'Workflow: Copyediting'}),
+				carlaPage.getByRole('heading', {name: 'Workflow: Copyediting'}),
 			).toBeVisible({timeout: 20_000});
 
-			const dmMfritz = new DiscussionManagerPage(mfritzPage);
-			await dmMfritz.expectInGroup(taskTitle, 'In progress');
-			const viewMfritz = await dmMfritz.openByTitle(taskTitle);
-			await viewMfritz.clickCompleteTask();
-			await viewMfritz.save();
-			await viewMfritz.close();
-			await dmMfritz.expectInGroup(taskTitle, 'Closed');
+			const dmCarla = new DiscussionManagerPage(carlaPage);
+			await dmCarla.expectInGroup(taskTitle, 'In progress');
+			const viewCarla = await dmCarla.openByTitle(taskTitle);
+			await viewCarla.clickCompleteTask();
+			await viewCarla.save();
+			await viewCarla.close();
+			await dmCarla.expectInGroup(taskTitle, 'Closed');
 
-			// --- Rule 11, verified as the MANAGER (dbarnes): once closed, a task
+			// --- Rule 11, verified as the MANAGER (editor.diana): once closed, a task
 			//     cannot be reopened from the UI at all. ---
 			await workflow.goto(submission.id);
 			await expect(
@@ -278,16 +278,16 @@ test.describe('Editorial Tasks & Discussions', () => {
 					tag,
 					title: `Cover note sub ${tag}`,
 					participants: [
-						{user: 'dbarnes', role: 'editor'},
-						{user: 'dbuskins', role: 'sectionEditor'},
+						{user: 'editor.diana', role: 'editor'},
+						{user: 'sectioneditor.ana', role: 'sectionEditor'},
 					],
 					commentsForEditor: `<p>Please consider my manuscript — ${tag}</p>`,
 				}),
 			);
 
-			// --- Author (atester): the cover-note discussion is on the submission
+			// --- Author (author.alex): the cover-note discussion is on the submission
 			//     stage, In progress; the author replies from My Submissions. ---
-			const authorCtx = await asUser('atester');
+			const authorCtx = await asUser('author.alex');
 			const authorPage = await authorCtx.newPage();
 			await authorPage.goto(mySubmissionsLink(submission.id), {
 				waitUntil: 'commit',
@@ -301,15 +301,15 @@ test.describe('Editorial Tasks & Discussions', () => {
 			await view.fillReply(`<p>Thanks for the feedback — reply ${tag}</p>`);
 			await view.save();
 
-			// The reply notifies every participant. We assert against sberardo:
+			// The reply notifies every participant. We assert against sectioneditor.omar:
 			// an ART section editor whom AssignEditors auto-adds to the cover-note
 			// (so a guaranteed participant) and who receives no notifications from
 			// any other test in this file — so this reply is the newest entry in
 			// their Tasks bell, robust to the grid's newest-first cap.
-			const editorEmail = USER.sberardo.email;
+			const editorEmail = USER.omar.email;
 
 			// --- Every participant is notified: a Tasks-bell entry appears. ---
-			const editorCtx = await asUser('sberardo');
+			const editorCtx = await asUser('sectioneditor.omar');
 			const editorPage = await editorCtx.newPage();
 			const bell = await openBell(editorPage, 'publicknowledge');
 			await expect(bell.task(tag).first()).toBeVisible({timeout: 15_000});
@@ -330,11 +330,11 @@ test.describe('Editorial Tasks & Discussions', () => {
 		},
 	);
 
-	// Canonical scenario 3 — dbarnes (a manager) creates a task with dbuskins as
-	// responsible participant and minoue as a plain participant: dbuskins can
-	// edit + complete; minoue sees it read-only; a sub-editor who is not a
-	// participant (sberardo) doesn't see it at all; a manager sees everything.
-	// dbarnes unchecks itself at creation — allowed only for managers (rule 6) —
+	// Canonical scenario 3 — editor.diana (a manager) creates a task with sectioneditor.ana as
+	// responsible participant and sectioneditor.ravi as a plain participant: sectioneditor.ana can
+	// edit + complete; sectioneditor.ravi sees it read-only; a sub-editor who is not a
+	// participant (sectioneditor.omar) doesn't see it at all; a manager sees everything.
+	// editor.diana unchecks itself at creation — allowed only for managers (rule 6) —
 	// so the manager's visibility (rule 17) is proven independently of
 	// participation.
 	test(
@@ -349,16 +349,16 @@ test.describe('Editorial Tasks & Discussions', () => {
 					tag,
 					title: `Boundary sub ${tag}`,
 					participants: [
-						{user: 'dbarnes', role: 'editor'},
-						{user: 'dbuskins', role: 'sectionEditor'},
-						{user: 'minoue', role: 'sectionEditor'},
-						{user: 'sberardo', role: 'sectionEditor'},
+						{user: 'editor.diana', role: 'editor'},
+						{user: 'sectioneditor.ana', role: 'sectionEditor'},
+						{user: 'sectioneditor.ravi', role: 'sectionEditor'},
+						{user: 'sectioneditor.omar', role: 'sectionEditor'},
 					],
 				}),
 			);
 
-			// --- Manager (dbarnes): create the task; responsible = dbuskins,
-			//     plain participant = minoue; uncheck self (manager may). ---
+			// --- Manager (editor.diana): create the task; responsible = sectioneditor.ana,
+			//     plain participant = sectioneditor.ravi; uncheck self (manager may). ---
 			const workflow = new EditorialWorkflowPage(page);
 			await workflow.goto(submission.id);
 			await expect(
@@ -372,13 +372,13 @@ test.describe('Editorial Tasks & Discussions', () => {
 			const form = await dm.openAdd();
 			await form.fillTitle(taskTitle);
 			await form.fillDescription(`<p>Roster boundary — ${tag}</p>`);
-			await form.checkParticipant(USER.dbuskins.name);
-			await form.checkParticipant(USER.minoue.name);
-			await form.uncheckParticipant(USER.dbarnes.name); // manager needn't join
+			await form.checkParticipant(USER.ana.name);
+			await form.checkParticipant(USER.ravi.name);
+			await form.uncheckParticipant(USER.diana.name); // manager needn't join
 			await form.enableTaskInfo();
 			await form.setDateDue(isoDate(14));
-			await form.setResponsibleAssignee(USER.dbuskins.name);
-			await form.setShouldStart('false'); // dbuskins will start it below
+			await form.setResponsibleAssignee(USER.ana.name);
+			await form.setShouldStart('false'); // sectioneditor.ana will start it below
 			await form.save();
 
 			// The manager (creator, not a participant) still sees it with full
@@ -386,41 +386,41 @@ test.describe('Editorial Tasks & Discussions', () => {
 			await dm.expectInGroup(taskTitle, 'Yet to begin');
 			await dm.expectActionsMenuVisible(taskTitle);
 
-			// --- Responsible participant (dbuskins): row actions + can complete. ---
-			const dbuskinsCtx = await asUser('dbuskins');
-			const dbuskinsPage = await dbuskinsCtx.newPage();
-			await dbuskinsPage.goto(editorialLink(submission.id), {waitUntil: 'commit'});
-			const dmDbuskins = new DiscussionManagerPage(dbuskinsPage);
-			await dmDbuskins.expectInGroup(taskTitle, 'Yet to begin');
-			await dmDbuskins.expectActionsMenuVisible(taskTitle);
-			// dbuskins can start + complete (responsible ⇒ write access).
-			const vDbuskins = await dmDbuskins.openByTitle(taskTitle);
-			await vDbuskins.clickStartTask();
-			await vDbuskins.save();
-			await vDbuskins.expectTaskStarted();
-			await vDbuskins.close();
-			await dmDbuskins.expectInGroup(taskTitle, 'In progress');
-			const vDbuskins2 = await dmDbuskins.openByTitle(taskTitle);
-			await vDbuskins2.clickCompleteTask();
-			await vDbuskins2.save();
-			await vDbuskins2.close();
-			await dmDbuskins.expectInGroup(taskTitle, 'Closed');
+			// --- Responsible participant (sectioneditor.ana): row actions + can complete. ---
+			const anaCtx = await asUser('sectioneditor.ana');
+			const anaPage = await anaCtx.newPage();
+			await anaPage.goto(editorialLink(submission.id), {waitUntil: 'commit'});
+			const dmAna = new DiscussionManagerPage(anaPage);
+			await dmAna.expectInGroup(taskTitle, 'Yet to begin');
+			await dmAna.expectActionsMenuVisible(taskTitle);
+			// sectioneditor.ana can start + complete (responsible ⇒ write access).
+			const vAna = await dmAna.openByTitle(taskTitle);
+			await vAna.clickStartTask();
+			await vAna.save();
+			await vAna.expectTaskStarted();
+			await vAna.close();
+			await dmAna.expectInGroup(taskTitle, 'In progress');
+			const vAna2 = await dmAna.openByTitle(taskTitle);
+			await vAna2.clickCompleteTask();
+			await vAna2.save();
+			await vAna2.close();
+			await dmAna.expectInGroup(taskTitle, 'Closed');
 
-			// --- Plain participant (minoue): sees it, but read-only (no actions). ---
-			const minoueCtx = await asUser('minoue');
-			const minouePage = await minoueCtx.newPage();
-			await minouePage.goto(editorialLink(submission.id), {waitUntil: 'commit'});
-			const dmMinoue = new DiscussionManagerPage(minouePage);
-			await dmMinoue.expectInGroup(taskTitle, 'Closed');
-			await dmMinoue.expectActionsMenuHidden(taskTitle);
+			// --- Plain participant (sectioneditor.ravi): sees it, but read-only (no actions). ---
+			const raviCtx = await asUser('sectioneditor.ravi');
+			const raviPage = await raviCtx.newPage();
+			await raviPage.goto(editorialLink(submission.id), {waitUntil: 'commit'});
+			const dmRavi = new DiscussionManagerPage(raviPage);
+			await dmRavi.expectInGroup(taskTitle, 'Closed');
+			await dmRavi.expectActionsMenuHidden(taskTitle);
 
-			// --- Non-participant sub-editor (sberardo): doesn't see the item. ---
-			const sberardoCtx = await asUser('sberardo');
-			const sberardoPage = await sberardoCtx.newPage();
-			await sberardoPage.goto(editorialLink(submission.id), {waitUntil: 'commit'});
-			const dmSberardo = new DiscussionManagerPage(sberardoPage);
-			await dmSberardo.expectVisible();
-			await expect(dmSberardo.titleButton(taskTitle)).toHaveCount(0, {
+			// --- Non-participant sub-editor (sectioneditor.omar): doesn't see the item. ---
+			const omarCtx = await asUser('sectioneditor.omar');
+			const omarPage = await omarCtx.newPage();
+			await omarPage.goto(editorialLink(submission.id), {waitUntil: 'commit'});
+			const dmOmar = new DiscussionManagerPage(omarPage);
+			await dmOmar.expectVisible();
+			await expect(dmOmar.titleButton(taskTitle)).toHaveCount(0, {
 				timeout: 15_000,
 			});
 		},
@@ -439,7 +439,7 @@ test.describe('Editorial Tasks & Discussions', () => {
 			const tag = uniqueTag('auto');
 			const templateTitle = `Auto task ${tag}`;
 
-			// dbarnes as 'editor' → the "Journal editor" group, which is
+			// editor.diana as 'editor' → the "Journal editor" group, which is
 			// ROLE_ID_MANAGER with settings access (registry/userGroups.xml:18).
 			// A MANAGER-role stage assignment is what lets the manager both see
 			// the panel AND edit an auto-created (participant-less) task — the
@@ -448,11 +448,11 @@ test.describe('Editorial Tasks & Discussions', () => {
 			// sub-editor assignment (role 17) would not satisfy that.
 			const {context} = await pkpApi.createJournal({
 				tag,
-				users: [{username: 'dbarnes', roles: ['editor']}],
+				users: [{username: 'editor.diana', roles: ['editor']}],
 			});
 			const journalPath = context.path;
 
-			// dbarnes (a manager here) creates the auto-add Copyediting template
+			// editor.diana (a manager here) creates the auto-add Copyediting template
 			// via the editTaskTemplates API.
 			await page.goto(`/index.php/${journalPath}/dashboard`, {
 				waitUntil: 'commit',
@@ -478,7 +478,7 @@ test.describe('Editorial Tasks & Discussions', () => {
 					tag,
 					title: `Auto sub ${tag}`,
 					journal: journalPath,
-					participants: [{user: 'dbarnes', role: 'editor'}],
+					participants: [{user: 'editor.diana', role: 'editor'}],
 				}),
 			);
 
@@ -504,8 +504,8 @@ test.describe('Editorial Tasks & Discussions', () => {
 
 			// Edit in a participant + owner, then it starts.
 			const editForm = await dm.openActions(templateTitle, 'Edit');
-			await editForm.checkParticipant(USER.dbarnes.name);
-			await editForm.setResponsibleAssignee(USER.dbarnes.name);
+			await editForm.checkParticipant(USER.diana.name);
+			await editForm.setResponsibleAssignee(USER.diana.name);
 			await editForm.save();
 			view = await dm.openByTitle(templateTitle);
 			await view.clickStartTask();
@@ -556,8 +556,8 @@ test.describe('Editorial Tasks & Discussions', () => {
 			const {context} = await pkpApi.createJournal({
 				tag,
 				users: [
-					{username: 'dbarnes', roles: ['manager', 'sectionEditor']},
-					{username: 'dbuskins', roles: ['sectionEditor']},
+					{username: 'editor.diana', roles: ['manager', 'sectionEditor']},
+					{username: 'sectioneditor.ana', roles: ['sectionEditor']},
 				],
 			});
 			const journalPath = context.path;
@@ -591,8 +591,8 @@ test.describe('Editorial Tasks & Discussions', () => {
 					title: `Prefill sub ${tag}`,
 					journal: journalPath,
 					participants: [
-						{user: 'dbarnes', role: 'sectionEditor'},
-						{user: 'dbuskins', role: 'sectionEditor'},
+						{user: 'editor.diana', role: 'sectionEditor'},
+						{user: 'sectioneditor.ana', role: 'sectionEditor'},
 					],
 				}),
 			);
@@ -629,11 +629,11 @@ test.describe('Editorial Tasks & Discussions', () => {
 			// useDiscussionManagerForm.setValuesFromTemplate() sets only title,
 			// type, description and due date and never writes the participants
 			// field — even though the fromTemplate endpoint DOES return the
-			// promoted participants. So the section editor (dbuskins) who holds the
+			// promoted participants. So the section editor (sectioneditor.ana) who holds the
 			// template's restricted group is NOT pre-selected; only the creator
-			// default (dbarnes) stays checked. Live-probed on 2026-07 main.
-			await form.expectParticipantChecked(USER.dbarnes.name); // creator default
-			await form.expectParticipantNotChecked(USER.dbuskins.name); // NOT pre-selected
+			// default (editor.diana) stays checked. Live-probed on 2026-07 main.
+			await form.expectParticipantChecked(USER.diana.name); // creator default
+			await form.expectParticipantNotChecked(USER.ana.name); // NOT pre-selected
 
 			// Nothing saved until submit: cancel and confirm no item was created.
 			await form.cancel();
@@ -660,9 +660,9 @@ test.describe('Editorial Tasks & Discussions', () => {
 			const {context} = await pkpApi.createJournal({
 				tag,
 				users: [
-					{username: 'dbarnes', roles: ['sectionEditor']},
-					{username: 'shellier', roles: ['sectionEditor']},
-					{username: 'svogt', roles: ['sectionEditor']},
+					{username: 'editor.diana', roles: ['sectionEditor']},
+					{username: 'proofreader.pia', roles: ['sectionEditor']},
+					{username: 'copyeditor.sam', roles: ['sectionEditor']},
 				],
 			});
 			const journalPath = context.path;
@@ -670,31 +670,31 @@ test.describe('Editorial Tasks & Discussions', () => {
 			const {submission} = await pkpApi.createSubmission({
 				tag,
 				journal: journalPath,
-				submitter: 'atester',
+				submitter: 'author.alex',
 				section: 'ART',
 				locale: 'en',
 				submitted: true,
 				participants: [
-					{user: 'dbarnes', role: 'sectionEditor'},
-					{user: 'shellier', role: 'sectionEditor'},
-					{user: 'svogt', role: 'sectionEditor'},
+					{user: 'editor.diana', role: 'sectionEditor'},
+					{user: 'proofreader.pia', role: 'sectionEditor'},
+					{user: 'copyeditor.sam', role: 'sectionEditor'},
 				],
 				publications: [{metadata: {title: {en: `Opt-out sub ${tag}`}}}],
 			});
 
-			// --- shellier: block discussion EMAILS in the scratch-journal profile.
-			//     (shellier + svogt are used only by this test, so their Tasks bells
+			// --- proofreader.pia: block discussion EMAILS in the scratch-journal profile.
+			//     (proofreader.pia + copyeditor.sam are used only by this test, so their Tasks bells
 			//     aren't polluted by other tests' notifications — the grid is not
 			//     context-scoped and shows only the newest entries.) ---
-			const optoutCtx = await asUser('shellier');
+			const optoutCtx = await asUser('proofreader.pia');
 			const optoutPage = await optoutCtx.newPage();
 			const optoutProfile = new UserProfilePage(optoutPage, journalPath);
 			await optoutProfile.goto('notificationSettings');
 			await optoutPage.locator('#emailNotificationNewQuery').check();
 			await optoutProfile.save('notificationSettings');
 
-			// --- dbarnes: discussion #1 → svogt gets an email with an unsubscribe
-			//     link (shellier is already email-blocked). ---
+			// --- editor.diana: discussion #1 → copyeditor.sam gets an email with an unsubscribe
+			//     link (proofreader.pia is already email-blocked). ---
 			const workflow = new EditorialWorkflowPage(page);
 			await workflow.goto(submission.id, {journalPath});
 			await expect(
@@ -705,33 +705,33 @@ test.describe('Editorial Tasks & Discussions', () => {
 			const dm = new DiscussionManagerPage(page);
 			await dm.expectVisible();
 			await createDiscussion(dm, `Disc one ${marker1}`, marker1, [
-				USER.shellier.name,
-				USER.svogt.name,
+				USER.pia.name,
+				USER.sam.name,
 			]);
 
-			const [svogtMail1] = await pkpMail.find({
-				to: USER.svogt.email,
+			const [samMail1] = await pkpMail.find({
+				to: USER.sam.email,
 				contains: marker1,
 				timeoutMs: 30_000,
 			});
-			expect(svogtMail1, 'svogt receives discussion #1 email').toBeTruthy();
-			const svogtFull = await pkpMail.fullMessage(svogtMail1.ID);
-			const unsubUrl = pkpMail.extractLink(svogtFull.HTML, 'unsubscribe');
+			expect(samMail1, 'copyeditor.sam receives discussion #1 email').toBeTruthy();
+			const samFull = await pkpMail.fullMessage(samMail1.ID);
+			const unsubUrl = pkpMail.extractLink(samFull.HTML, 'unsubscribe');
 			expect(unsubUrl, 'email has an unsubscribe link').toBeTruthy();
 
-			// --- svogt: follow the unsubscribe link + confirm. ---
-			const svogtCtx = await asUser('svogt');
-			const svogtPage = await svogtCtx.newPage();
-			await svogtPage.goto(unsubUrl, {waitUntil: 'commit'});
-			await svogtPage
+			// --- copyeditor.sam: follow the unsubscribe link + confirm. ---
+			const samCtx = await asUser('copyeditor.sam');
+			const samPage = await samCtx.newPage();
+			await samPage.goto(unsubUrl, {waitUntil: 'commit'});
+			await samPage
 				.getByRole('button', {name: /Unsubscribe/i})
 				.first()
 				.click();
 			await expect(
-				svogtPage.getByText(/unsubscrib/i).first(),
+				samPage.getByText(/unsubscrib/i).first(),
 			).toBeVisible({timeout: 15_000});
 
-			// --- dbarnes: discussion #2 → both reach the bell, neither the inbox. ---
+			// --- editor.diana: discussion #2 → both reach the bell, neither the inbox. ---
 			await workflow.goto(submission.id, {journalPath});
 			await expect(
 				workflow.workflowModal().getByRole('heading', {
@@ -740,33 +740,33 @@ test.describe('Editorial Tasks & Discussions', () => {
 			).toBeVisible({timeout: 20_000});
 			await dm.expectVisible();
 			await createDiscussion(dm, `Disc two ${marker2}`, marker2, [
-				USER.shellier.name,
-				USER.svogt.name,
+				USER.pia.name,
+				USER.sam.name,
 			]);
 
-			// dbarnes (creator) receives discussion #2's email — the control that
+			// editor.diana (creator) receives discussion #2's email — the control that
 			// bounds the negative assertions.
-			const [barnesMail2] = await pkpMail.find({
-				to: USER.dbarnes.email,
+			const [dianaMail2] = await pkpMail.find({
+				to: USER.diana.email,
 				contains: marker2,
 				timeoutMs: 30_000,
 			});
-			expect(barnesMail2, 'creator receives discussion #2 email').toBeTruthy();
+			expect(dianaMail2, 'creator receives discussion #2 email').toBeTruthy();
 
-			// shellier: bell yes, inbox no (profile email opt-out).
+			// proofreader.pia: bell yes, inbox no (profile email opt-out).
 			await expectBellHas(optoutPage, journalPath, tag);
 			await pkpMail.expectNone({
-				to: USER.shellier.email,
+				to: USER.pia.email,
 				contains: marker2,
-				afterControl: {to: USER.dbarnes.email, contains: marker2},
+				afterControl: {to: USER.diana.email, contains: marker2},
 			});
 
-			// svogt: bell yes, inbox no (unsubscribe-link opt-out).
-			await expectBellHas(svogtPage, journalPath, tag);
+			// copyeditor.sam: bell yes, inbox no (unsubscribe-link opt-out).
+			await expectBellHas(samPage, journalPath, tag);
 			await pkpMail.expectNone({
-				to: USER.svogt.email,
+				to: USER.sam.email,
 				contains: marker2,
-				afterControl: {to: USER.dbarnes.email, contains: marker2},
+				afterControl: {to: USER.diana.email, contains: marker2},
 			});
 		},
 	);

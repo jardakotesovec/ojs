@@ -15,15 +15,15 @@
 /**
  * @param {Object} opts
  * @param {string} opts.tag                       required; appended to every title locale for parallel isolation
- * @param {string} [opts.submitter='rvaca']       baseline user that submits
+ * @param {string} [opts.submitter='manager.maya']       baseline user that submits
  * @param {Array<{user: string, role: string}>} [opts.participants]
- *        Stage participants (defaults to dbarnes editor + dbuskins + minoue
+ *        Stage participants (defaults to editor.diana editor + sectioneditor.ana + sectioneditor.ravi
  *        section editors — the cast the Discussion Manager tests reach for).
  * @returns {object} scenario spec payload
  */
 module.exports = function submissionDraft({
 	tag,
-	submitter = 'rvaca',
+	submitter = 'manager.maya',
 	participants,
 } = {}) {
 	if (!tag) {
@@ -38,9 +38,9 @@ module.exports = function submissionDraft({
 		locale: 'en',
 
 		participants: participants ?? [
-			{user: 'dbarnes', role: 'editor'},
-			{user: 'dbuskins', role: 'sectionEditor'},
-			{user: 'minoue', role: 'sectionEditor'},
+			{user: 'editor.diana', role: 'editor'},
+			{user: 'sectioneditor.ana', role: 'sectionEditor'},
+			{user: 'sectioneditor.ravi', role: 'sectionEditor'},
 		],
 
 		publications: [

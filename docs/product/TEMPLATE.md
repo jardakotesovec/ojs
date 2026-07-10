@@ -163,7 +163,13 @@ atlas-claims: [<atom IDs this spec owns>]
      and WHAT the user sees; the internal field that implements it goes in the anchor
      (e.g. "...computed from whether it was started/closed (TaskResource.php:151 — from
      dateStarted/dateClosed)"). Reserve an inline internal name only when it is the
-     single clearest way to state a constraint, which is rare. -->
+     single clearest way to state a constraint, which is rare.
+
+     FORMAT ENUMERATIONS FOR NAVIGATION (maintainer, 2026-07-10): when a rule
+     enumerates 3+ parallel items — statuses, modes, options, variants, each with its
+     own condition — lay them out as bullets or a compact table, never as one prose
+     run of bolded names. A reader scanning for one status must find its row at a
+     glance. Prose stays for the rule's logic; the enumeration itself gets structure. -->
 
 ## Side effects
 

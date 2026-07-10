@@ -17,8 +17,8 @@
 /**
  * @param {Object} opts
  * @param {string} opts.tag                  required; appended to every title locale for parallel isolation
- * @param {string} [opts.submitter='rvaca']  baseline user that submits
- * @param {string} [opts.editor='dbarnes']   baseline user that sends to review (used only when `participants` not provided)
+ * @param {string} [opts.submitter='manager.maya']  baseline user that submits
+ * @param {string} [opts.editor='editor.diana']   baseline user that sends to review (used only when `participants` not provided)
  * @param {string} [opts.journal='publicknowledge']  journal urlPath; override for E0 scratch journals
  * @param {Array}  [opts.participants]       override default participant list; defaults to `[{user: editor, role: 'editor'}]`.
  *                                           Each item may include `recommendOnly` / `canChangeMetadata` flags.
@@ -27,8 +27,8 @@
  */
 module.exports = function submissionInReview({
 	tag,
-	submitter = 'rvaca',
-	editor = 'dbarnes',
+	submitter = 'manager.maya',
+	editor = 'editor.diana',
 	journal = 'publicknowledge',
 	participants,
 	reviewers,
@@ -51,8 +51,8 @@ module.exports = function submissionInReview({
 		reviewRounds: [
 			{
 				reviewers: reviewers ?? [
-					{user: 'phudson', method: 'anonymous', status: 'invited'},
-					{user: 'jjanssen', method: 'anonymous', status: 'accepted'},
+					{user: 'reviewer.paul', method: 'anonymous', status: 'invited'},
+					{user: 'reviewer.julia', method: 'anonymous', status: 'accepted'},
 				],
 			},
 		],

@@ -21,7 +21,7 @@ each test seeds its own state through test-only scenario endpoints
 1. **Isolation unit is the submission.** Most tests create their own submission(s) via the
    scenario endpoint and never touch anyone else's. The shared base journal
    `publicknowledge` (seeded by `playwright/fixtures/bootstrap.js`) is **read-only**: no test
-   may mutate journal-level settings, sections, categories, issues, or the 16 seeded users.
+   may mutate journal-level settings, sections, categories, issues, or the 17 seeded users.
    Tests that need journal-level mutations create a **scratch journal** via
    `POST /api/v1/_test/scenarios/journal` with a unique path.
 2. **Scenario endpoints must be accurate.** A seeded scenario must leave the same database
@@ -47,8 +47,8 @@ each test seeds its own state through test-only scenario endpoints
    state within the test; anything that cannot be isolated that way runs in a dedicated
    serial project with an explicit note. **NEVER enrol a shared seeded user in a new role**
    — that persists a global role other suites depend on (this bit the build once: a test
-   made `minoue` a manager of a scratch journal and it leaked into an unrelated
-   permission test). Use dedicated throwaway users for any role-mutation probe.
+   made a seeded section editor a manager of a scratch journal and it leaked into an
+   unrelated permission test). Use dedicated throwaway users for any role-mutation probe.
 8. **Mailpit is shared.** Never `clearAll()` outside the dedicated serial infrastructure
    spec. Assert emails scoped by recipient + the test's unique tag; use throwaway recipient
    users whenever a test counts messages or asserts absence, and pair every negative
@@ -70,7 +70,7 @@ each test seeds its own state through test-only scenario endpoints
 ## Bootstrap data policy
 
 - Base seed lives in `playwright/fixtures/bootstrap.js` (journal `publicknowledge`,
-  16 users, sections, categories, issues). Seeded users and roles are documented in the
+  17 users, sections, categories, issues). Seeded users and roles are documented in the
   `ojs-playwright-tests` skill.
 - **Richer defaults are encouraged**: enable features and metadata most real journals use
   (e.g. additional submission-wizard metadata fields, categories, DOIs where it doesn't

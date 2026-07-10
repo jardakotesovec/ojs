@@ -11,43 +11,46 @@ Defined in `lib/pkp/classes/security/Role.php:24-31`. These are the integer IDs 
 | `ROLE_ID_SITE_ADMIN` | 1 | — (siteAdmin flag) | Site-wide administrator. Outside any journal. |
 | `ROLE_ID_MANAGER` | 16 | `manager` | Journal manager — journal settings, users, plugins |
 | `ROLE_ID_SUB_EDITOR` | 17 | `editor`, `sectionEditor` | Editor / section editor — both map to sub-editor |
-| `ROLE_ID_ASSISTANT` | 4097 | `copyeditor`, `layoutEditor`, `proofreader` | Production assistants |
+| `ROLE_ID_ASSISTANT` | 4097 | `copyeditor`, `layoutEditor`, `proofreader`, `funding` | Assistants — `funding` (Funding coordinator) is the one default assistant group with review-stage access (stages 1,3) |
 | `ROLE_ID_REVIEWER` | 4096 | `reviewer` | Peer reviewer |
-| `ROLE_ID_AUTHOR` | 65536 | — (implicit on submit) | Author — anyone can become one by submitting |
-| `ROLE_ID_READER` | 1048576 | — (default) | Reader — any registered user |
+| `ROLE_ID_AUTHOR` | 65536 | `author` (also implicit on submit) | Author — anyone can become one by submitting |
+| `ROLE_ID_READER` | 1048576 | `reader` | Reader — any registered user |
 | `ROLE_ID_SUBSCRIPTION_MANAGER` | 2097152 | — (OJS-only) | Manages subscriptions. **Not seeded in baseline users.** OJS-only role. |
 
 **Note on string keys:** `sectionEditor` corresponds to `ROLE_ID_SUB_EDITOR`. **CAUTION (verified wave 11):** on default scratch-journal user groups, the scenario role string `editor` resolves to the "Journal editor" group, which is **`ROLE_ID_MANAGER`** per `registry/userGroups.xml:18` — NOT sub-editor. A `users: [{roles: ['editor']}]` throwaway therefore passes manager-level gates (canPublish, settings access). Use `sectionEditor` when you need a non-manager editorial role.
 
 ## Seeded test users
 
-Source of truth: `lib/pkp/playwright/data/users.js`. All 17 users are seeded into the `publicknowledge` journal (admin is a site-level user, created by the installer; others are created by `bootstrap.setup.js` via `/api/v1/_test/bootstrap`).
+Source of truth: `lib/pkp/playwright/data/users.js`. All 18 users are seeded into the `publicknowledge` journal (admin is a site-level user, created by the installer; others are created by `bootstrap.setup.js` via `/api/v1/_test/bootstrap`).
+
+The roster is **role-keyed** (maintainer decision 2026-07-10): usernames take the `role.firstname` form, display names read "Firstname Role" (so UI screenshots say the role), emails match usernames, and there is one account per permission archetype. All first names are unique across the roster.
 
 When a test needs a user with a given role, use the first one listed for that role (the `users` helper map at the bottom of `users.js` does exactly this).
 
 | Username | Role | Use this when you need... |
 |---|---|---|
 | `admin` | site admin | Admin console, multi-journal operations, plugin management |
-| `rvaca` | manager | Journal settings, managing users. **Flagged `mustChangePassword` — first login forces a reset. For plain tests prefer an editor.** |
-| `dbarnes` | editor | A senior editor of `publicknowledge` (also a sectionEditor in both sections) |
-| `dbuskins` | sectionEditor | Section editor for **Articles** (`ART`). Default pick when you need "a section editor". |
-| `sberardo` | sectionEditor | Another Articles section editor |
-| `minoue` | sectionEditor | Section editor for **Reviews** (`REV`) |
-| `jjanssen` | reviewer | Default reviewer. First in the list — use this when you just need "a reviewer". |
-| `phudson` | reviewer | A second reviewer (e.g. to model multiple reviews on one submission) |
-| `amccrae` | reviewer | A third reviewer |
-| `agallego` | reviewer | A fourth reviewer |
-| `mfritz` | copyeditor | Copyediting actions |
-| `svogt` | copyeditor | A second copyeditor |
-| `gcox` | layoutEditor | Layout / galley production |
-| `shellier` | layoutEditor | A second layout editor |
-| `cturner` | proofreader | Proofreading actions |
-| `skumar` | proofreader | A second proofreader |
-| `atester` | author | A non-privileged author. Use when a spec needs to exercise an author-only permission gate. |
+| `manager.maya` | manager | Journal settings, managing users |
+| `editor.diana` | editor | A senior editor of `publicknowledge` (also a sectionEditor in both sections) |
+| `sectioneditor.ana` | sectionEditor | Section editor for **Articles** (`ART`). Default pick when you need "a section editor". |
+| `sectioneditor.ravi` | sectionEditor | Section editor for **Reviews** (`REV`) |
+| `sectioneditor.omar` | sectionEditor | Another Articles section editor. The designated account for recommend-only assignments (the recommendOnly flag itself is per-assignment). |
+| `reviewer.julia` | reviewer | Default reviewer. First in the list — use this when you just need "a reviewer". |
+| `reviewer.paul` | reviewer | A second reviewer (e.g. to model multiple reviews on one submission) |
+| `reviewer.amara` | reviewer | A third reviewer |
+| `reviewer.adam` | reviewer | A fourth reviewer |
+| `copyeditor.carla` | copyeditor | Copyediting actions |
+| `copyeditor.sam` | copyeditor | A second copyeditor |
+| `layouteditor.leo` | layoutEditor | Layout / galley production |
+| `proofreader.pia` | proofreader | Proofreading actions |
+| `author.alex` | author | A non-privileged author. Use when a spec needs to exercise an author-only permission gate. |
+| `author.bea` | author | A second author — co-author and foreign-submission cases (e.g. one author must not see another's submission) |
+| `assistant.rita` | funding (assistant) | An assistant **with review-stage access** — enrolled in the Funding coordinator group (stages 1,3), the one default assistant group that reaches external review |
+| `reader.rosa` | reader | A registered user with no roles beyond reader — reader-facing gates, "logged in but no editorial access" checks |
 
-**Why `atester` matters.** Every other publicknowledge user either has a manager/editor role that short-circuits `Repo::submission()->canEditPublication` (NOT_CHANGE_METADATA_EDIT_PERMISSION_ROLES), or is `mustChangePassword` so login redirects before reaching any workflow page. `atester` is the only seeded user where author-side permission tests are meaningful. Password derives normally to `atesteratester`.
+**Why `author.alex` matters.** Every other seeded publicknowledge user with workflow access has a manager/editor role that short-circuits `Repo::submission()->canEditPublication` (NOT_CHANGE_METADATA_EDIT_PERMISSION_ROLES). `author.alex` (and `author.bea`) are author-only, so author-side permission tests are meaningful. Password derives normally to `author.alexauthor.alex`.
 
-**No pre-seeded reader / subscriber.** The seed data does not include a plain reader or a subscription-manager user.
+**No pre-seeded subscriber.** The seed data does not include a subscription-manager user (OJS-only role); `reader.rosa` covers the plain-reader case.
 
 ## Password rule
 
@@ -60,13 +63,9 @@ getPassword(username) {
 ```
 
 - `admin` → `admin`
-- everyone else → **username repeated twice** (e.g. `dbarnes` → `dbarnesdbarnes`, `jjanssen` → `jjanssenjjanssen`)
+- everyone else → **username repeated twice** (e.g. `editor.diana` → `editor.dianaeditor.diana`, `reviewer.julia` → `reviewer.juliareviewer.julia`)
 
-This matches the Cypress convention (`lib/pkp/cypress/support/commands.js:20`), so credentials port across suites.
-
-### Special case: `rvaca`
-
-`rvaca` is flagged `mustChangePassword: true`. On first login, OJS forces a password reset. For tests that just need "a journal manager", prefer `dbarnes` (who has editor privileges broad enough for most manager-style actions) unless the test is specifically about manager-only settings.
+No seeded user is flagged `mustChangePassword` — every account logs straight in to the dashboard.
 
 ## Login flow internals
 
@@ -92,9 +91,9 @@ Two paths, depending on the shape of the test:
 
 **Single-actor (default):**
 ```js
-test.use({user: 'dbarnes'});
+test.use({user: 'editor.diana'});
 test('...', async ({page}) => {
-    // page is already logged in as dbarnes via storageState
+    // page is already logged in as editor.diana via storageState
 });
 ```
 The `storageState` fixture at `lib/pkp/playwright/support/base-test.js` reads the `user` option, calls `ensureAuthStateFor`, and loads the cached file before the page is created.
@@ -102,7 +101,7 @@ The `storageState` fixture at `lib/pkp/playwright/support/base-test.js` reads th
 **Multi-actor:**
 ```js
 test('...', async ({page, asUser}) => {
-    const reviewerCtx = await asUser('jjanssen');
+    const reviewerCtx = await asUser('reviewer.julia');
     const reviewerPage = await reviewerCtx.newPage();
 });
 ```
@@ -113,7 +112,7 @@ See `asUser` in `lib/pkp/playwright/support/base-test.js`.
 Auth only works after the setup project has run (`bootstrap.setup.js`, governed by `config-factory.js:66-71`). The setup runs serially before every test project and seeds:
 1. The test database (schema via `tools/installTest.php`)
 2. The `publicknowledge` journal (from `playwright/fixtures/bootstrap.js`)
-3. All 16 non-admin users (admin is created by the installer)
+3. All 17 non-admin users (admin is created by the installer)
 
 If `.auth/` is stale (deleted DB, seed-data change), `ensureAuthStateFor` re-creates files on demand. Use `npm run test:e2e:reset` to force a full cold bootstrap.
 
@@ -130,8 +129,8 @@ Every test user (except admin) is enrolled in this journal. Seed data at `playwr
 
 | Abbrev | Title | Section editors | Notes |
 |---|---|---|---|
-| `ART` | Articles | dbarnes, dbuskins, sberardo | Word count limit 500 |
-| `REV` | Reviews | dbarnes, minoue | Abstracts not required; identifyType "Review Article" |
+| `ART` | Articles | editor.diana, sectioneditor.ana, sectioneditor.omar | Word count limit 500 |
+| `REV` | Reviews | editor.diana, sectioneditor.ravi | Abstracts not required; identifyType "Review Article" |
 
 ### Categories
 

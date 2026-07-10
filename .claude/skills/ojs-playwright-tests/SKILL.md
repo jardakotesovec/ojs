@@ -68,7 +68,7 @@ lib/pkp/playwright/
 │   ├── LoginPage.js         # /login form
 │   └── DashboardPage.js     # post-login landing
 ├── data/
-│   └── users.js             # The 17 baseline users + getPassword()
+│   └── users.js             # The 18 baseline users + getPassword()
 └── config-factory.js        # defineConfig() used by all three apps
 ```
 
@@ -88,22 +88,22 @@ asUser: async (username) => BrowserContext
 
 Returns a browser context **already authenticated** as the named user. First call for a given username performs a real UI login and caches the storage state to `playwright/.auth/<username>.json`. Later calls in the same run (and later runs until DB reset) short-circuit and load the file — but only after a cheap HTTP probe confirms the cached cookies still authenticate; impersonation flows can invalidate them. Every opened context auto-closes at test teardown.
 
-Use `asUser` for **multi-actor flows** — an author submits, an editor reviews, a reviewer rates. For single-actor specs, prefer `test.use({user: 'dbarnes'})`: it wires storage state via the `storageState` fixture override and you get an authenticated `page` directly.
+Use `asUser` for **multi-actor flows** — an author submits, an editor reviews, a reviewer rates. For single-actor specs, prefer `test.use({user: 'editor.diana'})`: it wires storage state via the `storageState` fixture override and you get an authenticated `page` directly.
 
 Example of both, together:
 
 ```js
 const {test, expect} = require('../support/base-test.js');
 
-test.use({user: 'dbuskins'}); // default context: section editor
+test.use({user: 'sectioneditor.ana'}); // default context: section editor
 
 test('section editor assigns reviewer, reviewer sees assignment', async ({page, asUser}) => {
-    // page is already logged in as dbuskins (section editor)
+    // page is already logged in as sectioneditor.ana (section editor)
     await page.goto('/dashboard');
     // ... editor actions ...
 
     // Open a second context as the reviewer, in parallel
-    const reviewerCtx = await asUser('jjanssen');
+    const reviewerCtx = await asUser('reviewer.julia');
     const reviewerPage = await reviewerCtx.newPage();
     await reviewerPage.goto('/dashboard');
     await expect(reviewerPage.getByRole('link', {name: /Review Assignment/i})).toBeVisible();
@@ -144,7 +144,7 @@ Env vars the tests depend on (all in `.env.playwright.example`):
 
 ## Companion files in this skill
 
-- `users.md` — role constants, the 17 seeded users, password rule, login flow internals (incl. storage-state liveness probe), journal context
+- `users.md` — role constants, the 18 seeded users, password rule, login flow internals (incl. storage-state liveness probe), journal context
 - `app-map.md` — screens organized by editorial journey: URL patterns, Vue components, PHP handlers, controls
 - `patterns.md` — locator priority + OJS pitfalls, fixture selection, waiting strategy, parallel-load lessons, tag conventions, decision-button labels, POM hierarchy, canonical test skeleton, verify-before-trusting
 - `scenarios.md` — scenario API (`/api/v1/_test/scenarios/*`) endpoints and schema, fixture builders at `playwright/fixtures/scenarios/`, decision/round-status quirks, Mailpit (`pkpMail`) usage

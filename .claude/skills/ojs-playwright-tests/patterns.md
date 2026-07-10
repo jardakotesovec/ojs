@@ -58,10 +58,10 @@ OJS-specific gotchas. Each of these has bitten the migration at least once.
 
 ### Single default user → `test.use({user: 'X'})`
 ```js
-test.use({user: 'dbarnes'});
+test.use({user: 'editor.diana'});
 
 test('editor does thing', async ({page}) => {
-    // page is pre-authenticated as dbarnes
+    // page is pre-authenticated as editor.diana
 });
 ```
 Works at `test.describe` level or file level. Storage state is cached on disk across runs — only pay login cost once per user per DB lifetime.
@@ -70,7 +70,7 @@ Works at `test.describe` level or file level. Storage state is cached on disk ac
 ```js
 test('editor assigns, reviewer accepts', async ({page, asUser}) => {
     // page is the default user (from test.use)
-    const reviewerCtx = await asUser('jjanssen');
+    const reviewerCtx = await asUser('reviewer.julia');
     const reviewerPage = await reviewerCtx.newPage();
     // Both pages are live in parallel
 });
@@ -269,7 +269,7 @@ When in doubt, treat plans as a map, not a GPS.
 const {test, expect} = require('../support/fixtures.js');
 
 // Default logged-in user for this file
-test.use({user: 'dbuskins'}); // section editor
+test.use({user: 'sectioneditor.ana'}); // section editor
 
 test.describe('feature area', () => {
     test('happy path', {tag: '@smoke'}, async ({page, ojsApi}) => {
@@ -298,13 +298,13 @@ test('shared behavior', {tag: '@smoke'}, async ({page}) => {
 // @ts-check
 const {test, expect} = require('../support/fixtures.js');
 
-test.use({user: 'dbuskins'}); // section editor is the "primary" actor
+test.use({user: 'sectioneditor.ana'}); // section editor is the "primary" actor
 
 test('editor assigns reviewer, reviewer accepts', async ({page, asUser}) => {
     await page.goto('/dashboard');
     // ... editor actions ...
 
-    const reviewerCtx = await asUser('jjanssen');
+    const reviewerCtx = await asUser('reviewer.julia');
     const reviewerPage = await reviewerCtx.newPage();
     await reviewerPage.goto('/dashboard');
     await expect(reviewerPage.getByRole('link', {name: /Review/i})).toBeVisible();
@@ -315,15 +315,15 @@ test('editor assigns reviewer, reviewer accepts', async ({page, asUser}) => {
 ## Things to avoid
 
 - **Depending on absolute database IDs.** `submissionId = 1` is wrong — use the ID returned by `ojsApi.createSubmission()` or scrape it from the page.
-- **Changing seed data mid-test.** The seeded journal (`publicknowledge`) and the 17 seeded users are shared across parallel workers. Mutating them (renaming, deleting, changing roles) will break sibling tests. If a test needs a user or journal with specific attributes, create one via the API as per-test setup.
+- **Changing seed data mid-test.** The seeded journal (`publicknowledge`) and the 18 seeded users are shared across parallel workers. Mutating them (renaming, deleting, changing roles) will break sibling tests. If a test needs a user or journal with specific attributes, create one via the API as per-test setup.
 - **Running the test server manually and also via Playwright.** `webServer` in `config-factory.js:47-65` auto-starts PHP. Trying to run `npm run test:e2e:serve` in another terminal at the same time fights over port 8000. If you need a manual server for poking around, stop the Playwright run first.
 - **Committing `.auth/` files.** Storage states contain session cookies. They're gitignored; if you see one staged, un-stage it.
-- **Assuming `rvaca` just works.** He's flagged `mustChangePassword: true`. For "a journal manager", prefer `dbarnes` unless the test is specifically exercising the password-change flow.
+- **Mutating a seeded account's flags.** No baseline account is `mustChangePassword`-flagged anymore — `manager.maya` logs straight in when you need "a journal manager". If a test needs an account with unusual flags (e.g. a forced password reset), create a throwaway user in a scratch journal instead of touching the roster.
 
 ## UI realities learned the hard way (wave 2)
 
 - **Dashboard search reacts to `keyup` only.** `fill()` sets the value without firing it — the list never filters. Use `pressSequentially()`.
-- **Paginated lists accumulate state across runs.** The test DB is long-lived locally; shared users like `atester` own hundreds of submissions. Never assert presence on an unscoped first page — search by the test's unique tag first. Extra trap: seeded drafts carry no `dateSubmitted` (real-draft parity) so they sort LAST in date-ordered lists.
+- **Paginated lists accumulate state across runs.** The test DB is long-lived locally; shared users like `author.alex` own hundreds of submissions. Never assert presence on an unscoped first page — search by the test's unique tag first. Extra trap: seeded drafts carry no `dateSubmitted` (real-draft parity) so they sort LAST in date-ordered lists.
 - **Server-rendered TinyMCE values never reach the backing textarea.** Assert via `getTinyMceContent()` (support/tinymce.js), not the textarea value.
 - **The wizard Steps rail collapses when it overflows** (non-current pills get `-screenReader`, 1px-clipped); a `force: true` click on a clipped pill is a silent no-op. Use `SubmissionWizardPage.gotoStep()`/`expectStep()` — they handle expansion, end-anchored name matching ('Review' vs 'Reviewer Suggestions'), and re-render-swallowed clicks.
 - **Side-modal wrappers report `visibility: hidden` permanently** — anchor visibility assertions on inner content, not the wrapper.

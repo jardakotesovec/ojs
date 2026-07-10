@@ -8,10 +8,10 @@
  * State at the end of the chain:
  *   - submission stageId = WORKFLOW_STAGE_ID_EXTERNAL_REVIEW (3), in progress
  *   - two review_rounds rows for stage 3
- *     - round 1: phudson reviewed (status=completed, recommendation=pendingRevisions)
- *     - round 2: jjanssen invited (no response yet)
+ *     - round 1: reviewer.paul reviewed (status=completed, recommendation=pendingRevisions)
+ *     - round 2: reviewer.julia invited (no response yet)
  *   - decision history records sendExternalReview → requestRevisions
- *     → newExternalRound, all by dbarnes
+ *     → newExternalRound, all by editor.diana
  *
  * Notable plan-vs-reality gotcha: the live `newExternalRound` decision
  * resets round 1's stored `status` column to PENDING_REVIEWERS as a
@@ -32,16 +32,16 @@
 /**
  * @param {Object} opts
  * @param {string} opts.tag                   required; appended to every title locale for parallel isolation
- * @param {string} [opts.submitter='rvaca']   baseline user that submits
- * @param {string} [opts.editor='dbarnes']    baseline user that drives the decisions (used only when `participants` not provided)
+ * @param {string} [opts.submitter='manager.maya']   baseline user that submits
+ * @param {string} [opts.editor='editor.diana']    baseline user that drives the decisions (used only when `participants` not provided)
  * @param {Array}  [opts.participants]        override default participant list; defaults to `[{user: editor, role: 'editor'}]`.
  * @param {Array}  [opts.reviewRounds]        override the two-round reviewer setup wholesale.
  * @returns {object} scenario spec payload
  */
 module.exports = function submissionInRound2({
 	tag,
-	submitter = 'rvaca',
-	editor = 'dbarnes',
+	submitter = 'manager.maya',
+	editor = 'editor.diana',
 	participants,
 	reviewRounds,
 } = {}) {
@@ -70,7 +70,7 @@ module.exports = function submissionInRound2({
 			{
 				reviewers: [
 					{
-						user: 'phudson',
+						user: 'reviewer.paul',
 						method: 'anonymous',
 						status: 'completed',
 						recommendation: 'pendingRevisions',
@@ -78,7 +78,7 @@ module.exports = function submissionInRound2({
 				],
 			},
 			{
-				reviewers: [{user: 'jjanssen', method: 'anonymous', status: 'invited'}],
+				reviewers: [{user: 'reviewer.julia', method: 'anonymous', status: 'invited'}],
 			},
 		],
 
