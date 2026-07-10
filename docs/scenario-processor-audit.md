@@ -1078,3 +1078,16 @@ Known-wrinkle entry (no Processor change yet); surfaced by the wave-7 issue-arch
 **Candidate fix**: mirror the resequence in SectionProcessor (assign max(seq)+1 per insert).
 
 **Verdict**: ⚠️ known parity wrinkle, recorded
+
+### Audit entry — ReviewRoundProcessor stamps `considered = REVIEW_ASSIGNMENT_NEW` (row 11, assign-and-manage-reviewers)
+
+**File**: `lib/pkp/classes/testing/scenario/Processor/ReviewRoundProcessor.php` (`assignReviewer` `$createParams`).
+**Domain**: `review_assignments.considered` for scenario-seeded reviewers.
+
+**Canonical UI entry point**: Add Reviewer modal → `ReviewerForm::execute()` (`lib/pkp/controllers/grid/users/reviewer/form/ReviewerForm.php:374`), which edits the new assignment with `considered = ReviewAssignment::REVIEW_ASSIGNMENT_NEW` (0).
+
+**Discrepancy fixed**: the Processor previously omitted `considered`, leaving the column NULL — a state the UI never produces. `PKPReviewerGridHandler::readReview()` flips NEW→VIEWED via a strict `=== REVIEW_ASSIGNMENT_NEW` comparison, so a review submitted onto a seeded (NULL) assignment could never reach "Review Viewed" when the editor first opened it (caught by the assign-and-manage-reviewers s9 test; deterministic). Fix: seed `considered = REVIEW_ASSIGNMENT_NEW` in `$createParams`; `statusFieldEdits()` still overwrites it with `REVIEW_ASSIGNMENT_CONSIDERED` for `'completed'` rows, matching the editor-confirmed end state.
+
+**Verified** (2026-07-10, live server :8000): seeded `accepted` reviewer → wizard-submitted review → editor Read Review open → row + API `statusId` reach REVIEW_ASSIGNMENT_STATUS_VIEWED; confirm/revert cycle behaves per spec rule 11–13.
+
+**Verdict**: ✅ parity (was ⚠️ NULL-considered wrinkle)
