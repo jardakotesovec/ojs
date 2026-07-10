@@ -126,8 +126,19 @@ discipline).
   it fresh; do not "review and keep" tainted output.
 - **Verification runs are the fallback-prone task class** (calibration feature 1:
   three verifier runs flipped 3/3 — spec author and test author 0/2 — and a
-  neutral-vocabulary rewrite did NOT prevent it). Protocol: after TWO discarded
-  delegated verification attempts, stop retrying subagents and have the
+  neutral-vocabulary rewrite did NOT prevent it; every flip hit ~5–10 minutes in).
+- **Delegate verification CHUNKED, not monolithic** (experiment from calibration
+  f2): split step 7 into 4–6 single-purpose subagents, each a fresh context with a
+  tight brief and ~5–15 tool calls — (a) permission re-derivation from code only,
+  (b) live positive controls, (c) live denial probes, (d) state-machine edge seeds,
+  (e) one ⚠-deviation reproduction each, (f) atlas coverage grep. Each returns a
+  small structured verdict; the orchestrator merges. Short fresh contexts lower the
+  flip odds and blast radius (a flipped chunk is a cheap retry, caught instantly by
+  the guard), and per-chunk flip incidence isolates WHICH content class triggers
+  the fallback — record chunk-type flip stats in the calibration report. A chunk
+  that flips twice goes inline.
+- Protocol floor: after TWO discarded delegated attempts of the SAME chunk (or of a
+  monolithic verifier), stop retrying subagents and have the
   ORCHESTRATOR complete the remaining checklist inline in the main session (it is
   guard-protected and pauses rather than switches). Salvage rule: a discarded run's
   conclusions are untrusted, but they may be used to NARROW what the clean re-run
