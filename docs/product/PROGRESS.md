@@ -27,15 +27,15 @@ RUNBOOK); wave counter starts then at 0 since last sampling.
 
 ## Totals
 
-- Features: **1 reference · 91 pending** (of 92; feature 39 folded into `article-landing`)
-- Tests: **6 / 700** (tasks-discussions) · last full-suite timing: n/a since reset
+- Features: **1 reference · 1 verified · 90 pending** (of 92; feature 39 folded into `article-landing`)
+- Tests: **18 / 700** (tasks-discussions 6 + submission-wizard 12) · last full-suite timing: n/a since reset
 - Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
 
 ## Features
 
 | # | Area | Feature | Budget | Spec | Tests | Note |
 |---|------|---------|--------|------|-------|------|
-| 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | pending | pending | dress rehearsal target — attempt 1 died to a main-thread flag mid-probe-battery (no spec written; probe leftovers wiped by DB reset); model policy since amended, start clean from step 1 |
+| 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | verified | green(x2) | dress rehearsal: 12 tests, 26 atoms, ledger rows 164–178; 1 verifier chunk all-opus (kept per policy); awaiting maintainer review |
 | 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | M·7 | pending | pending | |
 | 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | M·6 | pending | pending | |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | M·6 | pending | pending | |
@@ -149,3 +149,20 @@ appends to end-of-file). Per-class rates:
 | 2026-07-10 | assign-and-manage-reviewers | verification | verify-qa-review | 57 | 26 | 0 | FLIPPED@58/83 |
 | 2026-07-10 | submission-wizard | authoring | spec-author-att1 | 182 | 22 | 0 | FLIPPED@183/204 |
 | 2026-07-10 | submission-wizard | authoring | spec-author-att2 | 111 | 44 | 0 | FLIPPED@112/155 |
+| 2026-07-10 | submission-wizard | authoring | spec-author | 114 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | probe | probe-api-url-seams | 105 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | probe | probe-start-page-access | 161 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | probe | probe-wizard-ui-states | 118 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | probe | probe-submit-fanout-cancel | 188 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | authoring | spec-finalizer | 27 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | authoring | test-author | 157 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | verification | verify-permissions-code | 38 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | verification | verify-positive-controls | 73 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | verification | verify-denial-probes | 0 | 68 | 0 | all-opus |
+| 2026-07-10 | submission-wizard | verification | verify-state-edges | 33 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | verification | verify-deviation-repro | 53 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | verification | verify-atlas-coverage | 23 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | probe | probe-admin-reopen-holes | 30 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | authoring | readability-verifier | 7 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | authoring | readability-fix | 128 | 0 | 0 | clean |
+| 2026-07-10 | submission-wizard | authoring | verification-merge | 53 | 0 | 0 | clean |
