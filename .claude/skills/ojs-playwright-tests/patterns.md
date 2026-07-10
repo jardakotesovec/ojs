@@ -336,3 +336,40 @@ test('editor assigns reviewer, reviewer accepts', async ({page, asUser}) => {
 - **The submission GET's `reviewAssignments` is a hand-rolled summary**: `statusId` + Y-m-d dates only — no `cancelled`/`declined`/`dateReminded`/`dateAcknowledged` fields. Assert state via `statusId` constants or the row's History modal, not via fields that aren't there.
 - **Review files are grant-based**: seeded in-review submissions carry no review-round files; production promotes them via a client-side REST `files/{id}/copy?stageId=1` follow-up and the Add Reviewer modal's file selection writes the `review_files` grant. Mirror that flow; don't expect seeded files to be reviewer-visible.
 - **A real wizard submit fires `AssignEditors`** (auto-assigns the journal's section editors), so `participants` on submitted scenarios is additive; seeding `participants: []` WITHOUT `submitted` is what produces a genuine needs-editor state.
+
+## Live-probe cookbook (spec verification — learned 2026-07-10, calibration f1)
+
+Throwaway probes that verify spec claims against the running app. These idioms cost
+half a session to rediscover; use them as-is.
+
+- **Authenticate with Playwright request contexts, never bare curl.** Log in via the
+  real UI form in a `chromium` page, then fire probes through `context.request` —
+  the context carries session cookies automatically, and `page.evaluate(() =>
+  window.pkp?.currentUser?.csrfToken)` supplies the CSRF header for mutating calls.
+  curl-based login is a trap: multilingual journals 302 `/login` → `/en/login`, so a
+  naive `curl $ctx/login | grep csrfToken` reads an EMPTY page and every later
+  request runs anonymous — see next bullet for why that's poisonous.
+- **An anonymous XHR to a legacy grid op returns a plausible JSON denial** ("You
+  don't currently have access to that stage…"), indistinguishable at a glance from a
+  real role denial. NEVER trust a DENIED verdict without (a) proving the session is
+  live (an API GET that returns 200) and (b) a positive control — a plainly-entitled
+  actor (e.g. a pure section editor) running the SAME op and getting ALLOWED. A
+  denial without a passing control is evidence of nothing.
+- **Legacy grid-op URLs**: `.../$$$call$$$/grid/<path>/<op-name>` with the op
+  HYPHENATED (`read-review`, not `readReview`) and the header `X-Requested-With:
+  XMLHttpRequest`. camelCase op names or a missing XHR header → opaque 500s.
+- **REST verbs vary per route** — `confirmReview` is PUT, not POST (a wrong verb
+  can surface as a 500, not a 405). Check the `Route::` registration in the
+  controller before concluding anything from an error status.
+- **Scenario seeding**: users can be minted ONLY by the journal scenario's `users:
+  [{username, roles, password?, …}]` (explicit `password` is honored; otherwise
+  `username+username`); the submission scenario resolves usernames but never creates
+  them. Multilingual fields (`name`, section `title`/`abbrev`, publication `title`)
+  must be locale maps (`{"en": …}`) — a bare string 400s or worse. Per-reviewer
+  `status` / `method` / `responseDueDate` / `reviewDueDate` make day-boundary and
+  anonymity states seedable in one POST.
+- **Dual-role traps**: an author-editor probe needs a user genuinely enrolled in
+  BOTH groups who is the submitter — a bare stage assignment without the global
+  author role does not trip the author checks (false negative). Conversely a
+  same-user second `participants` entry rides on `build()`'s firstOr semantics
+  (see the scenario notes above).

@@ -19,6 +19,18 @@ loop resumes only when the maintainer declares calibration done.
   skill (env facts, seeded users, POMs, scenario endpoints).
 - **Background contract (once per session is plenty)**: `CHARTER.md`.
 
+## Resuming a feature mid-flight (fresh/empty session)
+
+If PROGRESS shows a row `in_progress` and the working tree holds uncommitted work
+for it, RESUME — do not restart from scratch: the gates are idempotent, so re-run
+them to discover where the loop stopped. In order: `lint-spec.sh` on the spec
+(step 3); the feature's tests twice (step 6); then judge from the spec's own
+footnotes whether live verification ran (probe dates + "live-probed" provenance
+in `<sup>` notes — a spec whose contested claims carry only code anchors still
+needs steps 4/7/8). Whatever a prior session's subagents reported is GONE with
+that session — only what is in the files counts. When a stage's completion is
+genuinely undecidable from the files, re-run that stage.
+
 ## Budget & ceilings (HARD)
 
 - **≤ 700 tests total**, **≤ 25 min** full-suite runtime on a fresh DB. The 700 is
@@ -99,12 +111,30 @@ discipline).
   (`model_refusal_fallback`). This went unnoticed for days in July 2026 and is why the
   pre-reset corpus was mostly authored by the wrong model. Mitigations now active on
   this machine: `switchModelsOnFlag: false` (the session pauses instead of switching)
-  and a PreToolUse **fable-guard** hook that hard-stops any session that started on
-  Fable and is now served by another model. **A fable-guard stop is working as
-  intended: resume in a FRESH session** (new sessions restore Fable); never disable
-  the guard mid-run.
-- Spot-check per feature: the last assistant `message.model` in the session
-  transcript must be `claude-fable-5`.
+  and a PreToolUse **fable-guard** hook (v2, 2026-07-10) that hard-stops tool use when
+  the session transcript OR any subagent transcript active in the last 2 minutes
+  started on Fable and is now served by another model. (v1 checked only the main
+  session — the calibration run's adversarial verifier flipped to Opus mid-run
+  undetected, because hooks receive the MAIN session's transcript_path even for
+  subagent tool calls.) **A fable-guard stop is working as intended: resume in a
+  FRESH session/agent**; never disable the guard mid-run.
+- The guard cannot catch a flip on an agent's final text-only turn, so the
+  **completion spot-check stays mandatory**: after every subagent finishes, count
+  models across its transcript (`grep '"type":"assistant"' <session-dir>/subagents/
+  agent-<id>.jsonl | grep -o '"model":"[^"]*"' | sort | uniq -c`) — anything other
+  than 100% `claude-fable-5` means the agent's output is tainted: discard and re-run
+  it fresh; do not "review and keep" tainted output.
+- **Verification runs are the fallback-prone task class** (calibration feature 1:
+  three verifier runs flipped 3/3 — spec author and test author 0/2 — and a
+  neutral-vocabulary rewrite did NOT prevent it). Protocol: after TWO discarded
+  delegated verification attempts, stop retrying subagents and have the
+  ORCHESTRATOR complete the remaining checklist inline in the main session (it is
+  guard-protected and pauses rather than switches). Salvage rule: a discarded run's
+  conclusions are untrusted, but they may be used to NARROW what the clean re-run
+  reads — never as evidence.
+- **Guard side effect**: for ~45 s after a flipped agent's last transcript write,
+  ALL tool calls in the session are guard-blocked (stop-the-line). This is intended
+  — wait it out; do not debug it, do not disable the guard.
 - **The completion notification is the ONLY reliable subagent liveness signal.** Never
   judge a subagent by transcript size or token count (that misled an orchestrator into
   killing working agents). If an agent looks stuck, check ground truth — has its

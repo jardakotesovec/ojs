@@ -41,7 +41,7 @@ declares calibration done. The maintainer picks each next feature.
 | 8 | Area 2 — Editorial workflow & peer review | `editorial-decisions` | H·13 | pending | pending | |
 | 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | pending | pending | |
 | 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | pending | pending | |
-| 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | pending | pending | |
+| 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | in_progress | pending | calibration feature 1 (stress test) |
 | 12 | Area 2 — Editorial workflow & peer review | `reviewer-response` | H·10 | pending | pending | |
 | 13 | Area 2 — Editorial workflow & peer review | `review-forms` | M·7 | pending | pending | |
 | 14 | Area 2 — Editorial workflow & peer review | `review-rounds-and-revisions` | H·12 | pending | pending | |
