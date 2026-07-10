@@ -4,10 +4,15 @@
 fresh, restarted, `/clear`ed, or resumed after compaction — becomes correct by reading
 these two files. Do not rely on conversation memory.
 
-**Current mode: CALIBRATION (since the 2026-07-10 reset).** Build **ONE feature**
-end-to-end per session, then **STOP for maintainer review** — the maintainer picks
-each next feature and signs off before another starts. The autonomous multi-feature
-loop resumes only when the maintainer declares calibration done.
+**The current mode lives in `PROGRESS.md`'s banner** — read it before doing
+anything. The modes:
+
+- **CALIBRATION / DRESS REHEARSAL**: build **ONE feature** end-to-end per session,
+  then **STOP for maintainer review**. In calibration the maintainer picks the
+  feature; in the dress rehearsal the session picks it itself by the waves
+  selection rule and must complete with ZERO maintainer input mid-run — the
+  rehearsal exists to prove the docs alone produce sign-off quality cold.
+- **AUTONOMOUS WAVES**: see the "Autonomous waves" section below.
 
 ## What to read, when (do NOT read everything up front)
 
@@ -100,11 +105,33 @@ discipline).
     Shared (pkp-lib) test/POM/Processor changes commit inside `lib/pkp`; specs, docs
     and OJS-only tests commit in the root. This is the single home of the commit
     rule — PRINCIPLES points here.
-11. **STOP (calibration mode)** — report to the maintainer: what was built, verifier
-    findings, open questions, anything low-confidence. Do not start another feature.
-    The review is about spec/test QUALITY and process fit — Open questions and ledger
-    rows stay recorded, not resolved: with 90+ features, blocking on answers would
-    stall the build (maintainer, 2026-07-10; the team returns to them over time).
+11. **Report** — to the maintainer: what was built, verifier findings, open
+    questions, anything low-confidence (that flag goes in the PROGRESS note — it
+    drives the waves sampling review). Open questions and ledger rows stay
+    recorded, not resolved: with 90+ features, blocking on answers would stall the
+    build (maintainer, 2026-07-10; the team returns to them over time). Then:
+    calibration/rehearsal mode → STOP, do not start another feature; waves mode →
+    the NEXT feature runs in a FRESH session (never continue in this one), unless
+    a wave boundary or halt condition hit (see Autonomous waves).
+
+## Autonomous waves (post-rehearsal mode)
+
+Active ONLY when the PROGRESS banner says so. The unit of work stays ONE feature
+per fresh session (context hygiene, not caution); a wave is a review cadence, not
+a batch:
+
+- **Selection**: the first `pending` row in PROGRESS table order. The maintainer
+  may reorder rows or mark a row claimed/deferred at any time — respect edits.
+- **Wave = 7 features.** The PROGRESS banner records the wave counter. When 7
+  features have completed since the last maintainer sampling, do NOT start
+  another: report and request a sampling review.
+- **Sampling review**: the maintainer spot-reads 1–2 specs from the wave plus
+  everything flagged low-confidence in PROGRESS notes. Nit findings → fix in
+  place; systemic findings → **HALT the campaign**, encode the fix in
+  TEMPLATE/RUNBOOK first (the s5 scenario-wording rule is the model), sweep it
+  across the wave's outputs, then resume.
+- **Park-and-continue is active** (see Ops): 3 failed attempts → `parked` with
+  the reason, move on.
 
 ## Model discipline (subagents & fallback)
 

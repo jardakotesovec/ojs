@@ -17,9 +17,13 @@ all test infrastructure (POMs, fixtures, support, scenario endpoints, serial
 wiring), the atlas, FEATURE-MAP, UNASSIGNED, and both ledgers (their findings are
 app facts, independent of the scratched specs).
 
-**Current mode: CALIBRATION.** Build ONE feature end-to-end per the RUNBOOK loop,
-then STOP for maintainer review — no autonomous looping until the maintainer
-declares calibration done. The maintainer picks each next feature.
+**Current mode: DRESS REHEARSAL (maintainer decision 2026-07-10).** Calibration
+feature 1 (`assign-and-manage-reviewers`) is signed off. The next session builds
+exactly ONE feature — the first `pending` row in table order — end-to-end per the
+RUNBOOK loop, with ZERO maintainer input mid-run and step 7 delegated per the
+chunked-verification protocol, then STOPS for maintainer review. If that review
+passes, the maintainer flips this banner to **AUTONOMOUS WAVES** (rules in
+RUNBOOK); wave counter starts then at 0 since last sampling.
 
 ## Totals
 
@@ -41,7 +45,7 @@ declares calibration done. The maintainer picks each next feature.
 | 8 | Area 2 — Editorial workflow & peer review | `editorial-decisions` | H·13 | pending | pending | |
 | 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | pending | pending | |
 | 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | pending | pending | |
-| 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | verified | green(x2) | calibration f1: 13 tests, 33 atoms, 5 proposed ledger rows — findings in the spec + calibration report; awaiting maintainer sign-off |
+| 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | verified | green(x2) | calibration f1: 13 tests, 33 atoms, 5 proposed ledger rows; maintainer signed off 2026-07-10 (scenario rewording applied) |
 | 12 | Area 2 — Editorial workflow & peer review | `reviewer-response` | H·10 | pending | pending | |
 | 13 | Area 2 — Editorial workflow & peer review | `review-forms` | M·7 | pending | pending | |
 | 14 | Area 2 — Editorial workflow & peer review | `review-rounds-and-revisions` | H·12 | pending | pending | |
