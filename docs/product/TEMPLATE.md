@@ -4,9 +4,10 @@ Copy this file to `specs/<feature>.md` and fill every section (or mark it `N/A �
 <reason>`). HTML comments are guidance — delete them in the real spec.
 
 **These specs are read by a PRODUCT OWNER / QA person, not an engineer.** The reference
-exemplars are `specs/tasks-discussions.md` (gold standard) and `specs/media-files.md`
-(the calibrated example) — read them before writing, and match their voice. The
-non-negotiable rules, enforced in every section:
+exemplar is `specs/tasks-discussions.md` (the maintainer-calibrated gold standard) —
+read it before writing, and match its voice. The non-negotiable rules, enforced in
+every section and checked mechanically by `docs/product/lint-spec.sh` (a spec must
+pass with ZERO findings before it proceeds to test authoring — the exemplar passes):
 
 1. **Business-language bodies, code in footnotes.** No section BODY (Purpose, Actors,
    Fields, Rules & state, Side effects, Scenarios) may contain a class/method name, a
@@ -31,6 +32,20 @@ non-negotiable rules, enforced in every section:
    the who to Actors (don't re-enumerate roles). A ⚠ permission *deviation* (e.g. a
    screen-vs-server divergence) may live in Rules/Known-deviations as a behavior anomaly
    but references roles minimally, not a full re-listing.
+4. **Probe evidence is provenance, exactly like code anchors.** Verification facts —
+   HTTP status codes, redirect targets, "live-probed …" notes and dates, seeded
+   usernames (`atester`, `dbarnes`, …) and the seeded journal — prove a claim; they are
+   not the claim. They live ONLY in the `<sup>` footnotes, alongside the code anchors.
+   The body states the observable outcome in the user's terms. The one real example
+   that defines the line (from the maintainer's red pen):
+   - **Bad**: "`/authorDashboard/submission/{id}` redirects to My Submissions with that
+     submission's tracking view open (live-probed 302, both author kinds)"
+   - **Good**: "An old bookmarked author-dashboard link lands on My Submissions with
+     that submission's tracking view open. <sup>g</sup>" — with the footnote carrying
+     `<sup>g</sup> /authorDashboard/submission/{id} → 302; PKPAuthorDashboardHandler::submission();
+     live-probed 2026-07-03 (submitter + assigned co-author)`.
+   The RUNBOOK still requires every affordance claim to be live-probed — this rule is
+   only about WHERE the evidence goes, never whether to collect it.
 
 ---
 
@@ -158,10 +173,20 @@ atlas-claims: [<atom IDs this spec owns>]
 ## Canonical scenarios
 
 <!-- Narrative user journeys a QA person would recognize, named. These are the
-     units the round-2 test crosswalk maps onto — one retained test per scenario, so
-     the count comes from the feature's Budget column in PROGRESS.md (L 3–4, M 6–8,
-     H up to ~12–13). Cover the core journey, the main permission boundary, and the
-     main state-rule variation at minimum. -->
+     units the test build maps onto — one retained test per scenario, so the count
+     comes from the feature's Budget column in PROGRESS.md (L 3–4, M 6–8, H up to
+     ~12–13). Cover the core journey, the main permission boundary, and the main
+     state-rule variation at minimum.
+
+     NAME ACTORS BY ROLE, never by seeded account: "an author", "a Journal Manager",
+     "a Section Editor assigned to the submission" — the scenario describes the
+     PRODUCT, not the test environment, and a QA person must be able to act it out on
+     any install. Seeded usernames (atester, dbarnes…), the seeded journal
+     (publicknowledge) and seeding recipes are test-authoring detail: if the test
+     author needs them, hang them off a <sup> footnote on the scenario. -->
+
+<!-- example: 1. **<Scenario name>** — an author: <flow in 2–4 sentences, including
+     the observable outcome>. <sup>s1</sup> -->
 
 1. **<Scenario name>** — <actor(s)>: <flow in 2–4 sentences, including the
    observable outcome>.

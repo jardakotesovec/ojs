@@ -198,6 +198,16 @@ appends a row here.
 
 ## 3. Flakiness sources in the local/CI environment (not app code)
 
+- **Transient parallel-load flakes under 5-worker full-suite runs** (moved from
+  PROGRESS at the 2026-07-10 consolidation; the affected round-2 tests were scratched
+  but the environmental causes remain for any new suite): (a) dev-server JSON response
+  truncation (`Unexpected end of JSON input`), (b) DB sequence-ordering races on
+  listing assertions, (c) web/high-res file-linking timing. Each passed in isolation.
+  Standing mitigation: `retries: 1` on the parallel `app` project in
+  `lib/pkp/playwright/config-factory.js` (committed in lib/pkp) — one retry absorbs
+  environmental flakes while a genuine regression still fails both attempts; the
+  serial project keeps no retries (single-worker, deterministic).
+
 - **Scenario API accepts a plain-string `metadata.title` and seeds a submission whose
   API map 500s** (`array_keys(): Argument #1 ($array) must be of type array, string
   given`): multilingual metadata passed as a bare string is stored under locale `'0'`

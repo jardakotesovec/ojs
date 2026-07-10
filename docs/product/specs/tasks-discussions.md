@@ -3,7 +3,6 @@ name: tasks-discussions
 scope: Editorial teams coordinate work on a submission through per-stage tasks (with owner + due date) and discussions (threaded conversations), optionally seeded from journal-level templates
 shared: pkp-lib
 status: verified
-e2e-plans: [discussions.md, editorial-tasks.md, notifications.md]
 atlas-claims:
   - API-editorial-task-add-task
   - API-editorial-task-edit-task
@@ -238,7 +237,7 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
     the item and later edited through the item's description field, as part of editing
     the item — so changing it **first requires write access per rule 13** (creator,
     manager or responsible participant; a sub-editor who is only a participant cannot
-    edit it, live-probed). Within a permitted edit, managers, sub-editors and site
+    edit it). Within a permitted edit, managers, sub-editors and site
     admins are exempt from an extra restriction that applies to other writers: they may
     change a head message only if they authored it, and only within one hour of writing
     it. Replies may be posted only by participants — a non-participant's reply is
@@ -273,8 +272,8 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
     variables substituted), and a due date of today plus the template's due interval.
     ⚠ It does **not** pre-select participants — the client prefill clears the responsible
     assignee and leaves the participant list at its default (only the current user, as
-    creator), even though the `fromTemplate` endpoint returns the promoted participants;
-    the form simply ignores them. The template must belong to this journal and match the
+    creator), even though the template data handed to the form does include the
+    promoted participants; the form simply ignores them. The template must belong to this journal and match the
     stage being worked on, or the prefill is refused. If the user applies a template
     while editing an existing item, the form warns first and then overwrites the current
     values on confirm. <sup>t</sup>

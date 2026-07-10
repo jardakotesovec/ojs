@@ -80,10 +80,8 @@ each test seeds its own state through test-only scenario endpoints
 
 ## Commit discipline
 
-`lib/pkp` is a separate repository (submodule). Shared specs, POMs, and Processor changes
-are committed inside `lib/pkp`; OJS-only specs and all docs (including this directory) are
-committed in the OJS root. **Never bump the submodule pointer in a root commit** — run
-`git restore --staged lib/pkp` before committing the root repo.
+Owned by `docs/product/RUNBOOK.md` (per-feature loop, Commit step): `lib/pkp` and root
+commit separately, never bump submodule pointers.
 
 ## App-code change ledger
 
