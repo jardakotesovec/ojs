@@ -62,8 +62,10 @@ discipline).
 2. **Author the spec** → `docs/product/specs/<feature>.md` per `TEMPLATE.md`:
    business-language body, frontend-first, every claim anchored to a stable symbol in
    a `<sup>` footnote, canonical scenarios named by role. Draw from the feature's
-   atlas atoms + the code; where the code is ambiguous, probe the live app (step 4's
-   etiquette), don't guess. Note: atlas `Claimed by:` markers survive from the
+   atlas atoms + the code; where the code is ambiguous, don't guess — put the
+   question on the PROBE LIST the author returns with its draft (step 4 executes
+   it via Opus probe subagents; the Fable author itself never probes, see Model
+   discipline). Note: atlas `Claimed by:` markers survive from the
    scratched round as feature-name claims — re-verify the atom list matches the
    rebuilt spec's frontmatter and adjust claims if the regrouping changed; do not
    treat an existing marker as "already covered".
@@ -78,7 +80,10 @@ discipline).
    a claimed reopen affordance didn't exist because the control disables once
    closed). No affordance claim ships without driving it — a throwaway Playwright
    probe or the browser, across the relevant state × role matrix. Probes are
-   throwaway; the retained tests are step 5's.
+   throwaway; the retained tests are step 5's. Execution is DELEGATED: the
+   author's probe list is farmed to `model: opus` probe subagents (see Model
+   discipline) and the facts handed back to a Fable agent to finalize the spec —
+   neither the orchestrator nor any Fable agent runs the battery itself.
 5. **Write the Playwright tests** — one per canonical scenario, per
    `docs/e2e/PRINCIPLES.md` + the `ojs-playwright-tests` skill: scenario-seed state,
    reuse/extend POMs, scope Mailpit by recipient+tag, `--output` to a private dir,
@@ -154,30 +159,50 @@ a batch:
   agent-<id>.jsonl | grep -o '"model":"[^"]*"' | sort | uniq -c`) — anything other
   than 100% `claude-fable-5` means the agent's output is tainted: discard and re-run
   it fresh; do not "review and keep" tainted output.
-- **Verification runs are the fallback-prone task class** (calibration feature 1:
-  three verifier runs flipped 3/3 — spec author and test author 0/2 — and a
-  neutral-vocabulary rewrite did NOT prevent it; every flip hit ~5–10 minutes in).
-- **Delegate verification CHUNKED, not monolithic** (experiment from calibration
-  f2): split step 7 into 4–6 single-purpose subagents, each a fresh context with a
-  tight brief and ~5–15 tool calls — (a) permission re-derivation from code only,
-  (b) live positive controls, (c) live denial probes, (d) state-machine edge seeds,
-  (e) one ⚠-deviation reproduction each, (f) atlas coverage grep. Each returns a
-  small structured verdict; the orchestrator merges. Short fresh contexts lower the
-  flip odds and blast radius (a flipped chunk is a cheap retry, caught instantly by
-  the guard), and per-chunk flip incidence isolates WHICH content class triggers
-  the fallback — record chunk-type flip stats in the calibration report. A chunk
-  that flips twice goes inline.
-- Protocol floor: after TWO discarded delegated attempts of the SAME chunk (or of a
-  monolithic verifier), stop retrying subagents and have the
-  ORCHESTRATOR complete the remaining checklist inline in the main session (it is
-  guard-protected and pauses rather than switches). Salvage rule: a discarded run's
-  conclusions are untrusted, but they may be used to NARROW what the clean re-run
-  reads — never as evidence. Inline completion is a BOUNDED exception, not a mode:
-  the orchestrator's job is steering, so keep probe outputs terse (status codes,
-  one-line verdicts), and if its context runs low mid-feature, finish the current
-  gate, commit what is committed-worthy, and END the session — a fresh one resumes
-  via "Resuming a feature mid-flight". Never let the orchestrator drift into
-  authoring.
+- **Probe-heavy context is the fallback-prone task class — not "verification" per
+  se.** Evidence: calibration f1's verifiers flipped 3/3 (probe-heavy) while its
+  authors ran clean 0/2 (mostly writing); the dress rehearsal's submission-wizard
+  spec authors flipped 2/2 the moment authoring turned into a long live-probe
+  battery, and the orchestrator that then took the battery inline got flagged
+  ITSELF at ~241k tokens — the run hard-paused mid-feature with zero durable
+  output (2026-07-10). Neutral vocabulary does not prevent it; accumulated probe
+  context is the trigger.
+- **Model policy (maintainer, 2026-07-10): Fable writes, Opus probes.** Anything
+  that AUTHORS prose or tests — spec author, test author, readability verifier,
+  code-only verification chunks — is Fable, pinned, guard-watched, spot-checked;
+  a flip still means discard and re-run. Live-probe EXECUTION — the step 4
+  affordance battery, live verification chunks, deviation reproductions — runs in
+  subagents deliberately pinned `model: opus`: probes return checkable facts
+  (status codes, on-screen labels, row states) whose value does not depend on the
+  model, and Fable retries there burn hours. An opus-pinned agent has no Fable
+  lines so the guard ignores it by design; the completion spot-check asserts each
+  agent is 100% its PINNED model. The discard-tainted-output rule applies only to
+  fable-pinned agents that flipped.
+- **Authors draft, probe agents probe.** The Fable spec author works from code +
+  atlas and returns the draft PLUS a probe list (every affordance/behavior claim
+  needing live confirmation, per step 4). The orchestrator farms that list to
+  Opus probe subagents (fresh context, tight scope, facts-only returns) and hands
+  the results to a Fable agent to fold in and finalize the footnotes. No Fable
+  agent — author, verifier, or ORCHESTRATOR — accumulates a probe battery in its
+  own context.
+- **Delegate verification CHUNKED, not monolithic**: split step 7 into 4–6
+  single-purpose subagents, each a fresh context with a tight brief and ~5–15 tool
+  calls — (a) permission re-derivation from code only, (b) live positive controls,
+  (c) live denial probes, (d) state-machine edge seeds, (e) one ⚠-deviation
+  reproduction each, (f) atlas coverage grep. Model per chunk follows the policy
+  above: (a) and (f) are code/text-only → `model: fable`; (b)–(e) are live probes
+  → `model: opus`. Each returns a small structured verdict; the orchestrator
+  merges. A fable chunk that flips is re-run pinned `model: opus` in a fresh
+  subagent — never inline.
+- **The orchestrator NEVER completes probe or verification work inline.** (The
+  earlier "bounded inline exception" is REVOKED, 2026-07-10: it walked the
+  dress-rehearsal orchestrator into running the probe battery itself, the main
+  session got flagged, and the whole run died with nothing on disk. Inline
+  completion is how you lose the controlling agent.) Salvage rule unchanged: a
+  discarded run's conclusions may NARROW what a clean re-run reads — never serve
+  as evidence. If the orchestrator's context runs low mid-feature, finish the
+  current gate, commit what is committed-worthy, and END the session — a fresh one
+  resumes via "Resuming a feature mid-flight".
 - **Guard side effect**: for ~45 s after a flipped agent's last transcript write,
   ALL tool calls in the session are guard-blocked (stop-the-line). This is intended
   — wait it out; do not debug it, do not disable the guard.

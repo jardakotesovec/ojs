@@ -35,7 +35,7 @@ RUNBOOK); wave counter starts then at 0 since last sampling.
 
 | # | Area | Feature | Budget | Spec | Tests | Note |
 |---|------|---------|--------|------|-------|------|
-| 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | pending | pending | |
+| 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | in_progress | pending | dress rehearsal, attempt 2 — attempt 1 died to a main-thread flag mid-probe-battery (no spec written); Fable-writes/Opus-probes policy since encoded |
 | 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | M·7 | pending | pending | |
 | 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | M·6 | pending | pending | |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | M·6 | pending | pending | |
