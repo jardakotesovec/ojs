@@ -87,9 +87,12 @@ discipline).
    findings or record them as Open questions.
 8. **Readability verify** — a SEPARATE subagent (never the spec's author) in a strict
    persona: a QA/PO person with NO access to the code or test environment reads ONLY
-   the body sections (everything above `## Reference`, minus footnotes) and must be
-   able to restate every rule in their own words. Rewrite anything they stumble on;
-   re-run the lint.
+   the body sections (everything above `## Reference`, minus footnotes) and must
+   (a) restate every rule in their own words, AND (b) walk each canonical scenario
+   as a manual test — "the steps I'd take and what I should see" — flagging any
+   verb or noun they cannot map to something on screen (the s5 lesson: "pins /
+   preloads the subsequent-request template" passed the lint but not a reader).
+   Rewrite anything they stumble on; re-run the lint.
 9. **Update PROGRESS** — status, #tests, a ONE-line note. Findings go in the spec and
    the ledger, never in PROGRESS.
 10. **Commit** — `lib/pkp` and root **separately**, NEVER bump submodule pointers

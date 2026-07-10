@@ -540,10 +540,11 @@ test.describe('Editorial Tasks & Discussions', () => {
 		},
 	);
 
-	// Canonical scenario 5 — while adding an item, picking a template flips the
-	// form to the template's type, prefills title/description/due date and
-	// pre-selects participants from the template's user groups; nothing is saved
-	// until the form is submitted.
+	// Canonical scenario 5 — while adding an item, picking a template switches
+	// the form to the template's type and prefills title/description/due date;
+	// it does NOT pre-select participants (rule 20 ⚠ — the template's user
+	// groups are ignored client-side); nothing is saved until the form is
+	// submitted.
 	test(
 		'Apply template prefill',
 		{tag: '@regression'},
@@ -567,8 +568,8 @@ test.describe('Editorial Tasks & Discussions', () => {
 			});
 			const csrf = await readCsrf(page);
 			// A submission-stage TASK template restricted to the Section editor
-			// group, so applying it should pre-select the section editors on the
-			// submission's stage (rule 20).
+			// group — per the rule-20 ⚠ deviation, applying it must NOT
+			// pre-select those section editors.
 			const groupId = await userGroupIdForRole(
 				page,
 				journalPath,
@@ -623,15 +624,13 @@ test.describe('Editorial Tasks & Discussions', () => {
 			expect(due, 'due date is prefilled').not.toBe('');
 			expect(due >= isoDate(0), 'due date is today-or-later').toBe(true);
 
-			// SPEC CONTRADICTION (rule 20 / scenario 5) — reported, not a test bug.
-			// The verified spec says applying a template "pre-selects participants
-			// from the template's user groups". As built, it does NOT: the client
+			// Rule-20 ⚠ deviation (spec Known deviations): the client
 			// useDiscussionManagerForm.setValuesFromTemplate() sets only title,
 			// type, description and due date and never writes the participants
 			// field — even though the fromTemplate endpoint DOES return the
-			// promoted participants. So the section editor (sectioneditor.ana) who holds the
-			// template's restricted group is NOT pre-selected; only the creator
-			// default (editor.diana) stays checked. Live-probed on 2026-07 main.
+			// promoted participants. So the section editor (sectioneditor.ana)
+			// who holds the template's restricted group is NOT pre-selected;
+			// only the creator default (editor.diana) stays checked.
 			await form.expectParticipantChecked(USER.diana.name); // creator default
 			await form.expectParticipantNotChecked(USER.ana.name); // NOT pre-selected
 

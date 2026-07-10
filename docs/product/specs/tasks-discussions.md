@@ -420,8 +420,8 @@ four weeks, or one to three months); and an optional **restriction to chosen rol
    It is not duplicated when the stage is re-entered while it still exists, though
    deleting it and re-entering the stage creates it again (rule 21); it can't be
    started until someone edits in participants and an owner.
-5. **Apply template prefill** — while adding an item, picking a template flips the form
-   to the template's type and prefills the title, description and due date; it does
+5. **Apply template prefill** — while adding an item, picking a template switches the
+   form to the template's type and prefills the title, description and due date; it does
    **not** pre-select participants (⚠ the responsible assignee is cleared and the
    participant list stays at its default, even though the template carries user groups —
    see rule 20). Nothing is saved until the user submits the form.

@@ -199,7 +199,28 @@ atlas-claims: [<atom IDs this spec owns>]
      PRODUCT, not the test environment, and a QA person must be able to act it out on
      any install. Seeded usernames (atester, dbarnes…), the seeded journal
      (publicknowledge) and seeding recipes are test-authoring detail: if the test
-     author needs them, hang them off a <sup> footnote on the scenario. -->
+     author needs them, hang them off a <sup> footnote on the scenario.
+
+     WRITE EACH SCENARIO AS A MANUAL TEST SCRIPT (maintainer, 2026-07-10): what the
+     tester does and what appears on screen, quoting the real UI labels. Rules can be
+     dense because they are STUDIED; scenarios are EXECUTED — each must stand alone
+     without a trip back into Rules & state to decode a verb. Ban builder's-seat
+     verbs (pins, preloads, fires, flips, wires…) and any noun that is not visible on
+     screen: name a template, panel or notification by its on-screen label, or by
+     what the user reads. The lint cannot catch this — it is enforced by the
+     readability verifier (RUNBOOK step 8), who must be able to walk each scenario as
+     "the steps I'd take and what I should see". Acceptance test: a QA person who
+     has NEVER opened the screen can execute the scenario and judge pass/fail.
+       - Bad: "on round two, the round-one reviewer is pinned in the picker with
+         'Reassign'; selecting them preloads the subsequent-round request template."
+       - Good: "the submission enters a second review round. In Add Reviewer, the
+         reviewers who completed round one appear at the top of the list, each with
+         a 'Reassign' button. Reassigning one opens the normal request form with the
+         predefined message already set to 'Review Request Subsequent' — the email
+         written for re-reviewing a revised submission, not the first-time
+         invitation."
+     The Playwright file's per-scenario comments and test titles reuse the spec's
+     scenario names and wording — when a scenario is reworded, mirror it there. -->
 
 <!-- example: 1. **<Scenario name>** — an author: <flow in 2–4 sentences, including
      the observable outcome>. <sup>s1</sup> -->

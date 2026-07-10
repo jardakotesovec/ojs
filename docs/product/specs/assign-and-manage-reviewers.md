@@ -437,29 +437,35 @@ ordering rule. <sup>k</sup>
 2. **Skip the email** — a Journal Manager assigns a reviewer with "Do not send
    email to Reviewer" ticked: the row still appears and the in-app notification
    fires, but no invitation email is sent. <sup>s2</sup>
-3. **Conflict warning and unlock** — the picker locks a candidate who could know
-   the authors (a journal manager who also reviews); the editor reads the warning,
-   unlocks, and assigns anyway. <sup>s3</sup>
-4. **Create or enroll a reviewer mid-assignment** — a Journal Manager creates a
-   brand-new reviewer account from inside the dialog (new user gets a registration
-   email and the review request); an Assistant with review-stage access sees
-   neither the create nor the enroll option. <sup>s4</sup>
-5. **Reassign last round's reviewer** — on round two, the round-one reviewer is
-   pinned in the picker with "Reassign"; selecting them preloads the
-   subsequent-round request template. <sup>s5</sup>
+3. **Conflict warning and unlock** — in Add Reviewer, a candidate who could know
+   the authors (a journal manager who also reviews) shows a warning notice in place
+   of the usual selection; the editor reads the warning, chooses "Unlock" — the
+   entry now offers "Select Reviewer" — and assigns anyway. <sup>s3</sup>
+4. **Create or enroll a reviewer mid-assignment** — a Journal Manager uses "Create
+   New Reviewer" inside Add Reviewer to make a brand-new account and assign it in
+   one flow (the new user gets a registration email and the review request); an
+   Assistant with review-stage access sees neither "Create New Reviewer" nor
+   "Enroll Existing User". <sup>s4</sup>
+5. **Reassign last round's reviewer** — the submission enters a second review
+   round. In Add Reviewer, the reviewers who completed round one appear at the top
+   of the list, each with a "Reassign" button. Reassigning one opens the normal
+   request form with the predefined message already set to "Review Request
+   Subsequent" — the email written for re-reviewing a revised submission, not the
+   first-time invitation. <sup>s5</sup>
 6. **Unassign before an answer vs cancel after** — unassigning a reviewer who
    never answered removes the row outright; cancelling one who accepted keeps a
    "Request Cancelled" row; both send the cancellation email unless skipped. <sup>s6</sup>
-7. **Reinstate** — the cancelled reviewer is reinstated and the row returns to
-   "Request Accepted". <sup>s7</sup>
-8. **Decline → resend cycle** — a declined reviewer is re-invited with fresh due
-   dates; the row shows "Request Resent" and the editor may again log the response
-   on the reviewer's behalf. <sup>s8</sup>
+7. **Reinstate a cancelled reviewer** — on a "Request Cancelled" row, the editor
+   uses "Reinstate" and keeps the prefilled notification email; the reviewer is
+   notified and the row returns to "Request Accepted". <sup>s7</sup>
+8. **Decline → resend cycle** — on a declined row, the editor uses "Resend Review
+   Request" and sets fresh due dates; the row shows "Request Resent" and the
+   editor may again log the response on the reviewer's behalf. <sup>s8</sup>
 9. **Read, rate, confirm, and set the recommendation by proxy** — an editor opens
-   a submitted review (row flips to "Review Viewed"), adjusts the reviewer's
+   a submitted review (the row changes to "Review Viewed"), adjusts the reviewer's
    recommendation, rates the review, and confirms: the row shows "Complete" with
    the new recommendation, and the activity log records the by-proxy
-   recommendation. Reverting the decision drops it back to "Review
+   recommendation. "Revert Decision" then drops the row back to "Review
    Submitted". <sup>s9</sup>
 10. **Thank the reviewer** — from a Complete row, the editor sends the prefilled
     thank-you; the reviewer receives it and the row moves to "Reviewer
@@ -467,9 +473,9 @@ ordering rule. <sup>k</sup>
 11. **Edit an in-flight assignment** — the editor moves the review due date; the
     row shows the new date and the reviewer receives the assignment-changed
     notification and email. <sup>s11</sup>
-12. **Remind an overdue reviewer** — an overdue row's headline action sends a
-    reminder built from the reminder template; the reviewer gets the email and
-    History shows the reminded date. <sup>s12</sup>
+12. **Remind an overdue reviewer** — an overdue row's headline action is "Send
+    Reminder"; it opens a prefilled reminder email, and sending it delivers the
+    email and stamps the reminded date in the row's History. <sup>s12</sup>
 13. **The author's window** — the submitting author sees no reviewer panel while
     reviews are anonymous or unfinished; once an open review is completed, a
     redacted panel appears with just the reviewer, the type and Read
