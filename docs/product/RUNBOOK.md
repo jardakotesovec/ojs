@@ -131,7 +131,12 @@ discipline).
   ORCHESTRATOR complete the remaining checklist inline in the main session (it is
   guard-protected and pauses rather than switches). Salvage rule: a discarded run's
   conclusions are untrusted, but they may be used to NARROW what the clean re-run
-  reads — never as evidence.
+  reads — never as evidence. Inline completion is a BOUNDED exception, not a mode:
+  the orchestrator's job is steering, so keep probe outputs terse (status codes,
+  one-line verdicts), and if its context runs low mid-feature, finish the current
+  gate, commit what is committed-worthy, and END the session — a fresh one resumes
+  via "Resuming a feature mid-flight". Never let the orchestrator drift into
+  authoring.
 - **Guard side effect**: for ~45 s after a flipped agent's last transcript write,
   ALL tool calls in the session are guard-blocked (stop-the-line). This is intended
   — wait it out; do not debug it, do not disable the guard.
