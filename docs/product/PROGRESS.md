@@ -35,7 +35,7 @@ RUNBOOK); wave counter starts then at 0 since last sampling.
 
 | # | Area | Feature | Budget | Spec | Tests | Note |
 |---|------|---------|--------|------|-------|------|
-| 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | in_progress | pending | dress rehearsal, attempt 2 — attempt 1 died to a main-thread flag mid-probe-battery (no spec written); model policy since amended (all subagents Fable, downgrades accepted; orchestrator never probes) |
+| 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | pending | pending | dress rehearsal target — attempt 1 died to a main-thread flag mid-probe-battery (no spec written; probe leftovers wiped by DB reset); model policy since amended, start clean from step 1 |
 | 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | M·7 | pending | pending | |
 | 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | M·6 | pending | pending | |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | M·6 | pending | pending | |
@@ -127,3 +127,25 @@ RUNBOOK); wave counter starts then at 0 since last sampling.
 | 90 | Area 8 — System, communications & administration | `csv-reports` | L·4 | pending | pending | |
 | 91 | Area 8 — System, communications & administration | `site-maintenance` | L·4 | pending | pending | |
 | 92 | Area 8 — System, communications & administration | `installation-upgrade` | L·4 | pending | pending | |
+
+## Model-fallback log
+
+One row per **completed subagent**, appended by
+`docs/product/log-model-mix.sh <agent.jsonl> <feature> <authoring|verification|probe> <label>`
+(the RUNBOOK completion spot-check). Clean rows are logged too — they are the
+denominators for per-class flip rates. `FLIPPED@N/M` = the first Opus assistant
+message was the Nth of M. **This section stays LAST in this file** (the script
+appends to end-of-file). Per-class rates:
+`awk -F'|' '/^\| 20/{c=$4; n[c]++; if($9!~/clean/) f[c]++} END{for(k in n) printf "%s: %d/%d flipped\n", k, f[k], n[k]}' docs/product/PROGRESS.md`
+
+| Date | Feature | Class | Agent | Fable | Opus | Other | Status |
+|------|---------|-------|-------|-------|------|-------|--------|
+| 2026-07-10 | assign-and-manage-reviewers | authoring | spec-author | 192 | 0 | 0 | clean |
+| 2026-07-10 | assign-and-manage-reviewers | authoring | test-author | 211 | 0 | 0 | clean |
+| 2026-07-10 | assign-and-manage-reviewers | authoring | readability-verifier | 59 | 0 | 0 | clean |
+| 2026-07-10 | assign-and-manage-reviewers | authoring | roster-migration | 148 | 0 | 0 | clean |
+| 2026-07-10 | assign-and-manage-reviewers | verification | verify-adversarial | 73 | 141 | 0 | FLIPPED@74/214 |
+| 2026-07-10 | assign-and-manage-reviewers | verification | verify-retry | 41 | 19 | 0 | FLIPPED@42/60 |
+| 2026-07-10 | assign-and-manage-reviewers | verification | verify-qa-review | 57 | 26 | 0 | FLIPPED@58/83 |
+| 2026-07-10 | submission-wizard | authoring | spec-author-att1 | 182 | 22 | 0 | FLIPPED@183/204 |
+| 2026-07-10 | submission-wizard | authoring | spec-author-att2 | 111 | 44 | 0 | FLIPPED@112/155 |

@@ -157,12 +157,14 @@ a batch:
   accept-downgrade policy). A fable-guard stop means the MAIN session flipped:
   resume in a fresh session; never disable the guard mid-run.
 - **The completion spot-check is now PROVENANCE RECORDING, not a gate**: after
-  each subagent finishes, count models across its transcript
-  (`grep '"type":"assistant"' <session-dir>/subagents/agent-<id>.jsonl |
-  grep -o '"model":"[^"]*"' | sort | uniq -c`) and record any mixed-model agent
-  in the feature report (e.g. "spec author flipped to opus after the draft").
-  Sampling reviews use this to watch whether opus-tail output correlates with
-  quality drift — if it does, that's a systemic finding (halt + amend).
+  EVERY subagent finishes (clean or flipped), append its row to the
+  "Model-fallback log" section at the end of `PROGRESS.md` via
+  `docs/product/log-model-mix.sh <session-dir>/subagents/agent-<id>.jsonl
+  <feature> <authoring|verification|probe> <label>` — authoring (spec/test/
+  readability writing) and verification/probe rows are classed separately so
+  per-class flip rates fall out of the log. Mention flips in the feature report
+  too. Sampling reviews use this to watch whether opus-tail output correlates
+  with quality drift — if it does, that's a systemic finding (halt + amend).
 - **Authors draft, probe agents probe.** The spec author works from code + atlas
   and returns the draft PLUS a probe list (every affordance/behavior claim
   needing live confirmation, per step 4) — drafting first is what keeps the prose
