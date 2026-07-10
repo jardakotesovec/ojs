@@ -5,9 +5,19 @@ Copy this file to `specs/<feature>.md` and fill every section (or mark it `N/A �
 
 **These specs are read by a PRODUCT OWNER / QA person, not an engineer.** The reference
 exemplar is `specs/tasks-discussions.md` (the maintainer-calibrated gold standard) —
-read it before writing, and match its voice. The non-negotiable rules, enforced in
-every section and checked mechanically by `docs/product/lint-spec.sh` (a spec must
-pass with ZERO findings before it proceeds to test authoring — the exemplar passes):
+read it before writing, and match its voice.
+
+**Altitude — two principles, no length quota** (maintainer, 2026-07-10). (1)
+*Complete*: enough information to accurately recreate the feature from the spec
+alone. (2) *Compressed*: written the way a product owner would write a
+specification — easy for a human to review, never repeating the same fact
+mechanically in multiple places; state each thing once, at its home section, and
+reference it elsewhere. Length is whatever those two principles produce: a simple
+CRUD feature yields a short spec, a state machine a long one.
+
+The non-negotiable rules, enforced in every section and checked mechanically by
+`docs/product/lint-spec.sh` (a spec must pass with ZERO findings before it proceeds
+to test authoring — the exemplar passes):
 
 1. **Business-language bodies, code in footnotes.** No section BODY (Purpose, Actors,
    Fields, Rules & state, Side effects, Scenarios) may contain a class/method name, a

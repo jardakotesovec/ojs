@@ -21,14 +21,25 @@ loop resumes only when the maintainer declares calibration done.
 
 ## Budget & ceilings (HARD)
 
-- **≤ 700 tests total**, **≤ 25 min** full-suite runtime on a fresh DB.
-- Per-feature budgets are tiered in each PROGRESS row (`Budget: tier·target`):
-  H 10–13 (core workflows, big permission matrices, state machines), M 6–8
-  (standard), L 3–4 (simple CRUD/read-only). The spec's canonical-scenario count
-  targets the budget (±1–2 by author judgment). Tiers on unbuilt rows are provisional
-  — respect maintainer edits.
+- **≤ 700 tests total**, **≤ 25 min** full-suite runtime on a fresh DB. The 700 is
+  the hard number; per-feature tiers exist to distribute it WELL — more complex or
+  more important features get more tests than simpler/less important ones
+  (maintainer, 2026-07-10).
+- Tiers live in each PROGRESS row (`Budget: tier·target`): H 10–13 (core workflows,
+  big permission matrices, state machines), M 6–8 (standard), L 3–4 (simple
+  CRUD/read-only). The spec's canonical-scenario count follows the tier ±1–2 by
+  author judgment — coverage of the feature's real risk is the goal, the tier keeps
+  the overall distribution honest. Tiers on unbuilt rows are provisional — respect
+  maintainer edits.
 
 ## The per-feature loop
+
+**Orchestration shape**: the heavy authoring is DELEGATED — the spec author, the test
+author, and each verifier are separate subagents pinned `model: fable` (see Model
+discipline). The orchestrating session briefs them (each brief points at TEMPLATE /
+PRINCIPLES — never paraphrases the rules), judges results, and is the ONLY writer of
+PROGRESS rows, atlas `Claimed by:` markers, and ledger rows (single-writer
+discipline).
 
 1. **Claim it** — set the feature's PROGRESS row to `in_progress`.
 2. **Author the spec** → `docs/product/specs/<feature>.md` per `TEMPLATE.md`:
@@ -62,10 +73,11 @@ loop resumes only when the maintainer declares calibration done.
 7. **Adversarial verify** — a separate pass that attempts to refute the permission
    and state rules and attacks liveness ("reachable by any user today?"). Resolve
    findings or record them as Open questions.
-8. **Readability verify** — a second, separate pass in a strict persona: a QA/PO
-   person with NO access to the code or test environment reads ONLY the body sections
-   (everything above `## Reference`, minus footnotes) and must be able to restate
-   every rule in their own words. Rewrite anything they stumble on; re-run the lint.
+8. **Readability verify** — a SEPARATE subagent (never the spec's author) in a strict
+   persona: a QA/PO person with NO access to the code or test environment reads ONLY
+   the body sections (everything above `## Reference`, minus footnotes) and must be
+   able to restate every rule in their own words. Rewrite anything they stumble on;
+   re-run the lint.
 9. **Update PROGRESS** — status, #tests, a ONE-line note. Findings go in the spec and
    the ledger, never in PROGRESS.
 10. **Commit** — `lib/pkp` and root **separately**, NEVER bump submodule pointers
@@ -75,6 +87,9 @@ loop resumes only when the maintainer declares calibration done.
     rule — PRINCIPLES points here.
 11. **STOP (calibration mode)** — report to the maintainer: what was built, verifier
     findings, open questions, anything low-confidence. Do not start another feature.
+    The review is about spec/test QUALITY and process fit — Open questions and ledger
+    rows stay recorded, not resolved: with 90+ features, blocking on answers would
+    stall the build (maintainer, 2026-07-10; the team returns to them over time).
 
 ## Model discipline (subagents & fallback)
 
