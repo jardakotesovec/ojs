@@ -56,7 +56,10 @@ author, and each verifier are separate subagents pinned `model: fable` (see Mode
 discipline). The orchestrating session briefs them (each brief points at TEMPLATE /
 PRINCIPLES — never paraphrases the rules), judges results, and is the ONLY writer of
 PROGRESS rows, atlas `Claimed by:` markers, and ledger rows (single-writer
-discipline).
+discipline). EVERY subagent brief — authors and verifiers alike — carries this line
+verbatim: "Do NOT write to PROGRESS.md, atlas files, or docs/e2e/app-changes.md;
+return proposed rows in your report instead." (A rehearsal test author appended a
+ledger row itself because its brief omitted this.)
 
 1. **Claim it** — set the feature's PROGRESS row to `in_progress`.
 2. **Author the spec** → `docs/product/specs/<feature>.md` per `TEMPLATE.md`:

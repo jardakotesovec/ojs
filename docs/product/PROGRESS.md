@@ -136,7 +136,7 @@ One row per **completed subagent**, appended by
 denominators for per-class flip rates. `FLIPPED@N/M` = the first Opus assistant
 message was the Nth of M. **This section stays LAST in this file** (the script
 appends to end-of-file). Per-class rates:
-`awk -F'|' '/^\| 20/{c=$4; n[c]++; if($9!~/clean/) f[c]++} END{for(k in n) printf "%s: %d/%d flipped\n", k, f[k], n[k]}' docs/product/PROGRESS.md`
+`awk -F'|' '/^\| 20[0-9][0-9]-/{c=$4; n[c]++; if($9!~/clean/) f[c]++} END{for(k in n) printf "%s: %d/%d flipped\n", k, f[k], n[k]}' docs/product/PROGRESS.md`
 
 | Date | Feature | Class | Agent | Fable | Opus | Other | Status |
 |------|---------|-------|-------|-------|------|-------|--------|
