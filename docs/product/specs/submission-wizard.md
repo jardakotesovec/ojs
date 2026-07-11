@@ -5,7 +5,6 @@ shared: pkp-lib
 status: verified
 atlas-claims:
   - PAGE-submission-index
-  - PAGE-submission-saved
   - PAGE-submission-wizard
   - PAGE-submission-cancelled
   - VUE-start-submission-form

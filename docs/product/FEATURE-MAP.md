@@ -30,10 +30,10 @@ References review-anonymity for who-sees-what once assignment starts.
 atoms: VUE-reviewer-suggestion-manager, VUE-reviewer-suggestions-list-panel, API-reviewer-suggestion-* (5), DB-reviewer_suggestions(+settings) (~5)
 
 ### submission-drafts — save-for-later, resume, delete a draft; incomplete-submissions list
-atoms: DB-submissions (submissionProgress/incomplete), API-submission-save-for-later, API-backend-submissions-bulk-delete-incomplete, MAIL-submission-saved-for-later, VUE-submissions-list-panel (~6)
+atoms: DB-submissions (submissionProgress/incomplete), API-submission-save-for-later, API-backend-submissions-bulk-delete-incomplete, API-{submission-delete,backend-submissions-delete}, MAIL-submission-saved-for-later, PAGE-submission-saved (~7)
 
 ### author-dashboard — the author's My-Submissions list and read-mostly tracking of their own submission
-atoms: PAGE-authordashboard-{submission,readsubmissionemail}, PAGE-dashboard-mysubmissions, VUE-submissions-list-panel (author variant) (~6)
+atoms: PAGE-authordashboard-{submission,readsubmissionemail}, PAGE-dashboard-mysubmissions (~5; VUE-submissions-list-panel moved to native-xml-import-export 2026-07-11 — no dashboard mount)
 
 ## Area 2 — Editorial workflow & peer review
 
