@@ -22,12 +22,12 @@ rehearsal passed).** Rules in RUNBOOK ("Autonomous waves"): one full per-feature
 loop per iteration, selection = first `pending` row in table order, wave = 7
 features between maintainer samplings. **Current maintainer directive: finish
 Area 1 (rows 2–5), then STOP for review even though the wave allows 7.**
-Wave counter: 1 feature since last sampling (rehearsal sign-off 2026-07-11).
+Wave counter: 2 features since last sampling (rehearsal sign-off 2026-07-11).
 
 ## Totals
 
-- Features: **1 reference · 2 verified · 89 pending** (of 92; feature 39 folded into `article-landing`)
-- Tests: **26 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8) · last full-suite timing: n/a since reset
+- Features: **1 reference · 3 verified · 88 pending** (of 92; feature 39 folded into `article-landing`)
+- Tests: **33 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7) · last full-suite timing: n/a since reset
 - Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
 
 ## Features
@@ -36,7 +36,7 @@ Wave counter: 1 feature since last sampling (rehearsal sign-off 2026-07-11).
 |---|------|---------|--------|------|-------|------|
 | 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | verified | green(x2) | dress rehearsal: 12 tests, 26 atoms, ledger rows 164–178; 1 verifier chunk all-opus (kept per policy); maintainer signed off 2026-07-11 |
 | 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | M·7 | verified | green(x2) | wave 1: 8 tests, 9 atoms, ledger rows 179–183 (2 confirmed defects: vocab journal-scoping, data-citations require); all 15 subagents fable-clean |
-| 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | M·6 | pending | pending | |
+| 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | M·6 | verified | green(x2) | wave 2: 7 tests (lib/pkp), 10 atoms, ledger rows 184–191; probe-vs-test RS-A conflict settled by arbitration chunk (probe artifact); 2 subagents flipped (kept per policy) |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | M·6 | pending | pending | |
 | 5 | Area 1 — Author submission & intake | `author-dashboard` | M·6 | pending | pending | |
 | 6 | Area 2 — Editorial workflow & peer review | `editorial-dashboards` | H·10 | pending | pending | |
@@ -182,3 +182,19 @@ appends to end-of-file). Per-class rates:
 | 2026-07-11 | submission-wizard-metadata | authoring | verification-merge | 21 | 0 | 0 | clean |
 | 2026-07-11 | submission-wizard-metadata | authoring | readability-verifier | 5 | 0 | 0 | clean |
 | 2026-07-11 | submission-wizard-metadata | authoring | readability-fix | 44 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | authoring | spec-author | 100 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | probe | probe-wizard-step | 66 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | probe | probe-assignment-flows | 68 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | probe | probe-editor-surfaces | 79 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | probe | probe-freeze-roles | 63 | 33 | 0 | FLIPPED@64/96 |
+| 2026-07-11 | reviewer-suggestions | authoring | spec-finalizer | 15 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | authoring | test-author | 124 | 18 | 0 | FLIPPED@125/142 |
+| 2026-07-11 | reviewer-suggestions | verification | verify-atlas-coverage | 23 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | verification | verify-rsa-arbitration | 27 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | verification | verify-positive-controls | 33 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | verification | verify-code-rederivation | 52 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | verification | verify-state-edges | 45 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | verification | verify-denial-probes | 50 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | authoring | verification-merge | 48 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | authoring | readability-verifier | 4 | 0 | 0 | clean |
+| 2026-07-11 | reviewer-suggestions | authoring | readability-fix | 91 | 0 | 0 | clean |
