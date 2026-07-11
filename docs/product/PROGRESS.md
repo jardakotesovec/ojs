@@ -17,13 +17,12 @@ all test infrastructure (POMs, fixtures, support, scenario endpoints, serial
 wiring), the atlas, FEATURE-MAP, UNASSIGNED, and both ledgers (their findings are
 app facts, independent of the scratched specs).
 
-**Current mode: DRESS REHEARSAL (maintainer decision 2026-07-10).** Calibration
-feature 1 (`assign-and-manage-reviewers`) is signed off. The next session builds
-exactly ONE feature — the first `pending` row in table order — end-to-end per the
-RUNBOOK loop, with ZERO maintainer input mid-run and step 7 delegated per the
-chunked-verification protocol, then STOPS for maintainer review. If that review
-passes, the maintainer flips this banner to **AUTONOMOUS WAVES** (rules in
-RUNBOOK); wave counter starts then at 0 since last sampling.
+**Current mode: AUTONOMOUS WAVES (maintainer flipped 2026-07-11 after the dress
+rehearsal passed).** Rules in RUNBOOK ("Autonomous waves"): one full per-feature
+loop per iteration, selection = first `pending` row in table order, wave = 7
+features between maintainer samplings. **Current maintainer directive: finish
+Area 1 (rows 2–5), then STOP for review even though the wave allows 7.**
+Wave counter: 0 features since last sampling (rehearsal sign-off 2026-07-11).
 
 ## Totals
 
@@ -35,7 +34,7 @@ RUNBOOK); wave counter starts then at 0 since last sampling.
 
 | # | Area | Feature | Budget | Spec | Tests | Note |
 |---|------|---------|--------|------|-------|------|
-| 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | verified | green(x2) | dress rehearsal: 12 tests, 26 atoms, ledger rows 164–178; 1 verifier chunk all-opus (kept per policy); awaiting maintainer review |
+| 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | verified | green(x2) | dress rehearsal: 12 tests, 26 atoms, ledger rows 164–178; 1 verifier chunk all-opus (kept per policy); maintainer signed off 2026-07-11 |
 | 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | M·7 | pending | pending | |
 | 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | M·6 | pending | pending | |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | M·6 | pending | pending | |

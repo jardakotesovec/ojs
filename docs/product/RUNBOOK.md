@@ -119,14 +119,19 @@ ledger row itself because its brief omitted this.)
     recorded, not resolved: with 90+ features, blocking on answers would stall the
     build (maintainer, 2026-07-10; the team returns to them over time). Then:
     calibration/rehearsal mode → STOP, do not start another feature; waves mode →
-    the NEXT feature runs in a FRESH session (never continue in this one), unless
-    a wave boundary or halt condition hit (see Autonomous waves).
+    continue with the next feature (next /loop iteration or fresh session),
+    unless a wave boundary, a maintainer scope directive in the PROGRESS banner,
+    or a halt condition hit (see Autonomous waves).
 
 ## Autonomous waves (post-rehearsal mode)
 
-Active ONLY when the PROGRESS banner says so. The unit of work stays ONE feature
-per fresh session (context hygiene, not caution); a wave is a review cadence, not
-a batch:
+Active ONLY when the PROGRESS banner says so. The unit of work stays ONE full
+per-feature loop per iteration; the maintainer typically runs iterations back to
+back in a single `/loop` session. Context across iterations is DISPOSABLE by
+design — all state lives in PROGRESS + the files, so a compaction mid-run (or
+mid-feature) is routine: re-read this file + PROGRESS and, if a feature is
+half-done, continue via "Resuming a feature mid-flight". A wave is a review
+cadence, not a batch:
 
 - **Selection**: the first `pending` row in PROGRESS table order. The maintainer
   may reorder rows or mark a row claimed/deferred at any time — respect edits.
