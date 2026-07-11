@@ -22,12 +22,12 @@ rehearsal passed).** Rules in RUNBOOK ("Autonomous waves"): one full per-feature
 loop per iteration, selection = first `pending` row in table order, wave = 7
 features between maintainer samplings. **Current maintainer directive: finish
 Area 1 (rows 2–5), then STOP for review even though the wave allows 7.**
-Wave counter: 3 features since last sampling (rehearsal sign-off 2026-07-11).
+Wave counter: 4 features since last sampling (rehearsal sign-off 2026-07-11). **Area 1 COMPLETE — loop stopped per the maintainer scope directive; awaiting sampling review.**
 
 ## Totals
 
-- Features: **1 reference · 4 verified · 87 pending** (of 92; feature 39 folded into `article-landing`)
-- Tests: **39 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6) · last full-suite timing: n/a since reset
+- Features: **1 reference · 5 verified · 86 pending** (of 92; feature 39 folded into `article-landing`)
+- Tests: **45 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6) · last full-suite timing: n/a since reset
 - Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
 
 ## Features
@@ -38,7 +38,7 @@ Wave counter: 3 features since last sampling (rehearsal sign-off 2026-07-11).
 | 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | M·7 | verified | green(x2) | wave 1: 8 tests, 9 atoms, ledger rows 179–183 (2 confirmed defects: vocab journal-scoping, data-citations require); all 15 subagents fable-clean |
 | 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | M·6 | verified | green(x2) | wave 2: 7 tests (lib/pkp), 10 atoms, ledger rows 184–191; probe-vs-test RS-A conflict settled by arbitration chunk (probe artifact); 2 subagents flipped (kept per policy) |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | M·6 | verified | green(x2) | wave 3: 6 tests (lib/pkp), 7 atoms, ledger rows 192–194 + row-167 amended (arbitration overturned a test-author premise); atlas transfers applied; all 16 subagents fable-clean |
-| 5 | Area 1 — Author submission & intake | `author-dashboard` | M·6 | pending | pending | |
+| 5 | Area 1 — Author submission & intake | `author-dashboard` | M·6 | verified | green(x2) | wave 4: 6 tests (lib/pkp), 5 atoms, ledger rows 195–203 (headline: multi-role revisions-view scoping 202, dead published-block 198, upload-revisions gate bug 199); 2 subagents flipped (kept per policy) |
 | 6 | Area 2 — Editorial workflow & peer review | `editorial-dashboards` | H·10 | pending | pending | |
 | 7 | Area 2 — Editorial workflow & peer review | `workflow-stage-navigation` | M·6 | pending | pending | |
 | 8 | Area 2 — Editorial workflow & peer review | `editorial-decisions` | H·13 | pending | pending | |
@@ -213,3 +213,19 @@ appends to end-of-file). Per-class rates:
 | 2026-07-11 | submission-drafts | authoring | verification-merge | 87 | 0 | 0 | clean |
 | 2026-07-11 | submission-drafts | authoring | readability-verifier | 4 | 0 | 0 | clean |
 | 2026-07-11 | submission-drafts | authoring | readability-fix | 59 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | authoring | spec-author | 109 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | probe | probe-access-nav-legacy | 65 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | probe | probe-editability-emails | 111 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | probe | probe-list-surfaces | 125 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | probe | probe-tracking-view | 152 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | authoring | spec-finalizer | 81 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | authoring | test-author | 138 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | verification | verify-atlas-coverage | 21 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | verification | verify-denial-probes | 18 | 5 | 0 | FLIPPED@19/23 |
+| 2026-07-11 | author-dashboard | verification | verify-code-rederivation | 60 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | verification | verify-positive-controls | 76 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | verification | verify-state-edges | 53 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | verification | verify-adh-add-arbitration | 34 | 35 | 0 | FLIPPED@35/69 |
+| 2026-07-11 | author-dashboard | authoring | verification-merge | 108 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | authoring | readability-verifier | 4 | 0 | 0 | clean |
+| 2026-07-11 | author-dashboard | authoring | readability-fix | 68 | 0 | 0 | clean |
