@@ -22,12 +22,12 @@ rehearsal passed).** Rules in RUNBOOK ("Autonomous waves"): one full per-feature
 loop per iteration, selection = first `pending` row in table order, wave = 7
 features between maintainer samplings. **Current maintainer directive: finish
 Area 1 (rows 2–5), then STOP for review even though the wave allows 7.**
-Wave counter: 0 features since last sampling (rehearsal sign-off 2026-07-11).
+Wave counter: 1 feature since last sampling (rehearsal sign-off 2026-07-11).
 
 ## Totals
 
-- Features: **1 reference · 1 verified · 90 pending** (of 92; feature 39 folded into `article-landing`)
-- Tests: **18 / 700** (tasks-discussions 6 + submission-wizard 12) · last full-suite timing: n/a since reset
+- Features: **1 reference · 2 verified · 89 pending** (of 92; feature 39 folded into `article-landing`)
+- Tests: **26 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8) · last full-suite timing: n/a since reset
 - Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
 
 ## Features
@@ -35,7 +35,7 @@ Wave counter: 0 features since last sampling (rehearsal sign-off 2026-07-11).
 | # | Area | Feature | Budget | Spec | Tests | Note |
 |---|------|---------|--------|------|-------|------|
 | 1 | Area 1 — Author submission & intake | `submission-wizard` | H·12 | verified | green(x2) | dress rehearsal: 12 tests, 26 atoms, ledger rows 164–178; 1 verifier chunk all-opus (kept per policy); maintainer signed off 2026-07-11 |
-| 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | M·7 | pending | pending | |
+| 2 | Area 1 — Author submission & intake | `submission-wizard-metadata` | M·7 | verified | green(x2) | wave 1: 8 tests, 9 atoms, ledger rows 179–183 (2 confirmed defects: vocab journal-scoping, data-citations require); all 15 subagents fable-clean |
 | 3 | Area 1 — Author submission & intake | `reviewer-suggestions` | M·6 | pending | pending | |
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | M·6 | pending | pending | |
 | 5 | Area 1 — Author submission & intake | `author-dashboard` | M·6 | pending | pending | |
@@ -165,3 +165,20 @@ appends to end-of-file). Per-class rates:
 | 2026-07-10 | submission-wizard | authoring | readability-verifier | 7 | 0 | 0 | clean |
 | 2026-07-10 | submission-wizard | authoring | readability-fix | 128 | 0 | 0 | clean |
 | 2026-07-10 | submission-wizard | authoring | verification-merge | 53 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | authoring | spec-author | 99 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | probe | probe-settings-defaults | 71 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | probe | probe-wizard-matrix | 86 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | probe | probe-vocab-leak | 114 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | probe | probe-submit-enforcement | 89 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | probe | probe-workflow-surfaces | 112 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | authoring | spec-finalizer | 71 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | authoring | test-author | 107 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | verification | verify-atlas-coverage | 28 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | verification | verify-permissions-code | 33 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | verification | verify-deviation-repro | 24 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | verification | verify-positive-controls | 26 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | verification | verify-denial-probes | 29 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | verification | verify-state-edges | 31 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | authoring | verification-merge | 21 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | authoring | readability-verifier | 5 | 0 | 0 | clean |
+| 2026-07-11 | submission-wizard-metadata | authoring | readability-fix | 44 | 0 | 0 | clean |
