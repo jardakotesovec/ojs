@@ -33,3 +33,5 @@ registry/uiLocaleKeysBackend.json
 /.env.playwright
 /blob-report/
 /playwright/.cache/
+docs/product/.reports/
+

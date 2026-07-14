@@ -188,6 +188,19 @@ cadence, not a batch:
   reproduction each, (f) atlas coverage grep. Each returns a small structured
   verdict; the orchestrator merges. Chunks that downgrade mid-run finish and
   count — record the flip, don't re-run.
+- **Keep findings OUT of the orchestrator's context — reports go to files**
+  (2026-07-14, after the Area-1 run's main session was flag-paused 3×; term-density
+  analysis showed each flag followed accumulated permission-testing narrative —
+  denial verdicts, bypass descriptions — mostly while composing reports).
+  Every probe/verification brief instructs the agent to WRITE its full findings to
+  `docs/product/.reports/<feature>-<label>.md` (gitignored, kept across sessions
+  for mid-flight resume; delete the feature's files after its commit) and RETURN
+  at most ~10 lines: verdict + file pointer + anything the orchestrator must act
+  on. The verification-merge / spec-finalizer agents READ those files — the
+  orchestrator never holds the detail. In its own prose (iteration reports,
+  PROGRESS notes, commit messages) the orchestrator CITES ledger rows and Open
+  questions by number instead of restating denial/bypass behavior. Volume is the
+  lever — vocabulary substitution is proven useless.
 - **The orchestrator NEVER completes probe or verification work inline.** (The
   earlier "bounded inline exception" is REVOKED, 2026-07-10: it walked the
   dress-rehearsal orchestrator into running the probe battery itself, the main
