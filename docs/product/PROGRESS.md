@@ -20,9 +20,11 @@ app facts, independent of the scratched specs).
 **Current mode: AUTONOMOUS WAVES (maintainer flipped 2026-07-11 after the dress
 rehearsal passed).** Rules in RUNBOOK ("Autonomous waves"): one full per-feature
 loop per iteration, selection = first `pending` row in table order, wave = 7
-features between maintainer samplings. **Current maintainer directive: finish
-Area 1 (rows 2–5), then STOP for review even though the wave allows 7.**
-Wave counter: 4 features since last sampling (rehearsal sign-off 2026-07-11). **Area 1 COMPLETE — loop stopped per the maintainer scope directive; awaiting sampling review.**
+features between maintainer samplings. **Current maintainer directive: work
+through Area 2 (rows 6–22, skipping already-done rows 11 and 19) in table order.
+The wave rule applies as designed: after 7 features, STOP for sampling review
+mid-area.** Wave counter: 0 features since last sampling (Area 1 sampled and
+approved 2026-07-14; findings-to-files protocol in force since — see RUNBOOK).
 
 ## Totals
 
