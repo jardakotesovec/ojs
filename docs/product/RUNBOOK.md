@@ -188,6 +188,21 @@ cadence, not a batch:
   reproduction each, (f) atlas coverage grep. Each returns a small structured
   verdict; the orchestrator merges. Chunks that downgrade mid-run finish and
   count — record the flip, don't re-run.
+- **Chunk briefs are POINTERS, never payloads** (2026-07-16: two main-session
+  flag-pauses fired ON the Agent calls composing the denial/arbitration briefs —
+  enumerating deny matrices and "adversarially refute" instructions in a spawn
+  prompt is what trips the classifier, whichever side generates or reads it;
+  it is also why denial chunks twice started life all-Opus). The spawn prompt
+  for a verification chunk contains ONLY: the feature name, the chunk letter,
+  the spec path, the report-file path, and "follow the chunk instructions in
+  RUNBOOK step 7" — the full instructions live HERE, written once: each chunk
+  reads the spec section it owns (permissions table for (a)/(c), Rules & state
+  for (d), Known deviations for (e)), checks every row it finds there against
+  code or the live app per its letter, bounds negatives with positive controls,
+  writes findings to its report file, and returns a ≤10-line verdict. For
+  arbitration chunks: name the two report files in conflict and the rule number
+  — never restate the conflicting behaviors in the prompt. Agent `description`
+  fields stay neutral ("check spec table (c) live"), not adversarial.
 - **Keep findings OUT of the orchestrator's context — reports go to files**
   (2026-07-14, after the Area-1 run's main session was flag-paused 3×; term-density
   analysis showed each flag followed accumulated permission-testing narrative —
