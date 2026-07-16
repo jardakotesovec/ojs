@@ -38,7 +38,7 @@ atoms: PAGE-authordashboard-{submission,readsubmissionemail}, PAGE-dashboard-mys
 ## Area 2 — Editorial workflow & peer review
 
 ### editorial-dashboards — editor/manager triage of all submissions (active, needs-editor, archived, my-assigned, review-assignments) with filters/search
-atoms: PAGE-dashboard-{index,editorial,reviewassignments}, PAGE-submissions-{index,tasks}, VUE-dashboard-page, VUE-dashboard-table, FORM-submission-filters, API-submissions-get-many (~12)
+atoms: PAGE-dashboard-{index,editorial,reviewassignments}, PAGE-submissions-{index,tasks}, VUE-dashboard-page, VUE-dashboard-table, FORM-submission-filters, API-backend-submissions-{get-many,assigned,reviews,get-views-count,get-review-assignments} (~13; the old `API-submissions-get-many` name was wrong — corrected 2026-07-16)
 
 ### workflow-stage-navigation — the workflow-page shell: stage tabs/bubbles, per-stage access, stage routing
 The decision action-bar rendered here is documented once in editorial-decisions; this owns only the shell/routing.
