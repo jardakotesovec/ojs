@@ -1,0 +1,421 @@
+---
+name: workflow-stage-navigation
+scope: The submission workflow panel's shell — its header and stage menu, which stages each person may open, the status notes for stages that aren't current, and the routing that lands people (and old bookmarks) in the right place
+shared: pkp-lib
+status: verified
+atlas-claims:
+  - PAGE-workflow-access
+  - PAGE-workflow-index
+  - PAGE-workflow-submission
+  - PAGE-workflow-externalreview
+  - PAGE-workflow-editorial
+  - PAGE-workflow-production
+  - VUE-workflow-page
+  - VUE-workflow-page-ojs
+  - AUTHZ-workflow-stage-access-policy
+  - AUTHZ-user-accessible-workflow-stage-policy
+  - AUTHZ-user-accessible-workflow-stage-required-policy
+  - AUTHZ-workflow-stage-required-policy
+---
+
+# Workflow stage navigation
+
+## Purpose
+
+Every submission travels through four stages — Submission, Review, Copyediting,
+Production — and the people working on it need one place that shows where it is,
+lets them jump between stages, and keeps them out of stages that aren't theirs. That
+place is the **workflow panel**: it slides open over the dashboard list when a row's
+View button is pressed (or a saved link is followed) and frames everything else —
+the submission's identity in the header with a colored stage indicator, a left-hand
+menu of stages (review rounds nested under Review) plus the publication's versions,
+and a status note when the opened stage isn't the one the submission is in. This
+spec owns that shell and its routing, including where the retired
+one-page-per-stage addresses land now. What fills each stage — file panels,
+reviewer tables, decision buttons — belongs to the per-stage features and to
+*editorial-decisions*; how the panel is *reached* from the lists belongs to the
+dashboard specs.
+
+## Actors & permissions
+
+Terms used below: *assigned* = has a stage assignment on this submission in a role
+they still hold (a lapsed or revoked role doesn't count, even if the assignment row
+survives); *stage coverage* = the set of workflow stages a role's user group is
+ticked for in the journal's Users & Roles settings — an assignment opens exactly the
+stages its group covers. Two baselines: **Site Administrator and Journal Manager**
+need no assignment — an unassigned manager may open every stage of any submission in
+the journal (⚠ with one wrinkle: a manager who is personally reviewing the
+submission is shown the panel as if they had no stage access — Known deviations);
+however, once a manager **is** assigned, their access follows the assignment like
+anyone else's. **Anonymous** visitors are sent to login. The panel has two
+dressings: the **editorial shell** (opened from the editorial dashboard, documented
+here) and the author's **tracking view** (opened from My Submissions — owned by the
+*author-dashboard* spec). Reviewers never get either: their dashboard rows lead to
+their own review pages.
+
+| Action | Who may — and when |
+|--------|--------------------|
+| **Open the editorial shell** | • Site Administrator, Journal Manager — any submission in the journal<br>• Section Editor, Assistant — when assigned<br>• Author, Reviewer — never this shell (authors get the tracking view; reviewers their review pages)<br>• Which rows offer the View button is the dashboards' rule <sup>a</sup> |
+| **See a stage's working panels** (instead of the no-access note) | • Anyone whose assigned role covers that stage<br>• Site Administrator, Journal Manager — every stage while unassigned <sup>b</sup> |
+| **See the Publication menu's version entries** | • Site Administrator, Journal Manager — while unassigned (the baseline)<br>• A Journal Manager, Section Editor or Assistant assigned on the submission's *current* stage<br>• The production-bound entries (Body Text, Galleys, Media, Permissions & Disclosure — the menu's name for the License screen — and Publication Settings) — only with production-stage access on top of that <sup>c</sup> |
+| **See the header tools** | • Activity Log — Site Administrator, Journal Manager, or a Section Editor assigned on the current stage<br>• Library — everyone who can open the shell<br>• Preview (relabeled View once published) — everyone who can open the shell, from the moment the submission reaches Copyediting <sup>d</sup> |
+| **Use a legacy workflow address** | • Site Administrator, Journal Manager, Section Editor, Assistant — same shell access as above, checked before the redirect<br>• Author, Reviewer — sent to an access-denied page reading "You don't currently have access to that stage of the workflow." — never into the workflow<br>• Logged out — asked to sign in first; an allowed person then continues on to the panel <sup>e</sup> |
+
+<sup>a</sup> dashboardPageStore.js openWorkflowModal() (mounts WorkflowPage per dashboard type); editorial-dashboards spec rule 15 (View-button gating); useWorkflowConfigOJS.js (EDITORIAL_DASHBOARD → workflowConfigEditorialOJS, else workflowConfigAuthorOJS); denial side live-probed 2026-07-16 (verification chunk c: author and reviewer deep links → 302 user/authorizationDenied?message=user.authorization.roleBasedAccessDenied — the role-whitelist denial, unlike the legacy ops' accessible-stage sentence; an *unassigned* Section Editor's deep link returns 200 and mounts the dashboard, but the panel renders an empty husk — the submission API answers 401 and no submission content or title appears — so "when assigned" holds substantively) ·
+<sup>b</sup> classes/user/Repository::getAccessibleWorkflowStages() (assignments × userGroupStages × still-held roles; manager/admin fallback when none); submission/maps/Schema::getPropertyStages(), getAssignmentRoles() (per-stage currentUserAssignedRoles; dateStart/dateEnd check); useWorkflowPermissions.js (accessibleStages); workflowConfigEditorialOJS.js WorkflowConfig.common.getPrimaryItems; denial + baseline live-probed 2026-07-16 (verification chunk c: stage-4-only assistant saw exactly the no-access sentence on Submission/Review/Production and real content on Copyediting; unassigned Site Administrator walked all four stages with the sentence nowhere) ·
+<sup>c</sup> useWorkflowPermissions.js (canAccessPublication = EditorialRoles on active stage; canAccessProduction = EditorialRoles on production stage); useWorkflowNavigationConfigOJS.js getPublicationVersionItems(), getPublicationItemsEditorial(); split live-probed 2026-07-16 (verification chunk c: assistant assigned off the current stage — no version entries, inert Publication header; assistant assigned on the current stage — non-production screens only, no create-version action; manager-role editor — full set plus "Create New Version") ·
+<sup>d</sup> workflowConfigEditorialOJS.js getHeaderItems(); useWorkflowPermissions.js (canAccessEditorialHistory: SITE_ADMIN/MANAGER/SUB_EDITOR on active stage); Preview/View block is stage+status-gated only (stageId EDITING/PRODUCTION, common.preview → common.view when STATUS_PUBLISHED), no permission check — live-probed 2026-07-16 (Group C: stage-covering assistant on a Copyediting submission saw Preview + Library, no Activity Log; verification chunk c re-confirmed both directions: same assistant's Preview absent while the submission sat in Review, Activity Log absent for the assistant but present for the manager-role editor) ·
+<sup>e</sup> WorkflowHandler::__construct() addRoleAssignment([SUB_EDITOR, MANAGER, SITE_ADMIN, ASSISTANT]); PKPWorkflowHandler::authorize() (access op: UserAccessibleWorkflowStageRequiredPolicy WORKFLOW_TYPE_EDITORIAL, roles not re-checked; stage ops: WorkflowStageAccessPolicy); PKPApplication::getWorkflowTypeRoles() (editorial workflow = admin/manager/sub-editor/assistant); live-probed 2026-07-16 (Group A: author + reviewer, access op AND stage-named op → 302 user/authorizationDenied?message=user.authorization.accessibleWorkflowStage — the accessible-stage sentence, not the role-whitelist denial; logged out → login with the legacy URL in `source`, chain resumes to the panel after sign-in); denial side re-probed 2026-07-16 (verification chunk c: author, reviewer AND an unassigned Section Editor each 302 → the accessibleWorkflowStage denial on both the entry-check and stage-named ops, assigned editor as positive control — confirming "same shell access as above" means assigned-only for Section Editors)
+
+## Fields & validation
+
+N/A — the shell is navigation only; it has no user-entered fields.
+
+## Rules & state
+
+**Shell anatomy**
+
+1. The panel header identifies the submission: its ID number above the title area,
+   the author list as the heading, the full title beneath it, and a **stage
+   indicator** — a colored dot plus label ("bubble") summarizing where the
+   submission stands. A spinner beside the ID appears while data refreshes.
+   <sup>a</sup>
+2. The stage indicator collapses stage + status into one label. Its states:
+
+   | Indicator | When |
+   |-----------|------|
+   | **Incomplete** | the submission wizard was never finished |
+   | **Submission** | in the Submission (desk review) stage |
+   | **Review (Round N)** | in the Review stage — N is the latest round |
+   | **Copyediting** | in the Copyediting stage, not scheduled or published |
+   | **Production** | in the Production stage, not scheduled or published |
+   | **Scheduled** | the version of record is assigned to an issue awaiting publication (shown from Copyediting or Production) |
+   | **Published** | the version of record is published |
+   | **Declined** | declined — this overrides every stage |
+
+   Each state has its own dot color, matching the stage badges used on the
+   dashboard lists. Scheduled and Published track the *version of record* only:
+   scheduling or publishing an earlier variant (e.g. an Author Original) leaves
+   the indicator on the plain stage. <sup>b</sup>
+
+**The stage menu**
+
+3. The left-hand menu opens with a **Workflow** group listing all four stages —
+   Submission, Review, Copyediting, Production — for *every* viewer, regardless of
+   which stages they may access: the menu never hides or locks an entry, and the
+   gate is applied inside the content area instead (rule 7). Under **Review**, one
+   sub-entry per existing review round ("Review Round 1", "Review Round 2", …);
+   a submission never in review has none. The **Review** entry is itself
+   selectable, not just a group heading — each click on it also folds or unfolds
+   its round list (⚠ what a selected round-less Review then shows misdescribes an
+   active round — Known deviations). The Workflow and Publication groups and
+   the Review stage start out expanded. <sup>c</sup>
+4. The stage the submission is *currently in* carries a colored stripe in the menu
+   (colored per stage, same palette as the indicator); in Review, the stripe sits on
+   the current round's entry. Selecting an entry sets the content-pane heading to
+   "Workflow: {stage}" (rounds: "Workflow: Review (Round N)"). <sup>d</sup>
+5. Below Workflow sits a **Publication** group with one entry per version of the
+   submission, each expanding into that version's editing screens: always Title &
+   Abstract, Contributors, Metadata and JATS XML; per journal settings, Citations
+   (the menu labels it "References"), Data availability and Identifiers; and, per
+   the permissions table, the production-bound screens. Alongside the versions
+   sits a "Create New Version" action for those who may publish. For a viewer entitled
+   to no version entries at all (per the permissions table), the group's header
+   still appears — an inert label with no expand arrow that opens nothing when
+   clicked. The entries and their contents belong to the publication/versioning
+   features; this spec owns only their place in the menu. <sup>e</sup>
+
+**Per-stage access**
+
+6. What a viewer may open is computed per stage from their assignments: each
+   assignment contributes the stages its user group covers, but only while the
+   underlying role is still held — an assignment in a role that was since removed
+   contributes nothing. Site Administrators and Journal Managers with no assignment
+   at all get every stage (the baseline above). Reviewer duties never contribute
+   stage access to this shell. <sup>f</sup>
+7. Opening a menu stage the viewer's roles don't cover shows a single sentence in
+   the content area — "You don't currently have access to that stage of the
+   workflow." — and no panels, no side column, no action buttons; the sentence
+   renders bare, without the "Status" box framing accessible stages use. The menu
+   entry itself stays clickable (rule 3). <sup>g</sup>
+8. Opening an accessible stage that is not the submission's current stage leads
+   with a **Status** box — alone when the stage has nothing to show yet, above
+   read-only panels when it does:
+   - a stage the submission hasn't reached: "The {stage} stage has not yet been
+     initiated." — and, beyond the "Current Submission Language" line that opens
+     every accessible stage view (the author's tracking view shows the same
+     line), nothing else;
+   - a stage the submission has passed: "The submission is currently in the
+     {current stage} stage.", above that stage's read-only panels;
+   - an older review round when the submission has moved on: "The submission has
+     been advanced to the next round of review" (still in Review) or "The
+     submission advanced to the next review round, was accepted, and is currently
+     in the {stage} stage." (already past Review);
+   - a published submission's Production stage: "Submission published."
+   What the current stage and round show beyond this box is the per-stage
+   features' domain. <sup>h</sup>
+
+**Landing and routing**
+
+9. Where the panel lands when opened fresh follows the submission's state: the
+   current stage's entry; in Review, the current round's entry; a Production-stage
+   submission already scheduled or published (and any published submission) lands on
+   the latest version's Title & Abstract instead; a submission internally marked
+   as having finished its workflow while still unpublished lands on Production —
+   a defensive edge: no in-app action produces that state (it was only ever
+   reached by forcing the stored record), so testers should not expect to stage
+   it. A declined submission lands on the stage it was declined in. The landing follows the submission's state
+   even when the viewer may not access that stage — such a viewer lands on the
+   no-access sentence (rule 7). <sup>i</sup>
+10. The selected menu entry is recorded in the page address as the panel is used, so
+    reloading or sharing the address reopens the same screen; a stale or invalid
+    menu reference in the address falls back to the fresh-open landing of rule 9.
+    (The address parameters and their cleanup on close are the dashboards'
+    bookkeeping.) <sup>j</sup>
+11. **Legacy addresses**: before 3.5/3.6 each submission had its own workflow page,
+    so old bookmarks and emailed links come in two shapes — the **entry-check
+    address**, whose last part names only the submission (a general "take me to
+    this submission's workflow" link), and the four **stage-named addresses**,
+    whose last part names one of the four stages (the verbatim forms are listed
+    under Reference). All of them now funnel to the editorial dashboard with
+    the panel open on that submission: the entry-check address redirects straight
+    there, and the stage-named addresses redirect in two hops (stage name →
+    stage landing → dashboard). ⚠ The stage named in the old address is dropped on
+    the way — the panel opens at its default landing (rule 9), not at the
+    bookmarked stage (Known deviations). <sup>k</sup>
+12. The stage-named legacy addresses authorize against the *named* stage — a viewer
+    whose roles don't cover that stage is refused even though the destination
+    ignores the stage entirely; the entry-check address only requires access to
+    *some* stage. ⚠ So one and the same person can be refused by an old
+    Production-stage bookmark yet open the same panel through the entry-check
+    address (Known deviations). <sup>l</sup>
+
+<sup>a</sup> WorkflowPage.vue (pre-title = submissionId + Spinner; title = authorsStringShort; description = fullTitle; post-description = StageBubble) ·
+<sup>b</sup> useSubmission.js getExtendedStage(), getExtendedStageLabel(), ExtendedStagesLabels (submissions.incomplete / manager.publication.submissionStage / submission.stage.externalReviewWithRound / submission.copyediting / manager.publication.productionStage / submission.status.scheduled / submission.stage.published / submissions.declined; DECLINED short-circuits first; SCHEDULED/PUBLISHED override in EDITING and PRODUCTION); StageBubble.vue ExtendedStagesColorClass; all eight labels + distinct bg-stage-* dot classes live-probed 2026-07-16 (Group C matrix; Scheduled identical from Copyediting and Production; Declined overrides stage); VoR-only: Repo\submission\Repository::getStatusByPublications() counts only a version-of-record publication for SCHEDULED/PUBLISHED — a published Author Original leaves the bubble on the plain stage (live-verified 2026-07-16; ledger §2 row 210, same mechanism, owned by editorial-dashboards) ·
+<sup>c</sup> useWorkflowNavigationConfigOJS.js getMenuItems() (workflow group always; no permissions filter in getWorkflowItems()), getReviewItems() (one item per round, workflow.reviewRoundN); WorkflowPageOJS.vue setExpandedKeys(['workflow','publication','marketing','workflow_3']); parent Review selectability live-probed 2026-07-16 (Group C item 6: selecting it sets workflowMenuKey=workflow_3, heading "Workflow: Review"; every click toggles round expansion while selection persists) ·
+<sup>d</sup> useWorkflowNavigationConfigOJS.js getWorkflowItem()/getReviewItem() (colorStripe = StageColors[stageId] when isActive), getWorkflowTitle() (semicolon + manager.workflow) ·
+<sup>e</sup> useWorkflowNavigationConfigOJS.js getPublicationVersionItems() (per-version items; publication_create_new_version when canPublish), getPublicationItemsEditorial() (identifiersEnabled, supportsCitations, supportsDataCitations/DataAvailability toggles; canAccessProduction block); empty-group rendering live-probed 2026-07-16 (Group C item 7: header li with icon + label, no submenu ul, no chevron, click is a no-op — useSideMenu attaches no command to an item with no link/action/state); menu labels live-verified 2026-07-16 (verification chunk c: the Citations entry renders as "References" — submission.citations msgstr, lib/pkp/locale/en/submission.po; JATS XML appears in every version's list regardless of production access; the action's label is "Create New Version") ·
+<sup>f</sup> classes/user/Repository::getAccessibleWorkflowStages(); submission/maps/Schema::getPropertyStages() (per-stage currentUserAssignedRoles; global manager/admin fallback only when not assigned in any still-held role), getAssignmentRoles(); useWorkflowPermissions.js accessibleStages ·
+<sup>g</sup> workflowConfigEditorialOJS.js WorkflowConfig.common.getPrimaryItems/getSecondaryItems/getActionItems (accessibleStages gate, shouldContinue:false → WorkflowPrimaryBasicMetadata with user.authorization.accessibleWorkflowStage); lib/pkp/locale/en/user.po; live-probed 2026-07-16 (Group B item 4: workflow-primary-items innerText = exactly the sentence, workflow-secondary-items and workflow-action-items both count 0 on uncovered stages; covered stage renders status box + Participants side column) ·
+<sup>h</sup> WorkflowSubmissionStatus.vue (workflow.stageNotStarted, workflow.submissionInFutureStage, workflow.submissionInNextReviewRound, workflow.submissionNextReviewRoundInFutureStage, editor.submission.workflowDecision.submission.published); useSubmission.js hasNotSubmissionStartedStage(), hasSubmissionPassedStage(); workflowConfigEditorialOJS.js common.getPrimaryItems (shouldContinue = !hasNotSubmissionStartedStage → unstarted stage renders status box only); OJS stage names from workflow.review.externalReview "Review", submission.copyediting, submission.production; not-yet-initiated + current-stage messages live-probed 2026-07-16 (Group B item 4); the ever-present language line is WorkflowChangeSubmissionLanguage (submission.list.changeSubmissionLanguage.currentLanguage), rendered ahead of the status box on every accessible stage view — same fixture author-dashboard rule 8 documents ·
+<sup>i</sup> useWorkflowNavigationConfigOJS.js getInitialSelectionItemKey() (review stages → workflow_{stage}_{currentRound}; PRODUCTION + status ≠ QUEUED → publication_{latest}_titleAbstract; DONE → publication if PUBLISHED else workflow_5; else workflow_{stageId}); declined keeps stageId → else branch; author-side declined landings live-probed 2026-07-11 (author-dashboard spec); editor-side landings live-probed 2026-07-16 (Group A item 8: scheduled + published → publication_{latest}_titleAbstract; a published submission is internally moved to the Done stage by ApplyDoneWorkflowStage, so it lands via the DONE branch — same outcome; Done-but-unpublished → workflow_5 verified only with a forced DB state, no in-app path found — defensive branch; Group B item 4: stage-4-only assistant landed on workflow_3_{round}, saw the no-access sentence) ·
+<sup>j</sup> useWorkflowMenu.js (workflowMenuKey query param: watch selectedMenuKey → write; on submission fetch → navigateToMenu(url key) with doesKeyExist fallback to getInitialSelectionItemKey()); dashboardPageStore.js onClose cleanup (editorial-dashboards <sup>n</sup>); fallback live-probed 2026-07-16 (Group A item 8d: stale publication key and garbage key both fell back to the fresh-open landing, bad key replaced in the URL) ·
+<sup>k</sup> PKPWorkflowHandler::access(), index() (both → dashboard/editorial?workflowSubmissionId={id}, no workflowMenuKey), submission()/externalReview()/editorial()/production() → _redirectToIndex() → workflow/index/{id}/{stageId}; workflow/access/{id} → 302 live-probed 2026-07-16 (editorial-dashboards <sup>g</sup>); two-hop chain + stage-drop live-probed 2026-07-16 (Group A item 1: hop 1 carries the op's stage id, hop 2 → dashboard/editorial?workflowSubmissionId={id} identical for stages 1 and 3, no workflowMenuKey; browser lands at the rule-9 default; post-login resume through the full chain also verified) ·
+<sup>l</sup> PKPWorkflowHandler::authorize() (access op: UserAccessibleWorkflowStageRequiredPolicy only; other ops: WorkflowStageAccessPolicy with identifyStageId() — stage from op name or index/{id}/{stageId} arg); UserAccessibleWorkflowStagePolicy::effect() (named stage ∩ editorial-workflow roles); live-probed 2026-07-16 (Group B item 3: stage-5-only and stage-4-only assistants — uncovered stage-named op → 302 user/authorizationDenied (accessibleWorkflowStage message, same sentence as rule 7), covered op and workflow/access both reach the dashboard; both directions bounded with positive controls)
+
+## Side effects
+
+None — the shell is read-only navigation. It sends no emails, raises no
+notifications and writes no log entries; the only trace of using it is the menu
+selection recorded in the page address (rule 10).
+
+## Settings that modify behavior
+
+- **Users & Roles → a role's stage coverage** (journal settings): ticking/unticking
+  workflow stages on a user group directly widens or narrows what its assignees may
+  open (rule 6). <sup>a</sup>
+- **Journal publication settings** add or remove Publication-menu entries: citations
+  support adds Citations; data-availability/data-citation support adds Data
+  availability; an enabled public-identifier plugin (such as URN) adds
+  Identifiers — enabling DOIs alone does not (rule 5). <sup>b</sup>
+- **Payments enabled** adds a payment dropdown to the editorial shell's header tools
+  (its behavior belongs to the fees feature). <sup>c</sup>
+- No config.inc.php variables alter these rules.
+
+<sup>a</sup> UserGroup::userGroupStages via Repository::getAccessibleWorkflowStages() ·
+<sup>b</sup> useWorkflowNavigationConfigOJS.js getPublicationItemsEditorial() (publicationSettings.supportsCitations / supportsDataCitations / supportsDataAvailability / identifiersEnabled) ·
+<sup>c</sup> workflowConfigEditorialOJS.js getHeaderItems() (publicationSettings.submissionPaymentsEnabled → WorkflowPaymentDropdown)
+
+## Cross-feature interactions
+
+- **editorial-dashboards** — owns how the panel is reached (View button, deep link,
+  address cleanup on close, list refresh) and who appears on which list; this spec
+  starts once the panel is open.
+- **author-dashboard** — owns the author dressing of this same shell (the tracking
+  view): its menu roster, per-stage author panels and author landings. The shared
+  mechanics (stage menu shape, access gate sentence, status boxes, landing rules)
+  are documented here once.
+- **editorial-decisions** (pending) — owns the decision action rail the shell
+  renders beside a stage's panels.
+- **stage-participants** (pending) — owns creating/removing the assignments that
+  rule 6 turns into stage access.
+- **Per-stage features** (submission/review/copyediting/production stage specs,
+  pending) — own every panel inside a stage; *tasks-discussions* and
+  *assign-and-manage-reviewers* own their panels likewise.
+- **Publication & versioning features** (pending) — own the Publication menu
+  entries' screens and the create-version/publish actions the menu exposes.
+
+## Canonical scenarios
+
+1. **A Section Editor tours the stage menu** — a Section Editor assigned to a
+   submission under Review opens it from the dashboard. The header shows the
+   submission's ID, authors and title with a "Review (Round 1)" stage indicator; in
+   the menu, all four stages are listed and the Review round entry carries the
+   colored stripe. Opening **Copyediting** shows a Status box reading "The
+   Copyediting stage has not yet been initiated." and nothing else beyond the
+   ever-present submission-language line (rule 8); opening
+   **Submission** shows "The submission is currently in the Review stage." above
+   the desk-review panels; returning to the Review round shows the working stage.
+   <sup>s1</sup>
+2. **Review rounds unfold in the menu** — on a submission sent to a second review
+   round, the Review menu entry contains "Review Round 1" and "Review Round 2".
+   Opening the panel fresh lands on Round 2 (the stripe sits there); selecting
+   Round 1 shows "The submission has been advanced to the next round of review"
+   above that round's historical content. After the submission is accepted and
+   moved on, Round 1 instead explains the submission advanced, was accepted, and
+   names the stage it now sits in. <sup>s2</sup>
+3. **An Assistant hits a stage their role doesn't cover** — an Assistant whose
+   group covers only Copyediting and Production is assigned to a submission in
+   Review. They open the panel: the menu still lists all four stages, but opening
+   **Review** (or Submission) shows only "You don't currently have access to that
+   stage of the workflow." — no panels, no side column, no buttons — while
+   Copyediting opens normally with its not-yet-initiated status. <sup>s3</sup>
+4. **A Journal Manager oversees without an assignment** — a Journal Manager who was
+   never assigned to the submission opens it from the dashboard and can walk every
+   stage: each accessible stage shows its panels or status note, never the
+   no-access sentence, and the header offers Activity Log and Library. <sup>s4</sup>
+5. **Old workflow addresses find their way home** — a Section Editor follows a
+   years-old bookmark to a submission's workflow page (the entry-check shape of
+   rule 11): the browser lands on the editorial dashboard with that submission's
+   panel open. A bookmark deep into a specific stage (a stage-named address)
+   arrives the same way but at the panel's default landing — the
+   bookmarked stage is not preselected. Followed while signed out, the bookmark
+   first asks for login and then continues on to the open panel. An author trying
+   an editorial workflow address never reaches the dashboard: they land on an
+   access-denied page reading "You don't currently have access to that stage of
+   the workflow." <sup>s5</sup>
+6. **An author and a Section Editor open the same submission** — for one submission
+   in Copyediting, the assigned Section Editor's panel and the author's tracking
+   view (from My Submissions) share the same skeleton — header with the same
+   "Copyediting" indicator, stage menu, Publication group — but the author's
+   Publication versions offer fewer screens (no Identifiers, no Publication
+   Settings, and no Permissions & Disclosure — the menu's name for the License
+   screen), the author's header has Library but no Activity Log, and no decision
+   rail appears anywhere in the author view (details owned by *author-dashboard*).
+   <sup>s6</sup>
+
+<sup>s1</sup> Seed: any queued submission in external review with an assigned sub-editor; stage names verbatim from manager.po / submission.po ·
+<sup>s2</sup> Round data: getReviewRoundsForStage(); messages WorkflowSubmissionStatus.vue ·
+<sup>s3</sup> Requires an assistant group with stage coverage excluding review (Users & Roles); seed note: no default assistant group covers exactly Copyediting + Production (registry/userGroups.xml — Copyeditor covers Copyediting only, Layout Editor covers Production only), so the seed unions two assignments on one assistant, assigned through both groups — precisely rule 6's per-assignment union; gate workflowConfigEditorialOJS.js common.getPrimaryItems; live-probed 2026-07-16 (Group B item 4, stage-4-only copyeditor group) ·
+<sup>s4</sup> Manager fallback Repository::getAccessibleWorkflowStages(); header items getHeaderItems() ·
+<sup>s5</sup> Routes: {journal}/workflow/access/{id} and {journal}/workflow/{submission|externalReview|editorial|production}/{id} and {journal}/workflow/index/{id}/{stageId}; author denial via WORKFLOW_TYPE_EDITORIAL role intersect (PKPWorkflowHandler::authorize()); all three legs live-probed 2026-07-16 (Group A items 1–2; probe note: assert redirects on the locale-prefixed /en/ URL form — bare journal URLs first take an unrelated locale 302) ·
+<sup>s6</sup> Contrast anchors: getPublicationItemsAuthor() vs getPublicationItemsEditorial(); workflowConfigAuthorOJS.js getHeaderItems() (Library only); the License screen's menu label is "Permissions & Disclosure" (publication.publicationLicense msgstr); Identifiers nuance: identifiersEnabled gates on pub-id plugins (e.g. URN — PKPDashboardHandler::setupIndex()), NOT on DOIs, so on a journal with no pub-id plugin enabled the entry is absent from BOTH dressings — the author-side absence still holds but is not an editor/author contrast; the contrast is carried by the production-bound entries; author side owned by author-dashboard spec
+
+## Known deviations (as-built ≠ intent)
+
+- ⚠ **A manager who reviews is blinded in the UI but not on the server** (rule 6,
+  permissions lead-in; live-confirmed 2026-07-16, Group B item 5): the submission
+  payload skips the global manager/admin fallback when the viewer holds an active
+  (not declined/cancelled) review assignment on the submission
+  (Schema::getPropertyStages() `$hasCurrentUserReviewAssignment` guard), so an
+  unassigned Journal Manager who is also a reviewer sees the no-access sentence on
+  all four stages (the shell itself still opens — header and menu load, only stage
+  content is blinded) — but classes/user/Repository::getAccessibleWorkflowStages()
+  has no such guard, so server-side stage authorization still permits them
+  everywhere (probed: the legacy stage route enters the normal redirect chain and a
+  stage-scoped participants API call succeeds for the same person). A declined AND
+  a cancelled review assignment both restore the full manager view, matching the
+  guard's condition. Suspected intent: reviewer anonymity should not be
+  underminable by the same person's manager hat — but then the server should match.
+  Proposed ledger row 211. Same family, smaller surface (code re-derivation
+  2026-07-16): the two sides even check "still-held" differently — the server
+  counts an assignment when the user still holds its role through *any* of their
+  groups (Repository::getAccessibleWorkflowStages()), while the payload requires
+  live membership in the assignment's own group
+  (Schema::getAssignmentRoles() date-window check) — so a user whose membership in
+  the assigned group lapsed but who holds the same role via another group keeps
+  server-side stage access while the UI blinds them; cold edge, the UI is only
+  ever stricter — folded into row 211's family note rather than a new row.
+- ⚠ **Legacy stage bookmarks lose their stage** (rule 11; live-confirmed
+  2026-07-16, Group A item 1): every old stage-named address ends at
+  `dashboard/editorial?workflowSubmissionId={id}` with no `workflowMenuKey`, so the
+  panel opens at the rule-9 default rather than the bookmarked stage
+  (PKPWorkflowHandler::index() discards the stage arg its authorization checked —
+  probed: a Submission-stage bookmark on a Review-stage submission opened at the
+  current review round). Suspected intent: map the old stage path onto the menu
+  key. Low impact; proposed ledger row 212 (behavior-change note).
+- ⚠ **Stage-named addresses are stricter than their destination** (rule 12;
+  live-confirmed 2026-07-16, Group B item 3): the named stage is authorized
+  (WorkflowStageAccessPolicy) although the redirect target ignores it — an
+  Assistant not covering the named stage is refused by e.g.
+  `workflow/production/{id}` (302 to the authorization-denied page carrying the
+  same "You don't currently have access to that stage of the workflow." sentence)
+  yet gets the identical end state via `workflow/access/{id}` or a covered
+  stage-named address. Harmless as-built inconsistency; folded into ledger row 212.
+- ⚠ **The selected parent Review entry misdescribes an active round** (rule 3;
+  found live 2026-07-16, Group C item 6): selecting the round-less **Review**
+  entry shows the status box "The submission has been advanced to the next round
+  of review" while round 1 is still running
+  (WorkflowSubmissionStatus.vue compares `selectedReviewRoundId` — null here —
+  against `currentReviewRound.id`), renders the round-scoped panels with no round
+  (the Reviewers and Files for Review tables sit empty despite existing
+  assignments), and drops the decision action rail entirely. A coherent defect
+  cluster: a round-less Review view that misstates where the submission is.
+  Suspected intent: the parent entry should be expand-only, or should select the
+  current round. Proposed ledger row 213.
+
+## Open questions
+
+1. Is the manager-as-reviewer UI blinding (Known deviations, first item —
+   live-confirmed both sides 2026-07-16) the intended product rule? If yes, should
+   getAccessibleWorkflowStages() apply the same active-review-assignment guard so
+   server-side access (legacy routes, stage-scoped APIs) matches the UI?
+2. Should a legacy stage-named address preselect that stage in the panel (e.g.
+   translate the old path to a `workflowMenuKey`), or is "default landing" the
+   accepted behavior?
+3. Should the parent **Review** menu entry be selectable at all (it is today —
+   Known deviations, last item), or expand-only / an alias for the current round?
+
+---
+
+<!-- REFERENCE MATERIAL — provenance and campaign bookkeeping, not product-owner
+     narrative. The PO-facing "where do I find this" is in Purpose. -->
+
+## Reference — entry points & surfaces
+
+| Entry | Path | Atom |
+|-------|------|------|
+| Workflow panel (generic shell) | Side modal mounted by the dashboards; `WorkflowPage.vue` layout (header slots, SideMenu, 2-column content) | VUE-workflow-page |
+| Workflow panel (OJS wiring) | `WorkflowPageOJS.vue` — mounts OJS managers/components into the shell, editorial vs author config split, default-expanded menu groups | VUE-workflow-page-ojs |
+| Legacy entry-check address | `{journal}/workflow/access/{submissionId}` → 302 `dashboard/editorial?workflowSubmissionId={id}` (live-probed 2026-07-16, editorial-dashboards) | PAGE-workflow-access |
+| Legacy stage landing | `{journal}/workflow/index/{submissionId}/{stageId}` → 302 same destination (stage dropped) | PAGE-workflow-index |
+| Legacy stage-named addresses | `{journal}/workflow/submission/{id}` | PAGE-workflow-submission |
+| | `{journal}/workflow/externalReview/{id}` | PAGE-workflow-externalreview |
+| | `{journal}/workflow/editorial/{id}` | PAGE-workflow-editorial |
+| | `{journal}/workflow/production/{id}` — each → 302 `workflow/index/{id}/{stageId}` → 302 dashboard | PAGE-workflow-production |
+| Stage-access authorization | WorkflowStageAccessPolicy (composite used by the legacy ops and every stage-scoped handler/API) | AUTHZ-workflow-stage-access-policy |
+| | UserAccessibleWorkflowStagePolicy (named-stage check against the computed stage map) | AUTHZ-user-accessible-workflow-stage-policy |
+| | UserAccessibleWorkflowStageRequiredPolicy (any-stage check; builds the accessible-stages context object) | AUTHZ-user-accessible-workflow-stage-required-policy |
+| | WorkflowStageRequiredPolicy (stage-id validity sub-policy composed inside WorkflowStageAccessPolicy) | AUTHZ-workflow-stage-required-policy |
+
+## Reference — code anchors
+
+- lib/pkp/pages/workflow/PKPWorkflowHandler.php — legacy ops (access/index/stage
+  names), authorize() split, identifyStageId(), _redirectToIndex()
+- pages/workflow/WorkflowHandler.php — OJS role whitelist + setupIndex() (dead
+  weight for the redirect ops; still feeds forms)
+- lib/pkp/classes/security/authorization/WorkflowStageAccessPolicy.php,
+  internal/UserAccessibleWorkflowStagePolicy.php,
+  internal/UserAccessibleWorkflowStageRequiredPolicy.php
+- lib/pkp/classes/user/Repository.php getAccessibleWorkflowStages() — the per-stage
+  access computation (assignments × group stage coverage × held roles; manager
+  fallback)
+- lib/pkp/classes/submission/maps/Schema.php getPropertyStages(),
+  getAssignmentRoles() — the `stages[].currentUserAssignedRoles` payload the UI
+  gates on (incl. the manager-as-reviewer guard)
+- lib/ui-library/src/pages/workflow/WorkflowPage.vue, WorkflowPageOJS.vue,
+  workflowStore.js — shell layout, store, OJS component wiring
+- lib/ui-library/src/pages/workflow/composables/useWorkflowNavigationConfig/
+  useWorkflowNavigationConfigOJS.js — menu roster, stripes, initial landing
+- lib/ui-library/src/pages/workflow/composables/useWorkflowMenu.js — menu-key URL
+  persistence and fallback
+- lib/ui-library/src/pages/workflow/composables/useWorkflowPermissions.js — UI
+  permission flags (accessibleStages, canAccessPublication/Production/Publish,
+  canAccessEditorialHistory)
+- lib/ui-library/src/pages/workflow/composables/useWorkflowConfig/
+  {useWorkflowConfigOJS,workflowConfigEditorialOJS,workflowConfigAuthorOJS}.js —
+  editorial/author dressing, per-stage access gate, header tools
+- lib/ui-library/src/pages/workflow/components/primary/WorkflowSubmissionStatus.vue —
+  status-box messages
+- lib/ui-library/src/components/StageBubble/StageBubble.vue +
+  lib/ui-library/src/composables/useSubmission.js — stage indicator states/labels

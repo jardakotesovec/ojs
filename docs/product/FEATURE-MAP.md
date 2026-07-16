@@ -42,7 +42,7 @@ atoms: PAGE-dashboard-{index,editorial,reviewassignments}, PAGE-submissions-{ind
 
 ### workflow-stage-navigation — the workflow-page shell: stage tabs/bubbles, per-stage access, stage routing
 The decision action-bar rendered here is documented once in editorial-decisions; this owns only the shell/routing.
-atoms: PAGE-workflow-{access,index,submission,editorial,production}, VUE-workflow-page(+ojs), AUTHZ-workflow-stage-access/user-accessible (~9). References editorial-decisions.
+atoms: PAGE-workflow-{access,index,submission,externalReview,editorial,production}, VUE-workflow-page(+ojs), AUTHZ-{workflow-stage-access,user-accessible-workflow-stage,user-accessible-workflow-stage-required,workflow-stage-required} (12; shorthand trued up 2026-07-16). References editorial-decisions.
 
 ### editorial-decisions — the decision engine (single home): record-decision UI, notify-author email (+attachments), attach files, decision→stage/status transition, decline/revert, new round, recommend — plus the variant table of OJS decision types
 This is the ONE home for decision mechanics; every stage feature (send-to-review, review-rounds-and-revisions, copyediting-stage, production-stage, done transitions) REFERENCES it rather than re-documenting decision rules. Merged-from: done-stage (the Done-stage transitions folded into the variant table below).

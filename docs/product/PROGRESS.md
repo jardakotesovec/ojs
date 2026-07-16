@@ -23,14 +23,14 @@ loop per iteration, selection = first `pending` row in table order, wave = 7
 features between maintainer samplings. **Current maintainer directive: work
 through Area 2 (rows 6–22, skipping already-done rows 11 and 19) in table order.
 The wave rule applies as designed: after 7 features, STOP for sampling review
-mid-area.** Wave counter: 1 feature since last sampling (editorial-dashboards
-2026-07-16; Area 1 sampled and approved 2026-07-14; findings-to-files protocol
-in force since — see RUNBOOK).
+mid-area.** Wave counter: 2 features since last sampling (editorial-dashboards +
+workflow-stage-navigation 2026-07-16; Area 1 sampled and approved 2026-07-14;
+findings-to-files protocol in force since — see RUNBOOK).
 
 ## Totals
 
-- Features: **1 reference · 6 verified · 85 pending** (of 92; feature 39 folded into `article-landing`)
-- Tests: **55 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10) · last full-suite timing: n/a since reset
+- Features: **1 reference · 7 verified · 84 pending** (of 92; feature 39 folded into `article-landing`)
+- Tests: **61 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6) · last full-suite timing: n/a since reset
 - Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
 
 ## Features
@@ -43,7 +43,7 @@ in force since — see RUNBOOK).
 | 4 | Area 1 — Author submission & intake | `submission-drafts` | M·6 | verified | green(x2) | wave 3: 6 tests (lib/pkp), 7 atoms, ledger rows 192–194 + row-167 amended (arbitration overturned a test-author premise); atlas transfers applied; all 16 subagents fable-clean |
 | 5 | Area 1 — Author submission & intake | `author-dashboard` | M·6 | verified | green(x2) | wave 4: 6 tests (lib/pkp), 5 atoms, ledger rows 195–203 (headline: multi-role revisions-view scoping 202, dead published-block 198, upload-revisions gate bug 199); 2 subagents flipped (kept per policy) |
 | 6 | Area 2 — Editorial workflow & peer review | `editorial-dashboards` | H·10 | verified | green(x2) | wave 5: 10 tests (lib/pkp), 16 atoms, ledger rows 204–210 + rows 2/204 amended (headline: hybrid admin review-view scope leak 208, anonymous bare-address 500 209, non-VoR scheduled invisibility 210); 1 verify chunk all-opus + 1 arbitration probe flipped (kept per policy); harness defect flagged: participants[] seeds lack group membership |
-| 7 | Area 2 — Editorial workflow & peer review | `workflow-stage-navigation` | M·6 | pending | pending | |
+| 7 | Area 2 — Editorial workflow & peer review | `workflow-stage-navigation` | M·6 | verified | green(x2) | wave 6: 6 tests (lib/pkp) + new WorkflowShellPage POM, 12 atoms, ledger rows 211–213 + 211 addendum (headline: manager-as-reviewer UI/server split 211, selectable parent Review entry bug 213); all 4 verify chunks PASS; all 13 subagents fable-clean; pointer-brief protocol applied |
 | 8 | Area 2 — Editorial workflow & peer review | `editorial-decisions` | H·13 | pending | pending | |
 | 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | pending | pending | |
 | 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | pending | pending | |
@@ -248,3 +248,17 @@ appends to end-of-file). Per-class rates:
 | 2026-07-16 | editorial-dashboards | authoring | verification-merge | 75 | 0 | 0 | clean |
 | 2026-07-16 | editorial-dashboards | authoring | readability-verifier | 8 | 0 | 0 | clean |
 | 2026-07-16 | editorial-dashboards | authoring | readability-fix | 38 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | authoring | spec-author | 82 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | probe | probe-groupB | 77 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | probe | probe-groupA | 78 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | probe | probe-groupC | 112 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | authoring | spec-finalizer | 71 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | authoring | test-author | 98 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | authoring | spec-fix-wording | 26 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | verification | verify-chunk-a | 40 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | verification | verify-chunk-b | 38 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | verification | verify-chunk-f | 28 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | verification | verify-chunk-c | 72 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | authoring | verification-merge | 38 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | authoring | readability-verifier | 6 | 0 | 0 | clean |
+| 2026-07-16 | workflow-stage-navigation | authoring | readability-fix | 21 | 0 | 0 | clean |
