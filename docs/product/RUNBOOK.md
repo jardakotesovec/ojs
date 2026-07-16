@@ -224,6 +224,14 @@ cadence, not a batch:
   context runs low mid-feature, finish the current gate, commit what is
   committed-worthy, and END the session — a fresh one resumes via "Resuming a
   feature mid-flight".
+- **A flag-pause can break the /loop wakeup chain**: if the flag kills the turn
+  that would have scheduled the next wakeup, the session sits idle until the
+  maintainer re-sends the loop prompt — no work is lost, resume is from file
+  state. For permission-dense features (editorial-decisions, roles-permissions,
+  review-anonymity — 14 pauses in 3 features on 2026-07-16 vs 3 in all of
+  Area 1), prefer ONE FEATURE PER FRESH SESSION over a long /loop: fresh context
+  zeroes the accumulated narrative, and the PROGRESS banner + wave counter keep
+  the cadence identical.
 - **The completion notification is the ONLY reliable subagent liveness signal.** Never
   judge a subagent by transcript size or token count (that misled an orchestrator into
   killing working agents). If an agent looks stuck, check ground truth — has its
