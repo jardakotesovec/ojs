@@ -78,11 +78,11 @@
 | LOC-editor-grid-action | `grid.action.*` | editor.po | 11 keys |  | |
 | LOC-editor-editor-submissions | `editor.submissions.*` | editor.po | 11 keys |  | |
 | LOC-editor-editor-notifyUsers | `editor.notifyUsers.*` | editor.po | 9 keys |  | |
-| LOC-editor-editor-decision | `editor.decision.*` | editor.po | 8 keys |  | |
+| LOC-editor-editor-decision | `editor.decision.*` | editor.po | 8 keys |  | editorial-decisions |
 | LOC-editor-misc | `(misc)` | editor.po | 3 rarer prefixes | editor.article (3), editor.submissionArchive (3), submission.queries (3) | |
 | LOC-emails-emailTemplate-variable | `emailTemplate.variable.*` | emails.po | 16 keys |  | |
 | LOC-emails-emails-userRoleAssignmentInvitationNotify | `emails.userRoleAssignmentInvitationNotify.*` | emails.po | 8 keys |  | |
-| LOC-emails-emails-decision | `emails.decision.*` | emails.po | 4 keys |  | |
+| LOC-emails-emails-decision | `emails.decision.*` | emails.po | 4 keys |  | editorial-decisions |
 | LOC-emails-misc | `(misc)` | emails.po | 7 rarer prefixes | emails.paymentRequestNotification (3), emails.submissionAck (3), emails.orcidRequestUpdateScope (3), emails.orcidRequestAuthorAuthorization (3), emails.orcidCollectAuthorId (3), emails.footer (3), emails.changeProfileEmailInvitationNotify (3) | |
 | LOC-grid-grid-action | `grid.action.*` | grid.po | 125 keys |  | |
 | LOC-grid-grid-user | `grid.user.*` | grid.po | 45 keys |  | |

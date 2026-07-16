@@ -26,14 +26,14 @@ PER FRESH SESSION — no multi-feature /loop (Area 2's permission-dense content
 flag-pauses long sessions; RUNBOOK Model discipline). Each session builds or
 resumes exactly ONE feature through commit, then STOPS. Wave rule unchanged:
 at 7 features since last sampling, stop for sampling review instead.**
-Wave counter: 2 features since last sampling (editorial-dashboards +
-workflow-stage-navigation 2026-07-16; Area 1 sampled and approved 2026-07-14;
-findings-to-files protocol in force since — see RUNBOOK).
+Wave counter: 3 features since last sampling (editorial-dashboards +
+workflow-stage-navigation + editorial-decisions 2026-07-16; Area 1 sampled and
+approved 2026-07-14; findings-to-files protocol in force since — see RUNBOOK).
 
 ## Totals
 
-- Features: **1 reference · 7 verified · 84 pending** (of 92; feature 39 folded into `article-landing`)
-- Tests: **61 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6) · last full-suite timing: n/a since reset
+- Features: **1 reference · 8 verified · 83 pending** (of 92; feature 39 folded into `article-landing`)
+- Tests: **74 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13) · last full-suite timing: n/a since reset
 - Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
 
 ## Features
@@ -47,7 +47,7 @@ findings-to-files protocol in force since — see RUNBOOK).
 | 5 | Area 1 — Author submission & intake | `author-dashboard` | M·6 | verified | green(x2) | wave 4: 6 tests (lib/pkp), 5 atoms, ledger rows 195–203 (headline: multi-role revisions-view scoping 202, dead published-block 198, upload-revisions gate bug 199); 2 subagents flipped (kept per policy) |
 | 6 | Area 2 — Editorial workflow & peer review | `editorial-dashboards` | H·10 | verified | green(x2) | wave 5: 10 tests (lib/pkp), 16 atoms, ledger rows 204–210 + rows 2/204 amended (headline: hybrid admin review-view scope leak 208, anonymous bare-address 500 209, non-VoR scheduled invisibility 210); 1 verify chunk all-opus + 1 arbitration probe flipped (kept per policy); harness defect flagged: participants[] seeds lack group membership |
 | 7 | Area 2 — Editorial workflow & peer review | `workflow-stage-navigation` | M·6 | verified | green(x2) | wave 6: 6 tests (lib/pkp) + new WorkflowShellPage POM, 12 atoms, ledger rows 211–213 + 211 addendum (headline: manager-as-reviewer UI/server split 211, selectable parent Review entry bug 213); all 4 verify chunks PASS; all 13 subagents fable-clean; pointer-brief protocol applied |
-| 8 | Area 2 — Editorial workflow & peer review | `editorial-decisions` | H·13 | in_progress | pending | |
+| 8 | Area 2 — Editorial workflow & peer review | `editorial-decisions` | H·13 | verified | green(x2) | wave 7: 13 tests (lib/pkp) + new DecisionWizardPage POM, 43 atoms, ledger rows 214–219 + row-10 addendum (headline: lesser-role stage-split UI/server mismatches 219, stale-round decision acceptance 218); s12 probe-vs-test conflict settled by arbitration; 2 author attempts flag-terminated, test-author flipped mid-run (kept per policy) |
 | 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | pending | pending | |
 | 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | pending | pending | |
 | 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | verified | green(x2) | calibration f1: 13 tests, 33 atoms, 5 proposed ledger rows; maintainer signed off 2026-07-10 (scenario rewording applied) |
@@ -270,3 +270,15 @@ appends to end-of-file). Per-class rates:
 | 2026-07-16 | editorial-decisions | probe | probe-groupB | 173 | 0 | 0 | clean |
 | 2026-07-16 | editorial-decisions | probe | probe-groupD | 134 | 0 | 0 | clean |
 | 2026-07-16 | editorial-decisions | probe | probe-groupC | 174 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | authoring | spec-finalizer | 86 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | authoring | test-author | 121 | 111 | 0 | FLIPPED@122/232 |
+| 2026-07-16 | editorial-decisions | verification | verify-chunk-f | 41 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | verification | verify-chunk-a | 45 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | verification | verify-chunk-b | 40 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | verification | verify-chunk-d | 68 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | verification | verify-s12-arbitration | 125 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | verification | verify-chunk-e | 82 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | verification | verify-chunk-c | 67 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | authoring | verification-merge | 71 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | authoring | readability-verifier | 7 | 0 | 0 | clean |
+| 2026-07-16 | editorial-decisions | authoring | readability-fix | 30 | 0 | 0 | clean |

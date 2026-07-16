@@ -46,7 +46,7 @@ atoms: PAGE-workflow-{access,index,submission,externalReview,editorial,productio
 
 ### editorial-decisions — the decision engine (single home): record-decision UI, notify-author email (+attachments), attach files, decision→stage/status transition, decline/revert, new round, recommend — plus the variant table of OJS decision types
 This is the ONE home for decision mechanics; every stage feature (send-to-review, review-rounds-and-revisions, copyediting-stage, production-stage, done transitions) REFERENCES it rather than re-documenting decision rules. Merged-from: done-stage (the Done-stage transitions folded into the variant table below).
-atoms: PAGE-decision-record, SCHEMA-decision, DB-edit_decisions, API-submission-{get,add}-decision, AUTHZ-decision-{write,allowed,stage-valid,type-required}, FORM-select-revision-{decision,recommendation}, ~35 Decision constants (incl. 33/34/35 Done), ~17 Decision*NotifyAuthor mailables, EVLOG-SUBM-ED-{DEC,REC,EMAIL}, NOTIF-editor-decision-*, API-submission-return-to-done, ApplyDoneWorkflowStage listener, WORKFLOW_STAGE_ID_DONE=6, I12799 backfill migration (~45)
+atoms: PAGE-decision-record, SCHEMA-decision, DB-edit_decisions, API-submission-get-decisions, API-submission-add-decision, AUTHZ-decision-{write,allowed,stage-valid,type-required}, FORM-select-revision-{decision,recommendation}, ~35 Decision constants (incl. 33/34/35 Done), ~17 Decision*NotifyAuthor mailables, EVLOG-SUBM-ED-{DEC,REC,EMAIL}, NOTIF-editor-decision-*, API-submission-return-to-done, ApplyDoneWorkflowStage listener, WORKFLOW_STAGE_ID_DONE=6, I12799 backfill migration (~45)
 
 Variant table (each decision: stage guard → resulting state):
 | Decision | Stage guard | Result |
