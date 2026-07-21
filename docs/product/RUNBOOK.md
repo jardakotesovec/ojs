@@ -71,7 +71,12 @@ ledger row itself because its brief omitted this.)
    discipline). Note: atlas `Claimed by:` markers survive from the
    scratched round as feature-name claims — re-verify the atom list matches the
    rebuilt spec's frontmatter and adjust claims if the regrouping changed; do not
-   treat an existing marker as "already covered".
+   treat an existing marker as "already covered". Also check the EXPOSURE LIST in
+   `docs/e2e/app-changes-audit-2026-07-21.md` for pre-campaign ledger rows owned
+   by this feature (round-1 findings unchecked since their tests were deleted):
+   treat them like standing ledger rows — fold them into the spec as candidate
+   deviations, let steps 4/7 re-validate them live, and have the orchestrator
+   amend the ledger row (and tick it off the exposure list) if the app diverged.
 3. **Lint gate** — `docs/product/lint-spec.sh specs/<feature>.md` must pass with
    ZERO findings before anything else proceeds. It catches code symbols, routes,
    HTTP codes, probe evidence, and seeded usernames leaking into PO/QA-facing body
