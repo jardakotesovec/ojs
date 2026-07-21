@@ -157,7 +157,9 @@ cadence, not a batch:
   pinned (`model: fable`). A mid-run downgrade to Opus is handled BY CLASS:
   AUTHORING agents (spec/test/POM/readability writing) that flip are allowed to
   finish and are LOGGED, but their output is DISCARDED and the chunk respawned
-  fresh (max 2 respawns, then park the feature and report);
+  fresh (max 2 respawns; for the TEST AUTHOR, exhausted respawns switch to the
+  SPLIT TEST-AUTHORING protocol below instead of parking — park only if that
+  also fails; other authoring chunks park the feature and report);
   VERIFICATION and PROBE agents that flip continue and their output is KEPT**
   (their results get merged and cross-checked, so a flipped verifier is low
   risk). Rationale for the revision: the 2026-07-16 editorial-decisions suite —
@@ -170,6 +172,32 @@ cadence, not a batch:
   once burned hours) still governs the STRUCTURE below: prose is drafted BEFORE
   probe context accumulates ("Authors draft"), and short fresh chunk contexts
   flip less — chunk authoring small so a respawn is cheap.
+- **Split test-authoring protocol (maintainer, 2026-07-21).** Use it INSTEAD of a
+  monolithic test author (a) from the start when the spec centers on a role×state
+  permission matrix (orchestrator judgment — the flip trigger is exactly that
+  content), or (b) mandatorily when a monolithic test-author's respawns exhaust.
+  Shape — one file, many small authors, quality held by scaffold + harmonizer:
+  1. **Scaffold agent** (first, before dense context): file skeleton — imports,
+     fixtures, tag helpers, `test.use`, header coverage map naming every canonical
+     scenario, empty stubs in spec order — plus ALL POM extensions, once, from the
+     probe reports' DOM facts. No test bodies.
+  2. **One micro-author per scenario, IN SERIES, fresh context each.** Pointer
+     brief only (scenario id, spec path, file path, PRINCIPLES/skill — never
+     restate the matrix). It implements exactly its stub, using the completed
+     tests already in the file as style examples, runs ITS OWN test to green
+     (bounded, ≤2 fix cycles), and writes a claim→assertion map for its scenario
+     to its `.reports` file. Log each as authoring `test-author-<sN>`.
+     Flip → discard that one test's diff, respawn once; second flip → mark the
+     scenario a STRAGGLER and continue the series (scenario-level parking).
+  3. **Stragglers**: one final tight retry each at the end; if it flips again the
+     orchestrator MAY keep an Opus-written version of that single test but MUST
+     flag it in the PROGRESS note for sampling review.
+  4. **Harmonizer** (authoring class — discard+respawn on flip): reads the whole
+     file; dedupes helpers, normalizes naming/selectors/wait patterns, checks the
+     header map against bodies, prunes zero-caller POM methods, and verifies each
+     test asserts its scenario's FULL final clause (the s12 rubric lesson).
+  5. Steps 6–8 (green twice on the whole suite, adversarial verify, readability)
+     run unchanged afterwards.
 - **Only the MAIN session must never run on the wrong model.** Mitigations active
   on this machine: `switchModelsOnFlag: false` (the main session pauses instead
   of switching — subagents still switch silently under it, which is now the
