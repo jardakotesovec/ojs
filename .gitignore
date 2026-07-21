@@ -35,3 +35,4 @@ registry/uiLocaleKeysBackend.json
 /playwright/.cache/
 docs/product/.reports/
 
+test-results-stage-participants/

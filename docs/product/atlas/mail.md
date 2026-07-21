@@ -29,7 +29,7 @@
 | MAIL-discussion-review | DiscussionReview | lib/pkp/classes/mail/mailables/DiscussionReview.php | template key: DISCUSSION_NOTIFICATION_REVIEW | email-delivery | tasks-discussions |
 | MAIL-discussion-submission | DiscussionSubmission | lib/pkp/classes/mail/mailables/DiscussionSubmission.php | template key: DISCUSSION_NOTIFICATION_SUBMISSION | email-delivery | tasks-discussions |
 | MAIL-edit-review-notify | EditReviewNotify | lib/pkp/classes/mail/mailables/EditReviewNotify.php | template key: REVIEW_EDIT | notifications | |
-| MAIL-editor-assigned | EditorAssigned | lib/pkp/classes/mail/mailables/EditorAssigned.php | template key: EDITOR_ASSIGN | email-delivery | |
+| MAIL-editor-assigned | EditorAssigned | lib/pkp/classes/mail/mailables/EditorAssigned.php | template key: EDITOR_ASSIGN | email-delivery | stage-participants |
 | MAIL-editorial-reminder | EditorialReminder | lib/pkp/classes/mail/mailables/EditorialReminder.php | template key: EDITORIAL_REMINDER | scheduled-tasks | |
 | MAIL-issue-published-notify | IssuePublishedNotify | classes/mail/mailables/IssuePublishedNotify.php | template key: ISSUE_PUBLISH_NOTIFY | issue-management | |
 | MAIL-open-access-notify | OpenAccessNotify | classes/mail/mailables/OpenAccessNotify.php | template key: OPEN_ACCESS_NOTIFY | notifications | |
@@ -59,7 +59,7 @@
 | MAIL-submission-acknowledgement | SubmissionAcknowledgement | lib/pkp/classes/mail/mailables/SubmissionAcknowledgement.php | template key: SUBMISSION_ACK | | submission-wizard |
 | MAIL-submission-acknowledgement-not-author | SubmissionAcknowledgementNotAuthor | lib/pkp/classes/mail/mailables/SubmissionAcknowledgementNotAuthor.php | template key: SUBMISSION_ACK_NOT_USER | | submission-wizard |
 | MAIL-submission-acknowledgement-other-authors | SubmissionAcknowledgementOtherAuthors | lib/pkp/classes/mail/mailables/SubmissionAcknowledgementOtherAuthors.php | template key: SUBMISSION_ACK_NOT_USER | | submission-wizard |
-| MAIL-submission-needs-editor | SubmissionNeedsEditor | lib/pkp/classes/mail/mailables/SubmissionNeedsEditor.php | template key: SUBMISSION_NEEDS_EDITOR | email-delivery | |
+| MAIL-submission-needs-editor | SubmissionNeedsEditor | lib/pkp/classes/mail/mailables/SubmissionNeedsEditor.php | template key: SUBMISSION_NEEDS_EDITOR | email-delivery | stage-participants |
 | MAIL-submission-saved-for-later | SubmissionSavedForLater | lib/pkp/classes/mail/mailables/SubmissionSavedForLater.php | template key: SUBMISSION_SAVED_FOR_LATER | | submission-drafts |
 | MAIL-subscription-expired | SubscriptionExpired | classes/mail/mailables/SubscriptionExpired.php | template key: SUBSCRIPTION_AFTER_EXPIRY | | |
 | MAIL-subscription-expired-last | SubscriptionExpiredLast | classes/mail/mailables/SubscriptionExpiredLast.php | template key: SUBSCRIPTION_AFTER_EXPIRY_LAST | | |

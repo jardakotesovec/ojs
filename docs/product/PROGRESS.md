@@ -28,15 +28,15 @@ commit, then STOPS. Model policy revised 2026-07-21 (RUNBOOK Model discipline):
 flipped AUTHORING output is discarded + respawned; verification/probe flips
 stay kept. Wave rule unchanged: at 7 features since last sampling, stop for
 sampling review instead.**
-Wave counter: 3 features since last sampling (editorial-dashboards +
+Wave counter: 4 features since last sampling (editorial-dashboards +
 workflow-stage-navigation 2026-07-16 + editorial-decisions rebuilt-from-scratch
-2026-07-21, replacing its scrapped 2026-07-16 build in the count; Area 1 sampled
+2026-07-21 + stage-participants 2026-07-22; Area 1 sampled
 and approved 2026-07-14; findings-to-files protocol in force since — see RUNBOOK).
 
 ## Totals
 
-- Features: **1 reference · 9 verified · 82 pending** (of 92; feature 39 folded into `article-landing`)
-- Tests: **74 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13) · last full-suite timing: n/a since reset
+- Features: **1 reference · 10 verified · 81 pending** (of 92; feature 39 folded into `article-landing`)
+- Tests: **83 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9) · last full-suite timing: n/a since reset
 - Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
 
 ## Features
@@ -51,7 +51,7 @@ and approved 2026-07-14; findings-to-files protocol in force since — see RUNBO
 | 6 | Area 2 — Editorial workflow & peer review | `editorial-dashboards` | H·10 | verified | green(x2) | wave 5: 10 tests (lib/pkp), 16 atoms, ledger rows 204–210 + rows 2/204 amended (headline: hybrid admin review-view scope leak 208, anonymous bare-address 500 209, non-VoR scheduled invisibility 210); 1 verify chunk all-opus + 1 arbitration probe flipped (kept per policy); harness defect flagged: participants[] seeds lack group membership |
 | 7 | Area 2 — Editorial workflow & peer review | `workflow-stage-navigation` | M·6 | verified | green(x2) | wave 6: 6 tests (lib/pkp) + new WorkflowShellPage POM, 12 atoms, ledger rows 211–213 + 211 addendum (headline: manager-as-reviewer UI/server split 211, selectable parent Review entry bug 213); all 4 verify chunks PASS; all 13 subagents fable-clean; pointer-brief protocol applied |
 | 8 | Area 2 — Editorial workflow & peer review | `editorial-decisions` | H·13 | verified | green(x2) | wave 7 rebuild (2026-07-21): 13 tests (lib/pkp) + new DecisionWizardPage POM, 43 atoms, ledger rows 220–228 (rows 214–219 + row-10 re-reproduced, untouched); ALL subagents fable-clean incl. authoring (rebuild directive satisfied, zero respawns); 4 atlas Hint fixes applied |
-| 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | pending | pending | |
+| 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | verified | green(x2) | wave 8 (2026-07-22): 9 tests (lib/pkp) via first SPLIT test-authoring run (2 monolithic test-authors flipped→discarded; all 12 split authoring agents fable-clean), ledger rows 229–234 + rows 8/9/14/73/74/75/135/164 amended/stamped (headline: SE privilege edits silently refused 229, dead anonymous-reviewer warning 231, assistant workflow occlusion 234); 3 verify chunks flipped (kept per policy); exposure rows 9/73/74/75 re-validated |
 | 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | pending | pending | |
 | 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | verified | green(x2) | calibration f1: 13 tests, 33 atoms, 5 proposed ledger rows; maintainer signed off 2026-07-10 (scenario rewording applied) |
 | 12 | Area 2 — Editorial workflow & peer review | `reviewer-response` | H·10 | pending | pending | |
@@ -303,3 +303,34 @@ appends to end-of-file). Per-class rates:
 | 2026-07-21 | editorial-decisions | authoring | readability-verifier | 7 | 0 | 0 | clean |
 | 2026-07-21 | editorial-decisions | authoring | readability-fix | 38 | 0 | 0 | clean |
 | 2026-07-21 | editorial-decisions | authoring | ledger-stamp | 23 | 0 | 0 | clean |
+| 2026-07-21 | ledger-audit | verification | era-audit | 60 | 0 | 0 | clean |
+| 2026-07-21 | ledger-audit | authoring | apply-markings | 32 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | spec-author | 77 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | probe | probe-batchB | 97 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | probe | probe-batchC | 150 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | probe | probe-batchA | 112 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | probe | probe-batchD | 228 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | spec-finalizer | 77 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | test-author-discarded | 25 | 205 | 0 | FLIPPED@26/230 |
+| 2026-07-21 | stage-participants | verification | verify-chunk-f | 29 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | verification | verify-chunk-a | 48 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | test-author-discarded-2 | 18 | 66 | 0 | FLIPPED@19/84 |
+| 2026-07-21 | stage-participants | authoring | test-scaffold | 57 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | test-author-s1 | 44 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | test-author-s2 | 65 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | test-author-s3 | 52 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | test-author-s4 | 45 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | test-author-s5 | 41 | 0 | 0 | clean |
+| 2026-07-21 | stage-participants | authoring | test-author-s6 | 31 | 0 | 0 | clean |
+| 2026-07-22 | stage-participants | authoring | test-author-s7 | 83 | 0 | 0 | clean |
+| 2026-07-22 | stage-participants | authoring | test-author-s8 | 104 | 0 | 0 | clean |
+| 2026-07-22 | stage-participants | authoring | test-author-s9 | 53 | 0 | 0 | clean |
+| 2026-07-22 | stage-participants | authoring | test-harmonizer | 101 | 0 | 0 | clean |
+| 2026-07-22 | stage-participants | verification | verify-chunk-b | 41 | 17 | 0 | FLIPPED@42/58 |
+| 2026-07-22 | stage-participants | verification | verify-chunk-c | 17 | 67 | 0 | FLIPPED@18/84 |
+| 2026-07-22 | stage-participants | verification | verify-chunk-d | 81 | 0 | 0 | clean |
+| 2026-07-22 | stage-participants | verification | verify-chunk-e | 72 | 24 | 0 | FLIPPED@73/96 |
+| 2026-07-22 | stage-participants | authoring | verification-merge | 102 | 0 | 0 | clean |
+| 2026-07-22 | stage-participants | authoring | readability-verifier | 6 | 0 | 0 | clean |
+| 2026-07-22 | stage-participants | authoring | readability-fix | 48 | 0 | 0 | clean |
+| 2026-07-22 | stage-participants | authoring | ledger-stamp | 68 | 0 | 0 | clean |

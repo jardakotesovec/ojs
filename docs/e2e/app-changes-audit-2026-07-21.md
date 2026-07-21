@@ -53,7 +53,7 @@ first under the current in-table-order directive). 129 rows across 62 pending fe
 
 | PROGRESS # | Owning feature | Rows | §2 row numbers |
 |---|---|---|---|
-| 9 | `stage-participants` | 4 | 9, 73, 74, 75 |
+| 9 | `stage-participants` | 4 | 9, 73, 74, 75 — all four re-validated 2026-07-21 (spec fold-in); no-drift re-confirmed 2026-07-22 (verification pass, chunk e) |
 | 12 | `reviewer-response` | 4 | 16, 76, 77, 78 |
 | 13 | `review-forms` | 2 | 39, 79 |
 | 14 | `review-rounds-and-revisions` | 1 | 80 |
@@ -148,8 +148,8 @@ re-validated = touched by the current campaign (2026-07-10+) or noted otherwise.
 | 5 | submission search ORs space-tokenized LIKE matches; drafts sort last | `editorial-dashboards` | verified | no spec cited | untouched |
 | 6 | FileAttacherUpload off-by-one enables attach during in-flight upload | `submission-files` | pending | no spec cited | untouched |
 | 7 | cancel review round cascade-deletes its own decision record | `editorial-decisions` | verified | review-rounds-revisions.spec.js: spec deleted | untouched |
-| 8 | skip-review accept never surfaces assign-copyeditor prompt | `copyediting-stage` | pending | copyediting-stage.spec.js: spec deleted | untouched |
-| 9 | editing/production status flips only via notify message, not assignment | `stage-participants` | pending | no spec cited | untouched |
+| 8 | skip-review accept never surfaces assign-copyeditor prompt | `copyediting-stage` | pending | copyediting-stage.spec.js: spec deleted | amended 2026-07-22 (stage-participants verify chunk e — every-viewer extension, live re-reproduction) |
+| 9 | editing/production status flips only via notify message, not assignment | `stage-participants` | verified | no spec cited | re-validated + amended 2026-07-21 (stage-participants probe D); no-drift re-confirmed 2026-07-22 (verify chunk e; adjacent row-8 amendment) |
 | 10 | back-from-copyediting mislabeled "Move to Review" without review round | `editorial-decisions` | verified | copyediting-stage.spec.js: spec deleted | addendum 2026-07-16; re-reproduced 2026-07-21 |
 | 11 | author dashboard crashes on early Submit Response click | `author-dashboard` | verified | no spec cited | untouched |
 | 12 | shared HTTP client lacks timeout; outbound hangs fatal job runner | `jobs-queue` | pending | no spec cited | untouched |
@@ -213,9 +213,9 @@ re-validated = touched by the current campaign (2026-07-10+) or noted otherwise.
 | 70 | Legacy workflow/index without stage segment crashes 500 | `workflow-stage-navigation` | verified | no spec cited | untouched |
 | 71 | Workflow modal opens incomplete drafts, bypassing completeness gate | `workflow-stage-navigation` | verified | no spec cited | untouched |
 | 72 | Workflow shell and API doors disagree on revoked-role access | `workflow-stage-navigation` | verified | no spec cited | untouched |
-| 73 | EDITOR_ASSIGN task notification dead after template rename | `stage-participants` | pending | no spec cited | untouched |
-| 74 | Re-assigning existing participant silently discards modal flags | `stage-participants` | pending | no spec cited | untouched |
-| 75 | Recommend-only assign-modal guards enforced on Edit, skipped on Add | `stage-participants` | pending | no spec cited | untouched |
+| 73 | EDITOR_ASSIGN task notification dead after template rename | `stage-participants` | verified | no spec cited | re-validated 2026-07-21 (stage-participants probe C); no-drift re-confirmed 2026-07-22 (verify chunk e) |
+| 74 | Re-assigning existing participant silently discards modal flags | `stage-participants` | verified | no spec cited | re-validated + amended 2026-07-21 (stage-participants probe C; UI path corrected — picker exclusion spans all stages); no-drift re-confirmed 2026-07-22 (verify chunk e) |
+| 75 | Recommend-only assign-modal guards enforced on Edit, skipped on Add | `stage-participants` | verified | no spec cited | re-validated 2026-07-21 (stage-participants probe C, end-to-end); no-drift re-confirmed 2026-07-22 (verify chunk e) |
 | 76 | Completed review's recommendation select stays enabled, cosmetic | `reviewer-response` | pending | no spec cited | untouched |
 | 77 | OJS locale shadows "For editor only" label wording | `reviewer-response` | pending | no spec cited | untouched |
 | 78 | Free-text review submittable empty despite client-side hint | `reviewer-response` | pending | no spec cited | untouched |

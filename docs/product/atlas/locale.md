@@ -50,7 +50,7 @@
 | LOC-common-notification-unsubscribeNotifications | `notification.unsubscribeNotifications.*` | common.po | 7 keys |  | |
 | LOC-common-reviewer-submission | `reviewer.submission.*` | common.po | 6 keys |  | |
 | LOC-common-grid-action | `grid.action.*` | common.po | 6 keys |  | |
-| LOC-common-stageParticipants-notify | `stageParticipants.notify.*` | common.po | 5 keys |  | |
+| LOC-common-stageParticipants-notify | `stageParticipants.notify.*` | common.po | 5 keys |  | stage-participants |
 | LOC-common-navigation-skip | `navigation.skip.*` | common.po | 5 keys |  | |
 | LOC-common-common-pagination | `common.pagination.*` | common.po | 5 keys |  | |
 | LOC-common-common-editorialHistory | `common.editorialHistory.*` | common.po | 5 keys |  | |
