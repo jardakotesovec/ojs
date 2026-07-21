@@ -20,12 +20,14 @@ app facts, independent of the scratched specs).
 **Current mode: AUTONOMOUS WAVES (maintainer flipped 2026-07-11 after the dress
 rehearsal passed).** Rules in RUNBOOK ("Autonomous waves"): one full per-feature
 loop per iteration, selection = first `pending` row in table order, wave = 7
-features between maintainer samplings. **Current maintainer directive (updated 2026-07-16): work through Area 2
+features between maintainer samplings. **Current maintainer directive (updated 2026-07-21): work through Area 2
 (rows 6–22, skipping already-done rows 11 and 19) in table order, ONE FEATURE
-PER FRESH SESSION — no multi-feature /loop (Area 2's permission-dense content
-flag-pauses long sessions; RUNBOOK Model discipline). Each session builds or
-resumes exactly ONE feature through commit, then STOPS. Wave rule unchanged:
-at 7 features since last sampling, stop for sampling review instead.**
+PER FRESH SESSION — a permanent preference now, not just flip mitigation; no
+multi-feature /loop. Each session builds or resumes exactly ONE feature through
+commit, then STOPS. Model policy revised 2026-07-21 (RUNBOOK Model discipline):
+flipped AUTHORING output is discarded + respawned; verification/probe flips
+stay kept. Wave rule unchanged: at 7 features since last sampling, stop for
+sampling review instead.**
 Wave counter: 3 features since last sampling (editorial-dashboards +
 workflow-stage-navigation 2026-07-16 + editorial-decisions rebuilt-from-scratch
 2026-07-21, replacing its scrapped 2026-07-16 build in the count; Area 1 sampled

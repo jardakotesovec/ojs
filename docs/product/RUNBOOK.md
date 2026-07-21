@@ -148,15 +148,23 @@ cadence, not a batch:
 
 ## Model discipline (subagents & fallback)
 
-- **Model policy (maintainer, 2026-07-10 final): every subagent starts on Fable,
-  pinned (`model: fable`); a mid-run downgrade to Opus is ACCEPTED — the agent
-  continues and its output is KEPT.** No discard, no re-run, no stop. Rationale:
-  Fable's safeguards flag probe-heavy contexts (`model_refusal_fallback`) —
-  calibration f1's verifiers flipped 3/3 and the rehearsal's spec authors 2/2
-  once their work turned into live-probe batteries, while pure-writing agents ran
-  clean — and retry loops burned hours for nothing. Structure, not policing,
-  keeps the writing on Fable: prose is drafted BEFORE probe context accumulates
-  (see "Authors draft" below), and short fresh chunk contexts flip less.
+- **Model policy (maintainer, revised 2026-07-21): every subagent starts on Fable,
+  pinned (`model: fable`). A mid-run downgrade to Opus is handled BY CLASS:
+  AUTHORING agents (spec/test/POM/readability writing) that flip are allowed to
+  finish and are LOGGED, but their output is DISCARDED and the chunk respawned
+  fresh (max 2 respawns, then park the feature and report);
+  VERIFICATION and PROBE agents that flip continue and their output is KEPT**
+  (their results get merged and cross-checked, so a flipped verifier is low
+  risk). Rationale for the revision: the 2026-07-16 editorial-decisions suite —
+  test-author flipped at 122/232 under the old accept-everything policy — failed
+  a rubric review precisely in its opus-tail half (the s12 inversion; see the
+  fallback memory / ledger context), while the 2026-07-21 from-scratch rebuild
+  ran 23/23 agents clean on the same permission-dense feature, showing flips are
+  now rare enough that discard+respawn costs ~nothing in expectation. The
+  original 2026-07-10 rationale (flips follow probe-heavy context; retry loops
+  once burned hours) still governs the STRUCTURE below: prose is drafted BEFORE
+  probe context accumulates ("Authors draft"), and short fresh chunk contexts
+  flip less — chunk authoring small so a respawn is cheap.
 - **Only the MAIN session must never run on the wrong model.** Mitigations active
   on this machine: `switchModelsOnFlag: false` (the main session pauses instead
   of switching — subagents still switch silently under it, which is now the
@@ -164,15 +172,18 @@ cadence, not a batch:
   main-transcript-only; v2's subagent scanning is retired with the
   accept-downgrade policy). A fable-guard stop means the MAIN session flipped:
   resume in a fresh session; never disable the guard mid-run.
-- **The completion spot-check is now PROVENANCE RECORDING, not a gate**: after
-  EVERY subagent finishes (clean or flipped), append its row to the
-  "Model-fallback log" section at the end of `PROGRESS.md` via
+- **The completion spot-check is a GATE for authoring rows, provenance recording
+  for the rest**: after EVERY subagent finishes (clean or flipped, kept or
+  discarded), append its row to the "Model-fallback log" section at the end of
+  `PROGRESS.md` via
   `docs/product/log-model-mix.sh <session-dir>/subagents/agent-<id>.jsonl
-  <feature> <authoring|verification|probe> <label>` — authoring (spec/test/
-  readability writing) and verification/probe rows are classed separately so
-  per-class flip rates fall out of the log. Mention flips in the feature report
-  too. Sampling reviews use this to watch whether opus-tail output correlates
-  with quality drift — if it does, that's a systemic finding (halt + amend).
+  <feature> <authoring|verification|probe> <label>` — authoring and
+  verification/probe rows are classed separately so per-class flip rates fall
+  out of the log. A FLIPPED authoring row triggers the discard+respawn rule
+  above (log the discarded attempt too — suffix its label `-discarded`).
+  Mention flips in the feature report. The 2026-07-21 rubric-review pair
+  (flipped suite 4.1 vs clean suite 4.5, defects clustered in the opus tail)
+  is the confirmed quality-drift precedent sampling reviews watch for.
 - **Authors draft, probe agents probe.** The spec author works from code + atlas
   and returns the draft PLUS a probe list (every affordance/behavior claim
   needing live confirmation, per step 4) — drafting first is what keeps the prose
@@ -212,9 +223,12 @@ cadence, not a batch:
   for mid-flight resume; delete the feature's files after its commit) and RETURN
   at most ~10 lines: verdict + file pointer + anything the orchestrator must act
   on. The verification-merge / spec-finalizer agents READ those files — the
-  orchestrator never holds the detail. In its own prose (iteration reports,
-  PROGRESS notes, commit messages) the orchestrator CITES ledger rows and Open
-  questions by number instead of restating denial/bypass behavior. Volume is the
+  orchestrator never holds the detail. In PROGRESS notes and commit messages the
+  orchestrator cites ledger rows and Open questions by number. RELAXED
+  2026-07-21 (flag-pauses have subsided — safeguards more accurate now): the
+  final MAINTAINER REPORT may describe findings in plain language again;
+  readability for the maintainer beats term-density caution there. If
+  main-session flag-pauses return, re-tighten this first. Volume remains the
   lever — vocabulary substitution is proven useless.
 - **The orchestrator NEVER completes probe or verification work inline.** (The
   earlier "bounded inline exception" is REVOKED, 2026-07-10: it walked the
@@ -224,14 +238,13 @@ cadence, not a batch:
   context runs low mid-feature, finish the current gate, commit what is
   committed-worthy, and END the session — a fresh one resumes via "Resuming a
   feature mid-flight".
-- **A flag-pause can break the /loop wakeup chain**: if the flag kills the turn
-  that would have scheduled the next wakeup, the session sits idle until the
-  maintainer re-sends the loop prompt — no work is lost, resume is from file
-  state. For permission-dense features (editorial-decisions, roles-permissions,
-  review-anonymity — 14 pauses in 3 features on 2026-07-16 vs 3 in all of
-  Area 1), prefer ONE FEATURE PER FRESH SESSION over a long /loop: fresh context
-  zeroes the accumulated narrative, and the PROGRESS banner + wave counter keep
-  the cadence identical.
+- **ONE FEATURE PER FRESH SESSION is the standing mode (maintainer, 2026-07-21)**
+  — originally a flip mitigation (a flag-pause can break a /loop wakeup chain:
+  the session sits idle until re-prompted; 14 pauses in 3 permission-dense
+  features on 2026-07-16), it is now kept as a permanent preference for
+  consistency: every feature starts in a clean session the maintainer launches,
+  no multi-feature /loop. Fresh context zeroes accumulated narrative as a side
+  benefit; the PROGRESS banner + wave counter keep the cadence.
 - **The completion notification is the ONLY reliable subagent liveness signal.** Never
   judge a subagent by transcript size or token count (that misled an orchestrator into
   killing working agents). If an agent looks stuck, check ground truth — has its
