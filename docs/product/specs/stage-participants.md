@@ -157,13 +157,13 @@ required here. <sup>f</sup>
 
 **Assignment effects on workflow status**
 8. Editing-stage and production-stage status notices ("Assign a copyeditor using the
-   Assign link in the Participants list.", "Awaiting copyedits.", and their
+   Assign link in the Participants list.", "Awaiting Copyedits.", and their
    production counterparts) are shown only to editors who are themselves assigned on
    that stage — an unassigned Journal Manager sees no status line at all. ⚠ The
    notice tracks whether a stage *discussion* exists, not who is assigned: assigning
    with the message left blank keeps the "assign a …" prompt; sending the message
    (or a later Notify) flips it to the awaiting state; and removing participants
-   never changes it — even removing the only copyeditor leaves "Awaiting copyedits."
+   never changes it — even removing the only copyeditor leaves "Awaiting Copyedits."
    standing. The notice can therefore be stale in both directions (Known deviations,
    ledger 9 as amended). <sup>h</sup>
 9. Assigning an editor clears the journal managers' "editor needs to be assigned"
@@ -213,7 +213,7 @@ required here. <sup>f</sup>
 <sup>e</sup> stage_assignments.can_change_metadata; Repo::submission()->canEditPublication(); AddParticipantForm::execute() (manager forced true); RestrictAuthorAssignment::handle(); UpdateAuthorStageAssignments::handle(); live-probed 2026-07-22 (verify-d E2: scenario draft carries can_change_metadata=1, real submit resets it to the Author group default 0; reset executed by RestrictAuthorAssignment — UpdateAuthorStageAssignments' index-keyed group lookup is inert, see Known deviations cleanup bullet) ·
 <sup>f</sup> AddParticipantForm::_isChangeRecommendOnlyAllowed(), _isChangePermitMetadataAllowed() (consulted in the edit branch of fetch()/execute() only); addParticipantForm.tpl add branch (unconditional checkboxes); StageParticipantNotifyHandler.js updateRecommendOnly() (group-keyed show/hide only); live-probed 2026-07-21 (probe C item 7: recommend-only SE's add-mode checkbox enabled, save stamped recommend_only=1 and the row note appeared; same actor's menu on another SE row held only Notify/Remove — no Edit); micro-edge (verify chunk a, code): _isChangeRecommendOnlyAllowed keys on the acting user's assignments regardless of role, so even a Journal Manager holding a recommend-only assignment on this submission loses the recommend-only box in edit mode — Validation::canEditParticipant() admits managers, but the form withholds the checkbox ·
 <sup>g</sup> AddParticipantForm::fetch() anonymousReviewerIds (anonymous + double-anonymous, non-declined — server data correct); StageParticipantNotifyHandler.js maybeTriggerReviewerWarning() (string radio value vs integer id array — strict indexOf never matches, ConfirmationModal branch unreachable); editor.submission.addStageParticipant.form.reviewerWarning (orphaned at runtime); live-probed 2026-07-21 (probe D item 11: active anonymous reviewer selected → no warning, assignment saved; declined reviewer correctly excluded from the id list) ·
-<sup>h</sup> PKPEditingProductionStatusNotificationManager::updateNotification() (EDITING branch keys on an editing-stage discussion existing — "If a copyeditor is assigned i.e. there is a copyediting discussion"; loops editorStageAssignments, hence per-assigned-editor visibility); StageParticipantGridHandler::saveParticipant() (no recompute); sendNotification() and deleteParticipant() (recompute runs but is inert on delete — the discussion survives); live-probed 2026-07-21 (probe D item 9 matrix: silent assign → prompt stays; assign+message and Notify → "Awaiting copyedits."; removals → no change, incl. removing the last copyeditor); the notice rows themselves are created only by UI-recorded ACCEPT / SEND_TO_PRODUCTION decisions — ⚠ Accept-and-Skip-Review creates none at all (Known deviations, ledger 8 as amended) ·
+<sup>h</sup> PKPEditingProductionStatusNotificationManager::updateNotification() (EDITING branch keys on an editing-stage discussion existing — "If a copyeditor is assigned i.e. there is a copyediting discussion"; loops editorStageAssignments, hence per-assigned-editor visibility); StageParticipantGridHandler::saveParticipant() (no recompute); sendNotification() and deleteParticipant() (recompute runs but is inert on delete — the discussion survives); live-probed 2026-07-21 (probe D item 9 matrix: silent assign → prompt stays; assign+message and Notify → "Awaiting Copyedits."; removals → no change, incl. removing the last copyeditor); the notice rows themselves are created only by UI-recorded ACCEPT / SEND_TO_PRODUCTION decisions — ⚠ Accept-and-Skip-Review creates none at all (Known deviations, ledger 8 as amended) ·
 <sup>i</sup> StageParticipantGridHandler::saveParticipant() (EDITOR_ASSIGNMENT_REQUIRED cleanup loop; decision-stage notices when the saved group is a manager group); PKPNotificationManager::getDecisionStageNotifications() (the four per-stage EDITOR_ASSIGNMENT_* types); EditorAssignmentNotificationManager::updateNotification() (per stage: delete when a MANAGER/SUB_EDITOR assignment covers the stage, create when none; notice texts notification.type.editorAssignment / editorAssignmentEditing / editorAssignmentProduction); live-probed 2026-07-22 (verify-d E1: needs-editor task rows for every manager incl. admin deleted on a Section-editor assignment — the delete is submission-scoped, not per-viewer; a Funding-coordinator (assistant) assignment leaves them; Tasks bell reflects both states) ·
 <sup>j</sup> SubEditorsDAO::assignEditors() (section + category lists, userInGroup + enabled filters, dedupe, group recommendOnly default; ⚠ $userGroups->keys() — collection indexes, not group ids — kills every candidate whose group id exceeds the journal's group count: ledger 135/164); triggered by the submitted event; live-probed 2026-07-21 (probe D item 14: real submit endpoint; publicknowledge ART → both in-group configured SEs assigned + mailed, the configured-but-not-in-group editor correctly skipped; scratch journal with configured SE → no assignment, zero mail, needs-editor fallback fired) ·
 <sup>k</sup> AssignEditors::handle() (EDITOR_ASSIGNMENT_REQUIRED task per manager + SubmissionNeedsEditor mailable, opt-out checked); live-probed 2026-07-21 (probe D item 14B1: task text "A new article has been submitted to which an editor needs to be assigned." + 'A new submission needs an editor to be assigned: "…"' email, to every journal-manager holder) ·
@@ -309,7 +309,7 @@ required here. <sup>f</sup>
    unassigned manager sees no status line at all (rule 8) and this check must be
    made as an assigned editor. Viewed that way, the line still reads "Assign a
    copyeditor using the Assign link in the Participants list." — it flips to
-   "Awaiting copyedits." only once a notification message is sent, whether from the
+   "Awaiting Copyedits." only once a notification message is sent, whether from the
    assign form or a later Notify; removing participants never updates it either
    (ledger 9). <sup>s2</sup>
 3. **Section hand-off: automatic editor assignment** — a Journal Manager configures a
@@ -388,7 +388,7 @@ follows is for developers and can be skipped without losing the behavior.
   saveParticipant never recomputes (blank-message assign → stale prompt, as the row
   says); sendMessage/sendNotification recompute AND create the discussion that flips
   the state; deleteParticipant runs the recompute but — the discussion surviving —
-  can never flip it (removing the last copyeditor leaves "Awaiting copyedits.";
+  can never flip it (removing the last copyeditor leaves "Awaiting Copyedits.";
   probe B independently saw the mirror case after removals). Bonus facts: the notice
   rows are per-assigned-editor, so an unassigned Journal Manager sees no status box;
   and scenario-seeded decisions skip creating the notice rows (processor parity gap,
@@ -465,7 +465,7 @@ follows is for developers and can be skipped without losing the behavior.
   re-spotted by the s2 test author before being matched to the existing row):
   Accept-and-Skip-Review creates no copyediting status notices for anyone — the
   submission lands on Copyediting showing neither "Assign a copyeditor using the
-  Assign link in the Participants list." nor "Awaiting copyedits.", for any
+  Assign link in the Participants list." nor "Awaiting Copyedits.", for any
   viewer, the assigned deciding editor included. Distinct from the row-9 family:
   row 9 is about existing notice rows keying on the discussion; here no notice
   rows are created at all — decision\Repository::getSubmissionNotificationTypes()
