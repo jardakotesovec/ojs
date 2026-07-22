@@ -62,6 +62,20 @@ for f in "${files[@]}"; do
   else
     echo "✓ $f"
   fi
+
+  # TEMPLATE rule 5 — whole-file term-density ceiling on attack-narrative
+  # phrasing (deviations + footnotes INCLUDED: every downstream agent reads the
+  # whole file, and accumulation is what trips the safeguard fallback — see the
+  # 2026-07-22 flip forensics). State expected/observed/ledger-N instead;
+  # mechanics live in probe reports. Ceiling 5: naming a feature like
+  # "Log In As" once or twice is fine, a dossier is not.
+  DENS_TERMS='bypass|ungated|impersonat|exploit|privilege escalat|log in as|still (answers|accepts|succeeds|grants|applies)|no server[- ]side (check|guard)|silently (grants|accepts|applie[sd])|hand-craft'
+  dens=$(grep -oiE "$DENS_TERMS" "$f" | wc -l | tr -d ' ')
+  if [ "$dens" -gt 5 ]; then
+    echo "✗ $f — deviation-phrasing density $dens (ceiling 5, TEMPLATE rule 5)"
+    grep -niE "$DENS_TERMS" "$f" | head -15 | sed 's/^/  /'
+    total=$((total+dens))
+  fi
 done
 
 [ $total -eq 0 ] && exit 0

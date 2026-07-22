@@ -61,16 +61,16 @@ participant list itself is closed to them. **Anonymous** users have no access. <
 | **Edit an assignment's privileges** | • Journal Manager, Site Administrator — any participant except themselves-as-Section-Editor; on rows with nothing changeable the form says "No changes can be made to this participant"<br>• Section Editor assigned to the stage — offered Edit on rows that are not their own and not a manager-level role's (such as Journal Editor); a recommend-only Section Editor is not offered it on any Section Editor row ⚠ yet every Section Editor edit is refused by the server without a word — the form reopens with the boxes reset and nothing saved (Known deviations, ledger 229) <sup>d</sup> |
 | **Remove a participant** | • Journal Manager, Site Administrator — any row<br>• Section Editor assigned to the stage — ⚠ sees and can use Remove on every row where Edit is withheld too: a Journal Editor's row, and their own — self-removal instantly costs them their access to the submission (Known deviations, ledger 230) <sup>e</sup> |
 | **Notify** (start a discussion with one participant) | • Journal Manager, Site Administrator, Section Editor, Assistant — anyone of these with access to the stage; Assistants are otherwise read-only here <sup>f</sup> |
-| **Log in as a participant** | • Rows show "Log In As" only where the viewer has impersonation rights over that user (rules owned by user-management) <sup>g</sup> |
+| **Log in as a participant** | • Rows show "Log In As" only where the viewer is permitted to use that feature on the listed user (rules owned by user-management) <sup>g</sup> |
 | **Automatic editor assignment** | • The system — on submission, from the editor lists configured on the submission's section and categories; ⚠ silently inoperative on any journal created after the install's first (Known deviations, ledger 135/164) <sup>h</sup> |
 
-<sup>a</sup> Schema::getPropertyStages() (global manager/admin roles injected into every stage's currentUserAssignedRoles unless the user is assigned in **no** role on the submission AND holds a review assignment that is neither declined nor **cancelled** — `!getDeclined() && !getCancelled()`, Schema.php ~963–972; code re-derived 2026-07-22, verify chunk a); workflowConfigAuthorOJS.js (no ParticipantManager); PKPSubmissionController participants routes (roleAuthorizer MANAGER/SUB_EDITOR/ASSISTANT); live-probed 2026-07-21 (probe A item 2: scratch manager with accepted review → currentUserAssignedRoles empty on every stage, stage views withheld, submission listed under "My Assignments as Reviewer"; after decline → managerial view restored incl. Assign/Edit/Remove; nuance: GET …/participants/{stageId} still answers 200 to the demoted manager — the closure is UI-side only, the API roleAuthorizer keys on journal roles) ·
+<sup>a</sup> Schema::getPropertyStages() (global manager/admin roles injected into every stage's currentUserAssignedRoles unless the user is assigned in **no** role on the submission AND holds a review assignment that is neither declined nor **cancelled** — `!getDeclined() && !getCancelled()`, Schema.php ~963–972; code re-derived 2026-07-22, verify chunk a); workflowConfigAuthorOJS.js (no ParticipantManager); PKPSubmissionController participants routes (roleAuthorizer MANAGER/SUB_EDITOR/ASSISTANT); live-probed 2026-07-21 (probe A item 2: scratch manager with accepted review → currentUserAssignedRoles empty on every stage, stage views withheld, submission listed under "My Assignments as Reviewer"; after decline → managerial view restored incl. Assign/Edit/Remove; nuance: the participants list remains retrievable by the demoted manager (GET …/participants/{stageId} → 200) — the closure is UI-side only, the API roleAuthorizer keys on journal roles; see Open questions 7) ·
 <sup>b</sup> workflowConfigEditorialOJS.js getSecondaryItems() (ParticipantManager in every stage's side panel); WorkflowStageAccessPolicy (grid ops); PKPSubmissionController::getParticipants(); live-probed 2026-07-21 (probe A items 1/10: assigned Assistant on stage 1 and SE whose group lacks stage 4 both get the no-access message, panel absent; unassigned Assistant: workflow shell empty, submission + participants API 401 roleBasedAccessDenied); ⚠ an *assigned* Assistant opening the Submission or Review stage is occluded by a blocked reviewer-suggestions error dialog (Known deviations, ledger 234) ·
-<sup>c</sup> useParticipantManagerConfig() getTopItems() (MANAGER/SITE_ADMIN/SUB_EDITOR assigned-in-stage); StageParticipantGridHandler::__construct() (addParticipant/saveParticipant ops); AddParticipantForm::execute() add branch (ungated recommendOnly); live-probed 2026-07-21 (probe A item 1 full matrix: unassigned JM + admin + assigned SE see Assign on stages 1 and 4, assigned Assistant does not; probe C item 7: recommend-only SE offered Assign) ·
+<sup>c</sup> useParticipantManagerConfig() getTopItems() (MANAGER/SITE_ADMIN/SUB_EDITOR assigned-in-stage); StageParticipantGridHandler::__construct() (addParticipant/saveParticipant ops); AddParticipantForm::execute() add branch (recommendOnly honored in add mode without the edit-mode guards — ledger 75); live-probed 2026-07-21 (probe A item 1 full matrix: unassigned JM + admin + assigned SE see Assign on stages 1 and 4, assigned Assistant does not; probe C item 7: recommend-only SE offered Assign) ·
 <sup>d</sup> useCurrentUser() canCurrentUserEditParticipant() (UI matrix); Validation::canEditParticipant() (server guard; its stage filter can never match — see Known deviations); AddParticipantForm::_isChangeRecommendOnlyAllowed(), _isChangePermitMetadataAllowed(); stageParticipants.noOptionsToHandle; live-probed 2026-07-21 (probe A item 3: 4-viewer × 6-row matrix exactly as stated; probe B item 4: SE ticked the Permissions box on an Assistant row → HTTP 200 with re-rendered form, no error, no toast, DB flag unchanged, no event-log entry) ·
 <sup>e</sup> useParticipantManagerConfig() getItemActions() (Remove keyed on canAdminister only, not isEditable); StageParticipantGridHandler::deleteParticipant() (role + CSRF + submission check only); live-probed 2026-07-21 (probe B item 5: assigned SE removed a Journal-editor row — DB row deleted, removal logged — and removed herself, losing the workflow view mid-page) ·
 <sup>f</sup> StageParticipantGridHandler::__construct() (viewNotify/sendNotification in the Assistant op set); useParticipantManagerConfig() getItemActions() (Notify unconditional); live-probed 2026-07-21 (probe A item 10: assigned Assistant's row menus carry only Notify; send succeeded end-to-end with "Notification sent to users.") ·
-<sup>g</sup> participant payload canLoginAs; useParticipantManagerActions() participantLoginAs(); live-probed 2026-07-21 (probe A: Log In As on every row for JM/admin, never for SEs or the Assistant) ·
+<sup>g</sup> participant payload canLoginAs; useParticipantManagerActions() participantLoginAs(); live-probed 2026-07-21 (probe A: the action on every row for JM/admin, never for SEs or the Assistant) ·
 <sup>h</sup> SubEditorsDAO::assignEditors(); AssignEditors::handle(); live-probed 2026-07-21 (probe D item 14 — see rule 10)
 
 ## Fields & validation
@@ -119,11 +119,11 @@ required here. <sup>f</sup>
    groups like Journal Editor or Production Editor (Known deviations,
    ledger 233). <sup>b</sup>
 3. The same person cannot be assigned twice in the same role through the form — the
-   picker hides them everywhere (Fields, "Locate a User"). ⚠ If a duplicate
-   assignment request is forced through anyway (a hand-crafted request; no UI path
-   reaches it), it reports success while keeping the existing assignment untouched
-   and discarding the privilege boxes without any warning — the only way to change
-   an existing assignment's privileges is Edit (Known deviations, ledger 74 as
+   picker hides them everywhere (Fields, "Locate a User"). ⚠ No screen reaches the
+   duplicate case; expected: a duplicate submitted another way is refused; observed:
+   it is reported as successful while the existing assignment and its privilege
+   settings stay unchanged, with no warning — the only way to change an existing
+   assignment's privileges is Edit (Known deviations, ledger 74 as
    amended). <sup>c</sup>
 
 **Privileges**
@@ -143,9 +143,9 @@ required here. <sup>f</sup>
    (it is always granted anyway); the recommend-only box is offered only on editor
    rows — and for an acting editor who is themselves recommend-only, the Edit action
    is withheld from editor rows entirely rather than shown with the box disabled.
-   ⚠ On **Assign** (add mode) none of these guards run — both boxes are shown and
-   honored for any administering user, so a recommend-only Section Editor can stamp
-   recommend-only onto a new participant (Known deviations, ledger 75). ⚠ And for
+   ⚠ On **Assign** (add mode) none of these limits apply — both boxes are shown and
+   honored for any administering user, so a recommend-only Section Editor can set
+   recommend-only on a new participant (Known deviations, ledger 75). ⚠ And for
    Section Editors the Edit matrix is moot in practice: the server refuses every
    non-manager privilege edit without feedback (Actors; Known deviations,
    ledger 229). <sup>f</sup>
@@ -226,8 +226,8 @@ required here. <sup>f</sup>
   participant."; a privilege edit confirms "The stage assignment has been changed." <sup>a</sup>
 - **Submission history**: adding writes a "… was assigned to this submission as
   a …" entry; removing writes the matching removal entry. Both name the real acting
-  user even when working as someone else. ⚠ A privilege *edit* — or even a forced
-  re-assignment that changes nothing — writes another "was assigned" entry, so
+  user even when working as someone else. ⚠ A privilege *edit* — or even a
+  repeated assignment that changes nothing — writes another "was assigned" entry, so
   histories show repeated assignment lines with no edit-specific wording (Known
   deviations, ledger 232). ⚠ And in every such entry the role name never fills
   in: the line ends in a raw placeholder where the role should be (Known
@@ -339,8 +339,8 @@ required here. <sup>f</sup>
    submission: that person is missing from the list, on every stage's panel alike,
    and searching their name finds "No Items" — so the same assignment cannot be
    made twice from the form. Changing an existing participant's privileges is done
-   with the row's Edit action, never by re-assigning. ⚠ (A duplicate request forced
-   outside the form reports success while silently discarding its privilege boxes —
+   with the row's Edit action, never by re-assigning. ⚠ (A duplicate submitted
+   another way is reported as successful while its privilege boxes are not applied —
    ledger 74.) <sup>s6</sup>
 7. **Removing a participant clears them everywhere** — a Journal Manager clicks
    Remove on an Assistant who participates in a discussion. The dialog "Remove
@@ -405,8 +405,8 @@ follows is for developers and can be skipped without losing the behavior.
   (firstOr on submission+user+group; direct POST → success response, row untouched),
   but the row's implied UI path does not exist — the picker's already-assigned
   exclusion has no stage condition, so an assigned user is hidden from that role's
-  picker on every stage panel. Only a hand-crafted request (or future UI regression)
-  reaches the defect. Spec rule 3 / scenario 6 rewritten accordingly.
+  picker on every stage panel. The defect is reachable only outside the UI (or
+  through a future UI regression). Spec rule 3 / scenario 6 rewritten accordingly.
 - ⚠ **Ledger 75** — **re-validated end-to-end 2026-07-21** (probe C item 7): a
   recommend-only Section Editor's add-mode recommend-only checkbox is enabled, and
   saving stamped `recommend_only=1` on a new Section Editor (row note shown).
@@ -426,13 +426,14 @@ follows is for developers and can be skipped without losing the behavior.
   The UI meanwhile offers Edit to assigned Section Editors
   (canCurrentUserEditParticipant). (If the filter ever matched, the next line calls
   an undefined accessor and would crash.)
-- ⚠ **NEW ledger 230 — Remove is offered wider than Edit, and the server
-  deletes ungated. CONFIRMED** (probe B item 5; UI corroborated by probes A item 3
+- ⚠ **NEW ledger 230 — Remove is offered more widely than Edit, and every offered
+  removal is applied. CONFIRMED** (probe B item 5; UI corroborated by probes A item 3
   and C item 7; code re-derived by verify chunks a and c): item actions key Remove on canAdminister alone, so an assigned
   Section Editor sees Remove exactly where Edit is hidden — manager-role rows and
-  their own row — and deleteParticipant applies no per-row guard: removing a
-  Journal Editor's assignment succeeded (DB row deleted, removal logged), and
-  self-removal succeeded too, instantly revoking the actor's own access mid-page.
+  their own row — and deleteParticipant applies no per-row rule of its own.
+  Expected: removal limited like Edit; observed: removing a Journal Editor's
+  assignment was applied (DB row deleted, removal logged), and self-removal was
+  applied too, immediately ending the actor's own access mid-page.
 - ⚠ **NEW ledger 231 — the anonymous-reviewer warning never fires. CONFIRMED
   refutation of the intended rule 7** (probe D item 11; code re-confirmed by
   verify chunk e): the server correctly
@@ -446,8 +447,8 @@ follows is for developers and can be skipped without losing the behavior.
   2026-07-22 — verify chunk c §4 caught the manager edit writing event_log row
   4643, type SUBMISSION_LOG_ADD_PARTICIPANT): every successful
   save writes SUBMISSION_LOG_ADD_PARTICIPANT — one add + one privilege edit yielded
-  two identical "was assigned" entries, and even a nothing-changed forced re-assign
-  wrote a third. No edit-specific event type exists. Related but separately owned:
+  two identical "was assigned" entries, and even a nothing-changed duplicate
+  re-assign wrote a third. No edit-specific event type exists. Related but separately owned:
   the entries' `{$userGroupName}` placeholder never resolves (**ledger 14**, owned
   by editorial-activity-log — re-confirmed live: the param key never lands in
   event_log_settings, every add entry shows the literal placeholder).
@@ -483,9 +484,9 @@ follows is for developers and can be skipped without losing the behavior.
   mechanism, seen on Review for an assistant with review-stage access): also
   reproduces on the Submission stage, and the impact is full-page occlusion.
 - **Minor, candidate (orchestrator to decide)** — the manager-as-reviewer demotion
-  is UI-only: while demoted, the participants REST endpoint still serves the full
-  list to the manager (probe A item 2). The UI withholds everything; no current
-  ledger row claims this.
+  applies on screen only: while demoted, the full participant list remains
+  retrievable by the manager through the API (probe A item 2). The UI withholds
+  everything; no current ledger row claims this.
 - ⚠ **Ledger 135/164** (owned by sections / submission-wizard) — **re-confirmed in
   passing** (probe D item 14): SubEditorsDAO::assignEditors() filters candidates
   with `$userGroups->keys()` (collection indexes, not group ids), so auto-assignment
@@ -525,8 +526,8 @@ follows is for developers and can be skipped without losing the behavior.
 6. StageParticipantGridHandler::fetchUserList() appears to have no caller (the add
    form embeds UserSelectGridHandler instead) — dead op to remove?
 7. Is the manager-as-reviewer demotion meant to close the participant list at the
-   API level too? The UI withholds it, but the REST participants endpoint still
-   answers the demoted manager (probe A item 2).
+   API level too? The UI withholds it, but the list remains retrievable by the
+   demoted manager through the REST API (probe A item 2).
 
 ---
 

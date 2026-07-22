@@ -56,6 +56,25 @@ to test authoring — the exemplar passes):
      live-probed 2026-07-03 (submitter + assigned co-author)`.
    The RUNBOOK still requires every affordance claim to be live-probed — this rule is
    only about WHERE the evidence goes, never whether to collect it.
+5. **Neutral deviation phrasing — everywhere in the file, deviations and footnotes
+   included.** A ⚠ row, Known-deviation entry or footnote states three things:
+   expected behavior, observed behavior, ledger row — in the same neutral product
+   voice as the rest of the spec. Do NOT narrate the security mechanics: no
+   "bypass"/"ungated"/"impersonation" framing, no "the server still
+   accepts/answers/grants…" war stories, no step-by-step how-to-reach-the-hole
+   walkthroughs. Those belong in the probe reports (`.reports/`, read on demand)
+   and the ledger row — the spec links, it doesn't retell. Naming a product
+   feature once (e.g. the "Log In As" action) is fine; ACCUMULATION is the
+   problem. Two reasons: a PO/QA reader needs the outcome, not the attack
+   narrative — and accumulated exploit-flavored prose in a spec measurably trips
+   the model-safeguard fallback for every downstream agent that reads it
+   (2026-07-22 forensics: two test-authors flipped on one spec's deviation
+   phrasing; an equally permission-heavy but neutrally-phrased spec authored
+   clean). `lint-spec.sh` enforces this as a whole-file term-density ceiling.
+   - **Bad**: "⚠ the demotion is UI-only — via Log In As, a demoted manager's
+     hand-crafted save still succeeds ungated; the server guard can never match."
+   - **Good**: "⚠ the restriction applies on screen only; a change submitted
+     another way is applied rather than refused (ledger 229). <sup>e</sup>"
 
 ---
 
