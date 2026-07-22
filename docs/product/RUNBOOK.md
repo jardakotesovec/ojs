@@ -172,10 +172,15 @@ cadence, not a batch:
   once burned hours) still governs the STRUCTURE below: prose is drafted BEFORE
   probe context accumulates ("Authors draft"), and short fresh chunk contexts
   flip less — chunk authoring small so a respawn is cheap.
-- **Split test-authoring protocol (maintainer, 2026-07-21).** Use it INSTEAD of a
-  monolithic test author (a) from the start when the spec centers on a role×state
-  permission matrix (orchestrator judgment — the flip trigger is exactly that
-  content), or (b) mandatorily when a monolithic test-author's respawns exhaust.
+- **Split test-authoring protocol (maintainer, 2026-07-21; demoted to FALLBACK
+  2026-07-22).** Default is always a MONOLITHIC test author — since TEMPLATE
+  rule 5 + the lint density ceiling, spec content no longer carries the flip
+  trigger (A/B proof: the same permission-matrix spec flipped 2 monolithic
+  authors at msgs 26/19 unswept, then authored 234 msgs fable-clean once
+  neutrally phrased, at equal rubric quality 4.5/5 and lower cost — one agent,
+  one coherent file, no harmonizer). Use the split protocol ONLY when a
+  monolithic test-author's respawns exhaust (it rescued wave 8: 12/12 agents
+  clean on the then-unswept spec).
   Shape — one file, many small authors, quality held by scaffold + harmonizer:
   1. **Scaffold agent** (first, before dense context): file skeleton — imports,
      fixtures, tag helpers, `test.use`, header coverage map naming every canonical
