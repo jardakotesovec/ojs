@@ -252,6 +252,18 @@ cadence, not a batch:
   arbitration chunks: name the two report files in conflict and the rule number
   — never restate the conflicting behaviors in the prompt. Agent `description`
   fields stay neutral ("check spec table (c) live"), not adversarial.
+  The SAME pointer rule binds two spots that have slipped (2026-07-24 flag
+  forensics — both contributed to a double main-session kill): (i) AD-HOC
+  probes spawned mid-loop — brief = report file + section + "reproduce the
+  finding there", NEVER a restatement of the scenario (an 835-char brief
+  restating a delete-bypass scenario produced a born-flipped probe at msg 5);
+  (ii) the VERIFICATION-MERGE brief is a pointer too — the report-file paths
+  plus "follow RUNBOOK step 7 merge duties", nothing else; the merge agent
+  reads the findings, the orchestrator must not re-narrate them while
+  composing the brief. And after a flag-kill, do NOT recompose the same dense
+  turn on resume — END the session and let a FRESH one run the remaining
+  gates (resume-from-files is designed for exactly this; the 07-24 second
+  kill was the same turn re-attempted in the same context).
 - **Keep findings OUT of the orchestrator's context — reports go to files**
   (2026-07-14, after the Area-1 run's main session was flag-paused 3×; term-density
   analysis showed each flag followed accumulated permission-testing narrative —
