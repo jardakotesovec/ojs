@@ -28,15 +28,16 @@ commit, then STOPS. Model policy revised 2026-07-21 (RUNBOOK Model discipline):
 flipped AUTHORING output is discarded + respawned; verification/probe flips
 stay kept. Wave rule unchanged: at 7 features since last sampling, stop for
 sampling review instead.**
-Wave counter: 4 features since last sampling (editorial-dashboards +
+Wave counter: 5 features since last sampling (editorial-dashboards +
 workflow-stage-navigation 2026-07-16 + editorial-decisions rebuilt-from-scratch
-2026-07-21 + stage-participants 2026-07-22; Area 1 sampled
-and approved 2026-07-14; findings-to-files protocol in force since — see RUNBOOK).
+2026-07-21 + stage-participants 2026-07-22 + send-to-review 2026-07-24; Area 1
+sampled and approved 2026-07-14; findings-to-files protocol in force since — see
+RUNBOOK).
 
 ## Totals
 
-- Features: **1 reference · 10 verified · 81 pending** (of 92; feature 39 folded into `article-landing`)
-- Tests: **83 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9) · last full-suite timing: n/a since reset
+- Features: **1 reference · 11 verified · 80 pending** (of 92; feature 39 folded into `article-landing`)
+- Tests: **90 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9 + send-to-review 7) · last full-suite timing: n/a since reset
 - Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
 
 ## Features
@@ -52,7 +53,7 @@ and approved 2026-07-14; findings-to-files protocol in force since — see RUNBO
 | 7 | Area 2 — Editorial workflow & peer review | `workflow-stage-navigation` | M·6 | verified | green(x2) | wave 6: 6 tests (lib/pkp) + new WorkflowShellPage POM, 12 atoms, ledger rows 211–213 + 211 addendum (headline: manager-as-reviewer UI/server split 211, selectable parent Review entry bug 213); all 4 verify chunks PASS; all 13 subagents fable-clean; pointer-brief protocol applied |
 | 8 | Area 2 — Editorial workflow & peer review | `editorial-decisions` | H·13 | verified | green(x2) | wave 7 rebuild (2026-07-21): 13 tests (lib/pkp) + new DecisionWizardPage POM, 43 atoms, ledger rows 220–228 (rows 214–219 + row-10 re-reproduced, untouched); ALL subagents fable-clean incl. authoring (rebuild directive satisfied, zero respawns); 4 atlas Hint fixes applied |
 | 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | verified | green(x2) | tests-only rebuild (2026-07-22): EXPERIMENT POSITIVE — monolithic test-author fable-clean (276 msgs, zero flips) on the rule-5-swept spec vs 2 flips on unswept wave-8 wording; 9 tests, rubric 4.5/5 (= split-protocol clean score); no new ledger rows (229–234 stand); s1 toast-race flake fixed (expectToast); spec quote-case fix ("Awaiting Copyedits.") |
-| 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | pending | pending | |
+| 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | verified | green(x2) | wave 8 (2026-07-24, finished by fresh session after double flag-kill — gates resumed from files): 7 tests, chunks a–f PASS, ledger 220/234 amended + 235–236 filed, OQ4 added, readability s5 status-note fix; 3 verify/probe flips (kept per policy); infra: `workflow-controls-right` data-cy hook gone from DOM (POM + skill app-map cite it) |
 | 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | verified | green(x2) | calibration f1: 13 tests, 33 atoms, 5 proposed ledger rows; maintainer signed off 2026-07-10 (scenario rewording applied) |
 | 12 | Area 2 — Editorial workflow & peer review | `reviewer-response` | H·10 | pending | pending | |
 | 13 | Area 2 — Editorial workflow & peer review | `review-forms` | M·7 | pending | pending | |
@@ -337,3 +338,21 @@ appends to end-of-file). Per-class rates:
 | 2026-07-22 | stage-participants | authoring | test-author-mono | 234 | 0 | 0 | clean |
 | 2026-07-22 | stage-participants | authoring | test-author-mono-flakefix | 276 | 0 | 0 | clean |
 | 2026-07-22 | stage-participants | verification | verify-rubric-clauses | 23 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | authoring | spec-author | 69 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | probe | probe-batchB | 55 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | probe | probe-batchC | 84 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | probe | probe-batchD | 80 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | probe | probe-batchA | 64 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | authoring | spec-finalizer | 57 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | authoring | test-author | 121 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | verification | verify-chunk-f | 28 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | verification | verify-chunk-a | 37 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | verification | verify-chunk-b | 39 | 16 | 0 | FLIPPED@40/55 |
+| 2026-07-24 | send-to-review | verification | verify-chunk-e | 59 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | verification | verify-chunk-c | 18 | 50 | 0 | FLIPPED@19/68 |
+| 2026-07-24 | send-to-review | verification | verify-chunk-d | 63 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | probe | probe-author-direct-delete | 4 | 69 | 0 | FLIPPED@5/73 |
+| 2026-07-24 | send-to-review | authoring | verification-merge | 47 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | authoring | readability-verifier | 9 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | authoring | ledger-stamp | 27 | 0 | 0 | clean |
+| 2026-07-24 | send-to-review | authoring | readability-fix | 26 | 0 | 0 | clean |
