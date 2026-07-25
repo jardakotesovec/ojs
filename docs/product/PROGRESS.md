@@ -24,19 +24,31 @@ features between maintainer samplings. **Current maintainer directive (updated 2
 (rows 6–22, skipping already-done rows 11 and 19) in table order, ONE FEATURE
 PER FRESH SESSION — a permanent preference now, not just flip mitigation; no
 multi-feature /loop. Each session builds or resumes exactly ONE feature through
-commit, then STOPS. Model policy revised 2026-07-21 (RUNBOOK Model discipline):
-flipped AUTHORING output is discarded + respawned; verification/probe flips
-stay kept. Wave rule unchanged: at 7 features since last sampling, stop for
+commit, then STOPS. Model roles split 2026-07-25 (RUNBOOK Model discipline;
+supersedes the 2026-07-21 all-fable policy): Fable authors specs and runs
+verification, Opus 5 runs probes and writes tests; Fable flip rules unchanged.
+Wave rule unchanged: at 7 features since last sampling, stop for
 sampling review instead.**
 Wave counter: 6 features since last sampling (editorial-dashboards +
 workflow-stage-navigation 2026-07-16 + editorial-decisions rebuilt-from-scratch
 2026-07-21 + stage-participants 2026-07-22 + send-to-review 2026-07-24 +
 reviewer-response 2026-07-25; Area 1 sampled and approved 2026-07-14;
-findings-to-files protocol in force since — see RUNBOOK). **reviewer-response was
-the Opus 5 single-arm trial (`docs/product/OPUS5-EVAL-PLAN.md`) — it awaits the
-maintainer's trial review, which he may treat as this wave's sampling; his
-outcome decision (sign-off / hybrid / stay-on-Fable) governs whether the next
-feature keeps `model: opus` subagents.**
+findings-to-files protocol in force since — see RUNBOOK). **Opus 5 eval CLOSED
+2026-07-25 (record: git history, OPUS5-EVAL-PLAN.md @ 88b9e02d8d): verdict =
+Fable authors specs; reviewer-response (the trial feature) stays. MAINTENANCE
+DIRECTIVES before/alongside resuming Area 2 — two queued sessions, detail in
+`.reports/opus-eval/STATE.md`: (1) send-to-review maintenance (add
+Delete-submission coverage — ledger rows 254/257 mark the ownership — plus the
+eval-found spec fixes); (2) re-scope + encoding session, which lands these
+STANDING MAINTAINER RULINGS (2026-07-25) into CHARTER/TEMPLATE and then trims
+this note: workflow-page specs COVER the author (author participates in the
+editorial process); `author-dashboard` narrows to the dashboard only, not the
+workflow page; manager components' mechanics are specified once in the
+manager's feature, stage features own per-stage gates/instantiation —
+generalized as variance-based ownership (invariants in the mechanism's home,
+deltas in the context feature); plus a living GLOSSARY.md for PO/QA language
+consistency (on-screen names win; coined terms get one definition home and
+first-use pointers).**
 
 ## Totals
 
