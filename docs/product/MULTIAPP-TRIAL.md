@@ -36,8 +36,8 @@ work).
 |------|--------|------|
 | G1 submodule alignment (omp+ops boot on campaign lib/pkp) | done | PASSED both apps (login 200, dashboards render, 0 console errors); commits omp `85da7e7eb0` / ops `d87f740243` on local `e2e_revamp_fable_2`; lib/pkp branch pushed to fork; report `.reports/multiapp-trial-g1.md` |
 | G2 servers + test DBs (3 fleets side-by-side) | done | PASSED ×3 (admin login + 0 console errors each; OJS regression 14/14 green with OMP+OPS live); omp_test/ops_test created, nothing dropped; lib/pkp `1b2111c34b`+`caa812b5e2` (pushed), omp 3 commits, ops 3 commits; ui-library aligned+built both apps; bonus fix: TEST_API_KEY never reached PHP env (broke OJS too); servers up: 8000/8100/8200; watch: shared Mailpit, stray php on 8010 |
-| G3 scenario API port (createContext+createSubmission on all 3; OMP internal round seeds) | in_progress | app-side controllers/index.php missing on OMP/OPS (probe: 400 OJS vs 404 OMP/OPS); DB routing already solved (config.test.inc.php per app); journal→context alias; section/issue/galleys as app overlays; reviewRounds internal/external key; IssueProcessor out of shared path |
-| G4 app playwright trees (smoke spec green on OMP+OPS) | pending | config, app.context.js capability map, bootstrap seeds per role subset |
+| G3 scenario API port (createContext+createSubmission on all 3; OMP internal round seeds) | done | PASSED ×3 (OMP internal round verified in DB; OPS stage-5 seeding; OJS 14/14 regression green); shared `f296a80c46` pushed, omp/ops re-pinned, ojs root `2336dc9d3a` (no submodule pointers); headline fix: shared builder hard-coded submission stage — OPS would have seeded invisible; report has overlay-model + SeriesProcessor design notes |
+| G4 app playwright trees (smoke spec green on OMP+OPS) | in_progress | config, app.context.js with APP-GLOSSARY's canonical hasX capability names, bootstrap seeds per role subset (neither app has publicknowledge in test DB yet — G4 owns baseline); post to canonical scenarios/context |
 | G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | done | glossary committed dd001eba4a; lint: badge syntax `{OJS OMP}` (canonical order, no all-three badge), variation-stub match, glossary-driven forbidden terms; 13/13 specs clean (orchestrator re-verified); bonus fix: vacuous-path bug in lint gate; OQ for maintainer: glossary `Translator` row vs the real OJS Translator user group |
 | Pilot 1: `workflow-stage-navigation` OMP+OPS delta | in_progress | SPEC DRAFT COMMITTED edb3e7e631 (lint-clean, 9 badges, 24 overrides; author attempt 1 flag-killed, respawn clean); 20-item probe list + tests wait on G2–G4 |
 | Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | in_progress | SPEC DRAFT COMMITTED 6a70d181d1 (lint-clean first attempt; OPS absence = file-scope badge + prose, OMP parity declaration + 6 overrides, 2 candidate OMP pool-leak defects); 15-item probe list waits on G3 |
@@ -84,6 +84,10 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 9: G3 PASSED ×3 (scenario API live everywhere; OPS
+  stage-hardcode landmine fixed; possible upstream OMP ResubmitInternal
+  constant bug flagged unmapped). G4 launched — last gate before the pilot
+  probe batteries.
 - 2026-07-26 — iter 8: Pilot-2 spec draft committed (fable-clean, no respawn
   needed — lean-brief pattern holding). Both pilot spec drafts now in; probe
   batteries queue behind G3 (still running). Mechanism-friction notes from
