@@ -154,7 +154,8 @@ cadence, not a batch:
 ## Model discipline (subagents & fallback)
 
 - **Model assignment by role (maintainer, 2026-07-25, from the Opus 5 eval —
-  record in `OPUS5-EVAL-PLAN.md` "Outcomes"): SPEC WORK stays on Fable —
+  full record in git history: OPUS5-EVAL-PLAN.md @ 88b9e02d8d, removed after
+  the eval closed): SPEC WORK stays on Fable —
   spec-author, spec-finalizer, readability-verifier/-fix, verification chunks,
   merge/arbitration agents are pinned `model: fable`. PROBES and TEST WRITING
   run on Opus 5 — all probe agents, the test-author (and the scaffold /
