@@ -2,9 +2,9 @@
 
 The **test-authoring** contract for the Playwright e2e suite. Every test-writing session
 follows these principles. The campaign's operating loop, test budget, and per-feature
-definition-of-done live in `docs/product/RUNBOOK.md`; the spec-authoring rules and
-completeness invariants live in `docs/product/CHARTER.md` (the spec-driven build:
-atoms → features → specs, under `docs/product/`). Progress state lives in
+definition-of-done live in `docs/product/RUNBOOK.md`; the spec-style rules live in
+`docs/product/TEMPLATE.md`; the campaign invariants live in `docs/product/CHARTER.md`
+(the spec-driven build: atoms → features → specs, under `docs/product/`). Progress state lives in
 `docs/product/PROGRESS.md`, never in conversation memory — re-running the same prompt must
 always resume correctly.
 

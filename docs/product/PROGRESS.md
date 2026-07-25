@@ -33,28 +33,21 @@ Wave counter: 6 features since last sampling (editorial-dashboards +
 workflow-stage-navigation 2026-07-16 + editorial-decisions rebuilt-from-scratch
 2026-07-21 + stage-participants 2026-07-22 + send-to-review 2026-07-24 +
 reviewer-response 2026-07-25; Area 1 sampled and approved 2026-07-14;
-findings-to-files protocol in force since — see RUNBOOK). **Opus 5 eval CLOSED
-2026-07-25 (record: git history, OPUS5-EVAL-PLAN.md @ 88b9e02d8d): verdict =
-Fable authors specs; reviewer-response (the trial feature) stays. MAINTENANCE
-DIRECTIVES before/alongside resuming Area 2 — two queued sessions, detail in
-`.reports/opus-eval/STATE.md`: (1) send-to-review maintenance (add
-Delete-submission coverage — ledger rows 254/257 mark the ownership — plus the
-eval-found spec fixes); (2) re-scope + encoding session, which lands these
-STANDING MAINTAINER RULINGS (2026-07-25) into CHARTER/TEMPLATE and then trims
-this note: workflow-page specs COVER the author (author participates in the
-editorial process); `author-dashboard` narrows to the dashboard only, not the
-workflow page; manager components' mechanics are specified once in the
-manager's feature, stage features own per-stage gates/instantiation —
-generalized as variance-based ownership (invariants in the mechanism's home,
-deltas in the context feature); plus a living GLOSSARY.md for PO/QA language
-consistency (on-screen names win; coined terms get one definition home and
-first-use pointers).**
+findings-to-files protocol in force since — see RUNBOOK). **Opus 5 eval CLOSED 2026-07-25** — verdict in RUNBOOK Model discipline; full
+record in git history (OPUS5-EVAL-PLAN.md @ 88b9e02d8d). The 2026-07-25
+STANDING MAINTAINER RULINGS are homed in `CHARTER.md` ("Standing maintainer
+rulings"). **Two queued maintenance sessions run FIRST, in order, one per
+session — briefs in `QUEUE.md`:** (1) send-to-review maintenance
+(Delete-submission coverage + eval spec fixes); (2) re-scope/encoding session
+(lands the rulings into TEMPLATE, seeds GLOSSARY.md, then trims this note).
+They do not count toward the wave counter and claim no PROGRESS row — strike
+the item in QUEUE.md when done. Area 2 (row 13 onward) resumes after both.**
 
 ## Totals
 
-- Features: **1 reference · 12 verified · 79 pending** (of 92; feature 39 folded into `article-landing`)
+- Features: **1 reference · 12 verified · 78 pending** (of 91 buildable; row 39 folded into `article-landing`)
 - Tests: **102 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9 + send-to-review 7 + reviewer-response 12) · last full-suite timing: n/a since reset
-- Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
+- Budget allocation ≈ 639, headroom ~61 (tiers + the ±1–2 rule: RUNBOOK Budget & ceilings; maintainer-rebalanced 2026-07-02)
 
 ## Features
 
@@ -159,9 +152,11 @@ One row per **completed subagent**, appended by
 `docs/product/log-model-mix.sh <agent.jsonl> <feature> <authoring|verification|probe> <label>`
 (the RUNBOOK completion spot-check). Clean rows are logged too — they are the
 denominators for per-class flip rates. `FLIPPED@N/M` = the first Opus assistant
-message was the Nth of M. Rows annotated `(pinned)` were spawned on a non-Fable
-model deliberately (the Opus 5 trial, `OPUS5-EVAL-PLAN.md`) — they are NOT
-fallbacks and are excluded from flip rates. **This section stays LAST in this
+message was the Nth of M. Rows annotated `(pinned)` were spawned on a non-Fable model deliberately (the
+standing role split — RUNBOOK Model discipline — or the closed Opus 5 trial,
+git history 88b9e02d8d); they are NOT fallbacks and are excluded from flip
+rates. The orchestrator appends ` (pinned)` to the Status cell by hand after
+running the script (it takes no flag for it). **This section stays LAST in this
 file** (the script appends to end-of-file). Per-class rates:
 `awk -F'|' '/^\| 20[0-9][0-9]-/{if($9~/pinned/) next; c=$4; n[c]++; if($9!~/clean/) f[c]++} END{for(k in n) printf "%s: %d/%d flipped\n", k, f[k], n[k]}' docs/product/PROGRESS.md`
 

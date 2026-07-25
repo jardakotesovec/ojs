@@ -7,18 +7,16 @@ these two files. Do not rely on conversation memory.
 **The current mode lives in `PROGRESS.md`'s banner** — read it before doing
 anything. The modes:
 
-- **CALIBRATION / DRESS REHEARSAL**: build **ONE feature** end-to-end per session,
-  then **STOP for maintainer review**. In calibration the maintainer picks the
-  feature; in the dress rehearsal the session picks it itself by the waves
-  selection rule and must complete with ZERO maintainer input mid-run — the
-  rehearsal exists to prove the docs alone produce sign-off quality cold.
+- **CALIBRATION / DRESS REHEARSAL**: one feature per session, then **STOP for
+  maintainer review** (rehearsal: the session self-selects by the waves rule,
+  zero maintainer input mid-run).
 - **AUTONOMOUS WAVES**: see the "Autonomous waves" section below.
 
 ## What to read, when (do NOT read everything up front)
 
 - **Every iteration**: this file + `PROGRESS.md` + the target feature's row in
   `FEATURE-MAP.md` (its atom list) — nothing else until you need it.
-- **When authoring the spec**: `TEMPLATE.md` (the four style rules + structure) and
+- **When authoring the spec**: `TEMPLATE.md` (the style rules + structure) and
   the exemplar `specs/tasks-discussions.md`; the feature's atoms in `atlas/*.md`.
 - **When authoring tests**: `docs/e2e/PRINCIPLES.md` + the `ojs-playwright-tests`
   skill (env facts, seeded users, POMs, scenario endpoints).
@@ -52,8 +50,9 @@ genuinely undecidable from the files, re-run that stage.
 ## The per-feature loop
 
 **Orchestration shape**: the heavy authoring is DELEGATED — the spec author, the test
-author, and each verifier are separate subagents pinned `model: fable` (see Model
-discipline). The orchestrating session briefs them (each brief points at TEMPLATE /
+author, each probe agent and each verifier are separate subagents — model per role is
+set in Model discipline (Fable for spec work and verification, Opus 5 for probes and
+test writing). The orchestrating session briefs them (each brief points at TEMPLATE /
 PRINCIPLES — never paraphrases the rules), judges results, and is the ONLY writer of
 PROGRESS rows, atlas `Claimed by:` markers, and ledger rows (single-writer
 discipline). EVERY subagent brief — authors and verifiers alike — carries this line
@@ -70,20 +69,18 @@ ledger row itself because its brief omitted this.)
    every affordance on the feature's screens must end up covered by a rule or
    scenario, DELEGATED with a verifiable pointer (the target spec must
    actually hold the behavior — mechanics live once in the owning manager
-   feature, per-stage gates live here), or explicitly waived. Forward-only:
-   applies to features built after 2026-07-25; earlier verified specs
-   retrofit during grooming. Where the code is ambiguous, don't guess — put
-   the question on the PROBE LIST the author returns with its draft (step 4 executes
-   it via dedicated probe subagents; the author itself never probes, see Model
-   discipline). Note: atlas `Claimed by:` markers survive from the
-   scratched round as feature-name claims — re-verify the atom list matches the
-   rebuilt spec's frontmatter and adjust claims if the regrouping changed; do not
-   treat an existing marker as "already covered". Also check the EXPOSURE LIST in
-   `docs/e2e/app-changes-audit-2026-07-21.md` for pre-campaign ledger rows owned
-   by this feature (round-1 findings unchecked since their tests were deleted):
-   treat them like standing ledger rows — fold them into the spec as candidate
-   deviations, let steps 4/7 re-validate them live, and have the orchestrator
-   amend the ledger row (and tick it off the exposure list) if the app diverged.
+   feature, per-stage gates live here), or explicitly waived. Forward-only — see
+   Definition of done; earlier verified specs retrofit when next reopened for any
+   maintenance (no dedicated pass scheduled). Where the code is ambiguous, don't
+   guess — put the question on the PROBE LIST the author returns with its draft
+   (step 4 executes it via dedicated probe subagents; the author itself never
+   probes, see Model discipline). Re-verify existing atlas `Claimed by:` markers
+   against the rebuilt spec's frontmatter and adjust claims if the regrouping
+   changed — never treat a surviving marker as "already covered" (markers predate
+   the 2026-07-10 reset). Also check the feature's rows in
+   `docs/e2e/app-changes-audit-2026-07-21.md` (pre-campaign findings): fold them
+   in as candidate deviations for steps 4/7 to re-validate; the orchestrator
+   amends the ledger and ticks the list. (Background in that file's header.)
 3. **Lint gate** — `docs/product/lint-spec.sh specs/<feature>.md` must pass with
    ZERO findings before anything else proceeds. It catches code symbols, routes,
    HTTP codes, probe evidence, and seeded usernames leaking into PO/QA-facing body
@@ -131,17 +128,16 @@ ledger row itself because its brief omitted this.)
     recorded, not resolved: with 90+ features, blocking on answers would stall the
     build (maintainer, 2026-07-10; the team returns to them over time). Then:
     calibration/rehearsal mode → STOP, do not start another feature; waves mode →
-    continue with the next feature (next /loop iteration or fresh session),
-    unless a wave boundary, a maintainer scope directive in the PROGRESS banner,
-    or a halt condition hit (see Autonomous waves).
+    ALSO STOP after this one feature (one feature per fresh session — see
+    Autonomous waves); flag if the wave counter reached 7.
 
 ## Autonomous waves (post-rehearsal mode)
 
-Active ONLY when the PROGRESS banner says so. The unit of work stays ONE full
-per-feature loop per iteration; the maintainer typically runs iterations back to
-back in a single `/loop` session. Context across iterations is DISPOSABLE by
-design — all state lives in PROGRESS + the files, so a compaction mid-run (or
-mid-feature) is routine: re-read this file + PROGRESS and, if a feature is
+Active ONLY when the PROGRESS banner says so. The unit of work is ONE full
+per-feature loop per session: every feature starts in a clean session the
+maintainer launches; no multi-feature `/loop` (standing maintainer preference,
+2026-07-21). Context across sessions is DISPOSABLE by design — all state lives
+in PROGRESS + the files, so a compaction mid-run (or mid-feature) is routine: re-read this file + PROGRESS and, if a feature is
 half-done, continue via "Resuming a feature mid-flight". A wave is a review
 cadence, not a batch:
 
@@ -155,8 +151,7 @@ cadence, not a batch:
   place; systemic findings → **HALT the campaign**, encode the fix in
   TEMPLATE/RUNBOOK first (the s5 scenario-wording rule is the model), sweep it
   across the wave's outputs, then resume.
-- **Park-and-continue is active** (see Ops): 3 failed attempts → `parked` with
-  the reason, move on.
+- **Park-and-continue is active** (rule in Ops).
 
 ## Model discipline (subagents & fallback)
 
@@ -173,55 +168,18 @@ cadence, not a batch:
   to the FABLE-PINNED classes only. The draft-before-probe structure, pointer
   briefs, and chunked verification stay unchanged for every class.**
 - **Fable flip policy (maintainer, revised 2026-07-21; applies to the
-  fable-pinned classes above). A mid-run downgrade to Opus is handled BY CLASS:
-  AUTHORING agents (spec/test/POM/readability writing) that flip are allowed to
-  finish and are LOGGED, but their output is DISCARDED and the chunk respawned
-  fresh (max 2 respawns; for the TEST AUTHOR, exhausted respawns switch to the
-  SPLIT TEST-AUTHORING protocol below instead of parking — park only if that
-  also fails; other authoring chunks park the feature and report);
-  VERIFICATION and PROBE agents that flip continue and their output is KEPT**
-  (their results get merged and cross-checked, so a flipped verifier is low
-  risk). Rationale for the revision: the 2026-07-16 editorial-decisions suite —
-  test-author flipped at 122/232 under the old accept-everything policy — failed
-  a rubric review precisely in its opus-tail half (the s12 inversion; see the
-  fallback memory / ledger context), while the 2026-07-21 from-scratch rebuild
-  ran 23/23 agents clean on the same permission-dense feature, showing flips are
-  now rare enough that discard+respawn costs ~nothing in expectation. The
-  original 2026-07-10 rationale (flips follow probe-heavy context; retry loops
-  once burned hours) still governs the STRUCTURE below: prose is drafted BEFORE
-  probe context accumulates ("Authors draft"), and short fresh chunk contexts
-  flip less — chunk authoring small so a respawn is cheap.
-- **Split test-authoring protocol (maintainer, 2026-07-21; demoted to FALLBACK
-  2026-07-22).** Default is always a MONOLITHIC test author — since TEMPLATE
-  rule 5 + the lint density ceiling, spec content no longer carries the flip
-  trigger (A/B proof: the same permission-matrix spec flipped 2 monolithic
-  authors at msgs 26/19 unswept, then authored 234 msgs fable-clean once
-  neutrally phrased, at equal rubric quality 4.5/5 and lower cost — one agent,
-  one coherent file, no harmonizer). Use the split protocol ONLY when a
-  monolithic test-author's respawns exhaust (it rescued wave 8: 12/12 agents
-  clean on the then-unswept spec).
-  Shape — one file, many small authors, quality held by scaffold + harmonizer:
-  1. **Scaffold agent** (first, before dense context): file skeleton — imports,
-     fixtures, tag helpers, `test.use`, header coverage map naming every canonical
-     scenario, empty stubs in spec order — plus ALL POM extensions, once, from the
-     probe reports' DOM facts. No test bodies.
-  2. **One micro-author per scenario, IN SERIES, fresh context each.** Pointer
-     brief only (scenario id, spec path, file path, PRINCIPLES/skill — never
-     restate the matrix). It implements exactly its stub, using the completed
-     tests already in the file as style examples, runs ITS OWN test to green
-     (bounded, ≤2 fix cycles), and writes a claim→assertion map for its scenario
-     to its `.reports` file. Log each as authoring `test-author-<sN>`.
-     Flip → discard that one test's diff, respawn once; second flip → mark the
-     scenario a STRAGGLER and continue the series (scenario-level parking).
-  3. **Stragglers**: one final tight retry each at the end; if it flips again the
-     orchestrator MAY keep an Opus-written version of that single test but MUST
-     flag it in the PROGRESS note for sampling review.
-  4. **Harmonizer** (authoring class — discard+respawn on flip): reads the whole
-     file; dedupes helpers, normalizes naming/selectors/wait patterns, checks the
-     header map against bodies, prunes zero-caller POM methods, and verifies each
-     test asserts its scenario's FULL final clause (the s12 rubric lesson).
-  5. Steps 6–8 (green twice on the whole suite, adversarial verify, readability)
-     run unchanged afterwards.
+  fable-pinned classes above).** A mid-run downgrade to Opus is handled BY
+  CLASS: AUTHORING agents that flip finish and are LOGGED, but their output is
+  DISCARDED and the chunk respawned fresh (max 2 respawns; then park the
+  feature and report). VERIFICATION agents that flip continue and their output
+  is KEPT (merged and cross-checked downstream, so a flipped verifier is low
+  risk). Chunk authoring small — respawns are cheap, and prose is drafted
+  BEFORE probe context accumulates ("Authors draft" below). (Rationale + the
+  2026-07-16/21 evidence: git history, this bullet.)
+- **Split test-authoring protocol — DORMANT** while the test author is
+  Opus-pinned (its trigger is a Fable flip). If test authoring ever returns to
+  Fable, restore the full protocol from git history (RUNBOOK @ 88b9e02d8d:
+  scaffold → serial micro-authors → stragglers → harmonizer; it rescued wave 8).
 - **Only the MAIN session must never run on the wrong model.** Mitigations active
   on this machine: `switchModelsOnFlag: false` (the main session pauses instead
   of switching — subagents still switch silently under it, which is now the
@@ -236,7 +194,9 @@ cadence, not a batch:
   `docs/product/log-model-mix.sh <session-dir>/subagents/agent-<id>.jsonl
   <feature> <authoring|verification|probe> <label>` — authoring and
   verification/probe rows are classed separately so per-class flip rates fall
-  out of the log. A FLIPPED authoring row triggers the discard+respawn rule
+  out of the log. For deliberately non-Fable agents (the Opus-pinned classes),
+  append ` (pinned)` to the logged row's Status cell by hand — the script takes
+  no flag for it. A FLIPPED authoring row triggers the discard+respawn rule
   above (log the discarded attempt too — suffix its label `-discarded`).
   Mention flips in the feature report. The 2026-07-21 rubric-review pair
   (flipped suite 4.1 vs clean suite 4.5, defects clustered in the opus tail)
@@ -307,13 +267,8 @@ cadence, not a batch:
   context runs low mid-feature, finish the current gate, commit what is
   committed-worthy, and END the session — a fresh one resumes via "Resuming a
   feature mid-flight".
-- **ONE FEATURE PER FRESH SESSION is the standing mode (maintainer, 2026-07-21)**
-  — originally a flip mitigation (a flag-pause can break a /loop wakeup chain:
-  the session sits idle until re-prompted; 14 pauses in 3 permission-dense
-  features on 2026-07-16), it is now kept as a permanent preference for
-  consistency: every feature starts in a clean session the maintainer launches,
-  no multi-feature /loop. Fresh context zeroes accumulated narrative as a side
-  benefit; the PROGRESS banner + wave counter keep the cadence.
+- **Session cadence** (one feature per fresh session) lives in Autonomous waves;
+  fresh context also zeroes accumulated narrative as a side benefit.
 - **The completion notification is the ONLY reliable subagent liveness signal.** Never
   judge a subagent by transcript size or token count (that misled an orchestrator into
   killing working agents). If an agent looks stuck, check ground truth — has its
@@ -339,6 +294,8 @@ cadence, not a batch:
   (`pkpMail.find({to, contains: tag})`); globally-scanning ops in serial specs.
 - **Park-and-continue** (autonomous mode only): 3 failed attempts → mark the row
   `parked` with the reason and move on. In calibration mode, stop and report instead.
+- **`.reports` cleanups**: never delete `.reports/opus-eval*/` while
+  `docs/product/QUEUE.md` still lists work referencing them.
 
 ## Definition of done
 

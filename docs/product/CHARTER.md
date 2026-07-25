@@ -4,7 +4,7 @@ The contract for this campaign: **why** it exists, **what** is in scope, and the
 invariants every wave must hold. **How** to run an iteration lives in `RUNBOOK.md`;
 **how** to write a spec lives in `TEMPLATE.md`; **how** to write tests lives in
 `docs/e2e/PRINCIPLES.md`; live state lives in `PROGRESS.md`. Started 2026-07-02;
-reset to calibration mode 2026-07-10 (see PROGRESS).
+the current mode always lives in `PROGRESS.md`'s banner.
 
 ## Mission
 
@@ -32,9 +32,9 @@ Enumerate mechanically first, then document, then map coverage — "did we miss 
 feature?" must be a grep, not a judgment call (round 1's single exploration pass
 demonstrably missed features):
 
-1. **Phase 0 — surface atlas** (`atlas/*.md`, DONE): ~13 mechanical sweeps, one per
-   modality, emitting **atoms** (stable ID + code pointer + one line). Completeness
-   over depth; no analysis in sweeps.
+1. **Phase 0 — surface atlas** (`atlas/*.md`, DONE): 14 mechanical sweeps
+   (affordances added 2026-07-25), one per modality, emitting **atoms** (stable ID +
+   code pointer + one line). Completeness over depth; no analysis in sweeps.
 2. **Phase 1 — feature specs** (`specs/*.md`): written per `TEMPLATE.md` to the
    RUNBOOK loop, adversarially verified, claiming their atoms.
 3. **Phase 2 — coverage crosswalk**: every spec scenario mapped against the test
@@ -76,11 +76,44 @@ demonstrably missed features):
   format (stable symbols, never line numbers) and the mechanical lint gate are defined
   in `TEMPLATE.md` — the single home for spec style.
 
+## Standing maintainer rulings (2026-07-25)
+
+Committed home for the rulings from the Opus 5 eval review. A queued re-scope +
+encoding session (see `QUEUE.md`) integrates them fully into TEMPLATE and sweeps
+the existing corpus; until then they bind as written:
+
+- **Variance-based ownership**: behavior that is invariant across contexts is
+  specified ONCE, in the mechanism's home feature; context features own the
+  deltas — presence, configuration, permissions, consequences — and point to the
+  home for mechanics (both directions verifiable). Litmus per sentence: "if I
+  changed stage/role/surface, would this still be true?" Named special cases:
+  - **Manager components**: reusable managers (file manager, participant
+    manager, tasks & discussions, …) get their mechanics specified once in the
+    manager's own feature; stage features own each instantiation — which panels
+    mount, which actions/columns appear, and the role × state gates on that
+    stage. Affordance-atom attribution follows the same split.
+  - **Test budget corollary**: mechanics are deep-tested once in the home
+    feature; context features test only gates/instantiation (duplicate
+    mechanism coverage is a reviewable defect).
+- **One shared workflow screen, author included** (refined 2026-07-25 — this
+  wording supersedes any surviving "dual-dressing" phrasing): the dashboards
+  are separate features (the editorial dashboard and My Submissions each own
+  their list), but the workflow screen both open is ONE shared surface.
+  Workflow-page specs cover EVERY role on it — the Author included — in the
+  same permission rows: role determines what is available; it never creates a
+  separate surface. Never split a stage into editor-view and author-view
+  features, and never frame the author's access as its own reduced screen.
+  The author's entry route (View on My Submissions) belongs to
+  `author-dashboard`; everything after it belongs to the workflow features.
+- **Glossary**: a living `docs/product/GLOSSARY.md` keeps PO/QA language
+  consistent — on-screen names always win; a term may be coined only when the
+  screen offers none; every coined term has ONE definition home (the glossary)
+  and first use per spec carries a gloss or pointer. Applies to test naming too.
+
 ## Definition of done
 
-- **Per spec**: every TEMPLATE section filled or explicitly N/A; every rule anchored;
-  `lint-spec.sh` clean; verifier findings resolved or recorded as Open questions;
-  atoms claimed in the sweep files.
+- **Per spec**: the operational checklist is `RUNBOOK.md`'s Definition of done
+  (single home).
 - **Campaign**: unclaimed atom count = 0 (claimed / parked-with-reason /
   out-of-scope-with-reason); every PROGRESS row `done` or `parked`.
 - "Recreatable from the spec" sets the altitude; the two lines above are the

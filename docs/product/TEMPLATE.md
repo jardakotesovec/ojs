@@ -209,9 +209,9 @@ atlas-claims: [<atom IDs this spec owns>]
 
 <!-- Narrative user journeys a QA person would recognize, named. These are the
      units the test build maps onto — one retained test per scenario, so the count
-     comes from the feature's Budget column in PROGRESS.md (L 3–4, M 6–8, H up to
-     ~12–13). Cover the core journey, the main permission boundary, and the main
-     state-rule variation at minimum.
+     comes from the feature's Budget column in PROGRESS.md; ranges and the ±1–2
+     judgment rule live in RUNBOOK's Budget & ceilings. Cover the core journey,
+     the main permission boundary, and the main state-rule variation at minimum.
 
      NAME ACTORS BY ROLE, never by seeded account: "an author", "a Journal Manager",
      "a Section Editor assigned to the submission" — the scenario describes the
