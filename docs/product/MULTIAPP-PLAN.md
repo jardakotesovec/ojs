@@ -1,10 +1,11 @@
 # Multi-app extension plan — OJS + OMP + OPS
 
-**Status: DRAFT for maintainer review (2026-07-25).** Synthesized from four parallel
-research analyses; full detail in `.reports/multiapp-A-divergence.md` (code-grounded
-inventory), `-B-specs.md` (spec mechanism design), `-C-tests.md` (test architecture),
-`-D-process.md` (campaign process). Nothing here is in force until the maintainer
-approves and the decisions in §8 are made.
+**Status: TRIAL APPROVED (maintainer, 2026-07-25) — see §9.** Mechanisms in §2–§4
+approved for a review-focused pilot; campaign-wide adoption decided after the trial.
+Synthesized from four parallel research analyses; full detail in
+`.reports/multiapp-A-divergence.md` (code-grounded inventory), `-B-specs.md` (spec
+mechanism design), `-C-tests.md` (test architecture), `-D-process.md` (campaign
+process).
 
 ## 1. The divergence picture (measured, not assumed)
 
@@ -202,3 +203,64 @@ the topology, parity declarations for the machinery.
    schedule it as its own effort? Who owns the OMP/OPS branch alignment?
 5. When do delta passes start: after Area 2 completes for OJS (first closed area
    under the current directive), or retro-pilot on the already-verified rows now?
+
+## 9. TRIAL — review-focused pilot (approved 2026-07-25)
+
+**Maintainer decision**: run the pilot NOW on already-verified review-cluster rows
+(retro-pilot; §8-Q5 answered), focused on review stage(s) to challenge the
+mechanism at its hardest point. Calibration mode: ONE unit per fresh session,
+maintainer reviews after each. §2–§4 mechanisms and §4 budgets provisionally
+approved for the trial's scope.
+
+### Pilot trio (in order — each exercises a different §7b delta class)
+
+1. `workflow-stage-navigation` — the stage-topology axis itself (OMP 5 stages /
+   OPS 1); pilots capability flags + existence badges both directions.
+2. `assign-and-manage-reviewers` — review machinery: OMP parity declaration
+   ("applies to Internal + External, probed") + internal-stage test subset;
+   OPS `n/a(no review)` — pilots the absence gate with a live absence probe.
+3. `editorial-decisions` — behavioral deltas: OMP's added decisions incl. the
+   internal→external topology edge (thin `omp-internal-review.md` spec is
+   in-scope here if the graduation rule demands it); OPS's reduced roster
+   (Decline/Revert only).
+
+### M0-lite — environment bring-up, scoped to the pilot (BLOCKER, runs first)
+
+Engineering session(s), not spec loops. Work the gates IN ORDER; commit per gate
+(lib/pkp vs app repos separately, RUNBOOK step 10 discipline); STOP and report at
+any gate needing maintainer input.
+
+- **G1 — submodule alignment**: point omp-main + ops-main `lib/pkp` at the
+  campaign SHA; resolve app-side fatals (expect abstract-method/plugin drift —
+  RUNBOOK "Plugin-submodule alignment" lore applies). GATE: both apps boot and
+  serve a login page.
+- **G2 — servers**: config-factory base-port parameter → OJS 8000 / OMP 8100 /
+  OPS 8200 side-by-side; OMP/OPS test DBs (Postgres, mirroring ojs_test setup).
+  GATE: three fleets up simultaneously, seeded admin login works on each.
+- **G3 — scenario API port**: `api/v1/_test` endpoints live on OMP + OPS;
+  shared schema de-OJS'd (`journal`→`context` alias; section/issue/galleys as
+  app overlays; `reviewRounds` internal/external key; IssueProcessor out of the
+  shared path). GATE: createContext + createSubmission succeed on all three
+  apps; an OMP submission seeds an internal review round.
+- **G4 — app trees**: minimal `playwright/` tree in omp-main + ops-main
+  (config, `support/app.context.js` with the capability map, bootstrap seeds
+  for each app's role subset). GATE: a trivial smoke spec (login + dashboard
+  heading) green on OMP and OPS.
+- **G5 — spec-side tooling**: `APP-GLOSSARY.md` (vocabulary + capability names);
+  lint-spec.sh extended (badge syntax, variation-stub match, glossary terms).
+  GATE: lint passes on all existing specs unchanged (mechanism is additive).
+
+### Trial session sequence (each = one fresh session, standard kickoff prompt
+pointed at this file's §9)
+
+M0-lite (G1–G5, one or more sessions) → pilot 1 → maintainer review → pilot 2 →
+review → pilot 3 → review → GO/NO-GO on campaign-wide adoption (§8 decisions
+finalized, RUNBOOK/TEMPLATE amended, delta passes scheduled per §4).
+
+Delta-loop steps for the pilot sessions: §4 "delta loop", plus each pilot ends by
+proposing amendments to THIS plan from what it learned (the trial exists to find
+the mechanism's friction, not to confirm it).
+
+**Housekeeping note**: OJS row 10 (`send-to-review`) is still `in_progress` from
+its flag-killed session — its standard resume session should run before or
+alongside the trial; it is not a trial dependency.
