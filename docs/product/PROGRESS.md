@@ -28,16 +28,20 @@ commit, then STOPS. Model policy revised 2026-07-21 (RUNBOOK Model discipline):
 flipped AUTHORING output is discarded + respawned; verification/probe flips
 stay kept. Wave rule unchanged: at 7 features since last sampling, stop for
 sampling review instead.**
-Wave counter: 5 features since last sampling (editorial-dashboards +
+Wave counter: 6 features since last sampling (editorial-dashboards +
 workflow-stage-navigation 2026-07-16 + editorial-decisions rebuilt-from-scratch
-2026-07-21 + stage-participants 2026-07-22 + send-to-review 2026-07-24; Area 1
-sampled and approved 2026-07-14; findings-to-files protocol in force since — see
-RUNBOOK).
+2026-07-21 + stage-participants 2026-07-22 + send-to-review 2026-07-24 +
+reviewer-response 2026-07-25; Area 1 sampled and approved 2026-07-14;
+findings-to-files protocol in force since — see RUNBOOK). **reviewer-response was
+the Opus 5 single-arm trial (`docs/product/OPUS5-EVAL-PLAN.md`) — it awaits the
+maintainer's trial review, which he may treat as this wave's sampling; his
+outcome decision (sign-off / hybrid / stay-on-Fable) governs whether the next
+feature keeps `model: opus` subagents.**
 
 ## Totals
 
-- Features: **1 reference · 11 verified · 80 pending** (of 92; feature 39 folded into `article-landing`)
-- Tests: **90 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9 + send-to-review 7) · last full-suite timing: n/a since reset
+- Features: **1 reference · 12 verified · 79 pending** (of 92; feature 39 folded into `article-landing`)
+- Tests: **102 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9 + send-to-review 7 + reviewer-response 12) · last full-suite timing: n/a since reset
 - Budget tiers (maintainer-rebalanced 2026-07-02): H 10–13 · M 6–8 · L 3–4; allocation ≈ 639, headroom ~61
 
 ## Features
@@ -55,7 +59,7 @@ RUNBOOK).
 | 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | verified | green(x2) | tests-only rebuild (2026-07-22): EXPERIMENT POSITIVE — monolithic test-author fable-clean (276 msgs, zero flips) on the rule-5-swept spec vs 2 flips on unswept wave-8 wording; 9 tests, rubric 4.5/5 (= split-protocol clean score); no new ledger rows (229–234 stand); s1 toast-race flake fixed (expectToast); spec quote-case fix ("Awaiting Copyedits.") |
 | 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | verified | green(x2) | wave 8 (2026-07-24, finished by fresh session after double flag-kill — gates resumed from files): 7 tests, chunks a–f PASS, ledger 220/234 amended + 235–236 filed, OQ4 added, readability s5 status-note fix; 3 verify/probe flips (kept per policy); infra: `workflow-controls-right` data-cy hook gone from DOM (POM + skill app-map cite it) |
 | 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | verified | green(x2) | calibration f1: 13 tests, 33 atoms, 5 proposed ledger rows; maintainer signed off 2026-07-10 (scenario rewording applied) |
-| 12 | Area 2 — Editorial workflow & peer review | `reviewer-response` | H·10 | pending | pending | |
+| 12 | Area 2 — Editorial workflow & peer review | `reviewer-response` | H·10 | verified | green(x2) | OPUS5 TRIAL (all 21 subagents pinned opus, all-opus by intent): 12 tests, 25 atoms, ledger 237–250 + 251–253 cross-feature, rows 16/76/77/78 amended (16 re-diagnosed), OQ 1–14; LOW-CONFIDENCE FLAG for the maintainer's trial review — the code-blind readability pass found 8 of 12 scenarios unwalkable as first written (all rewritten), and 3 authored claims needed live probes to overturn |
 | 13 | Area 2 — Editorial workflow & peer review | `review-forms` | M·7 | pending | pending | |
 | 14 | Area 2 — Editorial workflow & peer review | `review-rounds-and-revisions` | H·12 | pending | pending | |
 | 15 | Area 2 — Editorial workflow & peer review | `recommend-only-editors` | M·6 | pending | pending | |
@@ -356,3 +360,24 @@ appends to end-of-file). Per-class rates:
 | 2026-07-24 | send-to-review | authoring | readability-verifier | 9 | 0 | 0 | clean |
 | 2026-07-24 | send-to-review | authoring | ledger-stamp | 27 | 0 | 0 | clean |
 | 2026-07-24 | send-to-review | authoring | readability-fix | 26 | 0 | 0 | clean |
+| 2026-07-25 | reviewer-response | authoring | spec-author-oe | 0 | 138 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | probe | probe-batchB-oe | 0 | 93 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | probe | probe-batchA-oe | 0 | 132 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | probe | probe-batchD-oe | 0 | 155 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | probe | probe-batchC-oe | 0 | 150 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | authoring | spec-finalizer-oe | 0 | 26 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | authoring | test-author-oe | 0 | 239 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | authoring | spec-fix-rule11-oe | 0 | 45 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | verification | verify-chunk-f-oe | 0 | 45 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | verification | verify-chunk-a-oe | 0 | 62 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | verification | verify-chunk-b-oe | 0 | 57 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | verification | verify-chunk-d-oe | 0 | 56 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | verification | verify-chunk-e-oe | 0 | 81 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | verification | verify-chunk-c-oe | 0 | 112 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | probe | probe-a-edges-oe | 0 | 115 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | authoring | verification-merge-oe | 0 | 88 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | authoring | readability-verifier-oe | 0 | 13 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | probe | probe-f1-reviewfiles-oe | 0 | 97 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | authoring | readability-fix-oe | 0 | 153 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | authoring | atlas-markers-oe | 0 | 66 | 0 | all-opus (pinned) |
+| 2026-07-25 | reviewer-response | authoring | ledger-stamp-oe | 0 | 106 | 0 | all-opus (pinned) |

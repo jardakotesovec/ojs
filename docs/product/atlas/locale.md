@@ -48,7 +48,7 @@
 | LOC-common-email-addAttachment | `email.addAttachment.*` | common.po | 9 keys |  | |
 | LOC-common-common-upload | `common.upload.*` | common.po | 8 keys |  | |
 | LOC-common-notification-unsubscribeNotifications | `notification.unsubscribeNotifications.*` | common.po | 7 keys |  | |
-| LOC-common-reviewer-submission | `reviewer.submission.*` | common.po | 6 keys |  | |
+| LOC-common-reviewer-submission | `reviewer.submission.*` | common.po | 6 keys |  | reviewer-response (claimed 2026-07-25 — tab-1 Review Schedule labels + round-history date headings; only acceptedOn/submittedOn are exclusive, the four due-date keys are shared with the editor's reviewReminderForm/ReviewerForm → assign-and-manage-reviewers) |
 | LOC-common-grid-action | `grid.action.*` | common.po | 6 keys |  | |
 | LOC-common-stageParticipants-notify | `stageParticipants.notify.*` | common.po | 5 keys |  | stage-participants |
 | LOC-common-navigation-skip | `navigation.skip.*` | common.po | 5 keys |  | |
@@ -183,10 +183,10 @@
 | LOC-manager-manager-navigationMenu | `manager.navigationMenu.*` | manager.po | 4 keys |  | navigation-menus (claimed 2026-07-06) |
 | LOC-manager-manager-editorialStatistics | `manager.editorialStatistics.*` | manager.po | 4 keys |  | |
 | LOC-manager-misc | `(misc)` | manager.po | 6 rarer prefixes | manager.languages (3), grid.genres (3), api.issue (3), stats.timeline (3), stats.description (3), manager.submitWithCategories (3) | |
-| LOC-reviewer-reviewer-submission | `reviewer.submission.*` | reviewer.po | 39 keys |  | |
-| LOC-reviewer-submission-comments | `submission.comments.*` | reviewer.po | 4 keys |  | |
-| LOC-reviewer-reviewer-reviewSteps | `reviewer.reviewSteps.*` | reviewer.po | 4 keys |  | |
-| LOC-reviewer-misc | `(misc)` | reviewer.po | 1 rarer prefixes | reviewer.step1 (3) | |
+| LOC-reviewer-reviewer-submission | `reviewer.submission.*` | reviewer.po | 39 keys |  | reviewer-response (claimed 2026-07-25) |
+| LOC-reviewer-submission-comments | `submission.comments.*` | reviewer.po | 4 keys |  | reviewer-response (claimed 2026-07-25 — reviewer step-3 box wording, ledger 77; canShareWithAuthor/cannotShareWithAuthor also render in the editor's readReview/authorReadReview/reviewDownload templates → assign-and-manage-reviewers; sendToReviewers/sendCopyToReviewers have no call sites) |
+| LOC-reviewer-reviewer-reviewSteps | `reviewer.reviewSteps.*` | reviewer.po | 4 keys |  | reviewer-response (claimed 2026-07-25) |
+| LOC-reviewer-misc | `(misc)` | reviewer.po | 1 rarer prefixes | reviewer.step1 (3) | reviewer-response (claimed 2026-07-25 — reviewer.step1/complete/confirmSubmit/aboutDueDates + user.authorization.submissionReviewer; the openReview.* keys added after the 2026-07-02 sweep belong to open-peer-review-display) |
 | LOC-submission-editor-submission | `editor.submission.*` | submission.po | 158 keys |  | |
 | LOC-submission-metadata-property | `metadata.property.*` | submission.po | 85 keys |  | submission-wizard-metadata |
 | LOC-submission-submission-submit | `submission.submit.*` | submission.po | 69 keys |  | submission-wizard |

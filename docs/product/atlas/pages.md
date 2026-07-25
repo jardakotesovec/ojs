@@ -84,7 +84,7 @@
 | PAGE-reviewer-savestep | ReviewerHandler::saveStep | pages/reviewer/ReviewerHandler.php | Save review wizard step | reviewer-assignment.md | reviewer-response |
 | PAGE-reviewer-showdeclinereview | ReviewerHandler::showDeclineReview | pages/reviewer/ReviewerHandler.php | Show decline-review confirmation form | reviewer-response.md | reviewer-response |
 | PAGE-reviewer-savedeclinereview | ReviewerHandler::saveDeclineReview | pages/reviewer/ReviewerHandler.php | Submit decline-review form | reviewer-response.md | reviewer-response |
-| PAGE-reviewer-downloadfile | ReviewerHandler::downloadFile | pages/reviewer/ReviewerHandler.php | In role list but not routed/implemented (dead) | | |
+| PAGE-reviewer-downloadfile | ReviewerHandler::downloadFile | pages/reviewer/ReviewerHandler.php | In role list but not routed/implemented (dead) | | reviewer-response (claimed 2026-07-25 as documented-dead: in the role assignment, no handler method, no router case — Known deviations) |
 | PAGE-search-index | SearchHandler::index (inherited) | pages/search/SearchHandler.php | Site/journal search landing page | site-search.md | site-search |
 | PAGE-search-search | SearchHandler::search (inherited) | pages/search/SearchHandler.php | Search results page | site-search.md | site-search |
 | PAGE-search-similardocuments | SearchHandler::similarDocuments | pages/search/index.php | Op routed in switch; no matching handler method found (dead) | | |

@@ -54,7 +54,7 @@ first under the current in-table-order directive). 129 rows across 62 pending fe
 | PROGRESS # | Owning feature | Rows | §2 row numbers |
 |---|---|---|---|
 | 9 | `stage-participants` | 4 | 9, 73, 74, 75 — all four re-validated 2026-07-21 (spec fold-in); no-drift re-confirmed 2026-07-22 (verification pass, chunk e) |
-| 12 | `reviewer-response` | 4 | 16, 76, 77, 78 |
+| 12 | `reviewer-response` | 4 | 16, 76, 77, 78 — all four re-validated live 2026-07-25 (spec fold-in + verification chunk e); none drifted, row 16 mechanism re-diagnosed |
 | 13 | `review-forms` | 2 | 39, 79 |
 | 14 | `review-rounds-and-revisions` | 1 | 80 |
 | 16 | `review-anonymity` | 1 | 81 |
@@ -156,7 +156,7 @@ re-validated = touched by the current campaign (2026-07-10+) or noted otherwise.
 | 13 | PubMed export fetches remote NLM DTD; offline exports 500 | `pubmed-export` | pending | pubmed-metadata.spec.js: spec deleted | untouched |
 | 14 | activity log renders literal userGroupName placeholder on participant added | `editorial-activity-log` | pending | no spec cited | untouched |
 | 15 | discussions stage heading stale after in-place stage switch | `tasks-discussions` | reference | discussions.spec.js: spec deleted | untouched |
-| 16 | reviewer Submit Review confirm dies after two rejected cycles | `reviewer-response` | pending | review-forms.spec.js: spec deleted | untouched |
+| 16 | reviewer Submit Review confirm dies after two rejected cycles | `reviewer-response` | verified | reviewer-response.spec.js s5/s6 | re-validated + amended 2026-07-25 (arming condition and mechanism corrected; now covered by two retained tests) |
 | 17 | download-all zip filename double dash; locale claim retracted | `submission-files` | pending | no spec cited | untouched |
 | 18 | FIXED: UI-scheduled articles got PUBLISHED status while publication SCHEDULED | `publication-publish-flow` | pending | no spec cited | untouched (pre-reset re-verified 2026-07-04) |
 | 19 | unset urnCheckNo TypeError silently empties Identifiers form | `publication-identifiers` | pending | no spec cited | untouched |
@@ -216,9 +216,9 @@ re-validated = touched by the current campaign (2026-07-10+) or noted otherwise.
 | 73 | EDITOR_ASSIGN task notification dead after template rename | `stage-participants` | verified | no spec cited | re-validated 2026-07-21 (stage-participants probe C); no-drift re-confirmed 2026-07-22 (verify chunk e) |
 | 74 | Re-assigning existing participant silently discards modal flags | `stage-participants` | verified | no spec cited | re-validated + amended 2026-07-21 (stage-participants probe C; UI path corrected — picker exclusion spans all stages); no-drift re-confirmed 2026-07-22 (verify chunk e) |
 | 75 | Recommend-only assign-modal guards enforced on Edit, skipped on Add | `stage-participants` | verified | no spec cited | re-validated 2026-07-21 (stage-participants probe C, end-to-end); no-drift re-confirmed 2026-07-22 (verify chunk e) |
-| 76 | Completed review's recommendation select stays enabled, cosmetic | `reviewer-response` | pending | no spec cited | untouched |
-| 77 | OJS locale shadows "For editor only" label wording | `reviewer-response` | pending | no spec cited | untouched |
-| 78 | Free-text review submittable empty despite client-side hint | `reviewer-response` | pending | no spec cited | untouched |
+| 76 | Completed review's recommendation select stays enabled, cosmetic | `reviewer-response` | verified | reviewer-response.spec.js s7 | re-validated 2026-07-25, no drift; refusal cross-reference re-pointed at row 243 |
+| 77 | OJS locale shadows "For editor only" label wording | `reviewer-response` | verified | reviewer-response spec Known deviations | re-validated 2026-07-25 on both surfaces, no drift |
+| 78 | Free-text review submittable empty despite client-side hint | `reviewer-response` | verified | reviewer-response spec rule 8 | re-validated 2026-07-25, no drift; the client-side-hint half withdrawn (no prompt appears) |
 | 79 | In-use review form deactivatable despite activate-confirm promise | `review-forms` | pending | review-forms.spec.js: spec deleted | untouched (pre-reset re-verified, round-1 spec green) |
 | 80 | Author sees editor phrasing in review-round status card | `review-rounds-and-revisions` | pending | no spec cited | untouched |
 | 81 | Submission API participants array leaks author identity to reviewers | `review-anonymity` | pending | no spec cited | untouched |

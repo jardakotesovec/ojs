@@ -79,7 +79,7 @@ atoms: VUE-reviewer-manager, VUE-select-reviewer-list-panel, GRID-reviewer-grid,
 
 ### reviewer-response — the reviewer's own journey: accept/decline invitation, review steps, recommendation, comments, attachments, one-click access
 Merged-from: reviewer-invitation-response + reviewer-completes-review (one reviewer journey per decision 4).
-atoms: PAGE-reviewer-{submission,step,savestep,showdeclinereview,savedeclinereview}, VUE-reviewer-submission-page, DB-review_form_responses, review_files, MAIL-review-{confirm,decline,acknowledgement}, EVLOG-REV-{ACCP,DECL,RDY,RECOMMENDATION} (~14)
+atoms: PAGE-reviewer-{submission,step,savestep,showdeclinereview,savedeclinereview,downloadfile(documented-dead)}, VUE-reviewer-submission-page, AUTHZ-review-assignment-access-policy, API-review-get-history, GRID-reviewer-review-{files,attachments}-grid-handler, DB-{review_files,review_form_responses}, MAIL-review-{confirm,decline,complete-notify-editors}, NOTIF-reviewer-comment, EVLOG-REV-{ACCP,DECL,RDY}, LOC-reviewer-{reviewer-submission,reviewer-reviewSteps,submission-comments,misc}, LOC-common-reviewer-submission (~25). References assign-and-manage-reviewers (MAIL-review-acknowledgement is the editor's Thank Reviewer mail, not this feature).
 
 ### review-forms — a manager builds a review form with elements; a reviewer fills it; the editor reads responses
 atoms: GRID-review-form-grid, GRID-review-form-elements-grid, listbuilder-response-item, DB-review_forms(+settings,elements,element_settings,form_responses) (~6)
