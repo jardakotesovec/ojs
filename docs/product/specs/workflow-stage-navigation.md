@@ -85,9 +85,9 @@ N/A — the shell is navigation only; it has no user-entered fields.
    | Indicator | When |
    |-----------|------|
    | **Incomplete** | the submission wizard was never finished |
-   | **Submission** | in the Submission (desk review) stage |
-   | **Review (Round N)** | in the Review stage — N is the latest round |
-   | **Copyediting** | in the Copyediting stage, not scheduled or published |
+   | **Submission** {OJS OMP} | in the Submission (desk review) stage |
+   | **Review (Round N)** {OJS OMP} | in the Review stage — N is the latest round |
+   | **Copyediting** {OJS OMP} | in the Copyediting stage, not scheduled or published |
    | **Production** | in the Production stage, not scheduled or published |
    | **Scheduled** | the version of record is assigned to an issue awaiting publication (shown from Copyediting or Production) |
    | **Published** | the version of record is published |
@@ -147,7 +147,7 @@ N/A — the shell is navigation only; it has no user-entered fields.
      line), nothing else;
    - a stage the submission has passed: "The submission is currently in the
      {current stage} stage.", above that stage's read-only panels;
-   - an older review round when the submission has moved on: "The submission has
+   - an older review round {OJS OMP} when the submission has moved on: "The submission has
      been advanced to the next round of review" (still in Review) or "The
      submission advanced to the next review round, was accepted, and is currently
      in the {stage} stage." (already past Review);
@@ -218,7 +218,7 @@ selection recorded in the page address (rule 10).
   support adds Citations; data-availability/data-citation support adds Data
   availability; an enabled public-identifier plugin (such as URN) adds
   Identifiers — enabling DOIs alone does not (rule 5). <sup>b</sup>
-- **Payments enabled** adds a payment dropdown to the editorial shell's header tools
+- **Payments enabled** {OJS} adds a payment dropdown to the editorial shell's header tools
   (its behavior belongs to the fees feature). <sup>c</sup>
 - No config.inc.php variables alter these rules.
 
@@ -247,7 +247,7 @@ selection recorded in the page address (rule 10).
 
 ## Canonical scenarios
 
-1. **A Section Editor tours the stage menu** — a Section Editor assigned to a
+1. **A Section Editor tours the stage menu** {OJS OMP} — a Section Editor assigned to a
    submission under Review opens it from the dashboard. The header shows the
    submission's ID, authors and title with a "Review (Round 1)" stage indicator; in
    the menu, all four stages are listed and the Review round entry carries the
@@ -257,14 +257,14 @@ selection recorded in the page address (rule 10).
    **Submission** shows "The submission is currently in the Review stage." above
    the desk-review panels; returning to the Review round shows the working stage.
    <sup>s1</sup>
-2. **Review rounds unfold in the menu** — on a submission sent to a second review
+2. **Review rounds unfold in the menu** {OJS OMP} — on a submission sent to a second review
    round, the Review menu entry contains "Review Round 1" and "Review Round 2".
    Opening the panel fresh lands on Round 2 (the stripe sits there); selecting
    Round 1 shows "The submission has been advanced to the next round of review"
    above that round's historical content. After the submission is accepted and
    moved on, Round 1 instead explains the submission advanced, was accepted, and
    names the stage it now sits in. <sup>s2</sup>
-3. **An Assistant hits a stage their role doesn't cover** — an Assistant whose
+3. **An Assistant hits a stage their role doesn't cover** {OJS OMP} — an Assistant whose
    group covers only Copyediting and Production is assigned to a submission in
    Review. They open the panel: the menu still lists all four stages, but opening
    **Review** (or Submission) shows only "You don't currently have access to that
@@ -284,7 +284,7 @@ selection recorded in the page address (rule 10).
    an editorial workflow address never reaches the dashboard: they land on an
    access-denied page reading "You don't currently have access to that stage of
    the workflow." <sup>s5</sup>
-6. **An author and a Section Editor open the same submission** — for one submission
+6. **An author and a Section Editor open the same submission** {OJS OMP} — for one submission
    in Copyediting, the assigned Section Editor's panel and the author's tracking
    view (from My Submissions) share the same skeleton — header with the same
    "Copyediting" indicator, stage menu, Publication group — but the author's
@@ -366,6 +366,118 @@ selection recorded in the page address (rule 10).
 3. Should the parent **Review** menu entry be selectable at all (it is today —
    Known deviations, last item), or expand-only / an alias for the current round?
 
+## App variations — OMP / OPS
+
+Read the base spec through APP-GLOSSARY.md (journal → press / preprint server,
+Journal Manager → Press Manager / Preprint Server Manager, Section Editor →
+Series Editor / Moderator, and so on). The shell itself — header, access gate,
+no-access sentence, status-box machinery, submission-language line, address
+persistence and fallback — is one shared mechanism dressed per app, so every
+unbadged, un-overridden rule claims all three apps. <sup>v1</sup> The overrides
+below are keyed to the base text by quoted stubs.
+
+### OMP
+
+- "travels through four stages" — through five: an Internal Review stage sits
+  between Submission and the base spec's Review stage (on-screen: Internal
+  Review, External Review). Each review stage nests its own rounds, and the
+  round rules here (menu sub-entries, stripes, status boxes, landings) apply to
+  each review stage separately — parity probes pending. <sup>v2</sup>
+- "Review (Round N)" — two review indicator states, labeled Internal Review
+  (Round N) and External Review (Round N), each with its own dot color.
+  <sup>v3</sup>
+- "listing all four stages" — listing all five; the two review entries join
+  the Workflow and Publication groups as initially expanded. <sup>v4</sup>
+- "entry is itself selectable" — both review entries behave like the base
+  Review entry: selectable, folding their round list on each click. Whether the
+  round-less misdescription deviation reproduces on both stages is unprobed.
+  <sup>v4</sup>
+- "Below Workflow sits a Publication group" — a third group, Marketing
+  (Audience, Representatives, Publication Dates), sits between Workflow and
+  Publication in the editorial shell only and starts expanded; its screens
+  belong to OMP marketing features — this spec owns only their place in the
+  menu. <sup>v5</sup>
+- "Metadata and JATS XML" — there is no JATS XML entry. Every version lists
+  Title & Abstract, Contributors, Chapters, Metadata, Publication Formats and
+  Media unconditionally; Citations, Data availability and Identifiers follow
+  the same settings as the base spec; Body Text, Galleys and Publication
+  Settings entries do not exist. <sup>v6</sup>
+- "the production-bound entries" — are Catalog Entry and Permissions &
+  Disclosure. <sup>v6</sup>
+- "See the header tools" — the header also carries a work-type control
+  (authored work / edited volume) beside Library — on-screen form unprobed —
+  and there is no payment dropdown. <sup>v7</sup>
+- "the current round's entry" — per review stage: a submission in either
+  review stage lands on that stage's current round. <sup>v8</sup>
+- "the four stage-named addresses" — five: an internal-review shape joins them
+  (verbatim form under Reference), with the same two-hop redirect and the same
+  stage-drop deviation. <sup>v9</sup>
+- "offer fewer screens" — the author's versions lack Identifiers, Catalog
+  Entry and Permissions & Disclosure; Chapters, Publication Formats and Media
+  appear in both dressings. <sup>v6</sup>
+
+### OPS
+
+- "travels through four stages" — through one: Production. A preprint is
+  created in the Production stage and never leaves it, so the panel has no
+  stage topology to navigate. <sup>v10</sup>
+- "The stage indicator collapses" — the reachable states are Incomplete,
+  Production, Scheduled, Published and Declined only. <sup>v10</sup>
+- "listing all four stages" — the Workflow group holds a single Production
+  entry: no round sub-entries, no Review entry, and only the Workflow and
+  Publication groups exist to start out expanded. <sup>v11</sup>
+- "Metadata and JATS XML" — there is no JATS XML entry. Versions list Title &
+  Abstract, Contributors and Metadata, plus the same settings-gated Citations,
+  Data availability and Identifiers. <sup>v12</sup>
+- "the production-bound entries" — are Galleys, Media, Permissions &
+  Disclosure and Preprint entry. <sup>v12</sup>
+- "the submission reaches Copyediting" — from the start: every unposted
+  preprint already sits in the Production stage, so Preview is offered
+  immediately and is relabeled View once posted. <sup>v13</sup>
+- "leads with a status box" — only the published box ("Submission published.")
+  can occur; the not-yet-initiated, passed-stage and review-round boxes
+  describe stages that do not exist here. <sup>v10</sup>
+- "follows the submission's state" — collapses to two landings: a queued
+  preprint lands on the Production entry, a scheduled or posted one on the
+  latest version's Title & Abstract. <sup>v14</sup>
+- "funnel to the editorial dashboard" — only the entry-check and the
+  production-named shapes do; the submission-, review- and copyediting-named
+  shapes name stages the app does not have and are refused for every viewer,
+  in every role — exact refusal page unprobed. <sup>v15</sup>
+- "authorize against the named stage" — for the three absent-stage shapes the
+  refusal is therefore universal, widening the rule-12 asymmetry: no one can
+  use those addresses, while the entry-check address works normally.
+  <sup>v15</sup>
+- "has two dressings" — the author's tracking view drops the Workflow group
+  entirely (Publication versions only); the author-dashboard delta owns that
+  menu. <sup>v16</sup>
+- "A bookmark deep into" — only a production-stage bookmark arrives home; the
+  other stage-named bookmarks are refused as above. <sup>v15</sup>
+
+### Both apps
+
+- "assigned to an issue awaiting publication" — neither app has issues:
+  Scheduled means a version of record is scheduled for publication, and what
+  puts it there belongs to each app's publishing feature. <sup>v17</sup>
+
+<sup>v1</sup> useWorkflowConfigOMP.js / useWorkflowConfigOPS.js deep-merge the OJS editorial and author configs as base (deepMerge(ConfigEditorialOJS, ConfigEditorialOMP/OPS)), so WorkflowConfig.common — the accessibleStages gate, the no-access sentence, WorkflowSubmissionStatus, WorkflowChangeSubmissionLanguage — and useWorkflowMenu.js / WorkflowPage.vue are the same objects in all three apps; classes/user/Repository::getAccessibleWorkflowStages() and the authorization policies are shared lib/pkp code ·
+<sup>v2</sup> omp-main classes/core/Application.php getApplicationStages() (5 stages); useWorkflowNavigationConfigOMP.js getWorkflowItems() (five items; getReviewItems() run for internal and external stages); lib/pkp WorkflowStageDAO stage-path map incl. internalReview; per-review-stage parity (status boxes, round landings) is probe-pending — pilot-1 probe list ·
+<sup>v3</sup> useSubmission.js ExtendedStages.INTERNAL_REVIEW + ExtendedStagesLabels; omp locale submission.stage.internalReviewWithRound "Internal Review (Round {$round})" and submission.stage.externalReviewWithRound "External Review (Round {$round})"; StageBubble.vue ExtendedStagesColorClass + border-stage-in-internal-review stripe color in useWorkflowNavigationConfigOJS.js StageColors ·
+<sup>v4</sup> WorkflowPageOMP.vue setExpandedKeys(['workflow','publication','marketing', workflow_3, workflow_2]); useWorkflowNavigationConfigOMP.js passes isDisabled for round-bearing review entries but the shared getWorkflowItem() builder drops that property, leaving parent entries selectable exactly as in OJS; whether the ledger-213 round-less defect reproduces on both OMP review stages is probe-pending ·
+<sup>v5</sup> useWorkflowNavigationConfigOMP.js getMenuItems() (marketing group pushed between workflow and publication, EDITORIAL_DASHBOARD only), getMarketingItems(); omp locale monograph.audience "Audience", grid.catalogEntry.representatives "Representatives", grid.catalogEntry.publicationDates "Publication Dates" ·
+<sup>v6</sup> useWorkflowNavigationConfigOMP.js getPublicationItemsEditorial() (no jats item; chapters, publicationFormats, media unconditional; canAccessProduction → catalogEntry + license) and getPublicationItemsAuthor(); omp locale publication.catalogEntry "Catalog Entry"; publication.publicationLicense "Permissions & Disclosure" is the lib/pkp msgstr, shared by all three apps ·
+<sup>v7</sup> workflowConfigEditorialOMP.js getHeaderItems() (WorkflowWorkTypeOMP pushed unconditionally after Library; no WorkflowPaymentDropdown, no submissionPaymentsEnabled branch); the control's on-screen label/behavior is probe-pending ·
+<sup>v8</sup> useWorkflowNavigationConfigOMP.js getInitialSelectionItemKey() (internal OR external stage → workflow_{stageId}_{currentRound}; other branches identical to OJS) ·
+<sup>v9</sup> omp-main pages/workflow/WorkflowHandler.php addRoleAssignment(..., ['access','index','submission','internalReview','externalReview','editorial','production']) + internalReview() → _redirectToIndex(); redirect chain and stage-drop are the shared PKPWorkflowHandler ops ·
+<sup>v10</sup> ops-main schemas/submission.json stageId (default 5, validation min:5 max:5 — every preprint is Production-stage from creation); ops-main classes/core/Application.php getApplicationStages() = [WORKFLOW_STAGE_ID_PRODUCTION]; useSubmission.js getExtendedStage() branches for stages 1/3/4 therefore unreachable; Incomplete still reachable via submissionProgress; WorkflowSubmissionStatus.vue boxes other than the published one require a non-current or unreached stage, which cannot arise with one always-current stage ·
+<sup>v11</sup> useWorkflowNavigationConfigOPS.js getWorkflowItems() (single production item, no getReviewItems import); WorkflowPageOPS.vue setExpandedKeys(['workflow','publication']) ·
+<sup>v12</sup> useWorkflowNavigationConfigOPS.js getPublicationItemsEditorial() (no jats item; canAccessProduction → galleys, media, license, preprintEntry); ops locale preprint.entry msgstr "Preprint entry" (lowercase e) ·
+<sup>v13</sup> workflowConfigEditorialOPS.js getHeaderItems() — same stage+status gate as OJS (stageId EDITING or PRODUCTION, common.preview → common.view when STATUS_PUBLISHED), but an OPS submission's stageId is constantly PRODUCTION, so the gate is always open pre-publication ·
+<sup>v14</sup> useWorkflowNavigationConfigOPS.js getInitialSelectionItemKey() (no review branch; PRODUCTION + status ≠ QUEUED → publication_{latest}_titleAbstract; DONE branch as OJS; the extra MY_SUBMISSIONS always-publication branch is the author-dashboard delta's to document) ·
+<sup>v15</sup> ops-main pages/workflow/WorkflowHandler.php still registers the submission/externalReview/editorial ops, but WorkflowStageAccessPolicy composes WorkflowStageRequiredPolicy, whose effect() denies any stageId outside Application::getApplicationStages() — stages 1, 3, 4 are invalid in OPS, so denial precedes any redirect for every user; which denial page/message renders is probe-pending — pilot-1 probe list ·
+<sup>v16</sup> useWorkflowNavigationConfigOPS.js getMenuItems() (workflow group pushed only when dashboardPage is EDITORIAL_DASHBOARD; MY_SUBMISSIONS gets the publication group alone) ·
+<sup>v17</sup> lib/pkp classes/submission/Repository.php getStatusByPublications() — the version-of-record-only Scheduled/Published computation is base-class code shared by all three apps; only OJS ties scheduling to issue assignment (its publish flow), OMP/OPS schedule without issues — the scheduling trigger per app is owned by the respective publishing feature and is probe-pending
+
 ---
 
 <!-- REFERENCE MATERIAL — provenance and campaign bookkeeping, not product-owner
@@ -381,6 +493,7 @@ selection recorded in the page address (rule 10).
 | Legacy stage landing | `{journal}/workflow/index/{submissionId}/{stageId}` → 302 same destination (stage dropped) | PAGE-workflow-index |
 | Legacy stage-named addresses | `{journal}/workflow/submission/{id}` | PAGE-workflow-submission |
 | | `{journal}/workflow/externalReview/{id}` | PAGE-workflow-externalreview |
+| | `{journal}/workflow/internalReview/{id}` — OMP only (App variations); same chain | — (no OJS atom; OMP atlas pending) |
 | | `{journal}/workflow/editorial/{id}` | PAGE-workflow-editorial |
 | | `{journal}/workflow/production/{id}` — each → 302 `workflow/index/{id}/{stageId}` → 302 dashboard | PAGE-workflow-production |
 | Stage-access authorization | WorkflowStageAccessPolicy (composite used by the legacy ops and every stage-scoped handler/API) | AUTHZ-workflow-stage-access-policy |

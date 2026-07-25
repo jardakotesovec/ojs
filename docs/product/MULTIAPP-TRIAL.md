@@ -84,6 +84,10 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 5: Pilot-1 author attempt 1 flag-killed BEFORE any edit
+  (born-dead on a dense brief — the pointer-brief rule confirmed again);
+  respawn 1 of max 2 launched with a lean pointer brief. Spec file verified
+  untouched before respawn.
 - 2026-07-26 — iter 4: G5 done (lint extensions in; corpus re-verified 13/13
   clean). Pilot 1 SPEC-delta author (fable) launched in parallel with the
   running G2 — the draft needs only G5; its probe list waits for G2 servers.
