@@ -2,8 +2,9 @@
 
 Atoms that don't obviously belong to a feature land here instead of being force-fit
 (charter invariant). Each entry: atom ID, why it didn't fit, date parked. Grooming
-passes (every ~3 waves) cluster this list; an entry leaves the pile by being claimed
-by a spec or marked out-of-scope in its sweep file with a reason.
+passes cluster this list — maintainer-scheduled, tracked as a `QUEUE.md` item
+(none has run yet); an entry leaves the pile by being claimed by a spec or marked
+out-of-scope in its sweep file with a reason.
 
 | Atom | Why parked | Parked | Resolved |
 |------|-----------|--------|----------|

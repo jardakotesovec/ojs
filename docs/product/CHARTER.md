@@ -23,6 +23,11 @@ parked: OMP/OPS-specific surfaces OJS never exposes (monographs, chapters, publi
 formats, the catalog, `NOTIFICATION_TYPE_BOOK_*`, `*_INTERNAL` review-stage decisions,
 OMP/OPS-only Vue managers unwired in `WorkflowPageOJS`).
 
+A multi-app extension (OMP + OPS) is under **trial** — mechanisms and pilot scope in
+`MULTIAPP-PLAN.md` (trial approved 2026-07-25). Until the maintainer adopts it
+campaign-wide, the OJS-only scope above stands unchanged; adoption would amend this
+section.
+
 **Format: Markdown, not HTML.** Specs are reviewed raw and in diffs; inline HTML only
 where a structure needs it (`<br>` in cells, `<sup>` footnotes, rare `<details>`).
 
@@ -72,7 +77,7 @@ demonstrably missed features):
   hand-crafting an API call is "API-only", never a normal user capability.
 - **Business language, one statement per fact**: the spec body reads as a functional
   spec for PO/QA; every code symbol, probe result and seeded account lives in `<sup>`
-  footnotes and the Reference blocks. The four non-negotiable style rules, the anchor
+  footnotes and the Reference blocks. The non-negotiable style rules, the anchor
   format (stable symbols, never line numbers) and the mechanical lint gate are defined
   in `TEMPLATE.md` — the single home for spec style.
 
@@ -80,7 +85,9 @@ demonstrably missed features):
 
 Committed home for the rulings from the Opus 5 eval review. A queued re-scope +
 encoding session (see `QUEUE.md`) integrates them fully into TEMPLATE and sweeps
-the existing corpus; until then they bind as written:
+the existing corpus; until then they bind as written. Once that session lands,
+this section shrinks to the invariant statements plus pointers into TEMPLATE —
+style detail must not stay double-homed here:
 
 - **Variance-based ownership**: behavior that is invariant across contexts is
   specified ONCE, in the mechanism's home feature; context features own the
@@ -105,7 +112,8 @@ the existing corpus; until then they bind as written:
   features, and never frame the author's access as its own reduced screen.
   The author's entry route (View on My Submissions) belongs to
   `author-dashboard`; everything after it belongs to the workflow features.
-- **Glossary**: a living `docs/product/GLOSSARY.md` keeps PO/QA language
+- **Glossary**: a living `docs/product/GLOSSARY.md` (seeded by the queued
+  encoding session — `QUEUE.md`) keeps PO/QA language
   consistent — on-screen names always win; a term may be coined only when the
   screen offers none; every coined term has ONE definition home (the glossary)
   and first use per spec carries a gloss or pointer. Applies to test naming too.
@@ -114,17 +122,19 @@ the existing corpus; until then they bind as written:
 
 - **Per spec**: the operational checklist is `RUNBOOK.md`'s Definition of done
   (single home).
-- **Campaign**: unclaimed atom count = 0 (claimed / parked-with-reason /
-  out-of-scope-with-reason); every PROGRESS row `done` or `parked`.
-- "Recreatable from the spec" sets the altitude; the two lines above are the
+- **Campaign** (single home — RUNBOOK points here): unclaimed atom count = 0
+  (claimed / parked-with-reason / out-of-scope-with-reason); every PROGRESS row
+  `done` or `parked` (row states defined in `PROGRESS.md`'s header); full suite
+  within RUNBOOK's Budget & ceilings (≤ 700 tests, ≤ 25 min on a fresh DB);
+  parked list + accumulated ledger findings reported to the maintainer.
+- "Recreatable from the spec" sets the altitude; the lines above are the
   checkable bar.
 
 ## Operating rules
 
 - State lives in these files, not in conversation — any session resumes from disk.
-- Docs-only commits per wave: the campaign touches no application code; new bug
-  findings go to the `docs/e2e/app-changes.md` ledger.
-- **Live-probe etiquette**: scratch journals via the scenario endpoints for anything
-  mutating; `publicknowledge` and the seeded users are read-only; never `clearAll()`
-  Mailpit; test key `X-Test-Key: playwright-test-key` against servers on ports 8000+
-  (env facts in `.claude/skills/ojs-playwright-tests/`).
+- No application-code changes: the campaign commits specs, docs and tests only;
+  new bug findings go to the `docs/e2e/app-changes.md` ledger.
+- **Live-probe etiquette** (invariant): probes never mutate shared seeded state.
+  The operational rules live in RUNBOOK's "Ops & environment safeguards" and the
+  `ojs-playwright-tests` skill.

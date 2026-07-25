@@ -35,7 +35,9 @@ here when done. Area 2 (row 13 onward) resumes after items 1–2.
    "needs no assignment" baseline contradiction); survey other
    specs' tracking-view mentions; check author-dashboard's 6 tests for any
    that now belong to workflow features. Then trim the PROGRESS banner's
-   maintenance note.
+   maintenance note AND shrink CHARTER's "Standing maintainer rulings" section
+   to invariant statements + pointers into TEMPLATE (per that section's own
+   sunset clause).
 3. **Optional salvage** (during test grooming, not a bulk import): POM helper
    patterns (`arm-b-pom-extensions.diff`) and exact-set assertion style, from
    `.reports/opus-eval-analysis/inputs/`.
@@ -47,3 +49,8 @@ here when done. Area 2 (row 13 onward) resumes after items 1–2.
 5. Housekeeping: `.reports/reviewer-response-*` files await deletion after
    maintainer sampling; whether the eval's deep review counts as the wave
    sampling is the maintainer's call (counter stands at 6).
+6. **UNASSIGNED grooming pass (unscheduled — maintainer to slot, e.g. at a
+   sampling review):** the pile holds 4 parked atoms whose rows say "adopt at
+   grooming" plus the dead-code candidate list; cluster them and route each
+   (claim into a spec / mark out-of-scope in its sweep file). `UNASSIGNED.md`'s
+   header points here.

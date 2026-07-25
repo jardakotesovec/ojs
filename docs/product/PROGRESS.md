@@ -6,6 +6,12 @@ detailed findings belong in the spec itself (Known deviations / Open questions) 
 Style rules live in `TEMPLATE.md`; test rules in `docs/e2e/PRINCIPLES.md`; ops
 lessons in `RUNBOOK.md` — do not accrete any of those here.
 
+**Row states**: Spec `pending → in_progress → verified`; Tests `pending →
+green(x2)`. A feature is **done** — the term the Definitions of done use — when
+its spec is `verified`, its tests are `green(x2)`, and the work is committed
+(RUNBOOK Definition of done). `parked` = 3 failed attempts, reason in the Note
+(RUNBOOK Ops).
+
 **RESET 2026-07-10 (maintainer decision):** the round-2 build produced 67 specs +
 467 tests, but a silent model fallback meant most were authored by a weaker model
 than intended, and a style audit showed heavy technical leakage into PO/QA-facing
@@ -24,9 +30,10 @@ features between maintainer samplings. **Current maintainer directive (updated 2
 (rows 6–22, skipping already-done rows 11 and 19) in table order, ONE FEATURE
 PER FRESH SESSION — a permanent preference now, not just flip mitigation; no
 multi-feature /loop. Each session builds or resumes exactly ONE feature through
-commit, then STOPS. Model roles split 2026-07-25 (RUNBOOK Model discipline;
-supersedes the 2026-07-21 all-fable policy): Fable authors specs and runs
-verification, Opus 5 runs probes and writes tests; Fable flip rules unchanged.
+commit, then STOPS. Model roles (revised 2026-07-25, RUNBOOK Model
+discipline is the home): FABLE WRITES (specs + docs), OPUS 5 INVESTIGATES
+(probes, verification, tests); findings cross to Fable only as neutral change
+lists; Fable flip rules unchanged.
 Wave rule unchanged: at 7 features since last sampling, stop for
 sampling review instead.**
 Wave counter: 6 features since last sampling (editorial-dashboards +

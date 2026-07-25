@@ -12,15 +12,22 @@ anything. The modes:
   zero maintainer input mid-run).
 - **AUTONOMOUS WAVES**: see the "Autonomous waves" section below.
 
-## What to read, when (do NOT read everything up front)
+## What to read, when
 
-- **Every iteration**: this file + `PROGRESS.md` + the target feature's row in
-  `FEATURE-MAP.md` (its atom list) — nothing else until you need it.
+- **The floor, every iteration**: this file + `PROGRESS.md` + the target
+  feature's row in `FEATURE-MAP.md` (its atom list).
 - **When authoring the spec**: `TEMPLATE.md` (the style rules + structure) and
   the exemplar `specs/tasks-discussions.md`; the feature's atoms in `atlas/*.md`.
 - **When authoring tests**: `docs/e2e/PRINCIPLES.md` + the `ojs-playwright-tests`
   skill (env facts, seeded users, POMs, scenario endpoints).
 - **Background contract (once per session is plenty)**: `CHARTER.md`.
+- **Beyond the floor, read whatever helps** (maintainer, 2026-07-25): the list
+  above is a minimum path, not a ceiling. Opus-pinned agents may read broadly —
+  neighboring specs, old reports, code, atlas sweeps — with no flip risk.
+  Fable agents may read broadly too, with ONE ordering rule kept: draft prose
+  BEFORE accumulating probe/verification narrative (Model discipline). The
+  orchestrator stays lean not to save tokens but to keep detail in subagent
+  contexts where it belongs.
 
 ## Resuming a feature mid-flight (fresh/empty session)
 
@@ -51,8 +58,8 @@ genuinely undecidable from the files, re-run that stage.
 
 **Orchestration shape**: the heavy authoring is DELEGATED — the spec author, the test
 author, each probe agent and each verifier are separate subagents — model per role is
-set in Model discipline (Fable for spec work and verification, Opus 5 for probes and
-test writing). The orchestrating session briefs them (each brief points at TEMPLATE /
+set in Model discipline (Fable writes specs and docs; Opus 5 runs probes,
+verification, and test writing). The orchestrating session briefs them (each brief points at TEMPLATE /
 PRINCIPLES — never paraphrases the rules), judges results, and is the ONLY writer of
 PROGRESS rows, atlas `Claimed by:` markers, and ledger rows (single-writer
 discipline). EVERY subagent brief — authors and verifiers alike — carries this line
@@ -84,7 +91,8 @@ ledger row itself because its brief omitted this.)
 3. **Lint gate** — `docs/product/lint-spec.sh specs/<feature>.md` must pass with
    ZERO findings before anything else proceeds. It catches code symbols, routes,
    HTTP codes, probe evidence, and seeded usernames leaking into PO/QA-facing body
-   text (TEMPLATE rules 1 & 4).
+   text (TEMPLATE rules 1 & 4), plus the deviation-phrasing term-density ceiling
+   (rule 5).
 4. **Live-verify every affordance claim.** Any statement about what a UI control
    *does* — "button X appears / is enabled / says Y / is absent, in state Z for role
    R" — is the error class code-reading gets WRONG: the handler can't show you the
@@ -105,8 +113,10 @@ ledger row itself because its brief omitted this.)
    ledger the finding if it's a real app bug). Never edit a test to pass a claim the
    app disproves.
 7. **Adversarial verify** — a separate pass that attempts to refute the permission
-   and state rules and attacks liveness ("reachable by any user today?"). Resolve
-   findings or record them as Open questions.
+   and state rules and attacks liveness ("reachable by any user today?"). Run as
+   chunked Opus subagents; the Opus merge agent returns a neutral change list and
+   a Fable agent folds accepted findings into the spec (Model discipline).
+   Resolve findings or record them as Open questions.
 8. **Readability verify** — a SEPARATE subagent (never the spec's author) in a strict
    persona: a QA/PO person with NO access to the code or test environment reads ONLY
    the body sections (everything above `## Reference`, minus footnotes) and must
@@ -155,27 +165,32 @@ cadence, not a batch:
 
 ## Model discipline (subagents & fallback)
 
-- **Model assignment by role (maintainer, 2026-07-25, from the Opus 5 eval —
-  full record in git history: OPUS5-EVAL-PLAN.md @ 88b9e02d8d, removed after
-  the eval closed): SPEC WORK stays on Fable —
-  spec-author, spec-finalizer, readability-verifier/-fix, verification chunks,
-  merge/arbitration agents are pinned `model: fable`. PROBES and TEST WRITING
-  run on Opus 5 — all probe agents, the test-author (and the scaffold /
-  micro-authors / harmonizer when the split protocol runs), and test-fix
-  agents are pinned `model: opus`. Opus agents have no safeguard-flip
-  behavior: their log-model-mix rows read `all-opus` — annotate `(pinned)` so
-  per-class flip rates stay meaningful. Everything below about flips applies
-  to the FABLE-PINNED classes only. The draft-before-probe structure, pointer
-  briefs, and chunked verification stay unchanged for every class.**
-- **Fable flip policy (maintainer, revised 2026-07-21; applies to the
-  fable-pinned classes above).** A mid-run downgrade to Opus is handled BY
-  CLASS: AUTHORING agents that flip finish and are LOGGED, but their output is
-  DISCARDED and the chunk respawned fresh (max 2 respawns; then park the
-  feature and report). VERIFICATION agents that flip continue and their output
-  is KEPT (merged and cross-checked downstream, so a flipped verifier is low
-  risk). Chunk authoring small — respawns are cheap, and prose is drafted
-  BEFORE probe context accumulates ("Authors draft" below). (Rationale + the
-  2026-07-16/21 evidence: git history, this bullet.)
+- **Model assignment by role (maintainer, revised 2026-07-25): FABLE WRITES,
+  OPUS 5 INVESTIGATES.**
+  - **Fable-pinned** (`model: fable`): the spec author, spec-finalizer,
+    readability-verifier/-fix, and any agent that writes or edits specs or
+    campaign docs. The MAIN (orchestrating) session is always Fable.
+  - **Opus-pinned** (`model: opus`): every probe agent, the test author and
+    test-fix agents, ALL step-7 verification chunks, and the
+    verification-merge / arbitration agents. Opus is better tuned against
+    false safeguard flags, so investigative work — probing, adversarial
+    verification, test writing — runs on it end to end. Its log rows read
+    `all-opus`: annotate `(pinned)`.
+  - **The language boundary at the Fable seam**: findings flow ONE way. Opus
+    agents write full detail to `.reports/` files, read only by other Opus
+    agents; whatever crosses INTO a Fable context — the merge agent's change
+    list, probe fact sheets, orchestrator-bound returns, spawn briefs — is a
+    NEUTRAL, actionable summary in the outcome voice of TEMPLATE rule 5
+    ("rule 4: expected X, observed Y — see report / ledger row N"), never
+    attack narrative. Everything below about flips applies to the
+    Fable-pinned classes only.
+- **Fable flip policy (revised 2026-07-25 — every Fable-pinned agent is now a
+  writing agent).** An agent that downgrades to Opus mid-run finishes and is
+  LOGGED, but its output is DISCARDED and the agent respawned fresh (max 2
+  respawns; then park the feature and report). Keep writing chunks small —
+  respawns are cheap, and prose is drafted BEFORE probe context accumulates
+  ("Authors draft" below). (Rationale + the 2026-07-16/21 evidence: git
+  history, this bullet.)
 - **Split test-authoring protocol — DORMANT** while the test author is
   Opus-pinned (its trigger is a Fable flip). If test authoring ever returns to
   Fable, restore the full protocol from git history (RUNBOOK @ 88b9e02d8d:
@@ -210,55 +225,33 @@ cadence, not a batch:
   footnotes. The ORCHESTRATOR never accumulates a probe battery in its own
   context.
 - **Delegate verification CHUNKED, not monolithic**: split step 7 into 4–6
-  single-purpose subagents, each a fresh context with a tight brief and ~5–15 tool
-  calls — (a) permission re-derivation from code only, (b) live positive controls,
-  (c) live denial probes, (d) state-machine edge seeds, (e) one ⚠-deviation
-  reproduction each, (f) atlas coverage grep. Each returns a small structured
-  verdict; the orchestrator merges. Chunks that downgrade mid-run finish and
-  count — record the flip, don't re-run.
-- **Chunk briefs are POINTERS, never payloads** (2026-07-16: two main-session
-  flag-pauses fired ON the Agent calls composing the denial/arbitration briefs —
-  enumerating deny matrices and "adversarially refute" instructions in a spawn
-  prompt is what trips the classifier, whichever side generates or reads it;
-  it is also why denial chunks twice started life all-Opus). The spawn prompt
-  for a verification chunk contains ONLY: the feature name, the chunk letter,
-  the spec path, the report-file path, and "follow the chunk instructions in
-  RUNBOOK step 7" — the full instructions live HERE, written once: each chunk
-  reads the spec section it owns (permissions table for (a)/(c), Rules & state
-  for (d), Known deviations for (e)), checks every row it finds there against
-  code or the live app per its letter, bounds negatives with positive controls,
-  writes findings to its report file, and returns a ≤10-line verdict. For
-  arbitration chunks: name the two report files in conflict and the rule number
-  — never restate the conflicting behaviors in the prompt. Agent `description`
-  fields stay neutral ("check spec table (c) live"), not adversarial.
-  The SAME pointer rule binds two spots that have slipped (2026-07-24 flag
-  forensics — both contributed to a double main-session kill): (i) AD-HOC
-  probes spawned mid-loop — brief = report file + section + "reproduce the
-  finding there", NEVER a restatement of the scenario (an 835-char brief
-  restating a delete-bypass scenario produced a born-flipped probe at msg 5);
-  (ii) the VERIFICATION-MERGE brief is a pointer too — the report-file paths
-  plus "follow RUNBOOK step 7 merge duties", nothing else; the merge agent
-  reads the findings, the orchestrator must not re-narrate them while
-  composing the brief. And after a flag-kill, do NOT recompose the same dense
-  turn on resume — END the session and let a FRESH one run the remaining
-  gates (resume-from-files is designed for exactly this; the 07-24 second
-  kill was the same turn re-attempted in the same context).
-- **Keep findings OUT of the orchestrator's context — reports go to files**
-  (2026-07-14, after the Area-1 run's main session was flag-paused 3×; term-density
-  analysis showed each flag followed accumulated permission-testing narrative —
-  denial verdicts, bypass descriptions — mostly while composing reports).
-  Every probe/verification brief instructs the agent to WRITE its full findings to
-  `docs/product/.reports/<feature>-<label>.md` (gitignored, kept across sessions
-  for mid-flight resume; delete the feature's files after its commit) and RETURN
-  at most ~10 lines: verdict + file pointer + anything the orchestrator must act
-  on. The verification-merge / spec-finalizer agents READ those files — the
-  orchestrator never holds the detail. In PROGRESS notes and commit messages the
-  orchestrator cites ledger rows and Open questions by number. RELAXED
-  2026-07-21 (flag-pauses have subsided — safeguards more accurate now): the
-  final MAINTAINER REPORT may describe findings in plain language again;
-  readability for the maintainer beats term-density caution there. If
-  main-session flag-pauses return, re-tighten this first. Volume remains the
-  lever — vocabulary substitution is proven useless.
+  single-purpose Opus subagents, each a fresh context with a tight brief
+  (feature, chunk letter, spec path, report-file path, "follow the chunk
+  instructions in RUNBOOK Model discipline") and ~5–15 tool calls. The
+  instructions, written once: (a) permission re-derivation from code only,
+  (b) live positive controls, (c) live denial probes, (d) state-machine edge
+  seeds, (e) one ⚠-deviation reproduction each, (f) atlas coverage grep —
+  each chunk reads the spec section it owns (permissions table for (a)/(c),
+  Rules & state for (d), Known deviations for (e)), checks every row it finds
+  there against code or the live app per its letter, and bounds negatives with
+  positive controls. Each writes to its report file and returns its verdict;
+  the Opus MERGE agent reads the reports and hands the Fable finalizer a
+  neutral change list (the language boundary in the assignment bullet).
+- **Orchestrator protection (simplified 2026-07-25): subagents return neutral
+  spec feedback; detail stays in files.** Every probe/verification agent
+  writes its full findings to `docs/product/.reports/<feature>-<label>.md`
+  (gitignored; kept across sessions for mid-flight resume, deleted after the
+  feature's commit) and returns to the orchestrator only what was missed or
+  needs considering — spec/test feedback in the rule-5 outcome voice. That
+  neutral-return discipline IS the protection. Keep spawn briefs
+  matter-of-fact pointers (as in the chunk bullet) rather than restated
+  attack scenarios — dense adversarial briefs were the historical
+  main-session kill vector (2026-07-14/16/24 forensics; the stricter
+  machinery lives in git history — re-tighten from there if main-session
+  flags ever return). The final MAINTAINER REPORT may describe findings in
+  plain language. If the main session is flag-killed anyway: END the session
+  and let a FRESH one resume the remaining gates from files — never recompose
+  the same turn.
 - **The orchestrator NEVER completes probe or verification work inline.** (The
   earlier "bounded inline exception" is REVOKED, 2026-07-10: it walked the
   dress-rehearsal orchestrator into running the probe battery itself, the main
@@ -276,6 +269,11 @@ cadence, not a batch:
 
 ## Ops & environment safeguards
 
+- **Live-probe etiquette** (the CHARTER invariant, operationalized): scratch
+  journals via the scenario endpoints for anything mutating; `publicknowledge` and
+  the seeded users are read-only; never `clearAll()` Mailpit; test key
+  `X-Test-Key: playwright-test-key` against servers on ports 8000+ (env facts in
+  `.claude/skills/ojs-playwright-tests/`).
 - **DB hygiene**: reset (`npm run test:e2e:reset`) before any full-suite timing run
   and every ~8–10 features (long-lived DBs accumulate drafts whose worker tokens
   collide — ledger §3). Never delete `config.test.inc.php` alone. The test DB is
@@ -303,5 +301,5 @@ cadence, not a batch:
   atom on the feature's screens covered / verifiably delegated / waived
   (features built after 2026-07-25); scenario tests green twice; PROGRESS
   row updated (one-line note); committed; **maintainer sign-off (calibration mode)**.
-- **Campaign**: every feature `done` or `parked`; full suite ≤ 700 tests, ≤ 25 min on
-  a fresh DB; parked list + accumulated ledger findings reported.
+- **Campaign**: the campaign-level bar lives in `CHARTER.md`'s Definition of done
+  (single home).
