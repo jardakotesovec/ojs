@@ -34,8 +34,8 @@ work).
 
 | Unit | Status | Note |
 |------|--------|------|
-| G1 submodule alignment (omp+ops boot on campaign lib/pkp) | in_progress | expect abstract-method/plugin drift; RUNBOOK "Plugin-submodule alignment" lore |
-| G2 servers + test DBs (3 fleets side-by-side) | pending | config-factory base-port param 8000/8100/8200 |
+| G1 submodule alignment (omp+ops boot on campaign lib/pkp) | done | PASSED both apps (login 200, dashboards render, 0 console errors); commits omp `85da7e7eb0` / ops `d87f740243` on local `e2e_revamp_fable_2`; lib/pkp branch pushed to fork; report `.reports/multiapp-trial-g1.md` |
+| G2 servers + test DBs (3 fleets side-by-side) | in_progress | config-factory base-port param 8000/8100/8200; MUST first: align+build lib/ui-library in omp/ops (push ojs's branch to fork), kill G1's throwaway servers (PIDs 78111/81077); create omp_test/ops_test (existing omp_main_test* DBs are off-limits) |
 | G3 scenario API port (createContext+createSubmission on all 3; OMP internal round seeds) | pending | journal→context alias; section/issue/galleys as app overlays; reviewRounds internal/external key; IssueProcessor out of shared path |
 | G4 app playwright trees (smoke spec green on OMP+OPS) | pending | config, app.context.js capability map, bootstrap seeds per role subset |
 | G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | in_progress | glossary draft first (fable); lint extension follows; lint must pass on existing specs unchanged |
@@ -84,6 +84,13 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 3: G1 PASSED both apps, no fatals (the expected plugin
+  drift didn't materialise; one stale-cache warning fixed). G2 launched with
+  G1's handoff (ui-library alignment, server cleanup, test DBs). Bookkeeping
+  caveat: background-agent transcripts don't all land in `subagents/`, so
+  model-mix rows for some trial agents can't be logged — glossary agent
+  verified fable-clean; G1's served model unverifiable from disk (its work is
+  investigation-class; provenance there is recording, not a gate).
 - 2026-07-25 — iter 2: G5 glossary landed fable-clean (26 terms, 9 capability
   names, 4 open questions in its report — capability spellings now canonical,
   G4 must adopt them); lint-extension agent (opus) launched; maintainer widened
