@@ -38,7 +38,7 @@ work).
 | G2 servers + test DBs (3 fleets side-by-side) | in_progress | config-factory base-port param 8000/8100/8200; MUST first: align+build lib/ui-library in omp/ops (push ojs's branch to fork), kill G1's throwaway servers (PIDs 78111/81077); create omp_test/ops_test (existing omp_main_test* DBs are off-limits) |
 | G3 scenario API port (createContext+createSubmission on all 3; OMP internal round seeds) | pending | journal→context alias; section/issue/galleys as app overlays; reviewRounds internal/external key; IssueProcessor out of shared path |
 | G4 app playwright trees (smoke spec green on OMP+OPS) | pending | config, app.context.js capability map, bootstrap seeds per role subset |
-| G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | in_progress | glossary draft first (fable); lint extension follows; lint must pass on existing specs unchanged |
+| G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | done | glossary committed dd001eba4a; lint: badge syntax `{OJS OMP}` (canonical order, no all-three badge), variation-stub match, glossary-driven forbidden terms; 13/13 specs clean (orchestrator re-verified); bonus fix: vacuous-path bug in lint gate; OQ for maintainer: glossary `Translator` row vs the real OJS Translator user group |
 | Pilot 1: `workflow-stage-navigation` OMP+OPS delta | pending | delta loop per PLAN §4; spec mechanisms §2; stage-topology axis (OMP 5 stages / OPS 1) |
 | Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | pending | after Pilot 1; OMP parity declaration + internal-stage test subset; OPS absence gate `n/a(no review)` with live absence probe |
 | Learnings report + plan amendments | pending | → `.reports/multiapp-trial-learnings.md`, then fold proposals into MULTIAPP-PLAN §9 |
@@ -84,6 +84,9 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 4: G5 done (lint extensions in; corpus re-verified 13/13
+  clean). Pilot 1 SPEC-delta author (fable) launched in parallel with the
+  running G2 — the draft needs only G5; its probe list waits for G2 servers.
 - 2026-07-26 — iter 3: G1 PASSED both apps, no fatals (the expected plugin
   drift didn't materialise; one stale-cache warning fixed). G2 launched with
   G1's handoff (ui-library alignment, server cleanup, test DBs). Bookkeeping
