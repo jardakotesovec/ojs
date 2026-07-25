@@ -10,7 +10,9 @@ Sessions run under the normal RUNBOOK contract, one per session, in order; they
 do not count toward the wave counter and claim no PROGRESS row — strike the item
 here when done. Area 2 (row 13 onward) resumes after items 1–2.
 
-1. **send-to-review maintenance loop** (one session): add Delete-submission
+1. ~~**send-to-review maintenance loop**~~ **DONE 2026-07-26** (spec+tests+
+   ledger 258–261+atlas committed; former OQ3 resolved as ledger row 259).
+   Original brief, for the record: add Delete-submission
    coverage (eval decision 3; `arm-b-spec.md` rules 9/s4 + probe matrix in
    `.reports/opus-eval-analysis/inputs/` as reference — Fable re-authors, Opus
    probes re-verify live); fix the Site-Admin inversion, the Edit-a-file
@@ -19,7 +21,10 @@ here when done. Area 2 (row 13 onward) resumes after items 1–2.
    in the same rows as the editorial roles, role determines availability, and
    no "separate reduced tracking view" framing survives anywhere in the spec; reconcile ledger row 257 vs the spec's rule-5/OQ classification
    of the same behavior; tier M·7 → check if an 8th test fits budget.
-2. **Re-scope + encoding session** (one session): integrate the CHARTER
+2. **Re-scope + encoding session** (one session): GLOSSARY seed input — the
+   real reader-stumble term list in
+   `.reports/send-to-review-maint-readability.md` (kept past commit for this
+   purpose). Integrate the CHARTER
    standing rulings into TEMPLATE (variance-based ownership + the manager/stage
    and author-dressing special cases, with the test-budget corollary and the
    walkability counterweight: context scenarios may inline the MINIMAL

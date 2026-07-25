@@ -53,7 +53,7 @@ the item in QUEUE.md when done. Area 2 (row 13 onward) resumes after both.**
 ## Totals
 
 - Features: **1 reference · 12 verified · 78 pending** (of 91 buildable; row 39 folded into `article-landing`)
-- Tests: **102 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9 + send-to-review 7 + reviewer-response 12) · last full-suite timing: n/a since reset
+- Tests: **103 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9 + send-to-review 8 + reviewer-response 12) · last full-suite timing: n/a since reset
 - Budget allocation ≈ 639, headroom ~61 (tiers + the ±1–2 rule: RUNBOOK Budget & ceilings; maintainer-rebalanced 2026-07-02)
 
 ## Features
@@ -69,7 +69,7 @@ the item in QUEUE.md when done. Area 2 (row 13 onward) resumes after both.**
 | 7 | Area 2 — Editorial workflow & peer review | `workflow-stage-navigation` | M·6 | verified | green(x2) | wave 6: 6 tests (lib/pkp) + new WorkflowShellPage POM, 12 atoms, ledger rows 211–213 + 211 addendum (headline: manager-as-reviewer UI/server split 211, selectable parent Review entry bug 213); all 4 verify chunks PASS; all 13 subagents fable-clean; pointer-brief protocol applied |
 | 8 | Area 2 — Editorial workflow & peer review | `editorial-decisions` | H·13 | verified | green(x2) | wave 7 rebuild (2026-07-21): 13 tests (lib/pkp) + new DecisionWizardPage POM, 43 atoms, ledger rows 220–228 (rows 214–219 + row-10 re-reproduced, untouched); ALL subagents fable-clean incl. authoring (rebuild directive satisfied, zero respawns); 4 atlas Hint fixes applied |
 | 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | verified | green(x2) | tests-only rebuild (2026-07-22): EXPERIMENT POSITIVE — monolithic test-author fable-clean (276 msgs, zero flips) on the rule-5-swept spec vs 2 flips on unswept wave-8 wording; 9 tests, rubric 4.5/5 (= split-protocol clean score); no new ledger rows (229–234 stand); s1 toast-race flake fixed (expectToast); spec quote-case fix ("Awaiting Copyedits.") |
-| 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | verified | green(x2) | wave 8 (2026-07-24, finished by fresh session after double flag-kill — gates resumed from files): 7 tests, chunks a–f PASS, ledger 220/234 amended + 235–236 filed, OQ4 added, readability s5 status-note fix; 3 verify/probe flips (kept per policy); infra: `workflow-controls-right` data-cy hook gone from DOM (POM + skill app-map cite it) |
+| 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | verified | green(x2) | wave 8 (2026-07-24) + maintenance 2026-07-26 (QUEUE 1): 8 tests green(x2), Delete atom claimed (affordance gate's first exercise — 16 atoms marked), one-shared-screen rewrite, ledger 254 widened + 258–261 filed, former OQ3 resolved; all 14 agents clean under the model-role split |
 | 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | verified | green(x2) | calibration f1: 13 tests, 33 atoms, 5 proposed ledger rows; maintainer signed off 2026-07-10 (scenario rewording applied) |
 | 12 | Area 2 — Editorial workflow & peer review | `reviewer-response` | H·10 | verified | green(x2) | OPUS5 TRIAL (all 21 subagents pinned opus, all-opus by intent): 12 tests, 25 atoms, ledger 237–250 + 251–253 cross-feature, rows 16/76/77/78 amended (16 re-diagnosed), OQ 1–14; LOW-CONFIDENCE FLAG for the maintainer's trial review — the code-blind readability pass found 8 of 12 scenarios unwalkable as first written (all rewritten), and 3 authored claims needed live probes to overturn |
 | 13 | Area 2 — Editorial workflow & peer review | `review-forms` | M·7 | pending | pending | |
@@ -398,3 +398,17 @@ file** (the script appends to end-of-file). Per-class rates:
 | 2026-07-25 | reviewer-response | authoring | atlas-markers-oe | 0 | 66 | 0 | all-opus (pinned) |
 | 2026-07-25 | reviewer-response | authoring | ledger-stamp-oe | 0 | 106 | 0 | all-opus (pinned) |
 | 2026-07-25 | multiapp-trial | authoring | g5-glossary | 28 | 0 | 0 | clean |
+| 2026-07-26 | send-to-review | authoring | spec-author-maint | 71 | 0 | 0 | clean |
+| 2026-07-26 | send-to-review | probe | probe-A-killed-oe | 0 | 5 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | probe | probe-B-killed-oe | 0 | 3 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | probe | probe-A-maint-oe | 0 | 124 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | probe | probe-B-maint-oe | 0 | 172 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | authoring | spec-finalizer-maint | 72 | 0 | 0 | clean |
+| 2026-07-26 | send-to-review | authoring | test-author-maint-oe | 0 | 77 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | verification | verify-chunk-a-maint-oe | 0 | 82 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | verification | verify-chunk-c-maint-oe | 0 | 64 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | verification | verify-chunk-f-maint-oe | 0 | 36 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | verification | verify-merge-maint-oe | 0 | 26 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | authoring | verify-fold-maint | 27 | 0 | 0 | clean |
+| 2026-07-26 | send-to-review | authoring | readability-verifier-maint-oe | 0 | 12 | 0 | all-opus (pinned) |
+| 2026-07-26 | send-to-review | authoring | readability-fix-maint | 60 | 0 | 0 | clean |

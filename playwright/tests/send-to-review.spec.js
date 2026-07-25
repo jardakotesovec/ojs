@@ -11,11 +11,14 @@ const {
 const {
 	FileStagePanel,
 } = require('../../lib/pkp/playwright/pages/FileStagePanel.js');
+const {
+	DashboardPage,
+} = require('../../lib/pkp/playwright/pages/DashboardPage.js');
 
 /**
  * Send to review (the Submission-stage workspace) — one test per
  * canonical scenario of docs/product/specs/send-to-review.md
- * (7 scenarios → 7 tests). The workspace composition is OJS-specific
+ * (8 scenarios → 8 tests). The workspace composition is OJS-specific
  * (workflowConfigEditorialOJS.js: the Desk Review panel heading, the
  * OJS decision roster Send for Review / Accept and Skip Review /
  * Decline Submission, the Schedule For Publication shortcut), and the
@@ -33,6 +36,8 @@ const {
  *   s6 A desk decline leaves the room
  *      standing                             → 's6: desk decline — Declined badge, panels intact, collapsed rail, revert restores'
  *   s7 Who sees what on the first stage     → 's7: role boundary — assistant, author tracking view, unassigned manager'
+ *   s8 Deleting a declined submission
+ *      for good                             → 's8: permanent deletion — Delete prompt, panel closes, submission leaves the lists, address invalid'
  *
  * Facts baked in from the 2026-07-24 probe batches A–D (do not
  * rediscover): row actions are role=menuitem, not buttons; renames are
@@ -80,12 +85,23 @@ const DOCX_BODY_TEXT =
 
 const DELETE_PROMPT =
 	'Are you sure you wish to delete this item? This action cannot be undone.';
+// The submission-level Delete prompt (editor.submissionArchive.confirmDelete)
+// — distinct from the file-level DELETE_PROMPT above.
+const DELETE_SUBMISSION_PROMPT =
+	'Are you sure you want to permanently delete this submission?';
+const INVALID_SUBMISSION_SENTENCE = 'Invalid submission.';
 const FILES_PANEL_DESCRIPTION = 'Files uploaded at the time of submission';
 const DECISION_BUTTONS = [
 	'Send for Review',
 	'Accept and Skip Review',
 	'Decline Submission',
 ];
+// The action rail's EXACT contents, in render order — the Schedule For
+// Publication navigation shortcut sits above the decisions (Known
+// deviations, ledger row 220).
+const ACTIVE_RAIL = ['Schedule For Publication', ...DECISION_BUTTONS];
+const DECLINED_RAIL = ['Schedule For Publication', 'Revert Decline'];
+const DECLINED_RAIL_MANAGER = [...DECLINED_RAIL, 'Delete'];
 
 /** A unique, hyphenless, alphanumeric tag (parallel isolation). */
 function uniqueTag(prefix = 'str') {
@@ -105,7 +121,7 @@ function uniqueTag(prefix = 'str') {
  * Scenario spec for a SUBMITTED stage-1 submission with an AO
  * publication carrying the tag in its title.
  */
-function submittedSpec({tag, title, participants}) {
+function submittedSpec({tag, title, participants, decisions}) {
 	return {
 		tag,
 		journal: JOURNAL,
@@ -114,6 +130,7 @@ function submittedSpec({tag, title, participants}) {
 		locale: 'en',
 		submitted: true,
 		...(participants ? {participants} : {}),
+		...(decisions ? {decisions} : {}),
 		publications: [
 			{
 				versionStage: 'AO',
@@ -125,6 +142,39 @@ function submittedSpec({tag, title, participants}) {
 			},
 		],
 	};
+}
+
+/**
+ * The entry names inside a ZIP buffer, read from its central directory
+ * (EOCD record → entry count + directory offset → walk the records).
+ * No external tool: FileArchive::create() writes flat client filenames
+ * (PKPFileService::formatFilename — the file's displayed name), so the
+ * entry names are exactly what the panel's rows show.
+ *
+ * @param {Buffer} buffer
+ * @returns {string[]}
+ */
+function zipEntryNames(buffer) {
+	const eocd = buffer.lastIndexOf(Buffer.from('PK\x05\x06', 'latin1'));
+	if (eocd < 0) {
+		throw new Error('not a ZIP archive: no end-of-central-directory record');
+	}
+	const count = buffer.readUInt16LE(eocd + 10);
+	let offset = buffer.readUInt32LE(eocd + 16);
+	const names = [];
+	for (let i = 0; i < count; i++) {
+		if (buffer.readUInt32LE(offset) !== 0x02014b50) {
+			throw new Error('corrupt ZIP central directory');
+		}
+		const nameLen = buffer.readUInt16LE(offset + 28);
+		const extraLen = buffer.readUInt16LE(offset + 30);
+		const commentLen = buffer.readUInt16LE(offset + 32);
+		names.push(
+			buffer.subarray(offset + 46, offset + 46 + nameLen).toString('utf8'),
+		);
+		offset += 46 + nameLen + extraLen + commentLen;
+	}
+	return names;
 }
 
 /** A decision button in the workflow shell's action rail. */
@@ -308,14 +358,30 @@ test.describe('Send to review — the Submission-stage workspace', () => {
 		}
 
 		// "Download All Files" (a button styled as a link) delivers the
-		// package as one ZIP archive named <id>--submission-files.zip.
+		// package as one ZIP archive named <id>--submission-files.zip…
+		const listed = (
+			await files.table.getByRole('row').getByRole('link').allTextContents()
+		)
+			.map((text) => text.trim())
+			.filter(Boolean);
+		expect(listed, 'the panel lists the author\'s file').toEqual([SEEDED_FILE]);
+
 		const download = await files.downloadAll();
 		expect(download.suggestedFilename()).toBe(
 			`${submission.id}--submission-files.zip`,
 		);
 		const zipPath = await download.path();
-		const magic = fs.readFileSync(zipPath).subarray(0, 2).toString('latin1');
-		expect(magic, 'the archive is a real ZIP (PK magic)').toBe('PK');
+		const archive = fs.readFileSync(zipPath);
+		expect(
+			archive.subarray(0, 2).toString('latin1'),
+			'the archive is a real ZIP (PK magic)',
+		).toBe('PK');
+		// …"holding the whole package": its entries are exactly the files
+		// the panel lists, under the names it shows.
+		expect(
+			zipEntryNames(archive).sort(),
+			'the archive holds exactly the listed package',
+		).toEqual([...listed].sort());
 	});
 
 	// Canonical scenario 2 — the same Section Editor tidies the package:
@@ -591,10 +657,20 @@ test.describe('Send to review — the Submission-stage workspace', () => {
 		await wizard.recordThrough('Skipped Review');
 		await wizard.viewSummary(submission.id);
 
-		// The submission lands in Copyediting without ever entering review.
+		// The submission lands in Copyediting…
 		await expect(shell.contentHeading('Workflow: Copyediting')).toBeVisible({
 			timeout: 20_000,
 		});
+
+		// …WITHOUT ever entering review: no round was ever opened (no
+		// round entry in the stage menu), and the Review stage itself
+		// still reads as never initiated.
+		await expect(shell.menuItem('Review Round 1')).toHaveCount(0);
+		await shell.clickMenu('Review');
+		await expect(shell.contentHeading('Workflow: Review')).toBeVisible({
+			timeout: 20_000,
+		});
+		await shell.expectStageNotStarted('Review');
 
 		// Reopening the Submission stage: panels under a Status note naming
 		// the stage the submission now sits in.
@@ -666,18 +742,18 @@ test.describe('Send to review — the Submission-stage workspace', () => {
 				.getByRole('heading', {name: 'Desk Review Tasks & Discussions'}),
 		).toBeVisible();
 
-		// The decision column: only Revert Decline, still under the
-		// Schedule For Publication shortcut; no Delete for a Section Editor.
+		// The decision column collapses to Revert Decline as the ONLY
+		// decision offered — asserted as the rail's exact contents, not
+		// as a list of absences — still under the Schedule For
+		// Publication shortcut, and with no Delete for a Section Editor.
 		await expect(railButton(shell, 'Revert Decline')).toBeVisible({
 			timeout: 20_000,
 		});
-		await expect(railButton(shell, 'Schedule For Publication')).toBeVisible();
-		for (const label of DECISION_BUTTONS) {
-			await expect(railButton(shell, label)).toHaveCount(0);
-		}
-		await expect(railButton(shell, 'Delete')).toHaveCount(0);
+		await expect(shell.actionItems().getByRole('button')).toHaveText(
+			DECLINED_RAIL,
+		);
 
-		// A Journal Manager also sees Delete.
+		// A Journal Manager also sees Delete — and nothing else beyond it.
 		const mayaCtx = await asUser('manager.maya');
 		const mayaPage = await mayaCtx.newPage();
 		const mayaShell = new WorkflowShellPage(mayaPage);
@@ -685,16 +761,21 @@ test.describe('Send to review — the Submission-stage workspace', () => {
 		await expect(railButton(mayaShell, 'Revert Decline')).toBeVisible({
 			timeout: 20_000,
 		});
-		await expect(railButton(mayaShell, 'Delete')).toBeVisible();
+		await expect(mayaShell.actionItems().getByRole('button')).toHaveText(
+			DECLINED_RAIL_MANAGER,
+		);
 
-		// Reverting restores the original three exits.
+		// Reverting restores the original three exits — again as the
+		// rail's exact contents, with Revert Decline gone.
 		await openDecision(page, shell, 'Revert Decline');
 		await wizard.recordThrough('Submission Reactivated');
 		await wizard.viewSummary(submission.id);
-		for (const label of DECISION_BUTTONS) {
-			await expect(railButton(shell, label)).toBeVisible({timeout: 20_000});
-		}
-		await expect(railButton(shell, 'Revert Decline')).toHaveCount(0);
+		await expect(railButton(shell, 'Send for Review')).toBeVisible({
+			timeout: 20_000,
+		});
+		await expect(shell.actionItems().getByRole('button')).toHaveText(
+			ACTIVE_RAIL,
+		);
 	});
 
 	// Canonical scenario 7 — on one submission: an unassigned Journal
@@ -830,12 +911,20 @@ test.describe('Send to review — the Submission-stage workspace', () => {
 		await ritaConfirm.getByRole('button', {name: 'OK', exact: true}).click();
 		await expect(ritaFiles.row(scratchName)).toHaveCount(0, {timeout: 20_000});
 
-		// --- The Author's tracking view: same files, Download All Files,
-		//     no Upload, the row menu offering only Update File Details. ---
+		// --- The Author, entering the SAME screen through My Submissions:
+		//     the same Submission-stage workspace, the same files with
+		//     Download All Files, but no Upload, no Delete and no
+		//     decision buttons; each row's menu offers only Update File
+		//     Details (Known deviations). ---
 		const alexCtx = await asUser('author.alex');
 		const alexPage = await alexCtx.newPage();
 		const alexShell = new WorkflowShellPage(alexPage);
 		await alexShell.gotoTracking(submission.id);
+		// One shared screen: the author stands on the same workflow
+		// surface, opened on the Submission stage.
+		await expect(
+			alexShell.contentHeading('Workflow: Submission'),
+		).toBeVisible({timeout: 20_000});
 		const alexFiles = new FileStagePanel(alexPage, 'Submission Files');
 		await alexFiles.expectVisible();
 		await expect(alexFiles.row(wordName)).toBeVisible({timeout: 20_000});
@@ -845,10 +934,127 @@ test.describe('Send to review — the Submission-stage workspace', () => {
 		await expect(
 			alexFiles.root().getByRole('button', {name: 'Upload', exact: true}),
 		).toHaveCount(0);
+		// No decision buttons — for the Author the action column is not
+		// rendered at all (permissions table row j).
+		for (const label of DECISION_BUTTONS) {
+			await expect(railButton(alexShell, label)).toHaveCount(0);
+		}
+		await expect(alexShell.actionItems()).toHaveCount(0);
+		// …and no Delete: the row menu holds a single entry.
 		await alexFiles.openRowMenu(wordName);
 		await expect(alexPage.getByRole('menuitem')).toHaveText([
 			'Update File Details',
 		]);
 		await alexPage.keyboard.press('Escape');
+	});
+
+	// Canonical scenario 8 — on a submission already declined at the desk
+	// (the state scenario 6 ends in), a Journal Manager notes the
+	// submission's web address and presses "Delete" in the action column.
+	// A dialog titled "Delete" asks "Are you sure you want to permanently
+	// delete this submission?" with Confirm and Cancel; on Confirm the
+	// workflow panel closes and the submission is gone from the editorial
+	// lists. Opening the noted address now shows an empty workflow panel
+	// over the message "Invalid submission." (rule 8: permanent and
+	// total, no undo, no archive copy).
+	//
+	// The submission is a THROWAWAY seeded for this test alone (declined
+	// via the scenario API's initialDecline shortcut); a second declined
+	// submission sharing the searchable token rides along as the positive
+	// control that bounds the "gone from the list" negative — without it
+	// an empty list could simply mean the list had not loaded.
+	// The one part of rule 8 this test cannot reach is its Known
+	// deviation: the file-history rows that survive the deletion are, by
+	// the deviation's own statement, reachable from no screen.
+	test('s8: permanent deletion — Delete prompt, panel closes, submission leaves the lists, address invalid', async ({
+		asUser,
+		pkpApi,
+	}) => {
+		test.slow(); // two seeded submissions + a dashboard round-trip
+		const token = uniqueTag('strh');
+		const victimTitle = `Permanent deletion ${token} victim`;
+		const controlTitle = `Permanent deletion ${token} control`;
+		const declinedBy = [{type: 'initialDecline', by: 'editor.diana'}];
+		const participants = [{user: 'editor.diana', role: 'editor'}];
+		const {submission} = await pkpApi.createSubmission(
+			submittedSpec({
+				tag: `${token}v`,
+				title: victimTitle,
+				participants,
+				decisions: declinedBy,
+			}),
+		);
+		await pkpApi.createSubmission(
+			submittedSpec({
+				tag: `${token}c`,
+				title: controlTitle,
+				participants,
+				decisions: declinedBy,
+			}),
+		);
+
+		const mayaCtx = await asUser('manager.maya');
+		const page = await mayaCtx.newPage();
+		const shell = await openSubmissionStage(page, submission.id);
+
+		// The state scenario 6 ends in: declined at the desk, with the
+		// manager-only Delete in the collapsed action column.
+		await expect(
+			shell.header().getByText('Declined', {exact: true}).first(),
+		).toBeVisible({timeout: 20_000});
+		await expect(shell.actionItems().getByRole('button')).toHaveText(
+			DECLINED_RAIL_MANAGER,
+		);
+
+		// The manager notes the submission's web address first — it
+		// cannot be recovered afterwards.
+		const address = page.url();
+
+		// Delete asks for confirmation: a dialog titled "Delete" with the
+		// permanent-deletion question, Confirm and Cancel.
+		await railButton(shell, 'Delete').click();
+		const dialog = page
+			.locator('[data-cy="dialog"]')
+			.filter({hasText: DELETE_SUBMISSION_PROMPT})
+			.first();
+		await expect(dialog).toBeVisible({timeout: 10_000});
+		await expect(
+			dialog.getByRole('heading', {name: 'Delete', exact: true}),
+		).toBeVisible();
+		await expect(
+			dialog.getByRole('button', {name: 'Cancel', exact: true}),
+		).toBeVisible();
+		await dialog
+			.getByRole('button', {name: 'Confirm', exact: true})
+			.click();
+
+		// On Confirm the workflow panel closes.
+		await expect(dialog).toHaveCount(0, {timeout: 20_000});
+		await expect(shell.contentHeading('Workflow: Submission')).toHaveCount(0, {
+			timeout: 20_000,
+		});
+
+		// …and the submission is gone from the editorial lists — the
+		// Declined view it sat in still holds the control submission.
+		const dash = new DashboardPage(page);
+		await dash.gotoEditorial({view: 'declined'});
+		await expect(dash.viewHeading(/Declined/)).toBeVisible({timeout: 20_000});
+		await dash.search(token);
+		await expect(dash.row(controlTitle)).toBeVisible({timeout: 20_000});
+		await expect(dash.row(victimTitle)).toHaveCount(0);
+
+		// The noted address: an empty workflow panel over "Invalid
+		// submission." — no undo, no archive copy, nothing left to open.
+		await page.goto(address, {waitUntil: 'commit'});
+		const invalid = page
+			.locator('[data-cy="dialog"]')
+			.filter({hasText: INVALID_SUBMISSION_SENTENCE})
+			.first();
+		await expect(invalid).toBeVisible({timeout: 20_000});
+		await expect(shell.contentHeading('Workflow: Submission')).toHaveCount(0);
+		await expect(
+			shell.modal().getByRole('table', {name: 'Submission Files'}),
+		).toHaveCount(0);
+		await expect(shell.actionItems()).toHaveCount(0);
 	});
 });

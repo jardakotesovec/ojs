@@ -45,7 +45,7 @@ Header items are shared across all stages and evaluated once here (not repeated 
 
 | Atom ID | Surface | Control (locale key → English) | Role gate | State/visibility gate | Source anchor | Hint | Claimed by |
 |---|---|---|---|---|---|---|---|
-| AFF-wf-sub-file-panel | primary column | FileManager panel, namespace SUBMISSION_FILES — title `submission.submit.submissionFiles` → "Submission Files"; description `fileManager.submissionFilesDescription` → "Files uploaded at the time of submission" | internal to manager (separate slice) | stage access + stage started | workflowConfigEditorialOJS.js:191-198 | submission-files | |
+| AFF-wf-sub-file-panel | primary column | FileManager panel, namespace SUBMISSION_FILES — title `submission.submit.submissionFiles` → "Submission Files"; description `fileManager.submissionFilesDescription` → "Files uploaded at the time of submission" | internal to manager (separate slice) | stage access + stage started | workflowConfigEditorialOJS.js:191-198 | submission-files | send-to-review |
 | AFF-wf-sub-discussions | primary column | DiscussionManager panel (internal controls not declared here) | internal to manager | stage access + stage started | workflowConfigEditorialOJS.js:200-203 | tasks-discussions | |
 | AFF-wf-sub-participants | secondary column | ParticipantManager panel (its own config: `common.assign` → "Assign", etc. — separate slice) | internal to manager | stage access | workflowConfigEditorialOJS.js:215-221 | stage-participants | |
 | AFF-wf-sub-reviewer-suggestions | secondary column | ReviewerSuggestionManager panel | internal to manager | `publicationSettings.isReviewerSuggestionEnabled` | workflowConfigEditorialOJS.js:223-232 | reviewer-suggestions | |
@@ -55,11 +55,11 @@ Header items are shared across all stages and evaluated once here (not repeated 
 | Atom ID | Surface | Control (locale key → English) | Role gate | State/visibility gate | Source anchor | Hint | Claimed by |
 |---|---|---|---|---|---|---|---|
 | AFF-wf-sub-schedule-publication | action column | `editor.submission.schedulePublication` → "Schedule For Publication" (primary; navigates to publication menu) | stage access only | none — always declared (unusual: unconditional even pre-decision) | workflowConfigEditorialOJS.js:240-249 | publication-publish-flow | |
-| AFF-wf-sub-send-review | action column | `editor.submission.decision.sendExternalReview` → "Send for Review" (primary) | via decision availability | `isDecisionAvailable(DECISION_EXTERNAL_REVIEW)` | workflowConfigEditorialOJS.js:250-261 | send-to-review | |
+| AFF-wf-sub-send-review | action column | `editor.submission.decision.sendExternalReview` → "Send for Review" (primary) | via decision availability | `isDecisionAvailable(DECISION_EXTERNAL_REVIEW)` | workflowConfigEditorialOJS.js:250-261 | send-to-review | send-to-review |
 | AFF-wf-sub-skip-review | action column | `editor.submission.decision.skipReview` → "Accept and Skip Review" (secondary) | via decision availability | `isDecisionAvailable(DECISION_SKIP_EXTERNAL_REVIEW)` | workflowConfigEditorialOJS.js:263-277 | editorial-decisions | |
 | AFF-wf-sub-decline | action column | `editor.submission.decision.decline` → "Decline Submission" (warnable) | via decision availability | `isDecisionAvailable(DECISION_INITIAL_DECLINE)` | workflowConfigEditorialOJS.js:279-290 | editorial-decisions | |
-| AFF-wf-sub-revert-decline | action column | `editor.submission.decision.revertDecline` → "Revert Decline" (secondary) | via decision availability | `isDecisionAvailable(DECISION_REVERT_INITIAL_DECLINE)` | workflowConfigEditorialOJS.js:292-306 | editorial-decisions | |
-| AFF-wf-sub-delete | action column | `common.delete` → "Delete" (warnable) | `hasCurrentUserAtLeastOneAssignedRoleInAnyStage([MANAGER, SITE_ADMIN])` | piggybacks `isDecisionAvailable(DECISION_REVERT_INITIAL_DECLINE)` — i.e. only offered on a declined submission | workflowConfigEditorialOJS.js:308-327 | editorial-decisions | |
+| AFF-wf-sub-revert-decline | action column | `editor.submission.decision.revertDecline` → "Revert Decline" (secondary) | via decision availability | `isDecisionAvailable(DECISION_REVERT_INITIAL_DECLINE)` | workflowConfigEditorialOJS.js:292-306 | editorial-decisions | send-to-review |
+| AFF-wf-sub-delete | action column | `common.delete` → "Delete" (warnable) | `hasCurrentUserAtLeastOneAssignedRoleInAnyStage([MANAGER, SITE_ADMIN])` | piggybacks `isDecisionAvailable(DECISION_REVERT_INITIAL_DECLINE)` — i.e. only offered on a declined submission | workflowConfigEditorialOJS.js:308-327 | editorial-decisions | send-to-review |
 
 ### External Review stage — primary / secondary panels
 
@@ -179,7 +179,7 @@ No stage-specific `getSecondaryItems`/`getActionItems` on the author dressing fo
 | Atom ID | Surface | Control (locale key → English) | Role gate | State/visibility gate | Source anchor | Hint | Claimed by |
 |---|---|---|---|---|---|---|---|
 | AFF-wfa-sub-passed-status | primary column | SubmissionStatus (stage-passed banner; content internal to component) | stage access | `hasSubmissionPassedStage(submission, WORKFLOW_STAGE_ID_SUBMISSION)` | workflowConfigAuthorOJS.js:120-127 | author-dashboard | |
-| AFF-wfa-sub-file-panel | primary column | FileManager panel, namespace SUBMISSION_FILES — title `submission.submit.submissionFiles` → "Submission Files"; description `fileManager.submissionFilesDescription` → "Files uploaded at the time of submission" | matrix: Author assigned in stage → LIST, EDIT, DOWNLOAD_ALL (no upload here) | stage access + stage started | workflowConfigAuthorOJS.js:129-136 | submission-files | |
+| AFF-wfa-sub-file-panel | primary column | FileManager panel, namespace SUBMISSION_FILES — title `submission.submit.submissionFiles` → "Submission Files"; description `fileManager.submissionFilesDescription` → "Files uploaded at the time of submission" | matrix: Author assigned in stage → LIST, EDIT, DOWNLOAD_ALL (no upload here) | stage access + stage started | workflowConfigAuthorOJS.js:129-136 | submission-files | send-to-review |
 | AFF-wfa-sub-discussions | primary column | DiscussionManager panel (internal controls not declared here) | internal to manager | stage access + stage started | workflowConfigAuthorOJS.js:138-141 | tasks-discussions | |
 
 ### External Review stage (`WorkflowConfig[WORKFLOW_STAGE_ID_EXTERNAL_REVIEW]`)
@@ -300,18 +300,18 @@ Permission matrix for this namespace (useFileManagerConfig.js:20-63): Author →
 | Atom ID | Surface | Control (locale key → English) | Role gate | State/visibility gate | Source anchor | Hint | Claimed by |
 |---|---|---|---|---|---|---|---|
 | AFF-fm-sf-col-select | file table column | `editor.submission.selectFiles` → "Select Files" (sr-only header, checkbox cells) | FILE_SELECT permitted | **declared-unreachable here** — FILE_SELECT only exists in `*_SELECT` namespace variants | useFileManagerConfig.js:413-420 | submission-files | |
-| AFF-fm-sf-col-numero | file table column | `common.numero` → "No" | none | none | useFileManagerConfig.js:421-425 | submission-files | |
-| AFF-fm-sf-col-filename | file table column | `common.fileName` → "File Name" | none | none | useFileManagerConfig.js:426-430 | submission-files | |
-| AFF-fm-sf-col-date | file table column | `common.dateUploaded` → "Date uploaded" | none | none | useFileManagerConfig.js:431-435 | submission-files | |
-| AFF-fm-sf-col-type | file table column | `common.type` → "Type" | none | none | useFileManagerConfig.js:436-440 | submission-files | |
-| AFF-fm-sf-col-more-actions | file table column | `common.moreActions` → "More Actions" (sr-only, kebab cell) | none | none | useFileManagerConfig.js:442-447 | submission-files | |
-| AFF-fm-sf-top-upload | panel top bar | `common.upload` → "Upload" | FILE_UPLOAD: SubEditor/Manager/SiteAdmin/Assistant assigned in stage (NOT Author — author upload happens in the wizard/revisions, not here) | none | useFileManagerConfig.js:456-464; matrix :41-49 | submission-files | |
+| AFF-fm-sf-col-numero | file table column | `common.numero` → "No" | none | none | useFileManagerConfig.js:421-425 | submission-files | send-to-review |
+| AFF-fm-sf-col-filename | file table column | `common.fileName` → "File Name" | none | none | useFileManagerConfig.js:426-430 | submission-files | send-to-review |
+| AFF-fm-sf-col-date | file table column | `common.dateUploaded` → "Date uploaded" | none | none | useFileManagerConfig.js:431-435 | submission-files | send-to-review |
+| AFF-fm-sf-col-type | file table column | `common.type` → "Type" | none | none | useFileManagerConfig.js:436-440 | submission-files | send-to-review |
+| AFF-fm-sf-col-more-actions | file table column | `common.moreActions` → "More Actions" (sr-only, kebab cell) | none | none | useFileManagerConfig.js:442-447 | submission-files | send-to-review |
+| AFF-fm-sf-top-upload | panel top bar | `common.upload` → "Upload" | FILE_UPLOAD: SubEditor/Manager/SiteAdmin/Assistant assigned in stage (NOT Author — author upload happens in the wizard/revisions, not here) | none | useFileManagerConfig.js:456-464; matrix :41-49 | submission-files | send-to-review |
 | AFF-fm-sf-top-upload-select | panel top bar | `editor.submission.uploadSelectFiles` → "Upload/Select Files" | FILE_SELECT_UPLOAD permitted | **declared-unreachable here** — action absent from SUBMISSION_FILES action list (used by EDITOR_REVIEW_FILES / COPYEDITED_FILES / FINAL_DRAFT_FILES) | useFileManagerConfig.js:466-474 | submission-files | |
-| AFF-fm-sf-bottom-download-all | panel bottom bar | `submission.files.downloadAll` → "Download All Files" (link style) | FILE_DOWNLOAD_ALL: Author or SubEditor/Manager/SiteAdmin/Assistant | `filesCount > 0` | useFileManagerConfig.js:482-491; matrix :22-49 | submission-files | |
-| AFF-fm-sf-row-send-to-editor | file row kebab | `grid.action.sendToTextEditor` → "Send to Text Editor" | FILE_SEND_TO_EDITOR: SiteAdmin/Manager only | file extension in pandoc set (docx, odt, rtf, tex, latex, md, markdown) | useFileManagerConfig.js:500-511; :9-17; matrix :30-33 | submission-files | |
-| AFF-fm-sf-row-update-file | file row kebab | `grid.action.updateFile` → "Update File Details" | FILE_EDIT: Author or SubEditor/Manager/SiteAdmin/Assistant | none | useFileManagerConfig.js:513-519 | submission-files | |
-| AFF-fm-sf-row-more-info | file row kebab | `grid.action.moreInformation` → "More Information" | FILE_SEE_NOTES: SubEditor/Manager/SiteAdmin/Assistant (not Author) | none | useFileManagerConfig.js:521-527 | submission-files | |
-| AFF-fm-sf-row-delete | file row kebab | `grid.action.delete` → "Delete" (warnable) | FILE_DELETE: SubEditor/Manager/SiteAdmin/Assistant (not Author) | none | useFileManagerConfig.js:529-536 | submission-files | |
+| AFF-fm-sf-bottom-download-all | panel bottom bar | `submission.files.downloadAll` → "Download All Files" (link style) | FILE_DOWNLOAD_ALL: Author or SubEditor/Manager/SiteAdmin/Assistant | `filesCount > 0` | useFileManagerConfig.js:482-491; matrix :22-49 | submission-files | send-to-review |
+| AFF-fm-sf-row-send-to-editor | file row kebab | `grid.action.sendToTextEditor` → "Send to Text Editor" | FILE_SEND_TO_EDITOR: SiteAdmin/Manager only | file extension in pandoc set (docx, odt, rtf, tex, latex, md, markdown) | useFileManagerConfig.js:500-511; :9-17; matrix :30-33 | submission-files | send-to-review |
+| AFF-fm-sf-row-update-file | file row kebab | `grid.action.updateFile` → "Update File Details" | FILE_EDIT: Author or SubEditor/Manager/SiteAdmin/Assistant | none | useFileManagerConfig.js:513-519 | submission-files | send-to-review |
+| AFF-fm-sf-row-more-info | file row kebab | `grid.action.moreInformation` → "More Information" | FILE_SEE_NOTES: SubEditor/Manager/SiteAdmin/Assistant (not Author) | none | useFileManagerConfig.js:521-527 | submission-files | send-to-review |
+| AFF-fm-sf-row-delete | file row kebab | `grid.action.delete` → "Delete" (warnable) | FILE_DELETE: SubEditor/Manager/SiteAdmin/Assistant (not Author) | none | useFileManagerConfig.js:529-536 | submission-files | send-to-review |
 
 ### SUBMISSION_FILES_SELECT
 
