@@ -162,6 +162,37 @@ behavior"; fully per-app trees were rejected as 3× maintenance of literally sha
    coverage but isn't — track OPS by its own applicable-feature list, never by
    shared-suite adoption.
 
+## 7b. Worked example — OMP review (the boundary case, maintainer-raised)
+
+OMP review decomposes into every delta type at once; how each nuance lands:
+
+- **Extra decisions on a shared stage** → behavioral delta: an override in
+  `editorial-decisions.md`'s `## App variations — OMP`, keyed to the
+  decision-roster rule with a quoted stub, OMP anchors + OMP probe footnotes.
+  Tests: thin `editorial-decisions.omp.spec.js` companion covering only the
+  added decisions.
+- **The additional Internal Review stage** → hybrid, because it is the SAME
+  machinery instantiated on another stage:
+  - each review-machinery spec gets ONE scope declaration in its OMP variations
+    section — "applies identically to both Internal and External Review
+    <sup>probed</sup>, except: …" (the parity claim is probed, never assumed);
+  - one small OMP-unique spec `omp-internal-review.md` owns only what is new:
+    stage existence/position, entry & exit decisions, internal-round visibility,
+    transition topology — referencing the shared review specs for machinery
+    (single-home discipline);
+  - tests: shared review cores already run on OMP's external stage; the
+    `hasInternalReview` capability triggers an OMP companion re-running a
+    REPRESENTATIVE SUBSET of scenarios on the internal stage + the transition
+    decisions (seeded via the `reviewRounds` internal/external schema key).
+- **OMP features with no OJS counterpart** (catalog, chapters, formats…) → full
+  ordinary specs, `apps: [omp]`, new OMP area rows, OMP-repo tests, OMP budget.
+
+**The general rule this fixes in place**: an app addition that PARAMETERIZES
+existing machinery (another stage, another decision in a roster) is a variation
++ companion test; an addition with its own screens and rules is a feature with
+its own spec. When in doubt, split like internal review: thin unique spec for
+the topology, parity declarations for the machinery.
+
 ## 8. Decisions needed from the maintainer
 
 1. Approve the four-tier spec mechanism (§2) and the capability-flag test shape (§3)?
