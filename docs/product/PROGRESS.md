@@ -147,9 +147,11 @@ One row per **completed subagent**, appended by
 `docs/product/log-model-mix.sh <agent.jsonl> <feature> <authoring|verification|probe> <label>`
 (the RUNBOOK completion spot-check). Clean rows are logged too — they are the
 denominators for per-class flip rates. `FLIPPED@N/M` = the first Opus assistant
-message was the Nth of M. **This section stays LAST in this file** (the script
-appends to end-of-file). Per-class rates:
-`awk -F'|' '/^\| 20[0-9][0-9]-/{c=$4; n[c]++; if($9!~/clean/) f[c]++} END{for(k in n) printf "%s: %d/%d flipped\n", k, f[k], n[k]}' docs/product/PROGRESS.md`
+message was the Nth of M. Rows annotated `(pinned)` were spawned on a non-Fable
+model deliberately (the Opus 5 trial, `OPUS5-EVAL-PLAN.md`) — they are NOT
+fallbacks and are excluded from flip rates. **This section stays LAST in this
+file** (the script appends to end-of-file). Per-class rates:
+`awk -F'|' '/^\| 20[0-9][0-9]-/{if($9~/pinned/) next; c=$4; n[c]++; if($9!~/clean/) f[c]++} END{for(k in n) printf "%s: %d/%d flipped\n", k, f[k], n[k]}' docs/product/PROGRESS.md`
 
 | Date | Feature | Class | Agent | Fable | Opus | Other | Status |
 |------|---------|-------|-------|-------|------|-------|--------|
