@@ -12,26 +12,33 @@
  * @ingroup api_v1_test
  *
  * @brief OJS subclass of PKPContextScenarioController. Registers
- *        POST /api/v1/_test/scenarios/journal which invokes the shared
- *        context-build pipeline plus OJS-specific extensions.
+ *        POST /api/v1/_test/scenarios/journal — the OJS vocabulary alias
+ *        of the shared `scenarios/context` route — which invokes the
+ *        shared context-build pipeline plus OJS-specific extensions.
  *
- * Overrides `context()` to pull OJS-only concepts (issues) into the
- * journal scratch build. Issues are OJS-specific and never reach OMP/OPS,
- * so keeping them off the shared controller avoids polluting the
- * cross-app schema.
+ * Both routes are live and identical. `context` is the canonical
+ * cross-app spelling (OMP registers `press`, OPS `server`); `journal` is
+ * kept indefinitely because `bootstrap.setup.js` and every existing OJS
+ * fixture post to it.
+ *
+ * Hangs OJS-only concepts (issues, subscriptions) off afterContextCreated()
+ * and declares their spec keys as schema overlays, so the shared
+ * cross-app schema carries no OJS vocabulary.
  */
 
 namespace APP\API\v1\_test;
 
+use APP\testing\bootstrap\Processor\IssueProcessor;
 use APP\testing\bootstrap\Processor\SubscriptionProcessor;
 use Illuminate\Support\Facades\Route;
 use PKP\API\v1\_test\PKPContextScenarioController;
-use PKP\testing\bootstrap\Processor\IssueProcessor;
 
 class JournalScenarioController extends PKPContextScenarioController
 {
     public function getGroupRoutes(): void
     {
+        parent::getGroupRoutes();
+
         Route::post('journal', $this->context(...))
             ->name('test.scenarios.journal');
     }
@@ -71,6 +78,17 @@ class JournalScenarioController extends PKPContextScenarioController
     protected function schemaOverlayProperties(): array
     {
         return [
+            // Issues are the OJS publishing container; no other app has
+            // Repo::issue(). Declared here (not in the shared schema) so
+            // an OMP/OPS spec naming `issues` is rejected at validation
+            // instead of fataling inside a processor.
+            'issues' => [
+                'type' => 'array',
+                'items' => [
+                    'type' => 'object',
+                    'additionalProperties' => true,
+                ],
+            ],
             'subscriptions' => [
                 'type' => 'array',
                 'items' => [

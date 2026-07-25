@@ -87,6 +87,12 @@ class SubmissionScenarioController extends PKPSubmissionScenarioController
     protected function schemaOverlayProperties(): array
     {
         return [
+            // `section` is the OJS/OPS submission container (OMP uses
+            // `series`), so it is an overlay rather than a shared key.
+            // Required here — every OJS submission has a section, and the
+            // whole existing OJS fixture corpus passes one — which keeps
+            // the pre-multi-app validation behaviour byte-identical.
+            'section' => ['type' => 'string', 'minLength' => 1],
             'metrics' => [
                 'type' => 'object',
                 'additionalProperties' => false,
@@ -94,6 +100,39 @@ class SubmissionScenarioController extends PKPSubmissionScenarioController
                     'views' => ['type' => 'integer', 'minimum' => 0],
                     'downloads' => ['type' => 'integer', 'minimum' => 0],
                     'months' => ['type' => 'integer', 'minimum' => 1, 'maximum' => 24],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * OJS keeps `section` required, exactly as the shared schema did
+     * before the key moved out to this overlay.
+     */
+    protected function schemaRequiredOverlay(): array
+    {
+        return ['section'];
+    }
+
+    /**
+     * The OJS publishing container + representation model, overlaid onto
+     * the shared `$defs/publication`. `issue` and `galleys` are OJS
+     * concepts (OMP publishes into a catalog via publication formats;
+     * OPS posts continuously with no container), so they live here and
+     * $ref the reusable building blocks the shared schema still carries.
+     */
+    protected function schemaOverlayDefProperties(): array
+    {
+        return [
+            'publication' => [
+                'issue' => ['$ref' => '#/$defs/issue'],
+                'galleys' => [
+                    'type' => 'array',
+                    'items' => ['$ref' => '#/$defs/galley'],
+                ],
+                'mediaFiles' => [
+                    'type' => 'array',
+                    'items' => ['$ref' => '#/$defs/mediaFile'],
                 ],
             ],
         ];
