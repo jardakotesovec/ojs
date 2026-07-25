@@ -35,12 +35,12 @@ work).
 | Unit | Status | Note |
 |------|--------|------|
 | G1 submodule alignment (omp+ops boot on campaign lib/pkp) | done | PASSED both apps (login 200, dashboards render, 0 console errors); commits omp `85da7e7eb0` / ops `d87f740243` on local `e2e_revamp_fable_2`; lib/pkp branch pushed to fork; report `.reports/multiapp-trial-g1.md` |
-| G2 servers + test DBs (3 fleets side-by-side) | in_progress | config-factory base-port param 8000/8100/8200; MUST first: align+build lib/ui-library in omp/ops (push ojs's branch to fork), kill G1's throwaway servers (PIDs 78111/81077); create omp_test/ops_test (existing omp_main_test* DBs are off-limits) |
-| G3 scenario API port (createContext+createSubmission on all 3; OMP internal round seeds) | pending | journal→context alias; section/issue/galleys as app overlays; reviewRounds internal/external key; IssueProcessor out of shared path |
+| G2 servers + test DBs (3 fleets side-by-side) | done | PASSED ×3 (admin login + 0 console errors each; OJS regression 14/14 green with OMP+OPS live); omp_test/ops_test created, nothing dropped; lib/pkp `1b2111c34b`+`caa812b5e2` (pushed), omp 3 commits, ops 3 commits; ui-library aligned+built both apps; bonus fix: TEST_API_KEY never reached PHP env (broke OJS too); servers up: 8000/8100/8200; watch: shared Mailpit, stray php on 8010 |
+| G3 scenario API port (createContext+createSubmission on all 3; OMP internal round seeds) | in_progress | app-side controllers/index.php missing on OMP/OPS (probe: 400 OJS vs 404 OMP/OPS); DB routing already solved (config.test.inc.php per app); journal→context alias; section/issue/galleys as app overlays; reviewRounds internal/external key; IssueProcessor out of shared path |
 | G4 app playwright trees (smoke spec green on OMP+OPS) | pending | config, app.context.js capability map, bootstrap seeds per role subset |
 | G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | done | glossary committed dd001eba4a; lint: badge syntax `{OJS OMP}` (canonical order, no all-three badge), variation-stub match, glossary-driven forbidden terms; 13/13 specs clean (orchestrator re-verified); bonus fix: vacuous-path bug in lint gate; OQ for maintainer: glossary `Translator` row vs the real OJS Translator user group |
-| Pilot 1: `workflow-stage-navigation` OMP+OPS delta | pending | delta loop per PLAN §4; spec mechanisms §2; stage-topology axis (OMP 5 stages / OPS 1) |
-| Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | pending | after Pilot 1; OMP parity declaration + internal-stage test subset; OPS absence gate `n/a(no review)` with live absence probe |
+| Pilot 1: `workflow-stage-navigation` OMP+OPS delta | in_progress | SPEC DRAFT COMMITTED edb3e7e631 (lint-clean, 9 badges, 24 overrides; author attempt 1 flag-killed, respawn clean); 20-item probe list + tests wait on G2–G4 |
+| Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | in_progress | spec-delta author (fable) drafting; OMP parity declaration + OPS absence path; probes/tests wait on G2–G4 |
 | Learnings report + plan amendments | pending | → `.reports/multiapp-trial-learnings.md`, then fold proposals into MULTIAPP-PLAN §9 |
 
 Dependency chain: G1 → G2 → G3 → G4 → pilot tests. G5 is independent (any
@@ -84,6 +84,14 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 7: G2 PASSED all three fleets (OJS untouched + regression
+  green; OMP 8100, OPS 8200 with fresh test DBs). G3 launched with G2's
+  handoff. Pilot-2 author still drafting.
+- 2026-07-26 — iter 6: Pilot-1 respawn SUCCEEDED — spec deltas committed
+  edb3e7e631 (orchestrator re-ran lint: clean); author returned 20 probes,
+  2 graduation candidates (OMP Marketing/Catalog screens; OPS >⅓-trigger
+  wording needs maintainer call) + mechanism-friction notes for the learnings
+  report. Pilot-2 spec author (fable) launched in parallel; G2 still running.
 - 2026-07-26 — iter 5: Pilot-1 author attempt 1 flag-killed BEFORE any edit
   (born-dead on a dense brief — the pointer-brief rule confirmed again);
   respawn 1 of max 2 launched with a lean pointer brief. Spec file verified
