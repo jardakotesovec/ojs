@@ -153,8 +153,19 @@ cadence, not a batch:
 
 ## Model discipline (subagents & fallback)
 
-- **Model policy (maintainer, revised 2026-07-21): every subagent starts on Fable,
-  pinned (`model: fable`). A mid-run downgrade to Opus is handled BY CLASS:
+- **Model assignment by role (maintainer, 2026-07-25, from the Opus 5 eval —
+  record in `OPUS5-EVAL-PLAN.md` "Outcomes"): SPEC WORK stays on Fable —
+  spec-author, spec-finalizer, readability-verifier/-fix, verification chunks,
+  merge/arbitration agents are pinned `model: fable`. PROBES and TEST WRITING
+  run on Opus 5 — all probe agents, the test-author (and the scaffold /
+  micro-authors / harmonizer when the split protocol runs), and test-fix
+  agents are pinned `model: opus`. Opus agents have no safeguard-flip
+  behavior: their log-model-mix rows read `all-opus` — annotate `(pinned)` so
+  per-class flip rates stay meaningful. Everything below about flips applies
+  to the FABLE-PINNED classes only. The draft-before-probe structure, pointer
+  briefs, and chunked verification stay unchanged for every class.**
+- **Fable flip policy (maintainer, revised 2026-07-21; applies to the
+  fable-pinned classes above). A mid-run downgrade to Opus is handled BY CLASS:
   AUTHORING agents (spec/test/POM/readability writing) that flip are allowed to
   finish and are LOGGED, but their output is DISCARDED and the chunk respawned
   fresh (max 2 respawns; for the TEST AUTHOR, exhausted respawns switch to the

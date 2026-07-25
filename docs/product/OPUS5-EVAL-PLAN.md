@@ -117,3 +117,43 @@ reference's 7 tests at tier M·7; the 6-dimension rubric above per artifact.
 After review: Fable's build stays canonical on the main branch; verified novel
 Opus findings get cherry-picked into the real ledger; delete both
 `opus-eval-str` branches when done.
+
+## Outcomes & maintainer decisions (2026-07-25 — the eval is CLOSED)
+
+**Verdict: Fable 5 stays the authoring model for specifications.** The blind
+panel scored the Opus replay higher (4.33 vs 3.33; full record in
+`.reports/opus-eval-analysis/DEEPDIVE.md`), but the maintainer's own review
+found the seam-level defects the panel structurally missed (rule-4 duplication
+of workflow-access rules, 2.5× spec volume, harness leakage into PO-facing
+text) and weighed Fable's corpus discipline and prose economy as decisive for
+a 90-feature corpus.
+
+Decisions, each to be landed deliberately across docs/specs/tests:
+
+1. **Model roles split (encoded in RUNBOOK Model discipline):** Fable authors
+   and maintains specs and runs verification; Opus 5 runs probes and writes
+   tests — the eval showed its test craft (exact-set assertions, POM
+   investment, deterministic flake handling) and probe stamina are its
+   strongest surfaces, and probe agents were the largest Fable-flip class.
+2. **Scope ruling on the author dressing (REVISES the mid-eval leaning):**
+   workflow-page specs COVER the author — the author actively participates in
+   the editorial process and the workflow page's editor/author overlap is the
+   substance, not an accident. `author-dashboard` narrows to the dashboard
+   itself (My Submissions lists), NOT the workflow/tracking page. Existing
+   docs to amend: author-dashboard spec scope, workflow-stage-navigation's
+   dressing delegation, send-to-review's author rows (now in-scope —
+   consistently, one scope per table).
+3. **Delete-submission behavior is send-to-review's** (the orphaned
+   `API-backend-submissions-delete` atom): claim the atom, specify the
+   behavior (the replay's rule 9 / scenario 4 / probe matrix in
+   `.reports/opus-eval-analysis/inputs/arm-b-spec.md` is reference material —
+   Fable re-authors, Opus re-probes per decision 1), fix the atlas owner line.
+4. **The replay's spec + tests are deleted** (branches `opus-eval-str`
+   removed 2026-07-25; reference copies only in the gitignored analysis dir).
+   Its verified ledger findings were folded first (rows 254, 257 + re-repro
+   clauses on 235/236, commit f7bd05f997). The reviewer-response trial feature
+   REMAINS live on the campaign branch (verified output stands).
+5. **Affordance sweep adopted** (prototype in the analysis dir): a 14th atlas
+   sweep enumerating declared UI controls (screen × control × role/state gate)
+   → `atlas/affordances.md`, forward-only, DoD gains a behavior-side gate once
+   the sweep lands and is reviewed.
