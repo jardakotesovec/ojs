@@ -65,8 +65,15 @@ ledger row itself because its brief omitted this.)
 2. **Author the spec** → `docs/product/specs/<feature>.md` per `TEMPLATE.md`:
    business-language body, frontend-first, every claim anchored to a stable symbol in
    a `<sup>` footnote, canonical scenarios named by role. Draw from the feature's
-   atlas atoms + the code; where the code is ambiguous, don't guess — put the
-   question on the PROBE LIST the author returns with its draft (step 4 executes
+   atlas atoms + the code — including the feature's rows in
+   `atlas/affordances.md` (the declared-control sweep, added 2026-07-25):
+   every affordance on the feature's screens must end up covered by a rule or
+   scenario, DELEGATED with a verifiable pointer (the target spec must
+   actually hold the behavior — mechanics live once in the owning manager
+   feature, per-stage gates live here), or explicitly waived. Forward-only:
+   applies to features built after 2026-07-25; earlier verified specs
+   retrofit during grooming. Where the code is ambiguous, don't guess — put
+   the question on the PROBE LIST the author returns with its draft (step 4 executes
    it via dedicated probe subagents; the author itself never probes, see Model
    discipline). Note: atlas `Claimed by:` markers survive from the
    scratched round as feature-name claims — re-verify the atom list matches the
@@ -335,7 +342,9 @@ cadence, not a batch:
 
 ## Definition of done
 
-- **Per feature**: spec `verified` + lint-clean; scenario tests green twice; PROGRESS
+- **Per feature**: spec `verified` + lint-clean; every `atlas/affordances.md`
+  atom on the feature's screens covered / verifiably delegated / waived
+  (features built after 2026-07-25); scenario tests green twice; PROGRESS
   row updated (one-line note); committed; **maintainer sign-off (calibration mode)**.
 - **Campaign**: every feature `done` or `parked`; full suite ≤ 700 tests, ≤ 25 min on
   a fresh DB; parked list + accumulated ledger findings reported.
