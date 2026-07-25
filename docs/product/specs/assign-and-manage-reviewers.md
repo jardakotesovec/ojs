@@ -39,7 +39,7 @@ atlas-claims:
   - LOC-editor-reviewer-list
 ---
 
-# Assign & manage reviewers
+# Assign & manage reviewers {OJS OMP}
 
 ## Purpose
 
@@ -583,6 +583,80 @@ ordering rule. <sup>k</sup>
    hide management affordances from an
    author-editor rather than show buttons that all fail on click, or is the
    server refusal the intended (defence-in-depth) design?
+
+## App variations — OMP / OPS
+
+Read the base spec through APP-GLOSSARY.md (journal → press, Journal Manager →
+Press Manager, article → monograph, section → series, and so on). The title
+badge scopes this whole feature to OJS and OMP: every rule, field, status,
+modal, side effect, setting and scenario above claims both of those apps unless
+overridden below — and none of it exists in OPS. Overrides are keyed to the
+base text by quoted stubs.
+
+### OMP
+
+**Parity declaration.** OMP runs review twice — an Internal Review stage sits
+before the base spec's review stage (on-screen: External Review) — and this
+feature is one machinery mounted on both: the panel and its computed statuses,
+the picker with its stats and filters, the per-row actions and their modals,
+the emails, notifications and log entries, the settings, and the author-facing
+variant apply identically to Internal and External Review, per round, except
+as overridden below. The parity claim is probe-pending — it must be confirmed
+on a running press, never assumed. <sup>m1</sup>
+
+- "everyone holding a reviewer role" — the role is split into two groups,
+  Internal Reviewer (internal rounds) and External Reviewer (external rounds),
+  and the pool follows the round: searching or filtering the picker returns
+  only candidates whose group belongs to the round's stage. As built the split
+  leaks at two edges — the picker's first, unsearched page is not stage-scoped,
+  and the assignment's server check asks only for the reviewer role, so a
+  cross-stage candidate who reaches the form is not refused (candidate
+  deviation, probe-pending). <sup>m2</sup>
+- "reviewer group to enroll into" — only the round's own group is offered:
+  Create New Reviewer and Enroll Existing User list just the group assigned to
+  that review stage. The enroll search also excludes holders of either
+  reviewer group, so an internal reviewer cannot be enrolled into the external
+  group from this picker, nor the reverse (probe-pending). <sup>m3</sup>
+- "recommendation on their behalf" — reviewer recommendations do not exist in
+  OMP: reviewers are never asked for one, the read-review modal neither shows
+  a recommendation nor offers the set-or-adjust control, the by-proxy log
+  entry never occurs, and the status rows whose extra info is the reviewer's
+  recommendation show none. <sup>m4</sup>
+- "attempts an ORCID deposit" — the deposit is a no-op in OMP: confirming a
+  review and the manual send-to-ORCID row action both run without error, and
+  nothing is ever sent to the reviewer's record; the action's status-blind
+  availability (first Known deviation) is expected to reproduce, offering a
+  button that can never deposit (probe-pending). <sup>m5</sup>
+- "at least one completed open review" — on an internal round the author's
+  redacted variant is gated on the round merely having an open review,
+  completed or not — laxer than the external round's completed-open gate, and
+  it is an open intent question whether authors should see internal rounds at
+  all (candidate deviation, probe-pending). <sup>m6</sup>
+- "set the recommendation by proxy" — scenario 9 runs without its
+  recommendation steps in OMP: read, rate and confirm work as written, with no
+  recommendation to adjust and no by-proxy log row. <sup>m4</sup>
+
+### OPS
+
+**Absent — nothing here exists in OPS.** A preprint is created in the
+Production stage and never leaves it, so a review round can never arise; no
+reviewer user group exists to hold the role this panel manages; and no surface
+of this spec — the Reviewers panel, the Add Reviewer picker, the
+per-assignment actions, their emails, notifications, log entries and
+settings — is mounted, routable or seeded there. Every rule, field, status,
+scenario, setting and deviation above is out of scope for OPS (the title badge
+is the contract; the glossary's absence rule is the reader's safety net). This
+absence is claimed from code and is itself probe-pending: the pilot battery
+must confirm on a running server that no role can reach any reviewer
+surface. <sup>o1</sup>
+
+<sup>m1</sup> omp-main lib/ui-library useWorkflowConfigOMP.js deep-merges the OJS editorial/author configs (deepMerge(ConfigEditorialOJS, ConfigEditorialOMP)), so the external-stage ReviewerManager mount is the OJS config object verbatim (workflowConfigEditorialOJS.js) while workflowConfigEditorialOMP.js mounts the same ReviewerManager per internal round (same props minus recommendations) and workflowConfigAuthorOMP.js mounts the redacted author variant on both stages; omp-main controllers/grid/users/reviewer/ReviewerGridHandler.php is an empty subclass of PKPReviewerGridHandler (every grid op shared); all picker/assignment/action forms and modals are shared lib/pkp (omp-main templates/controllers/grid/users/reviewer/ holds only the readReview.tpl override — see m4); omp-main api/v1/reviews/index.php mounts the shared PKPReviewController; mail Repository::map() is merged unchanged and omp-main registry/emailTemplates.xml seeds the full review family (REVIEW_REQUEST, REVIEW_REQUEST_SUBSEQUENT, REVIEW_CANCEL, REVIEW_REINSTATE, REVIEW_RESEND_REQUEST, REVIEW_ACK, REVIEW_REMIND, REVIEW_EDIT, REVIEWER_REGISTER); the base's section-default review form works per series via shared ReviewerForm::initData() + Application::getSectionIdPropName() = 'seriesId' + omp schemas/section.json reviewFormId; the shared context schema carries defaultReviewMode, defaultReviewPublicVisibility, numWeeksPerResponse/numWeeksPerReview, restrictReviewerFileAccess and reviewerAccessKeysEnabled, and omp schemas/context.json adds reviewerSuggestionEnabled — internal-stage parity itself is probe-pending (MULTIAPP-PLAN §7b representative-subset battery) ·
+<sup>m2</sup> omp-main registry/userGroups.xml — two groups on ROLE_ID_REVIEWER: Internal Reviewer stages="2", External Reviewer stages="3" (only the external group has permitSelfRegistration + masthead); scoping: AdvancedSearchReviewerForm::fetch() passes reviewStage = $reviewRound->getStageId() into the reviewers API, whose collector applies filterByWorkflowStageIds() via the user_group_stage join (lib/pkp PKPUserController::getReviewers(); classes/user/Collector.php); leak 1: PKPSelectReviewerListPanel::_getCollector() omits the stage filter, so the server-rendered first page of the picker is unscoped; leak 2: ReviewerForm::_isValidReviewer() checks only userHasRole(..., ROLE_ID_REVIEWER), never the group's stage — both probe-pending (candidate OMP ledger row) ·
+<sup>m3</sup> ReviewerForm::fetch() feeds the create/enroll group choice from Repo::userGroup()->getUserGroupsByStage($contextId, $reviewRound->getStageId(), ROLE_ID_REVIEWER) — only the round's stage group; PKPReviewerGridHandler::getUsersNotAssignedAsReviewers() excludes every reviewer-role holder regardless of group, so cross-group enrolment is unavailable from the picker; probe-pending ·
+<sup>m4</sup> omp-main templates/controllers/grid/users/reviewer/readReview.tpl blanks the reviewerRecommendations capture ("Not implemented in OMP") before including the shared readReview.tpl, where OJS instead injects its set-or-adjust block and OJS's app ReviewerGridHandler::reviewRead() writes reviewerRecommendationId + the by-proxy log entry — OMP's app handler is an empty subclass with no such override; ui-library useReviewerManagerConfig.js renders no recommendation cell when no recommendations prop is passed, and neither OMP workflow config passes one; watch item, not a graduation: the configurable-recommendation plumbing is half-wired in OMP (Application::hasCustomizableReviewerRecommendation() true, install/upgrade migrations present) but SettingsHandler::workflow() never exposes the settings tab and there is no reviewers/recommendations API route; probe-pending ·
+<sup>m5</sup> omp-main classes/orcid/actions/SendReviewToOrcid.php extends PKPSendReviewToOrcid whose execute() is an intentional no-op ("currently only OJS" per its docblock); both call sites run in OMP — PKPReviewerGridHandler::reviewRead() at confirm time and the manual POST reviews/{submissionId}/{reviewAssignmentId}/sendToOrcid (mounted by omp-main api/v1/reviews/index.php) — and useReviewerManagerConfig.js offers the row action under the same status-blind condition recorded in Known deviations; probe-pending ·
+<sup>m6</sup> workflowConfigAuthorOMP.js gates the internal-round author ReviewerManager on getOpenReviewAssignmentsForRound() (open assignments, completed or not) with redactedForAuthors, while the external round inherits the OJS gate getOpenAndCompletedReviewAssignmentsForRound() (workflowConfigAuthorOJS.js); whether authors should see internal rounds at all is omp-internal-review scope (pilot 3); probe-pending ·
+<sup>o1</sup> ops-main schemas/submission.json pins stageId (default 5, validation min:5/max:5) and classes/core/Application.php getApplicationStages() returns production only, so no review round can exist; registry/userGroups.xml defines no reviewer-role group (the stray ROLE_ID_REVIEWER in controllers/api/file/ManageFileApiHandler.php is dead wiring — no user can hold the role); no OPS workflow config mounts ReviewerManager (workflowConfigEditorialOPS.js is production-only; the deep-merged OJS review-stage entry is unreachable — no menu item, no stage-3 submission possible); the editors' reviewer grid needs an app subclass of PKPReviewerGridHandler to be URL-resolvable and OPS has none (no controllers/grid/users/ directory), while lib/pkp's AuthorReviewerGridHandler is routable but blocked by its review-round authorization; there is no api/v1/reviews/index.php, so the shared PKPReviewController is unreachable; classes/mail/Repository.php map() lists no review mailables and registry/emailTemplates.xml seeds none (one orphan row: REQUEST_REVIEW_ROUND_AUTHOR_RESPONSE, a template with no mailable in the OPS map); the Settings → Workflow Review tab sits behind hasReviewStage, false in OPS; review DB tables are installed by shared migrations but nothing writes them; the live absence probe remains mandatory (MULTIAPP-PLAN §4 — absent is itself probed)
 
 ---
 
