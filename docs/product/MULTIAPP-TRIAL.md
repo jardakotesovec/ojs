@@ -40,7 +40,7 @@ work).
 | G4 app playwright trees (smoke spec green on OMP+OPS) | pending | config, app.context.js capability map, bootstrap seeds per role subset |
 | G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | done | glossary committed dd001eba4a; lint: badge syntax `{OJS OMP}` (canonical order, no all-three badge), variation-stub match, glossary-driven forbidden terms; 13/13 specs clean (orchestrator re-verified); bonus fix: vacuous-path bug in lint gate; OQ for maintainer: glossary `Translator` row vs the real OJS Translator user group |
 | Pilot 1: `workflow-stage-navigation` OMP+OPS delta | in_progress | SPEC DRAFT COMMITTED edb3e7e631 (lint-clean, 9 badges, 24 overrides; author attempt 1 flag-killed, respawn clean); 20-item probe list + tests wait on G2–G4 |
-| Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | in_progress | spec-delta author (fable) drafting; OMP parity declaration + OPS absence path; probes/tests wait on G2–G4 |
+| Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | in_progress | SPEC DRAFT COMMITTED 6a70d181d1 (lint-clean first attempt; OPS absence = file-scope badge + prose, OMP parity declaration + 6 overrides, 2 candidate OMP pool-leak defects); 15-item probe list waits on G3 |
 | Learnings report + plan amendments | pending | → `.reports/multiapp-trial-learnings.md`, then fold proposals into MULTIAPP-PLAN §9 |
 
 Dependency chain: G1 → G2 → G3 → G4 → pilot tests. G5 is independent (any
@@ -84,6 +84,10 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 8: Pilot-2 spec draft committed (fable-clean, no respawn
+  needed — lean-brief pattern holding). Both pilot spec drafts now in; probe
+  batteries queue behind G3 (still running). Mechanism-friction notes from
+  both authors accumulating for the learnings report.
 - 2026-07-26 — iter 7: G2 PASSED all three fleets (OJS untouched + regression
   green; OMP 8100, OPS 8200 with fresh test DBs). G3 launched with G2's
   handoff. Pilot-2 author still drafting.
