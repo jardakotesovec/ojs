@@ -397,3 +397,4 @@ file** (the script appends to end-of-file). Per-class rates:
 | 2026-07-25 | reviewer-response | authoring | readability-fix-oe | 0 | 153 | 0 | all-opus (pinned) |
 | 2026-07-25 | reviewer-response | authoring | atlas-markers-oe | 0 | 66 | 0 | all-opus (pinned) |
 | 2026-07-25 | reviewer-response | authoring | ledger-stamp-oe | 0 | 106 | 0 | all-opus (pinned) |
+| 2026-07-25 | multiapp-trial | authoring | g5-glossary | 28 | 0 | 0 | clean |
