@@ -89,6 +89,11 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   launched per pilot 1's iters 14–17 pattern: shrunk verify OMP a/c/e (opus),
   light OPS-absence verify (opus), readability spot-read of the new prose
   (fable). No spec edits until all three land — a single fix pass folds them.
+- 2026-07-26 — iter 21: readability spot-read landed — 13/13 scenarios walkable,
+  all overrides restatable but one; 5 findings (1 moderate: the OPS absence
+  sentence uses developer/HTTP vocabulary a no-code reader can't check) + a
+  stale Roles-footnote "confirm on first probe" now that OPS probes are done.
+  Held for the single fix pass; both verify chunks still running.
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
