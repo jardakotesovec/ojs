@@ -36,10 +36,10 @@ discipline is the home): FABLE WRITES (specs + docs), OPUS 5 INVESTIGATES
 lists; Fable flip rules unchanged.
 Wave rule unchanged: at 7 features since last sampling, stop for
 sampling review instead.**
-Wave counter: 6 features since last sampling (editorial-dashboards +
+Wave counter: 5 features since last sampling (editorial-dashboards +
 workflow-stage-navigation 2026-07-16 + editorial-decisions rebuilt-from-scratch
-2026-07-21 + stage-participants 2026-07-22 + send-to-review 2026-07-24 +
-reviewer-response 2026-07-25; Area 1 sampled and approved 2026-07-14;
+2026-07-21 + stage-participants 2026-07-22 + send-to-review 2026-07-24;
+Area 1 sampled and approved 2026-07-14;
 findings-to-files protocol in force since — see RUNBOOK). **Opus 5 eval CLOSED 2026-07-25** — verdict in RUNBOOK Model discipline; full
 record in git history (OPUS5-EVAL-PLAN.md @ 88b9e02d8d). The 2026-07-25
 STANDING MAINTAINER RULINGS are homed in `CHARTER.md` ("Standing maintainer
@@ -48,12 +48,12 @@ session — briefs in `QUEUE.md`:** (1) send-to-review maintenance
 (Delete-submission coverage + eval spec fixes); (2) re-scope/encoding session
 (lands the rulings into TEMPLATE, seeds GLOSSARY.md, then trims this note).
 They do not count toward the wave counter and claim no PROGRESS row — strike
-the item in QUEUE.md when done. Area 2 (row 13 onward) resumes after both.**
+the item in QUEUE.md when done. Area 2 (row 12 onward) resumes after both.**
 
 ## Totals
 
-- Features: **1 reference · 12 verified · 78 pending** (of 91 buildable; row 39 folded into `article-landing`)
-- Tests: **103 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9 + send-to-review 8 + reviewer-response 12) · last full-suite timing: n/a since reset
+- Features: **1 reference · 11 verified · 79 pending** (of 91 buildable; row 39 folded into `article-landing`)
+- Tests: **91 / 700** (tasks-discussions 6 + submission-wizard 12 + submission-wizard-metadata 8 + reviewer-suggestions 7 + submission-drafts 6 + author-dashboard 6 + editorial-dashboards 10 + workflow-stage-navigation 6 + editorial-decisions 13 + stage-participants 9 + send-to-review 8) · last full-suite timing: n/a since reset
 - Budget allocation ≈ 639, headroom ~61 (tiers + the ±1–2 rule: RUNBOOK Budget & ceilings; maintainer-rebalanced 2026-07-02)
 
 ## Features
@@ -71,7 +71,7 @@ the item in QUEUE.md when done. Area 2 (row 13 onward) resumes after both.**
 | 9 | Area 2 — Editorial workflow & peer review | `stage-participants` | M·8 | verified | green(x2) | tests-only rebuild (2026-07-22): EXPERIMENT POSITIVE — monolithic test-author fable-clean (276 msgs, zero flips) on the rule-5-swept spec vs 2 flips on unswept wave-8 wording; 9 tests, rubric 4.5/5 (= split-protocol clean score); no new ledger rows (229–234 stand); s1 toast-race flake fixed (expectToast); spec quote-case fix ("Awaiting Copyedits.") |
 | 10 | Area 2 — Editorial workflow & peer review | `send-to-review` | M·7 | verified | green(x2) | wave 8 (2026-07-24) + maintenance 2026-07-26 (QUEUE 1): 8 tests green(x2), Delete atom claimed (affordance gate's first exercise — 16 atoms marked), one-shared-screen rewrite, ledger 254 widened + 258–261 filed, former OQ3 resolved; all 14 agents clean under the model-role split |
 | 11 | Area 2 — Editorial workflow & peer review | `assign-and-manage-reviewers` | H·12 | verified | green(x2) | calibration f1: 13 tests, 33 atoms, 5 proposed ledger rows; maintainer signed off 2026-07-10 (scenario rewording applied) |
-| 12 | Area 2 — Editorial workflow & peer review | `reviewer-response` | H·10 | verified | green(x2) | OPUS5 TRIAL (all 21 subagents pinned opus, all-opus by intent): 12 tests, 25 atoms, ledger 237–250 + 251–253 cross-feature, rows 16/76/77/78 amended (16 re-diagnosed), OQ 1–14; LOW-CONFIDENCE FLAG for the maintainer's trial review — the code-blind readability pass found 8 of 12 scenarios unwalkable as first written (all rewritten), and 3 authored claims needed live probes to overturn |
+| 12 | Area 2 — Editorial workflow & peer review | `reviewer-response` | H·10 | pending | pending | |
 | 13 | Area 2 — Editorial workflow & peer review | `review-forms` | M·7 | pending | pending | |
 | 14 | Area 2 — Editorial workflow & peer review | `review-rounds-and-revisions` | H·12 | pending | pending | |
 | 15 | Area 2 — Editorial workflow & peer review | `recommend-only-editors` | M·6 | pending | pending | |
@@ -160,9 +160,8 @@ One row per **completed subagent**, appended by
 (the RUNBOOK completion spot-check). Clean rows are logged too — they are the
 denominators for per-class flip rates. `FLIPPED@N/M` = the first Opus assistant
 message was the Nth of M. Rows annotated `(pinned)` were spawned on a non-Fable model deliberately (the
-standing role split — RUNBOOK Model discipline — or the closed Opus 5 trial,
-git history 88b9e02d8d); they are NOT fallbacks and are excluded from flip
-rates. The orchestrator appends ` (pinned)` to the Status cell by hand after
+standing role split — RUNBOOK Model discipline); they are NOT fallbacks and are
+excluded from flip rates. The orchestrator appends ` (pinned)` to the Status cell by hand after
 running the script (it takes no flag for it). **This section stays LAST in this
 file** (the script appends to end-of-file). Per-class rates:
 `awk -F'|' '/^\| 20[0-9][0-9]-/{if($9~/pinned/) next; c=$4; n[c]++; if($9!~/clean/) f[c]++} END{for(k in n) printf "%s: %d/%d flipped\n", k, f[k], n[k]}' docs/product/PROGRESS.md`
@@ -376,39 +375,8 @@ file** (the script appends to end-of-file). Per-class rates:
 | 2026-07-24 | send-to-review | authoring | readability-verifier | 9 | 0 | 0 | clean |
 | 2026-07-24 | send-to-review | authoring | ledger-stamp | 27 | 0 | 0 | clean |
 | 2026-07-24 | send-to-review | authoring | readability-fix | 26 | 0 | 0 | clean |
-| 2026-07-25 | reviewer-response | authoring | spec-author-oe | 0 | 138 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | probe | probe-batchB-oe | 0 | 93 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | probe | probe-batchA-oe | 0 | 132 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | probe | probe-batchD-oe | 0 | 155 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | probe | probe-batchC-oe | 0 | 150 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | authoring | spec-finalizer-oe | 0 | 26 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | authoring | test-author-oe | 0 | 239 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | authoring | spec-fix-rule11-oe | 0 | 45 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | verification | verify-chunk-f-oe | 0 | 45 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | verification | verify-chunk-a-oe | 0 | 62 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | verification | verify-chunk-b-oe | 0 | 57 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | verification | verify-chunk-d-oe | 0 | 56 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | verification | verify-chunk-e-oe | 0 | 81 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | verification | verify-chunk-c-oe | 0 | 112 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | probe | probe-a-edges-oe | 0 | 115 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | authoring | verification-merge-oe | 0 | 88 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | authoring | readability-verifier-oe | 0 | 13 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | probe | probe-f1-reviewfiles-oe | 0 | 97 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | authoring | readability-fix-oe | 0 | 153 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | authoring | atlas-markers-oe | 0 | 66 | 0 | all-opus (pinned) |
-| 2026-07-25 | reviewer-response | authoring | ledger-stamp-oe | 0 | 106 | 0 | all-opus (pinned) |
 | 2026-07-25 | multiapp-trial | authoring | g5-glossary | 28 | 0 | 0 | clean |
 | 2026-07-26 | send-to-review | authoring | spec-author-maint | 71 | 0 | 0 | clean |
-| 2026-07-26 | send-to-review | probe | probe-A-killed-oe | 0 | 5 | 0 | all-opus (pinned) |
-| 2026-07-26 | send-to-review | probe | probe-B-killed-oe | 0 | 3 | 0 | all-opus (pinned) |
-| 2026-07-26 | send-to-review | probe | probe-A-maint-oe | 0 | 124 | 0 | all-opus (pinned) |
-| 2026-07-26 | send-to-review | probe | probe-B-maint-oe | 0 | 172 | 0 | all-opus (pinned) |
 | 2026-07-26 | send-to-review | authoring | spec-finalizer-maint | 72 | 0 | 0 | clean |
-| 2026-07-26 | send-to-review | authoring | test-author-maint-oe | 0 | 77 | 0 | all-opus (pinned) |
-| 2026-07-26 | send-to-review | verification | verify-chunk-a-maint-oe | 0 | 82 | 0 | all-opus (pinned) |
-| 2026-07-26 | send-to-review | verification | verify-chunk-c-maint-oe | 0 | 64 | 0 | all-opus (pinned) |
-| 2026-07-26 | send-to-review | verification | verify-chunk-f-maint-oe | 0 | 36 | 0 | all-opus (pinned) |
-| 2026-07-26 | send-to-review | verification | verify-merge-maint-oe | 0 | 26 | 0 | all-opus (pinned) |
 | 2026-07-26 | send-to-review | authoring | verify-fold-maint | 27 | 0 | 0 | clean |
-| 2026-07-26 | send-to-review | authoring | readability-verifier-maint-oe | 0 | 12 | 0 | all-opus (pinned) |
 | 2026-07-26 | send-to-review | authoring | readability-fix-maint | 60 | 0 | 0 | clean |
