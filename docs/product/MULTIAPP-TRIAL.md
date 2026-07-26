@@ -142,6 +142,17 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   members the trial added AND four method bodies it rewrote that three
   surviving specs are green against — left whole deliberately. lib/pkp NOT
   pushed: no omp/ops re-pin is needed for a test deletion.
+- 2026-07-26 — iter 27: OJS scope probe landed with the headline that reframes
+  pilot 2 — **none of the five findings is an OMP delta; all five reproduce on
+  OJS**. They are BASE-spec facts the OMP pass surfaced only because a press was
+  looked at harder than the journal ever was. That is a trial learning in its
+  own right: the multi-app delta pass doubles as a base-spec auditor. Filed
+  ledger rows 268 (updated-assignment task never withdrawn), 269 (validity
+  refusal 500s silently), 270 (assistant blocked by a role-denied dialog, with
+  a reachability rider), 271 (XML export served as text/html) and 272 ([OMP]
+  empty JATS recommendation — the ONE half that stayed app-specific). Launched
+  the second fold (fable, base-not-badged + the glossary one-liner) and the
+  deferred post-removal suite run (opus, expect green minus 12).
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
