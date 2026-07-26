@@ -102,6 +102,18 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   candidate (reviewer dashboard reachable on OPS, prints an untranslated
   OJS-only key) and a refinement to draft row 266. Held for the fix pass;
   OMP verify still running.
+- 2026-07-26 — iter 23: OMP verify landed (the big one — parity declaration
+  CONFIRMED and now evidenced on its two unprobed legs; 4 corrections m3/m6/m7 +
+  scenario-5 stage-boundary gap, 1 base claim REFUTED (rule 17 History does show
+  the reminder → residual OQ4 dropped), 13-item change list). Closeout trio
+  complete. Launched: fix pass (fable, folds OMP-except-3/8/11/12 + all OPS +
+  all readability) and an OJS scope probe (opus) for the 4 findings that touch
+  BASE claims and can't be badged until OJS is checked (hidden group field,
+  un-withdrawn task, 500 on refused assignment, assistant 401, XML mime).
+  Orchestrator filed ledger row 267 ([OPS] reviewer role creatable → broken
+  reviewer dashboard + untranslated OJS-only key) and amended 264 (first page
+  applies no filters either) and 266 (checkbox is disabled + hard-coded; the
+  masthead pin is previous-calendar-year; OPS has no such form at all).
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
