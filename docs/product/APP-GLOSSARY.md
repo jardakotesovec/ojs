@@ -45,8 +45,8 @@ Terms not in this file mean the same thing in all three apps.
 | — | Volume Editor, Chapter Author, Translator (chapter roles) | — |
 
 *Note*: report A pairs OPS "Moderator" with the Editor slot, report B (checkout-
-verified) with the Section-editor slot; B's mapping is recorded here. Confirm
-against the OPS masthead on first probe — on-screen names win.
+verified) with the Section-editor slot; B's mapping is recorded here — confirmed
+in live OPS Moderator sessions, 2026-07-26.
 
 ### Workflow stages and decisions
 
