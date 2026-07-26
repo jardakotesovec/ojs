@@ -84,6 +84,16 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 12: Pilot-1 probes batch A (OMP) done (8/9 confirmed with
+  nuances; work-type labels contradicted; harness findings: OMP presses seed
+  zero default reviewer recommendations → ledger 263 reserved, orphan
+  submissions on failed scenario builds, silent reviewRounds drop). Pilot-1
+  finalizer (fable, citing reserved ledger rows 262/263) + Pilot-2 probe
+  battery (opus) launched in parallel.
+- 2026-07-26 — iter 11: Pilot-1 probes batch B (OPS) done — 11 verdicts incl.
+  a BASE-SPEC defect reproducing on OJS (published-status box unreachable,
+  blank stage-name render — candidate ledger row) and an OPS landing
+  three-state correction. Waiting on batch A (OMP) before the spec finalizer.
 - 2026-07-26 — iter 10: G4 PASSED ×3 — ALL M0-lite GATES DONE. Force-push
   deviation disclosed (recorded, no follow-up needed beyond the morning
   report). Pilot-1 probe battery launched: two opus agents (OMP items /
