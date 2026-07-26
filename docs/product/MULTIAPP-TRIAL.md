@@ -114,6 +114,16 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   reviewer dashboard + untranslated OJS-only key) and amended 264 (first page
   applies no filters either) and 266 (checkbox is disabled + hard-coded; the
   masthead pin is previous-calendar-year; OPS has no such form at all).
+- 2026-07-26 — iter 24 (OUT-OF-BAND, maintainer-directed mid-loop; not trial
+  work): discard the `reviewer-response` feature produced by the closed Opus-5
+  eval. Maintainer rulings: PROGRESS row 12 → back to `pending` (feature stays
+  on the map, wave counter 6→5); ledger → delete rows 237–253 AND revert the
+  trial's amendments to 16/76/77/78. Deleted 19 `.reports/reviewer-response-*`
+  files + `opus-eval/` + `opus-eval-analysis/` (gitignored ⇒ unrecoverable from
+  git; archived to the session scratchpad first). Two sweeps launched: ledger +
+  tests (opus), docs + atlas unclaim (fable), both fenced off from the files the
+  pilot-2 fix pass and the OJS scope probe are touching. Suite green-run
+  deferred until the OJS probe releases `ojs_test`.
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
