@@ -133,7 +133,7 @@ create/enroll variants):
 
 | Field (UI label) | Required? | Rules |
 |------------------|-----------|-------|
-| **Choose a predefined message** | No | Email template for the request; from round two a reassigned last-round reviewer gets the "subsequent request" template preselected <sup>b</sup> |
+| **Choose a predefined message** | No | Email template for the request; from round two the choice follows the path taken — the "Reassign" path offers only the "subsequent request" template, the ordinary selection path only the first-time request <sup>b</sup> |
 | **Email to be sent to reviewer** | No | Prefilled from the chosen template, editable rich text <sup>b</sup> |
 | **Do not send email to Reviewer** | No | Skips the request email entirely (the in-app notification still fires) <sup>c</sup> |
 | **Response Due Date / Review Due Date** | Yes (both) | Defaulted from the journal's review-deadline settings; the review due date must be on or after the response due date <sup>d</sup> |
@@ -151,8 +151,11 @@ create/enroll variants):
 - Email — required, unique
 - Reviewing Interests
 - Affiliation
-- The reviewer group to enroll into
-- An "Appear on the masthead" checkbox
+- The reviewer group to enroll into — shown as a choice only when the journal
+  has more than one reviewer group; on a default journal (a single reviewer
+  group) no group control appears and that group is used
+- An "Appear on the masthead" checkbox — pre-ticked, and it cannot be changed
+  (Known deviations)
 
 The account is created with a generated password the user must change at first
 login.
@@ -183,15 +186,15 @@ ordering rule. <sup>k</sup>
   carries across submissions (who may open it: see Actors & permissions).
 
 <sup>a</sup> PKPSelectReviewerListPanel::getConfig() (filters, labels), getItems(); SelectReviewerListPanel.vue / SelectReviewerListItem.vue; PKPUserController::getReviewers() (search + filter params); AdvancedSearchReviewerForm::fetch() (author list, `currentlyAssigned`, `warnOnAssignment`, `lastRoundReviewers`); live-probed 2026-07-10 (filters panel, locked notices, stats expansion, round-2 Reassign pinning) ·
-<sup>b</sup> reviewerFormFooter.tpl (template select + personal message); AdvancedSearchReviewerForm::initData()/getEmailTemplates() (ReviewRequest + ReviewRequestSubsequent + alternates); live-probed: round-1 select offered "Review Request"; round-2 Reassign preselected "Review Request Subsequent" ·
+<sup>b</sup> reviewerFormFooter.tpl (template select + personal message); AdvancedSearchReviewerForm::initData()/getEmailTemplates() (ReviewRequest + ReviewRequestSubsequent + alternates); AdvancedReviewerSearchHandler.js removes the non-matching option per path, so Reassign offers only ReviewRequestSubsequent and ordinary selection only ReviewRequest; live-probed: round-1 select offered "Review Request"; round-2 Reassign showed "Review Request Subsequent" as the sole option (re-verified 2026-07-26, both OMP stages) ·
 <sup>c</sup> reviewerFormFooter.tpl `skipEmail`; EditorAction::addReviewer() (email skipped, notification unconditional); live-probed: skip-email assignment produced a "Request Sent" row and zero messages for that recipient ·
 <sup>d</sup> ReviewerForm::__construct() (required + FormValidatorDateCompare GREATER_OR_EQUAL); HasReviewDueDate::getDueDates() (journal `numWeeksPerReview` / `numWeeksPerResponse`, fallbacks 4/3 weeks); live-probed: defaults +4w/+4w on the default journal, +2w/+6w on a scratch journal configured 2/6 ·
 <sup>e</sup> reviewerFormFooter.tpl (LimitReviewFilesGridHandler expander + no-files warning); ReviewerForm::execute() (grants on selected files) ·
 <sup>f</sup> reviewerFormFooter.tpl `reviewMethod` radios; ReviewerForm::initData() (`defaultReviewMode`, fallback double-anonymous); live-probed: double-anonymous preselected on the default journal ·
 <sup>g</sup> reviewerFormFooter.tpl `isReviewPubliclyVisible`; ReviewerForm::initData() (context default); EditorAction::addReviewer() ·
 <sup>h</sup> reviewerFormFooter.tpl (select gated on active forms); ReviewerForm::initData() (section default form); live-probed: absent on the form-less default journal, present with "None / Free Form Review" + form title on the scratch journal ·
-<sup>i</sup> CreateReviewerForm (validators; generated password, must-change flag; masthead flag on enrol); live-probed 2026-07-10: created account was assigned and received both the registration and the invitation email ·
-<sup>j</sup> EnrollExistingReviewerForm (userGroup + userId required; server re-checks the target has no reviewer role, group is a reviewer group of this journal); PKPReviewerGridHandler::getUsersNotAssignedAsReviewers() ·
+<sup>i</sup> CreateReviewerForm (validators; generated password, must-change flag); createReviewerForm.tpl renders the group select only when the context has more than one reviewer group and a hidden pinned group otherwise — shared count-driven template, code-verified for OJS and live-verified on OMP 2026-07-26; the masthead checkbox is rendered checked + disabled and neither form reads a submitted value — the enrollment stores the flag as on via a hard-coded argument to assignUserToGroup() (Known deviations); live-probed 2026-07-10: created account was assigned and received both the registration and the invitation email ·
+<sup>j</sup> EnrollExistingReviewerForm (userGroup + userId required; server re-checks the target has no reviewer role, group is a reviewer group of this journal); enrollExistingReviewerForm.tpl renders the group select unconditionally — one option on a single-group journal; PKPReviewerGridHandler::getUsersNotAssignedAsReviewers() ·
 <sup>k</sup> EditReviewForm (same date checks; review form only until `dateCompleted`); live-probed field set 2026-07-10 ·
 <sup>l</sup> ReviewerNotifyActionForm (prefill + skip); ResendRequestReviewerForm (dates re-asked); ThankReviewerForm; ReviewReminderForm (template picker; one-click URL masked in preview + compiled body fetch); LogReviewerResponseForm; EmailReviewerForm (subject/body required); ReviewerGossipForm; all modals live-driven 2026-07-10
 
@@ -304,8 +307,10 @@ ordering rule. <sup>k</sup>
 16. **Send Reminder** mails the chosen reminder to the reviewer and stamps the
     reminded date shown in History. Automated overdue reminders are a scheduled
     task (`scheduled-tasks`), not this manual action. <sup>p</sup>
-17. **History** shows the assignment's date milestones (assigned, notified,
-    reminded, confirmed/declined, completed, acknowledged). **Email Reviewer**
+17. **History** lists the assignment's dated milestones under the labels shown
+    on screen — Assigned, Notified, Reminder, Confirm (or Declined), Completed,
+    Acknowledged — ordered by date, not by lifecycle, so an early reminder can
+    sit above later milestones. **Email Reviewer**
     sends a free-form message logged to the submission's email log. **Editorial
     Notes** edits the shared note about this reviewer — one note per reviewer,
     not tied to any single journal. <sup>q</sup>
@@ -330,7 +335,7 @@ ordering rule. <sup>k</sup>
 <sup>n</sup> ThankReviewerForm::execute() (ReviewAcknowledgement mail — live-verified "Thank you for your review"; `dateAcknowledged`; considered backfill) ·
 <sup>o</sup> EditReviewForm::execute() (change detection → NOTIFICATION_TYPE_REVIEW_ASSIGNMENT_UPDATED at TASK level + EditReviewNotify mail behind the blocked-emails check; live-verified notification row + "Your review assignment has been changed…" email after a due-date edit) ·
 <sup>p</sup> ReviewReminderForm::execute() (ReviewRemind mail, `dateReminded`, SUBMISSION_LOG_REVIEW_REMIND; live-verified email + log row + stamp); TASK-reviewreminder (scheduled) is owned by scheduled-tasks ·
-<sup>q</sup> PKPReviewerGridHandler::reviewHistory() (date list — live-rendered), sendEmail() (EmailReviewerForm; logged REVIEW_NOTIFY_REVIEWER), gossip() ·
+<sup>q</sup> PKPReviewerGridHandler::reviewHistory() (date list — live-rendered); reviewHistory.tpl renders the milestones date-sorted with the labels quoted in the rule — live-verified 2026-07-26 on both OMP review stages (shared template): the Reminder line rendered immediately after sending and after a reload, a completed+acknowledged row rendered its full label set, and a declined+reminded row sorted the older reminder to the top; sendEmail() (EmailReviewerForm; logged REVIEW_NOTIFY_REVIEWER), gossip() ·
 <sup>r</sup> workflowConfigAuthorOJS.js (open-and-completed gate); useReviewerManagerConfig() getColumns()/getItemPrimaryActions() (`redactedForAuthors`); AuthorReviewerGridHandler; live-probed as the submitting author (3 columns, single open-review row, working read modal; no panel without a completed open review)
 
 ## Side effects
@@ -538,13 +543,18 @@ ordering rule. <sup>k</sup>
   2026-07-10: confirm after unconsider at 10:11 → no row; re-confirm at 10:12/10:13
   → rows 138/139). **PROPOSED ledger row.**
 - ⚠ **The "Appear on the masthead" checkbox on Create New Reviewer / Enroll
-  Existing User has no effect** (Fields & validation) — expected: ticking it
+  Existing User is inert** (Fields & validation) — expected: a choice that
   eventually lists the new reviewer on the public editorial masthead;
-  observed: the choice is stored with the enrolment but never read for
-  reviewer groups — the masthead excludes the reviewer role from its role list
-  and draws its reviewer names from completed reviews instead, so the checkbox
-  changes nothing (probed on a press 2026-07-26; the journal behavior follows
-  from the same shared machinery — the OMP-specific consequence is in App
+  observed: the checkbox is pre-ticked and disabled — the editor can neither
+  tick nor untick it — the enrollment records the flag as on regardless of
+  what the form submits (the forms pass a hard-coded value and read no
+  submitted one), and the masthead never reads that flag for reviewer groups:
+  it excludes the reviewer role from its role sections and draws its reviewer
+  names from reviews completed in the previous calendar year instead (probed
+  on a press 2026-07-26, bounded — the role sections and the
+  previous-year reviewer list both rendered while the newly created reviewers
+  did not; the journal behavior follows from the same shared forms and
+  masthead handler — the OMP-specific stage consequence is in App
   variations). **PROPOSED ledger row 266.**
 - Existing ledger row 52 already covers the Add Reviewer dialog's
   reviewer-suggestion list quirks ("Select undefined" accessible names; no
@@ -592,6 +602,13 @@ ordering rule. <sup>k</sup>
    hide management affordances from an
    author-editor rather than show buttons that all fail on click, or is the
    server refusal the intended (defence-in-depth) design?
+7. The reviewer-directory endpoint this spec claims (atlas
+   API-user-get-reviewers, the picker's search source) is mounted in all three
+   apps: on OPS it answers with an empty collection on a default install and a
+   populated one once a Preprint Server Manager creates a Reviewer role there,
+   even though every surface of this spec is absent (App variations — OPS,
+   verified 2026-07-26). Should the atom's OPS half move to a spec that owns
+   user directories, or stay claimed here under the absence paragraph?
 
 ## App variations — OMP / OPS
 
@@ -620,15 +637,18 @@ below. <sup>m1</sup>
   only candidates whose group belongs to the round's stage. ⚠ As built, two
   edges deviate from that scoping: the picker's first, unsearched page lists
   both groups' reviewers — a search immediately re-scopes the list
-  (ledger 264) — and an assignment of a wrong-stage candidate who reaches the
-  form is accepted rather than refused (ledger 265). <sup>m2</sup>
+  (ledger 264) — and if a wrong-stage candidate is selected anyway, say from
+  that unsearched first page, the assignment form accepts them instead of
+  refusing (ledger 265). <sup>m2</sup>
 - "reviewer group to enroll into" — the round's own group is the only one
-  reachable: Enroll Existing User offers a one-option group choice (the
-  round's stage group), while Create New Reviewer shows no group control at
-  all — the new account is enrolled into the round's stage group without a
-  choice being offered. The enroll search also excludes holders of either
-  reviewer group, so an internal reviewer cannot be enrolled into the external
-  group from this picker, nor the reverse. <sup>m3</sup>
+  reachable: whichever form is used, the new or enrolled reviewer lands in the
+  round's stage group. The form shapes themselves — a one-option choice on
+  Enroll Existing User, no visible group control on Create New Reviewer — are
+  the ordinary single-group rendering a default journal shows too (Fields &
+  validation); the OMP delta is which group that is, chosen by the round's
+  stage. The enroll search also excludes holders of either reviewer group, so
+  an internal reviewer cannot be enrolled into the external group from this
+  picker, nor the reverse. <sup>m3</sup>
 - "recommendation on their behalf" — reviewer recommendations do not exist in
   OMP: reviewers are never asked for one, the read-review modal neither shows
   a recommendation nor offers the set-or-adjust control, the by-proxy log
@@ -640,49 +660,66 @@ below. <sup>m1</sup>
   availability (first Known deviation) reproduces, offering a button that can
   never deposit. <sup>m5</sup>
 - "at least one completed open review" — on an internal round the author's
-  redacted variant is gated on the round merely having an open review,
-  completed or not — laxer than the external round's completed-open gate.
-  Before any review completes, what appears is an empty panel: the author sees
-  the redacted Reviewers table with no rows (the matching external case shows
-  no panel at all), so the early disclosure is the panel's existence, not any
-  reviewer; a row appears only once a review completes. It remains an open
-  intent question whether authors should see internal rounds at all (candidate
-  deviation). <sup>m6</sup>
+  redacted variant appears once the round has a review of the open type,
+  whether or not that review is finished — though a declined or cancelled one
+  does not count — laxer than the external round's gate, which also requires
+  the open review to be completed. Before any open review completes, what
+  appears is an empty panel: the author sees the redacted Reviewers table with
+  no rows (the matching external case shows no panel at all), so the early
+  disclosure is the panel's existence, not any reviewer; rows appear as open
+  reviews complete, on either stage. It remains an open intent question
+  whether authors should see internal rounds at all (a possible future
+  Known-deviations entry, pending that decision). <sup>m6</sup>
 - "set the recommendation by proxy" — scenario 9 runs without its
   recommendation steps in OMP: read, rate and confirm work as written, with no
   recommendation to adjust and no by-proxy log row. <sup>m4</sup>
-- "Appear on the masthead" — ⚠ the base deviation (the checkbox is stored but
-  never read for reviewer groups — Known deviations) carries an extra
-  consequence here: the masthead's reviewer names come solely from completed
-  external-round reviews, so a reviewer who only ever completes internal
-  rounds can never appear on the masthead, whatever the checkbox says
-  (ledger 266). <sup>m7</sup>
+- "enters a second review round" — round counting restarts per stage, and
+  scenario 5's reassignment offer reads only the previous round of the *same*
+  stage: a second internal round and a second external round each list their
+  own round-one reviewers with "Reassign" and the "Review Request Subsequent"
+  message, but when a monograph moves from Internal Review into External
+  Review it starts external round one — no one is offered for reassignment,
+  the reviewer who just completed the internal round sits in the ordinary list
+  with a plain "Select Reviewer", and the only message offered is the
+  first-time "Review Request". <sup>m8</sup>
+- "Appear on the masthead" — ⚠ the base deviation (the checkbox cannot be
+  changed and is never read for reviewer groups — Known deviations) carries an
+  extra pin here: the masthead's reviewer names come solely from
+  external-round reviews completed in the previous calendar year, so a
+  reviewer who only ever completes internal rounds can never appear on the
+  masthead — and even an external-round reviewer is listed only in the year
+  after completing (ledger 266). <sup>m7</sup>
 
 ### OPS
 
-**Absent — nothing here exists in OPS.** A preprint is created in the
-Production stage and never leaves it, so a review round can never arise; no
-reviewer user group exists to hold the role this panel manages; and no
-reviewer surface of this spec is usable there — the Reviewers panel is never
-mounted, the Add Reviewer picker never opens, and the per-assignment actions,
-their emails, notifications, log entries and settings are absent. Two shape
-nuances, both inert: the shared user-directory route that feeds the picker
-remains reachable and answers with an empty reviewer list (no reviewer group
-exists to populate it), and the author-facing variant's address resolves but
-is refused by its authorization (no review round can ever exist to satisfy
-it). Every rule, field, status, scenario, setting and deviation above is out
-of scope for OPS (the title badge is the contract; the glossary's absence rule
-is the reader's safety net). The absence was confirmed on a running server: no
-role reaches any reviewer surface. <sup>o1</sup>
+**Absent — nothing here exists in OPS.** A preprint lives in the Production
+stage from creation to posting (what posting does to its internal stage
+marker is `workflow-stage-navigation`'s record), so a review round can never
+arise, and no surface of this spec is usable there: the Reviewers panel is
+never mounted, the Add Reviewer picker never opens, the per-assignment
+actions with their emails, notifications and log entries are absent, and the
+workflow settings offer no Review tab. No reviewer user group is installed by
+default — an install fact, not an app impossibility: a Preprint Server
+Manager can create a Reviewer role from the roles settings and people can
+then hold it, yet every surface of this spec stays absent even then (what a
+signed-in holder of that role sees of their own is other features' scope).
+Every rule, field, status, scenario, setting and deviation above is out of
+scope for OPS (the title badge is the contract; the glossary's absence rule
+is the reader's safety net). The absence was confirmed on a running server —
+by menu, by direct web address, and through the participant surfaces, before
+and after a reviewer role existed; the shared machinery leaves a few inert
+traces behind the scenes, none reachable from any screen (the footnote lists
+them). <sup>o1</sup>
 
-<sup>m1</sup> omp-main lib/ui-library useWorkflowConfigOMP.js deep-merges the OJS editorial/author configs (deepMerge(ConfigEditorialOJS, ConfigEditorialOMP)), so the external-stage ReviewerManager mount is the OJS config object verbatim (workflowConfigEditorialOJS.js) while workflowConfigEditorialOMP.js mounts the same ReviewerManager per internal round (same props minus recommendations) and workflowConfigAuthorOMP.js mounts the redacted author variant on both stages; omp-main controllers/grid/users/reviewer/ReviewerGridHandler.php is an empty subclass of PKPReviewerGridHandler (every grid op shared); all picker/assignment/action forms and modals are shared lib/pkp (omp-main templates/controllers/grid/users/reviewer/ holds only the readReview.tpl override — see m4); omp-main api/v1/reviews/index.php mounts the shared PKPReviewController; mail Repository::map() is merged unchanged and omp-main registry/emailTemplates.xml seeds the full review family (REVIEW_REQUEST, REVIEW_REQUEST_SUBSEQUENT, REVIEW_CANCEL, REVIEW_REINSTATE, REVIEW_RESEND_REQUEST, REVIEW_ACK, REVIEW_REMIND, REVIEW_EDIT, REVIEWER_REGISTER); the base's section-default review form works per series via shared ReviewerForm::initData() + Application::getSectionIdPropName() = 'seriesId' + omp schemas/section.json reviewFormId; the shared context schema carries defaultReviewMode, defaultReviewPublicVisibility, numWeeksPerResponse/numWeeksPerReview, restrictReviewerFileAccess and reviewerAccessKeysEnabled, and omp schemas/context.json adds reviewerSuggestionEnabled — internal-stage parity live-probed 2026-07-26 (MULTIAPP-PLAN §7b representative-subset battery: canonical scenarios 1, 6, 8 and 12 plus the full status walk of rule 2 re-run on Internal Review rounds — all ten display labels, per-status action menus, modals, emails and date stamps byte-identical to the external round; the series-default review-form check required activating the seeded forms by hand — the scenario seeder creates review forms inactive with no way to declare a series default, a pilot-3-relevant harness gap recorded in the pilot-2 probe report §16.3) ·
-<sup>m2</sup> omp-main registry/userGroups.xml — two groups on ROLE_ID_REVIEWER: Internal Reviewer stages="2", External Reviewer stages="3" (only the external group has permitSelfRegistration + masthead); scoping: AdvancedSearchReviewerForm::fetch() passes reviewStage = $reviewRound->getStageId() into the reviewers API, whose collector applies filterByWorkflowStageIds() via the user_group_stage join (lib/pkp PKPUserController::getReviewers(); classes/user/Collector.php); leak 1: PKPSelectReviewerListPanel::_getCollector() omits the stage filter, so the server-rendered first page of the picker is unscoped; leak 2: ReviewerForm::_isValidReviewer() checks only userHasRole(..., ROLE_ID_REVIEWER), never the group's stage — both live-probed 2026-07-26: stage-scoped search/filter confirmed on both stages (wrong-stage searches return the empty state); the unsearched first page rendered all four seeded reviewers, external-only accounts included, on an internal round (also reproduced on a scratch press), and submitting the assignment form for an external-only reviewer on an internal round completed normally, leaving a cross-stage assignment row (ledger 264, 265; pilot-2 probe report §§4–5) ·
-<sup>m3</sup> ReviewerForm::fetch() feeds the create/enroll group choice from Repo::userGroup()->getUserGroupsByStage($contextId, $reviewRound->getStageId(), ROLE_ID_REVIEWER) — only the round's stage group; PKPReviewerGridHandler::getUsersNotAssignedAsReviewers() excludes every reviewer-role holder regardless of group, so cross-group enrolment is unavailable from the picker; live-probed 2026-07-26: the enroll form showed a one-option select (Internal Reviewer on the internal round, External Reviewer on the external), the create form carries the group only as a hidden field pinned to the round's stage group — accounts created from each round landed in that round's group — and the enroll autocomplete returned no reviewer-group holder while a control search returned non-reviewer staff ·
-<sup>m4</sup> omp-main templates/controllers/grid/users/reviewer/readReview.tpl blanks the reviewerRecommendations capture ("Not implemented in OMP") before including the shared readReview.tpl, where OJS instead injects its set-or-adjust block and OJS's app ReviewerGridHandler::reviewRead() writes reviewerRecommendationId + the by-proxy log entry — OMP's app handler is an empty subclass with no such override; ui-library useReviewerManagerConfig.js renders no recommendation cell when no recommendations prop is passed, and neither OMP workflow config passes one; watch item, not a graduation: the configurable-recommendation plumbing is half-wired in OMP (Application::hasCustomizableReviewerRecommendation() true, install/upgrade migrations present) but SettingsHandler::workflow() never exposes the settings tab and there is no reviewers/recommendations API route; live-probed 2026-07-26 on both stages: the read-review modal shows no recommendation and no set-or-adjust control (its only buttons are Download Review Form and Confirm), Submitted/Viewed/Complete/Thanked rows carry no recommendation line, and confirm/revert cycles wrote only the confirmed/unconsidered log entries — no by-proxy entry is producible; recommendations are also unseedable on OMP — presses are created without the default recommendation set (ledger 263), a pilot-3 fixture blocker ·
+<sup>m1</sup> omp-main lib/ui-library useWorkflowConfigOMP.js deep-merges the OJS editorial/author configs (deepMerge(ConfigEditorialOJS, ConfigEditorialOMP)), so the external-stage ReviewerManager mount is the OJS config object verbatim (workflowConfigEditorialOJS.js) while workflowConfigEditorialOMP.js mounts the same ReviewerManager per internal round (same props minus recommendations) and workflowConfigAuthorOMP.js mounts the redacted author variant on both stages; omp-main controllers/grid/users/reviewer/ReviewerGridHandler.php is an empty subclass of PKPReviewerGridHandler (every grid op shared); all picker/assignment/action forms and modals are shared lib/pkp (omp-main templates/controllers/grid/users/reviewer/ holds only the readReview.tpl override — see m4); omp-main api/v1/reviews/index.php mounts the shared PKPReviewController; mail Repository::map() is merged unchanged and omp-main registry/emailTemplates.xml seeds the full review family (REVIEW_REQUEST, REVIEW_REQUEST_SUBSEQUENT, REVIEW_CANCEL, REVIEW_REINSTATE, REVIEW_RESEND_REQUEST, REVIEW_ACK, REVIEW_REMIND, REVIEW_EDIT, REVIEWER_REGISTER); the base's section-default review form works per series via shared ReviewerForm::initData() + Application::getSectionIdPropName() = 'seriesId' + omp schemas/section.json reviewFormId; the shared context schema carries defaultReviewMode, defaultReviewPublicVisibility, numWeeksPerResponse/numWeeksPerReview, restrictReviewerFileAccess and reviewerAccessKeysEnabled, and omp schemas/context.json adds reviewerSuggestionEnabled — internal-stage parity live-probed 2026-07-26 (MULTIAPP-PLAN §7b representative-subset battery: canonical scenarios 1, 6, 8 and 12 plus the full status walk of rule 2 re-run on Internal Review rounds — all ten display labels, per-status action menus, modals, emails and date stamps byte-identical to the external round; the verification pass widened the evidence 2026-07-26 — assign/edit task notifications, the picker's five filters with identical parameters and defaults, per-candidate stats on a rated control reviewer, the role-matrix menus with server-bounded refusals, the overdue boundary and the review exports all re-measured internal ≡ external; the series-default review-form check required activating the seeded forms by hand — the scenario seeder creates review forms inactive with no way to declare a series default, a pilot-3-relevant harness gap recorded in the pilot-2 probe report §16.3) ·
+<sup>m2</sup> omp-main registry/userGroups.xml — two groups on ROLE_ID_REVIEWER: Internal Reviewer stages="2", External Reviewer stages="3" (only the external group has permitSelfRegistration + masthead); scoping: AdvancedSearchReviewerForm::fetch() passes reviewStage = $reviewRound->getStageId() into the reviewers API, whose collector applies filterByWorkflowStageIds() via the user_group_stage join (lib/pkp PKPUserController::getReviewers(); classes/user/Collector.php); leak 1: PKPSelectReviewerListPanel::_getCollector() applies neither the stage nor the panel's stat filters, so the server-rendered first page of the picker is unscoped by stage or filter (it does honour the already-assigned lock and the round-2 pinning); leak 2: ReviewerForm::_isValidReviewer() checks only userHasRole(..., ROLE_ID_REVIEWER), never the group's stage — both live-probed 2026-07-26 and re-verified bounded: search and filter-only requests carry the round's stage on both stages (wrong-stage searches return the empty state; the same filter with the opposite stage flips exactly the group-only accounts); the unsearched first page rendered the identical candidate list on internal and external rounds — external-only accounts and filter-excluded candidates included — and submitting the assignment form for an external-only reviewer on an internal round completed normally, leaving a cross-stage assignment row (ledger 264, 265; pilot-2 probe report §§4–5; verification report D-9) ·
+<sup>m3</sup> ReviewerForm::fetch() feeds the create/enroll group choice from Repo::userGroup()->getUserGroupsByStage($contextId, $reviewRound->getStageId(), ROLE_ID_REVIEWER) — only the round's stage group; PKPReviewerGridHandler::getUsersNotAssignedAsReviewers() excludes every reviewer-role holder regardless of group, so cross-group enrollment is unavailable from the picker; the one-option/no-control shapes are the shared count-driven templates (createReviewerForm.tpl renders a select only above one group, enrollExistingReviewerForm.tpl always renders it) — a default single-group OJS journal renders the identical pair (code-derived; the OJS fleet was not probed in this pass — verification report D-2); live-probed 2026-07-26: the enroll form showed a one-option select (Internal Reviewer on the internal round, External Reviewer on the external), the create form carries the group only as a hidden field pinned to the round's stage group — accounts created from each round landed in that round's group — and the enroll autocomplete returned no reviewer-group holder while a control search returned non-reviewer staff ·
+<sup>m4</sup> omp-main templates/controllers/grid/users/reviewer/readReview.tpl blanks the reviewerRecommendations capture ("Not implemented in OMP") before including the shared readReview.tpl, where OJS instead injects its set-or-adjust block and OJS's app ReviewerGridHandler::reviewRead() writes reviewerRecommendationId + the by-proxy log entry — OMP's app handler is an empty subclass with no such override; ui-library useReviewerManagerConfig.js renders no recommendation cell when no recommendations prop is passed, and neither OMP workflow config passes one; watch item, not a graduation: the configurable-recommendation plumbing is half-wired in OMP (Application::hasCustomizableReviewerRecommendation() true, install/upgrade migrations present) but SettingsHandler::workflow() never exposes the settings tab and there is no reviewers/recommendations API route; live-probed 2026-07-26 on both stages: the read-review modal shows no recommendation and no set-or-adjust control (its only buttons are Download Review Form and Confirm), Submitted/Viewed/Complete/Thanked rows carry no recommendation line, and confirm/revert cycles wrote only the confirmed/unconsidered log entries — no by-proxy entry is producible, and the OJS-only recommendations API path answers not-found on OMP; the author's read modal (authorReadReview.tpl, fully shared, no OMP override) is blank by data rather than template — the assignment's recommendation id is always null on OMP; presses never receive the default recommendation set however they are created — only OJS's ContextService::addDefaultRecommendations() seeds it, so the recommendations table is empty for every press (ledger 263 — an app-level fact, broader than its scenario-API framing; also a pilot-3 fixture blocker; verification report D-11) ·
 <sup>m5</sup> omp-main classes/orcid/actions/SendReviewToOrcid.php extends PKPSendReviewToOrcid whose execute() is an intentional no-op ("currently only OJS" per its docblock); both call sites run in OMP — PKPReviewerGridHandler::reviewRead() at confirm time and the manual POST reviews/{submissionId}/{reviewAssignmentId}/sendToOrcid (mounted by omp-main api/v1/reviews/index.php) — and useReviewerManagerConfig.js offers the row action under the same status-blind condition recorded in Known deviations; live-probed 2026-07-26: the row action offered on never-accepted and Complete rows on both stages, the manual send returned success with an empty body and wrote no deposit setting, confirm-time deposits likewise wrote nothing, and a malformed control call drew a validation error — the API is live and the no-op is real ·
-<sup>m6</sup> workflowConfigAuthorOMP.js gates the internal-round author ReviewerManager on getOpenReviewAssignmentsForRound() (open assignments, completed or not) with redactedForAuthors, while the external round inherits the OJS gate getOpenAndCompletedReviewAssignmentsForRound() (workflowConfigAuthorOJS.js); whether authors should see internal rounds at all is omp-internal-review scope (pilot 3); live-probed 2026-07-26: an internal round with an open accepted-but-uncompleted review rendered the three-column redacted panel with no rows for the author while the identically-staged external case rendered no panel; completed open reviews rendered a single row on both stages; an anonymous-only internal round rendered no panel; Add Reviewer never visible to the author ·
-<sup>m7</sup> lib/pkp AboutContextHandler::getSortedMastheadUserGroups() builds the masthead role list with excludeRoles([ROLE_ID_REVIEWER]), so the per-user masthead flag written by CreateReviewerForm/EnrollExistingReviewerForm is never read for reviewer groups; the masthead's reviewer names come from Repo::reviewAssignment()->getExternalReviewerIdsByCompletedYear(), whose DAO pins stage_id = WORKFLOW_STAGE_ID_EXTERNAL_REVIEW — internal-round completions can never qualify; live-probed 2026-07-26: accounts created from both rounds with the box ticked persisted the per-user flag (stored even for the Internal Reviewer group, whose own group-level masthead flag is off) and the public masthead page rendered no reviewer either way; the inert checkbox is app-wide (shared handler — the OJS side is claimed from that shared code, not probed), the external-stage pin is the OMP consequence (ledger 266; pilot-2 probe report §15) ·
-<sup>o1</sup> ops-main schemas/submission.json pins stageId (default 5, validation min:5/max:5) and classes/core/Application.php getApplicationStages() returns production only, so no review round can exist; registry/userGroups.xml defines no reviewer-role group (the stray ROLE_ID_REVIEWER in controllers/api/file/ManageFileApiHandler.php is dead wiring — no user can hold the role); no OPS workflow config mounts ReviewerManager (workflowConfigEditorialOPS.js is production-only; the deep-merged OJS review-stage entry is unreachable — no menu item, no stage-3 submission possible); the editors' reviewer grid needs an app subclass of PKPReviewerGridHandler to be URL-resolvable and OPS has none (no controllers/grid/users/ directory), while lib/pkp's AuthorReviewerGridHandler is routable but blocked by its review-round authorization; there is no api/v1/reviews/index.php, so the shared PKPReviewController is unreachable; classes/mail/Repository.php map() lists no review mailables and registry/emailTemplates.xml seeds none (one orphan row: REQUEST_REVIEW_ROUND_AUTHOR_RESPONSE, a template with no mailable in the OPS map); the Settings → Workflow Review tab sits behind hasReviewStage, false in OPS; review DB tables are installed by shared migrations but nothing writes them; live-probed 2026-07-26 (pilot-2 probe report §1, scratch OPS context, manager + moderator + author): no reviewer surface in any workflow view and no review string anywhere on the three pages; a review-round seed is refused at the decision vocabulary; the editors' reviewer grid request is byte-identical to a nonexistent component while a control grid resolves; the author grid resolves and is refused at its review-round authorization; reviews API paths answer not-found while the shared GET api/v1/users/reviewers (mounted by ops-main api/v1/users/index.php) answers 200 with an empty collection — the one endpoint the old blanket "not mounted or routable" sentence overstated, folded into the OPS paragraph above; Settings → Workflow shows no Review tab; the mailables list has no review family and the template list's only review-family hit is the predicted orphan row
+<sup>m6</sup> workflowConfigAuthorOMP.js gates the internal-round author ReviewerManager on getOpenReviewAssignmentsForRound() with redactedForAuthors, while the external round inherits the OJS gate getOpenAndCompletedReviewAssignmentsForRound() (workflowConfigAuthorOJS.js); the effective gate is "any open-type assignment that is neither declined nor cancelled" because the gate's input is the submission record the author receives, which already omits declined and cancelled assignments for a viewer without stage access (submission maps Schema.php) — those rounds look reviewer-less to the panel; whether authors should see internal rounds at all is omp-internal-review scope (pilot 3); live-probed 2026-07-26 with a full state table (verification report D-4): invited and accepted-but-uncompleted open reviews each rendered the three-column redacted panel with no rows for the author (the identically-staged external cases rendered no panel), declined-only and cancelled-only rounds rendered no panel, completed open reviews rendered a single row on both stages, an anonymous-only internal round rendered no panel, and Add Reviewer was never visible to the author ·
+<sup>m7</sup> lib/pkp AboutContextHandler::getSortedMastheadUserGroups() builds the masthead role sections with excludeRoles([ROLE_ID_REVIEWER]), so the per-user masthead flag is never read for reviewer groups — and there is no choice to store: createReviewerForm.tpl and enrollExistingReviewerForm.tpl both render the checkbox checked + disabled, neither form reads a masthead user var, and assignUserToGroup() is called with the flag hard-coded on (a POST carrying masthead=0 was stored as 1); the masthead's reviewer names come from Repo::reviewAssignment()->getExternalReviewerIdsByCompletedYear($contextId, date('Y') - 1), whose DAO pins both stage_id = WORKFLOW_STAGE_ID_EXTERNAL_REVIEW and the previous calendar year — internal-round completions never qualify, and current-year external completions qualify only next year; live-probed 2026-07-26, bounded on a scratch press (verification report D-1): a masthead-flagged editor rendered in the role sections, an external review re-dated to the previous year rendered under "Peer Reviewers in Previous Year", the identically re-dated internal review did not, and neither newly created reviewer appeared despite the stored flag (shared forms and handler — the OJS side is claimed from that shared code, not probed; the external-stage pin is the OMP consequence) (ledger 266) ·
+<sup>m8</sup> AdvancedSearchReviewerForm::fetch() computes the reassignment offer only when $reviewRound->getRound() > 1 and looks the previous round up within the same stage, while OMP restarts round numbering per stage — the internal→external transition hands the picker an empty last-round list; the per-path template narrowing is the shared AdvancedReviewerSearchHandler.js behavior recorded in footnote b of Fields & validation; live-probed 2026-07-26 (verification report D-5): internal round 1→2 and external round 1→2 both pinned the completing reviewer ("This reviewer completed a review in the last round.") with "Review Request Subsequent" as the sole message, while a monograph whose completed internal round moved into External Review round 1 listed that reviewer unpinned with "Select Reviewer" and "Review Request" as the only message ·
+<sup>o1</sup> ops-main schemas/submission.json pins stageId (default 5, validation min:5/max:5; a posted preprint parks on the internal past-the-end marker recorded by workflow-stage-navigation) and classes/core/Application.php getApplicationStages() returns production only, so no review round can exist; registry/userGroups.xml defines no reviewer-role group (the stray ROLE_ID_REVIEWER in controllers/api/file/ManageFileApiHandler.php is dead wiring), but the role is creatable in-app — the shared roles settings offer Reviewer as a permission level (Application::getRoleNames(true), not overridden by OPS); live 2026-07-26 (OPS verification pass, probes C–E): a manager created such a group through Settings → Users & Roles (its sole stage checkbox, Production, is disabled — the group carries no stage; the public registration form's reviewer opt-in renders the untranslated key ##user.reviewerPrompt.userGroup##, a string family that exists only in OJS), a visitor self-registered into it, and GET api/v1/users/reviewers — the one endpoint of this spec that OPS mounts (ops-main api/v1/users/index.php) — went from an empty collection to a populated reviewer record, while the whole absence battery re-run unchanged: no panel, no picker, no per-assignment action; no OPS workflow config mounts ReviewerManager (workflowConfigEditorialOPS.js is production-only; the deep-merged OJS review-stage menu entries are unreachable — forcing their menu keys falls back to the production landing byte-identically); the editors' reviewer grid needs an app subclass of PKPReviewerGridHandler to be URL-resolvable and OPS has none (no controllers/grid/users/ directory); lib/pkp's AuthorReviewerGridHandler is routable and refused for every viewer — with the app's own stage id (5) the refusal is exactly the review-round authorization, other stage ids fail earlier at the stage check, an anonymous component call at stage access; there is no api/v1/reviews/index.php, so the shared PKPReviewController is unmounted and the reviews API paths answer not-found; classes/mail/Repository.php map() lists no review mailables and registry/emailTemplates.xml seeds none (one orphan row: REQUEST_REVIEW_ROUND_AUTHOR_RESPONSE, a template with no mailable in the OPS map); the Settings → Workflow Review tab sits behind hasReviewStage, false in OPS; the remaining inert traces — an open list of shared machinery, not a closed pair: review DB tables installed by shared migrations but never written, the submission payload's empty review keys (reviewAssignments, reviewRounds, reviewersNotAssigned), the shared context schema's review preferences (defaultReviewMode, numWeeksPerReview, …) which ops-main schemas/context.json keeps and the contexts API accepts writes to although nothing reads them without a review stage, and the stage-participant Assign form's shared anonymous-reviewer warning string with an always-empty reviewer-id list; live-probed 2026-07-26 (pilot-2 probe report §1 + OPS verification report; scratch OPS contexts; manager, moderator and author sessions, before and after the created role): no reviewer surface of this spec reachable by menu, forced menu key, legacy web address, grid or API — every negative bounded by a positive control in the same session; a signed-in holder of the created role lands on a reviewer-assignments page owned by editorial-dashboards / reviewer-response, outside this spec's surfaces
 
 ---
 
