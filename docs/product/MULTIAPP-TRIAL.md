@@ -84,6 +84,11 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 20 (fresh session after the handoff; state re-read from this
+  file): all three fleets verified up (8000/8100/8200). Pilot-2 closeout trio
+  launched per pilot 1's iters 14–17 pattern: shrunk verify OMP a/c/e (opus),
+  light OPS-absence verify (opus), readability spot-read of the new prose
+  (fable). No spec edits until all three land — a single fix pass folds them.
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
