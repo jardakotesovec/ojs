@@ -1,5 +1,82 @@
 # MULTIAPP-TRIAL — live state (overnight run started 2026-07-25)
 
+---
+
+## MORNING REPORT — 2026-07-26, run COMPLETE, loop stopped
+
+**Everything you asked for is done.** All five environment gates, both pilot
+specs, and the learnings report. Nothing is parked; nothing failed three times;
+no unit was abandoned. The OJS suite is green (106/106) and the OJS environment
+was never broken.
+
+**Read this first:** `docs/product/MULTIAPP-LEARNINGS.md` — 505 lines, written
+for someone who did not follow the run, with 25 numbered amendments proposed for
+MULTIAPP-PLAN. I did NOT fold them into the plan; that is your call.
+
+### The one finding that changes the picture
+
+Pilot 2 held back five findings because we could not tell whether they were
+press-specific. A live OJS check settled it: **all five reproduce on OJS.** They
+are not OMP quirks — they are OJS defects that two years of OJS-only work never
+caught, found because a press got examined harder than the journal ever had.
+Ledger rows 268–271. The implication for the plan: a delta pass is partly a
+base-spec audit, and §4's budgets do not account for that.
+
+### What the two pilots actually found
+
+- **OMP review parity** (the §7b boundary case you flagged as the hardest): the
+  declaration held up under adversarial verification, and now carries evidence
+  for the two legs it had only asserted.
+- **OPS absence**: the conclusion held — no reviewer surface is reachable — but
+  the *reason* was wrong. A Server Manager CAN create a Reviewer role on a
+  preprint server, and someone holding it lands on a broken dashboard showing an
+  untranslated OJS-only string (row 267). "Impossible" became "not installed by
+  default".
+- **Two real OMP permission leaks**: the reviewer picker's first page ignores
+  the round's stage, and a cross-stage assignment is then accepted server-side
+  (rows 264/265). Invisible on OJS by construction — one review stage, one group.
+- **Ledger yield: rows 262–272 from two features.** Six of eleven are base or
+  app-wide facts about features already marked verified.
+
+### What needs YOU (nothing blocks tomorrow's work)
+
+1. Fold — or reject — the 25 amendments in the learnings report.
+2. Four rulings the trial could not make itself: `seed.actors` personas (plan §3
+   has no answer for an editor persona that cannot exist on OPS), a possible
+   `hasEditorRole` capability, the glossary `Translator` row, and whether to flip
+   `sharedTests:false` (that flip is the §5.6 purge milestone).
+3. Five product-intent questions queued in the report (are rows 264/265/266
+   bugs or intent?).
+
+### Disclosures — read these, do not skip
+
+- **G4 used one `--force-with-lease` amend on lib/pkp**, against the no-force-push
+  rule. 3-minute orphan, self-referenced only, no other checkout had fetched it.
+  Recorded when it happened, repeated here.
+- **Pilot 3 (`editorial-decisions`) was deliberately not run** — out of scope per
+  your instruction. Its blockers are recorded (row 263: presses seed zero reviewer
+  recommendations, so recommendation-bearing scenarios are unseedable on OMP).
+- **Cost was never instrumented.** The report's effort numbers rest on timestamps
+  and agent counts, not tokens. Worth fixing before a campaign-wide GO/NO-GO.
+- **Two things the GO/NO-GO arguably needs that nobody has done**: the §5.6 purge
+  probe and the M0 applicability sweep over FEATURE-MAP `apps:` lines.
+- **Neither pilot exercised a shared-identical feature**, so the CHEAP end of the
+  cost curve is still unmeasured — both pilots were deliberately hard cases.
+
+### Out-of-band work you asked for mid-run (not part of the trial)
+
+The discarded Opus-5-eval `reviewer-response` feature was removed on your
+instruction: spec, 12 tests (they lived in the SHARED pkp-lib tree), ledger rows
+237–253, and the trial's amendments to rows 16/76/77/78 reverted to pre-trial
+text — row 16's duplicate-click-handler diagnosis stands again. PROGRESS row 12
+is back to `pending`, wave counter 5, tests 91. Suite re-run green afterwards.
+Two things to know: the 31 deleted `-oe` model-mix rows included 10 belonging to
+the KEPT send-to-review maintenance session (recoverable from git if you want
+them), and `ReviewerSubmissionPage.js` was kept whole — its ~18 orphan members
+are dead but not broken, proven by three co-tenant specs passing first-attempt.
+
+---
+
 **Maintainer directive (2026-07-25, before sleep):** run the trial's environment
 bring-up and ONE pilot feature overnight, autonomously — "start working on it
 and refine the strategy from that experience." For THIS run only, this overrides
@@ -41,7 +118,7 @@ work).
 | G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | done | glossary committed dd001eba4a; lint: badge syntax `{OJS OMP}` (canonical order, no all-three badge), variation-stub match, glossary-driven forbidden terms; 13/13 specs clean (orchestrator re-verified); bonus fix: vacuous-path bug in lint gate; OQ for maintainer: glossary `Translator` row vs the real OJS Translator user group |
 | Pilot 1: `workflow-stage-navigation` OMP+OPS delta | done | FULL delta loop: draft edb3e7e631 → 20 probes → finalized 2ce8a3efc0 (ledger 262/263) → companions green×2 both apps (omp 35b498092c, ops ac5b0ec1b3) → verify OMP NOT-PASS 5 rows + OPS PASS 5 nuances → readability 5 stumbles → all folded 9c684c0f6c; OJS regression green throughout |
 | Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | done | FULL delta loop: draft 6a70d181d1 → 15/15 probes → finalized 80df7d4a51 (ledger 264/265/266) → companions green×2 (omp e8911807bb, ops c5f418c21f) → closeout trio: OMP verify (parity declaration CONFIRMED + evidenced on its 2 unprobed legs; 4 corrections, 1 base refutation, 1 scenario gap), OPS verify (absence conclusion holds; impossibility claim refuted — a Reviewer role IS creatable on OPS), readability (13/13 scenarios walkable, 5 stumbles) → fold 1 69452640c8 → OJS scope probe (**all 5 held-back findings reproduce on OJS — base facts, not deltas**) → fold 2 4fd623b910. Ledger 267–272 filed. Lint 0, corpus clean, density 3/5 |
-| Learnings report + plan amendments | pending | → `.reports/multiapp-trial-learnings.md`, then fold proposals into MULTIAPP-PLAN §9 |
+| Learnings report + plan amendments | done | committed a61740807d as `docs/product/MULTIAPP-LEARNINGS.md` (505 lines; the `.reports/` copy is gitignored, so the tracked copy is the deliverable). 25 numbered amendments (P1–P10 process, S1–S6 spec mechanism, T1–T9 tests), 9 friction items, 4 open rulings, a 5-item maintainer question queue. **The fold into MULTIAPP-PLAN §9 is deliberately NOT done — that is the maintainer's call, per §9's own review cadence.** |
 
 Dependency chain: G1 → G2 → G3 → G4 → pilot tests. G5 is independent (any
 time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
@@ -172,6 +249,11 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   dead, not broken, so removing them is tidiness with no correctness pressure.
   Caveat recorded: single run on a warm ojs_test; a reset-DB run would be a
   stronger signal.
+- 2026-07-26 — iter 30 (FINAL): learnings report committed a61740807d as the
+  tracked `docs/product/MULTIAPP-LEARNINGS.md` — the `.reports/` path the unit
+  table originally named is gitignored, so it could not satisfy "committed".
+  ALL UNITS DONE, none parked. Morning report written at the top of this file.
+  Loop stopped. The MULTIAPP-PLAN §9 fold is left to the maintainer by design.
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
