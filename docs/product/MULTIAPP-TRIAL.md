@@ -39,7 +39,7 @@ work).
 | G3 scenario API port (createContext+createSubmission on all 3; OMP internal round seeds) | done | PASSED ×3 (OMP internal round verified in DB; OPS stage-5 seeding; OJS 14/14 regression green); shared `f296a80c46` pushed, omp/ops re-pinned, ojs root `2336dc9d3a` (no submodule pointers); headline fix: shared builder hard-coded submission stage — OPS would have seeded invisible; report has overlay-model + SeriesProcessor design notes |
 | G4 app playwright trees (smoke spec green on OMP+OPS) | done | PASSED ×3 (smoke 3/3 cold+warm both apps; OJS 14/14); lib/pkp `23d35b375b`+`60b6193d8f` pushed, app trees committed, ojs root `11059f814e`; DISCLOSED DEVIATION: one --force-with-lease amend on lib/pkp (3-min orphan, self-referenced only); rulings needed: seed.actors persona indirection (plan §3 gap — editor.diana can't exist on OPS), possible hasEditorRole capability; sharedTests:false in app configs (flipping it = §5.6 purge milestone) |
 | G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | done | glossary committed dd001eba4a; lint: badge syntax `{OJS OMP}` (canonical order, no all-three badge), variation-stub match, glossary-driven forbidden terms; 13/13 specs clean (orchestrator re-verified); bonus fix: vacuous-path bug in lint gate; OQ for maintainer: glossary `Translator` row vs the real OJS Translator user group |
-| Pilot 1: `workflow-stage-navigation` OMP+OPS delta | in_progress | SPEC DRAFT COMMITTED edb3e7e631 (lint-clean, 9 badges, 24 overrides; author attempt 1 flag-killed, respawn clean); 20-item probe list + tests wait on G2–G4 |
+| Pilot 1: `workflow-stage-navigation` OMP+OPS delta | done | FULL delta loop: draft edb3e7e631 → 20 probes → finalized 2ce8a3efc0 (ledger 262/263) → companions green×2 both apps (omp 35b498092c, ops ac5b0ec1b3) → verify OMP NOT-PASS 5 rows + OPS PASS 5 nuances → readability 5 stumbles → all folded 9c684c0f6c; OJS regression green throughout |
 | Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | in_progress | SPEC DRAFT COMMITTED 6a70d181d1 (lint-clean first attempt; OPS absence = file-scope badge + prose, OMP parity declaration + 6 overrides, 2 candidate OMP pool-leak defects); 15-item probe list waits on G3 |
 | Learnings report + plan amendments | pending | → `.reports/multiapp-trial-learnings.md`, then fold proposals into MULTIAPP-PLAN §9 |
 
@@ -84,6 +84,15 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 18: Pilot-2 probes 15/15 done — all confirmed with
+  corrections; TWO real OMP permission leaks (picker first page unscoped,
+  cross-stage assignment accepted) + dead masthead checkbox → ledger rows
+  264–266 reserved; §7b parity declaration probe-confirmed. Finalizer (fable)
+  launched. Pilot-3 blockers recorded for the learnings report.
+- 2026-07-26 — iter 17: PILOT 1 DONE (fix pass folded 17 findings; corpus
+  clean; companion tests semantically unaffected — 2 cosmetic comment/title
+  drifts noted in the fix report). Noisy finished verify task killed after
+  ~12 duplicate notifications. Pilot-2 probes still running.
 - 2026-07-26 — iter 16: OPS verify chunk PASS (nothing refuted; 5 precision
   nuances queued for the fix pass — notably Known-deviations bullets unbadged
   yet impossible on OPS, and a v12 roster footnote that is context-specific).
