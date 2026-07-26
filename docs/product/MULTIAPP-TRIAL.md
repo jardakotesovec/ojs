@@ -40,7 +40,7 @@ work).
 | G4 app playwright trees (smoke spec green on OMP+OPS) | done | PASSED ×3 (smoke 3/3 cold+warm both apps; OJS 14/14); lib/pkp `23d35b375b`+`60b6193d8f` pushed, app trees committed, ojs root `11059f814e`; DISCLOSED DEVIATION: one --force-with-lease amend on lib/pkp (3-min orphan, self-referenced only); rulings needed: seed.actors persona indirection (plan §3 gap — editor.diana can't exist on OPS), possible hasEditorRole capability; sharedTests:false in app configs (flipping it = §5.6 purge milestone) |
 | G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | done | glossary committed dd001eba4a; lint: badge syntax `{OJS OMP}` (canonical order, no all-three badge), variation-stub match, glossary-driven forbidden terms; 13/13 specs clean (orchestrator re-verified); bonus fix: vacuous-path bug in lint gate; OQ for maintainer: glossary `Translator` row vs the real OJS Translator user group |
 | Pilot 1: `workflow-stage-navigation` OMP+OPS delta | done | FULL delta loop: draft edb3e7e631 → 20 probes → finalized 2ce8a3efc0 (ledger 262/263) → companions green×2 both apps (omp 35b498092c, ops ac5b0ec1b3) → verify OMP NOT-PASS 5 rows + OPS PASS 5 nuances → readability 5 stumbles → all folded 9c684c0f6c; OJS regression green throughout |
-| Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | in_progress | draft 6a70d181d1 → 15/15 probes → FINALIZED 80df7d4a51 (ledger 264/265/266) → companions GREEN×2 (omp e8911807bb 4 tests, ops c5f418c21f 1 absence test; OJS 14/14; zero spec conflicts). REMAINING: shrunk verify (OMP a/c/e + a light OPS-absence check), readability spot-read of new prose, fix pass folding both — then done. Follow pilot 1's closeout pattern (iters 14–17). |
+| Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | done | FULL delta loop: draft 6a70d181d1 → 15/15 probes → finalized 80df7d4a51 (ledger 264/265/266) → companions green×2 (omp e8911807bb, ops c5f418c21f) → closeout trio: OMP verify (parity declaration CONFIRMED + evidenced on its 2 unprobed legs; 4 corrections, 1 base refutation, 1 scenario gap), OPS verify (absence conclusion holds; impossibility claim refuted — a Reviewer role IS creatable on OPS), readability (13/13 scenarios walkable, 5 stumbles) → fold 1 69452640c8 → OJS scope probe (**all 5 held-back findings reproduce on OJS — base facts, not deltas**) → fold 2 4fd623b910. Ledger 267–272 filed. Lint 0, corpus clean, density 3/5 |
 | Learnings report + plan amendments | pending | → `.reports/multiapp-trial-learnings.md`, then fold proposals into MULTIAPP-PLAN §9 |
 
 Dependency chain: G1 → G2 → G3 → G4 → pilot tests. G5 is independent (any
@@ -153,6 +153,14 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   empty JATS recommendation — the ONE half that stayed app-specific). Launched
   the second fold (fable, base-not-badged + the glossary one-liner) and the
   deferred post-removal suite run (opus, expect green minus 12).
+- 2026-07-26 — iter 28: **PILOT 2 DONE** — second fold committed 4fd623b910
+  (all five held-back findings landed as BASE corrections, unbadged; glossary
+  Moderator note confirmed; stale "PROPOSED row 266" citation fixed — the five
+  numberless PROPOSED rows are pre-trial base-spec backlog, deliberately left).
+  Both pilots now complete. Learnings report (fable) launched — the last unit —
+  briefed to find friction rather than confirm the mechanism, and to disclose
+  the G4 force-with-lease deviation and pilot 3's out-of-scope blockers.
+  Post-removal suite run still going.
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
