@@ -40,7 +40,7 @@ work).
 | G4 app playwright trees (smoke spec green on OMP+OPS) | done | PASSED ×3 (smoke 3/3 cold+warm both apps; OJS 14/14); lib/pkp `23d35b375b`+`60b6193d8f` pushed, app trees committed, ojs root `11059f814e`; DISCLOSED DEVIATION: one --force-with-lease amend on lib/pkp (3-min orphan, self-referenced only); rulings needed: seed.actors persona indirection (plan §3 gap — editor.diana can't exist on OPS), possible hasEditorRole capability; sharedTests:false in app configs (flipping it = §5.6 purge milestone) |
 | G5 spec-side tooling (APP-GLOSSARY.md + lint extensions) | done | glossary committed dd001eba4a; lint: badge syntax `{OJS OMP}` (canonical order, no all-three badge), variation-stub match, glossary-driven forbidden terms; 13/13 specs clean (orchestrator re-verified); bonus fix: vacuous-path bug in lint gate; OQ for maintainer: glossary `Translator` row vs the real OJS Translator user group |
 | Pilot 1: `workflow-stage-navigation` OMP+OPS delta | done | FULL delta loop: draft edb3e7e631 → 20 probes → finalized 2ce8a3efc0 (ledger 262/263) → companions green×2 both apps (omp 35b498092c, ops ac5b0ec1b3) → verify OMP NOT-PASS 5 rows + OPS PASS 5 nuances → readability 5 stumbles → all folded 9c684c0f6c; OJS regression green throughout |
-| Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | in_progress | SPEC DRAFT COMMITTED 6a70d181d1 (lint-clean first attempt; OPS absence = file-scope badge + prose, OMP parity declaration + 6 overrides, 2 candidate OMP pool-leak defects); 15-item probe list waits on G3 |
+| Pilot 2: `assign-and-manage-reviewers` OMP+OPS delta | in_progress | draft 6a70d181d1 → 15/15 probes → FINALIZED 80df7d4a51 (ledger 264/265/266) → companions GREEN×2 (omp e8911807bb 4 tests, ops c5f418c21f 1 absence test; OJS 14/14; zero spec conflicts). REMAINING: shrunk verify (OMP a/c/e + a light OPS-absence check), readability spot-read of new prose, fix pass folding both — then done. Follow pilot 1's closeout pattern (iters 14–17). |
 | Learnings report + plan amendments | pending | → `.reports/multiapp-trial-learnings.md`, then fold proposals into MULTIAPP-PLAN §9 |
 
 Dependency chain: G1 → G2 → G3 → G4 → pilot tests. G5 is independent (any
@@ -84,6 +84,11 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
+  session; no agents in flight): pilot-2 companions green×2 both apps,
+  committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
+  learnings report + MULTIAPP-PLAN §9 amendments; morning report; stop loop.
+  Fresh session: re-run the same /loop prompt — this file is the state.
 - 2026-07-26 — iter 18: Pilot-2 probes 15/15 done — all confirmed with
   corrections; TWO real OMP permission leaks (picker first page unscoped,
   cross-stage assignment accepted) + dead masthead checkbox → ledger rows
