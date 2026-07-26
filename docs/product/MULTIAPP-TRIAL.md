@@ -161,6 +161,17 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   briefed to find friction rather than confirm the mechanism, and to disclose
   the G4 force-with-lease deviation and pilot 3's out-of-scope blockers.
   Post-removal suite run still going.
+- 2026-07-26 — iter 29: post-removal suite GREEN — 106/106, exit 0, zero flaky,
+  one run: `ojs` project 104 (was 116 — exactly minus 12), setup 2, serial 0
+  (empty by construction, pre-existing). PROGRESS's 91 reconciles: it counts 11
+  product-spec features and excludes `assign-and-manage-reviewers` (13 tests,
+  round-1, predates the campaign) — 91+13=104, so no stale count. The
+  `ReviewerSubmissionPage` worry is CLEARED empirically: all three co-tenant
+  specs green first-attempt (13/13, 10/10, 13/13) driving the trial-rewritten
+  method bodies — keeping the POM whole is safe; its ~18 orphan members are
+  dead, not broken, so removing them is tidiness with no correctness pressure.
+  Caveat recorded: single run on a warm ojs_test; a reset-DB run would be a
+  stronger signal.
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
