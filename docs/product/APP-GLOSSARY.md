@@ -24,7 +24,7 @@ Terms not in this file mean the same thing in all three apps.
 | OJS term (as written in specs) | OMP | OPS |
 |---|---|---|
 | journal | press | preprint server |
-| article / submission | monograph (work types: authored work, edited volume) | preprint |
+| article / submission | monograph (work types on screen: Monograph, Edited Volume) | preprint |
 | section | series (optional; categories carry more weight) | section (unchanged; seed section "Preprints") |
 | issue | — no issues. Counterpart feature: catalog (New Releases / Featured) | — no issues; continuous posting |
 | issue assignment | — counterpart feature: catalog entry | — |

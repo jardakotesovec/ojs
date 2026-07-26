@@ -58,13 +58,13 @@ their own review pages.
 | **Open the editorial shell** | • Site Administrator, Journal Manager — any submission in the journal<br>• Section Editor, Assistant — when assigned<br>• Author, Reviewer — never this shell (authors get the tracking view; reviewers their review pages)<br>• Which rows offer the View button is the dashboards' rule <sup>a</sup> |
 | **See a stage's working panels** (instead of the no-access note) | • Anyone whose assigned role covers that stage<br>• Site Administrator, Journal Manager — every stage while unassigned <sup>b</sup> |
 | **See the Publication menu's version entries** | • Site Administrator, Journal Manager — while unassigned (the baseline)<br>• A Journal Manager, Section Editor or Assistant assigned on the submission's *current* stage<br>• The production-bound entries (Body Text, Galleys, Media, Permissions & Disclosure — the menu's name for the License screen — and Publication Settings) — only with production-stage access on top of that <sup>c</sup> |
-| **See the header tools** | • Activity Log — Site Administrator, Journal Manager, or a Section Editor assigned on the current stage<br>• Library — everyone who can open the shell<br>• Preview (relabeled View once published) — everyone who can open the shell, from the moment the submission reaches Copyediting <sup>d</sup> |
+| **See the header tools** | • Activity Log — Site Administrator, Journal Manager, or a Section Editor assigned on the current stage<br>• Library — everyone who can open the shell<br>• Preview (relabeled View once published) — everyone who can open the shell, from the moment the submission reaches Copyediting<br>• Return to Workflow — gated on a decision, not a role or an app: shown when the viewer's available decisions include returning the submission to the workflow (in practice: on a published submission), for managers and assigned Section Editors alike; the decision's behavior belongs to *editorial-decisions* <sup>d</sup> |
 | **Use a legacy workflow address** | • Site Administrator, Journal Manager, Section Editor, Assistant — same shell access as above, checked before the redirect<br>• Author, Reviewer — sent to an access-denied page reading "You don't currently have access to that stage of the workflow." — never into the workflow<br>• Logged out — asked to sign in first; an allowed person then continues on to the panel <sup>e</sup> |
 
 <sup>a</sup> dashboardPageStore.js openWorkflowModal() (mounts WorkflowPage per dashboard type); editorial-dashboards spec rule 15 (View-button gating); useWorkflowConfigOJS.js (EDITORIAL_DASHBOARD → workflowConfigEditorialOJS, else workflowConfigAuthorOJS); denial side live-probed 2026-07-16 (verification chunk c: author and reviewer deep links → 302 user/authorizationDenied?message=user.authorization.roleBasedAccessDenied — the role-whitelist denial, unlike the legacy ops' accessible-stage sentence; an *unassigned* Section Editor's deep link returns 200 and mounts the dashboard, but the panel renders an empty husk — the submission API answers 401 and no submission content or title appears — so "when assigned" holds substantively) ·
 <sup>b</sup> classes/user/Repository::getAccessibleWorkflowStages() (assignments × userGroupStages × still-held roles; manager/admin fallback when none); submission/maps/Schema::getPropertyStages(), getAssignmentRoles() (per-stage currentUserAssignedRoles; dateStart/dateEnd check); useWorkflowPermissions.js (accessibleStages); workflowConfigEditorialOJS.js WorkflowConfig.common.getPrimaryItems; denial + baseline live-probed 2026-07-16 (verification chunk c: stage-4-only assistant saw exactly the no-access sentence on Submission/Review/Production and real content on Copyediting; unassigned Site Administrator walked all four stages with the sentence nowhere) ·
 <sup>c</sup> useWorkflowPermissions.js (canAccessPublication = EditorialRoles on active stage; canAccessProduction = EditorialRoles on production stage); useWorkflowNavigationConfigOJS.js getPublicationVersionItems(), getPublicationItemsEditorial(); split live-probed 2026-07-16 (verification chunk c: assistant assigned off the current stage — no version entries, inert Publication header; assistant assigned on the current stage — non-production screens only, no create-version action; manager-role editor — full set plus "Create New Version") ·
-<sup>d</sup> workflowConfigEditorialOJS.js getHeaderItems(); useWorkflowPermissions.js (canAccessEditorialHistory: SITE_ADMIN/MANAGER/SUB_EDITOR on active stage); Preview/View block is stage+status-gated only (stageId EDITING/PRODUCTION, common.preview → common.view when STATUS_PUBLISHED), no permission check — live-probed 2026-07-16 (Group C: stage-covering assistant on a Copyediting submission saw Preview + Library, no Activity Log; verification chunk c re-confirmed both directions: same assistant's Preview absent while the submission sat in Review, Activity Log absent for the assistant but present for the manager-role editor) ·
+<sup>d</sup> workflowConfigEditorialOJS.js getHeaderItems(); useWorkflowPermissions.js (canAccessEditorialHistory: SITE_ADMIN/MANAGER/SUB_EDITOR on active stage); Preview/View block is stage+status-gated only (stageId EDITING/PRODUCTION, common.preview → common.view when STATUS_PUBLISHED), no permission check — live-probed 2026-07-16 (Group C: stage-covering assistant on a Copyediting submission saw Preview + Library, no Activity Log; verification chunk c re-confirmed both directions: same assistant's Preview absent while the submission sat in Review, Activity Log absent for the assistant but present for the manager-role editor); Return to Workflow: addItemIf(isDecisionAvailable(submission, DECISION_RETURN_TO_WORKFLOW)) sits in the OJS, OMP and OPS editorial configs alike — observed 2026-07-26 on a published OMP monograph and a posted OPS preprint (manager and section-editor viewers), so it is a shared decision-gated tool, not an app extra; caveat: the same configs register a sibling "Return to Done" button (DECISION_RETURN_TO_DONE) that no probed state has shown — the header after a return-to-workflow decision was not walked (OPS probe H left it incomplete), so that button's reachability is unconfirmed, recorded here as a caveat rather than a claim ·
 <sup>e</sup> WorkflowHandler::__construct() addRoleAssignment([SUB_EDITOR, MANAGER, SITE_ADMIN, ASSISTANT]); PKPWorkflowHandler::authorize() (access op: UserAccessibleWorkflowStageRequiredPolicy WORKFLOW_TYPE_EDITORIAL, roles not re-checked; stage ops: WorkflowStageAccessPolicy); PKPApplication::getWorkflowTypeRoles() (editorial workflow = admin/manager/sub-editor/assistant); live-probed 2026-07-16 (Group A: author + reviewer, access op AND stage-named op → 302 user/authorizationDenied?message=user.authorization.accessibleWorkflowStage — the accessible-stage sentence, not the role-whitelist denial; logged out → login with the legacy URL in `source`, chain resumes to the panel after sign-in); denial side re-probed 2026-07-16 (verification chunk c: author, reviewer AND an unassigned Section Editor each 302 → the accessibleWorkflowStage denial on both the entry-check and stage-named ops, assigned editor as positive control — confirming "same shell access as above" means assigned-only for Section Editors)
 
 ## Fields & validation
@@ -140,12 +140,16 @@ N/A — the shell is navigation only; it has no user-entered fields.
    renders bare, without the "Status" box framing accessible stages use. The menu
    entry itself stays clickable (rule 3). <sup>g</sup>
 8. Opening an accessible stage that is not the submission's current stage leads
-   with a **Status** box — alone when the stage has nothing to show yet, above
-   read-only panels when it does:
+   with a **Status** box:
    - a stage the submission hasn't reached: "The {stage} stage has not yet been
-     initiated." — and, beyond the "Current Submission Language" line that opens
-     every accessible stage view (the author's tracking view shows the same
-     line), nothing else;
+     initiated." — in the main column, nothing else beyond that box and the
+     "Current Submission Language" line that opens every accessible stage view
+     (the author's tracking view shows the same line). The box is not alone on
+     the screen, though: the editorial shell still renders the stage's
+     Participants side column beside it, and an un-reached Production stage
+     also offers its "Schedule For Publication" action (⚠ one exception: on
+     OMP, the un-reached view of that app's extra review stage drops the
+     Participants column — Known deviations);
    - a stage the submission has passed: "The submission is currently in the
      {current stage} stage.", above that stage's read-only panels;
    - an older review round {OJS OMP} when the submission has moved on: "The submission has
@@ -181,7 +185,8 @@ N/A — the shell is navigation only; it has no user-entered fields.
     so old bookmarks and emailed links come in two shapes — the **entry-check
     address**, whose last part names only the submission (a general "take me to
     this submission's workflow" link), and the four **stage-named addresses**,
-    whose last part names one of the four stages (the verbatim forms are listed
+    whose last part names one of the four stages — it reads submission,
+    externalReview, editorial or production (the full address forms are listed
     under Reference). All of them now funnel to the editorial dashboard with
     the panel open on that submission: the entry-check address redirects straight
     there, and the stage-named addresses redirect in two hops (stage name →
@@ -202,7 +207,7 @@ N/A — the shell is navigation only; it has no user-entered fields.
 <sup>e</sup> useWorkflowNavigationConfigOJS.js getPublicationVersionItems() (per-version items; publication_create_new_version when canPublish), getPublicationItemsEditorial() (identifiersEnabled, supportsCitations, supportsDataCitations/DataAvailability toggles; canAccessProduction block); empty-group rendering live-probed 2026-07-16 (Group C item 7: header li with icon + label, no submenu ul, no chevron, click is a no-op — useSideMenu attaches no command to an item with no link/action/state); menu labels live-verified 2026-07-16 (verification chunk c: the Citations entry renders as "References" — submission.citations msgstr, lib/pkp/locale/en/submission.po; JATS XML appears in every version's list regardless of production access; the action's label is "Create New Version"); the Data availability entry's on-screen label is "Data" — submission.dataAvailabilityAndCitation.data msgstr, lib/pkp/locale/en/submission.po, shared by all three apps (label live-probed 2026-07-26, pilot-1 batch B item 16 — a base-spec label fix surfaced by the OPS roster walk, not an app delta) ·
 <sup>f</sup> classes/user/Repository::getAccessibleWorkflowStages(); submission/maps/Schema::getPropertyStages() (per-stage currentUserAssignedRoles; global manager/admin fallback only when not assigned in any still-held role), getAssignmentRoles(); useWorkflowPermissions.js accessibleStages ·
 <sup>g</sup> workflowConfigEditorialOJS.js WorkflowConfig.common.getPrimaryItems/getSecondaryItems/getActionItems (accessibleStages gate, shouldContinue:false → WorkflowPrimaryBasicMetadata with user.authorization.accessibleWorkflowStage); lib/pkp/locale/en/user.po; live-probed 2026-07-16 (Group B item 4: workflow-primary-items innerText = exactly the sentence, workflow-secondary-items and workflow-action-items both count 0 on uncovered stages; covered stage renders status box + Participants side column) ·
-<sup>h</sup> WorkflowSubmissionStatus.vue (workflow.stageNotStarted, workflow.submissionInFutureStage, workflow.submissionInNextReviewRound, workflow.submissionNextReviewRoundInFutureStage, editor.submission.workflowDecision.submission.published); useSubmission.js hasNotSubmissionStartedStage(), hasSubmissionPassedStage(); workflowConfigEditorialOJS.js common.getPrimaryItems (shouldContinue = !hasNotSubmissionStartedStage → unstarted stage renders status box only); OJS stage names from workflow.review.externalReview "Review", submission.copyediting, submission.production; not-yet-initiated + current-stage messages live-probed 2026-07-16 (Group B item 4); the ever-present language line is WorkflowChangeSubmissionLanguage (submission.list.changeSubmissionLanguage.currentLanguage), rendered ahead of the status box on every accessible stage view — same fixture author-dashboard rule 8 documents; published-box unreachability + blank-stage sentence live-probed 2026-07-26 (pilot-1 batch B item 13: a published submission sits on the internal Done stage — ApplyDoneWorkflowStage on PublicationPublished — so WorkflowSubmissionStatus.vue's hasSubmissionPassedStage() branch fires before the PRODUCTION+published branch that would emit editor.submission.workflowDecision.submission.published, and its StageNames map has entries for stages 2–5 only, so the Done stage's name resolves to nothing; byte-identical render observed on an OJS published submission, read-only, and an OPS posted preprint — ledger row 262) ·
+<sup>h</sup> WorkflowSubmissionStatus.vue (workflow.stageNotStarted, workflow.submissionInFutureStage, workflow.submissionInNextReviewRound, workflow.submissionNextReviewRoundInFutureStage, editor.submission.workflowDecision.submission.published); useSubmission.js hasNotSubmissionStartedStage(), hasSubmissionPassedStage(); workflowConfigEditorialOJS.js common.getPrimaryItems (shouldContinue = !hasNotSubmissionStartedStage → the PRIMARY column holds only the status box on an unstarted stage; secondary/action items are separate getters — EDITING and PRODUCTION getSecondaryItems push ParticipantManager unconditionally, PRODUCTION getActionItems pushes schedulePublication unconditionally, and workflowConfigEditorialOMP.js overrides neither stage, so the un-reached-stage side column is shared behavior: OJS un-reached Copyediting observed with the Participants column 2026-07-16 (Group B item 4), OMP un-reached Copyediting AND Production observed 2026-07-26 (pilot-1 verify pass, port 8140 — Production adds the "Schedule For Publication" action, Copyediting shows no action), OJS un-reached Production not separately probed — same config objects, code-derived; this corrects the earlier "box alone" reading and closes former Open question 4); OJS stage names from workflow.review.externalReview "Review", submission.copyediting, submission.production; not-yet-initiated + current-stage messages live-probed 2026-07-16 (Group B item 4); the ever-present language line is WorkflowChangeSubmissionLanguage (submission.list.changeSubmissionLanguage.currentLanguage), rendered ahead of the status box on every accessible stage view — same fixture author-dashboard rule 8 documents; published-box unreachability + blank-stage sentence live-probed 2026-07-26 (pilot-1 batch B item 13: a published submission sits on the internal Done stage — ApplyDoneWorkflowStage on PublicationPublished — so WorkflowSubmissionStatus.vue's hasSubmissionPassedStage() branch fires before the PRODUCTION+published branch that would emit editor.submission.workflowDecision.submission.published, and its StageNames map has entries for stages 2–5 only, so the Done stage's name resolves to nothing; byte-identical render observed on an OJS published submission, read-only, and an OPS posted preprint — ledger row 262) ·
 <sup>i</sup> useWorkflowNavigationConfigOJS.js getInitialSelectionItemKey() (review stages → workflow_{stage}_{currentRound}; PRODUCTION + status ≠ QUEUED → publication_{latest}_titleAbstract; DONE → publication if PUBLISHED else workflow_5; else workflow_{stageId}); declined keeps stageId → else branch; author-side declined landings live-probed 2026-07-11 (author-dashboard spec); editor-side landings live-probed 2026-07-16 (Group A item 8: scheduled + published → publication_{latest}_titleAbstract; a published submission is internally moved to the Done stage by ApplyDoneWorkflowStage, so it lands via the DONE branch — same outcome; Done-but-unpublished → workflow_5 verified only with a forced DB state, no in-app path found — defensive branch; Group B item 4: stage-4-only assistant landed on workflow_3_{round}, saw the no-access sentence) ·
 <sup>j</sup> useWorkflowMenu.js (workflowMenuKey query param: watch selectedMenuKey → write; on submission fetch → navigateToMenu(url key) with doesKeyExist fallback to getInitialSelectionItemKey()); dashboardPageStore.js onClose cleanup (editorial-dashboards <sup>n</sup>); fallback live-probed 2026-07-16 (Group A item 8d: stale publication key and garbage key both fell back to the fresh-open landing, bad key replaced in the URL); cross-app parity live-probed 2026-07-26 (pilot-1 batch B item 19: OPS persistence + reload hold; stale keys — including other-app workflow_{1,2,3} keys, exactly what a copied OJS link would carry — and garbage keys all rewritten to the rule-9 landing; OJS control re-confirmed read-only; OMP persistence + deep-link confirmed batch A §12.2, its stale-key fallback not separately probed) ·
 <sup>k</sup> PKPWorkflowHandler::access(), index() (both → dashboard/editorial?workflowSubmissionId={id}, no workflowMenuKey), submission()/externalReview()/editorial()/production() → _redirectToIndex() → workflow/index/{id}/{stageId}; workflow/access/{id} → 302 live-probed 2026-07-16 (editorial-dashboards <sup>g</sup>); two-hop chain + stage-drop live-probed 2026-07-16 (Group A item 1: hop 1 carries the op's stage id, hop 2 → dashboard/editorial?workflowSubmissionId={id} identical for stages 1 and 3, no workflowMenuKey; browser lands at the rule-9 default; post-login resume through the full chain also verified) ·
@@ -257,7 +262,8 @@ selection recorded in the page address (rule 10).
    submission's ID, authors and title with a "Review (Round 1)" stage indicator; in
    the menu, all four stages are listed and the Review round entry carries the
    colored stripe. Opening **Copyediting** shows a Status box reading "The
-   Copyediting stage has not yet been initiated." and nothing else beyond the
+   Copyediting stage has not yet been initiated." with the Participants side
+   column beside it, and nothing else in the main column beyond the
    ever-present submission-language line (rule 8); opening
    **Submission** shows "The submission is currently in the Review stage." above
    the desk-review panels; returning to the Review round shows the working stage.
@@ -308,14 +314,19 @@ selection recorded in the page address (rule 10).
 
 ## Known deviations (as-built ≠ intent)
 
-- ⚠ **A manager who reviews is blinded in the UI but not on the server** (rule 6,
-  permissions lead-in; live-confirmed 2026-07-16, Group B item 5): the submission
-  payload skips the global manager/admin fallback when the viewer holds an active
-  (not declined/cancelled) review assignment on the submission
+- ⚠ **A manager who reviews is blinded in the UI but not on the server** {OJS OMP}
+  (rule 6, permissions lead-in; live-confirmed 2026-07-16, Group B item 5): the
+  submission payload skips the global manager/admin fallback when the viewer holds
+  an active (not declined/cancelled) review assignment on the submission
   (Schema::getPropertyStages() `$hasCurrentUserReviewAssignment` guard), so an
   unassigned Journal Manager who is also a reviewer sees the no-access sentence on
-  all four stages (the shell itself still opens — header and menu load, only stage
-  content is blinded) — but classes/user/Repository::getAccessibleWorkflowStages()
+  all four stages (the shell itself still opens — header and menu load — but the
+  blinding reaches past stage content: the Activity Log button disappears and the
+  Publication group collapses to a bare header with no version entries and no
+  create action, since canAccessEditorialHistory, canAccessPublication and
+  canPublish all derive from the same emptied per-stage roles — observed on OMP
+  2026-07-26, pilot-1 verify P3; ledger row 211's user-visible surface is this
+  whole set) — but classes/user/Repository::getAccessibleWorkflowStages()
   has no such guard, so server-side stage authorization still permits them
   everywhere (probed: the legacy stage route enters the normal redirect chain and a
   stage-scoped participants API call succeeds for the same person). A declined AND
@@ -335,7 +346,9 @@ selection recorded in the page address (rule 10).
   the blinding covers all five stages, and the server side is identically
   permissive — the internal-review legacy op included enters the normal
   redirect chain and a stage-scoped participants call returns content for the
-  same blinded person; ledger row 211 applies as written.
+  same blinded person; ledger row 211 applies as written. Cannot arise on OPS —
+  the app installs no reviewer group and has no review stage, so no manager can
+  hold a review assignment there (hence the badge).
 - ⚠ **Legacy stage bookmarks lose their stage** (rule 11; live-confirmed
   2026-07-16, Group A item 1): every old stage-named address ends at
   `dashboard/editorial?workflowSubmissionId={id}` with no `workflowMenuKey`, so the
@@ -344,16 +357,20 @@ selection recorded in the page address (rule 10).
   probed: a Submission-stage bookmark on a Review-stage submission opened at the
   current review round). Suspected intent: map the old stage path onto the menu
   key. Low impact; proposed ledger row 212 (behavior-change note).
-- ⚠ **Stage-named addresses are stricter than their destination** (rule 12;
-  live-confirmed 2026-07-16, Group B item 3): the named stage is authorized
+- ⚠ **Stage-named addresses are stricter than their destination** {OJS OMP}
+  (rule 12; live-confirmed 2026-07-16, Group B item 3): the named stage is authorized
   (WorkflowStageAccessPolicy) although the redirect target ignores it — an
   Assistant not covering the named stage is refused by e.g.
   `workflow/production/{id}` (302 to the authorization-denied page carrying the
   same "You don't currently have access to that stage of the workflow." sentence)
   yet gets the identical end state via `workflow/access/{id}` or a covered
   stage-named address. Harmless as-built inconsistency; folded into ledger row 212.
-- ⚠ **The selected parent Review entry misdescribes an active round** (rule 3;
-  found live 2026-07-16, Group C item 6): selecting the round-less **Review**
+  The asymmetry cannot arise on OPS: its one surviving stage-named address names
+  the app's only stage, so a viewer refused there is refused by the entry-check
+  address too (App variations).
+- ⚠ **The selected parent Review entry misdescribes an active round** {OJS OMP}
+  (rule 3; found live 2026-07-16, Group C item 6; no Review entry exists on OPS to
+  select): selecting the round-less **Review**
   entry shows the status box "The submission has been advanced to the next round
   of review" while round 1 is still running
   (WorkflowSubmissionStatus.vue compares `selectedReviewRoundId` — null here —
@@ -364,11 +381,14 @@ selection recorded in the page address (rule 10).
   Suspected intent: the parent entry should be expand-only, or should select the
   current round. Proposed ledger row 213. Reproduces on both OMP review stages,
   on single- and multi-round fixtures (live-probed 2026-07-26, pilot-1 batch A
-  item 2); OMP addendum for the ledger row: the round-less Internal Review
-  parent additionally drops the Participants side column
-  (workflowConfigEditorialOMP.js getSecondaryItems early-returns before pushing
-  ParticipantManager when no round is selected), while the External Review
-  parent — inheriting the OJS guard — keeps it.
+  item 2); OMP addendum for the ledger row, scope widened by the pilot-1 verify
+  pass: ANY Internal Review view with no selected round loses the Participants
+  side column — the round-less parent entry and the not-yet-initiated stage
+  alike (workflowConfigEditorialOMP.js getSecondaryItems early-returns before
+  pushing ParticipantManager whenever no round is selected, which includes a
+  Submission-stage monograph's un-reached Internal Review entry — the OMP
+  exception rule 8 flags) — while External Review, inheriting the OJS guard,
+  keeps the column in both cases; this scope carries into ledger row 213.
 - ⚠ **The published status box never renders — a blank-stage sentence appears
   instead** (rule 8, last bullet; live-probed 2026-07-26, pilot-1 batch B
   item 13): expected — a published submission's Production stage leads with
@@ -393,14 +413,7 @@ selection recorded in the page address (rule 10).
    accepted behavior?
 3. Should the parent **Review** menu entry be selectable at all (it is today —
    Known deviations, fourth item), or expand-only / an alias for the current round?
-4. Does rule 8's "alone when the stage has nothing to show yet" hold for an
-   un-reached **Production** stage on OJS? On OMP the not-yet-initiated
-   Production view carries a Participants side column and a
-   schedule-for-publication action beside the box, while un-reached Copyediting
-   shows the box alone (live-probed 2026-07-26, pilot-1 batch A item 4); the
-   OJS probes only walked Copyediting, so this may be a base-rule overstatement
-   rather than an OMP delta (App variations, OMP).
-5. {OMP} Scheduled is reachable only by setting a future publication date on a
+4. {OMP} Scheduled is reachable only by setting a future publication date on a
    screen whose help text steers users toward *backdating* — is a
    forward-scheduling affordance intended? (Likely owned by the publishing
    feature; recorded here because the Scheduled indicator's reachability is
@@ -432,18 +445,16 @@ below are keyed to the base text by quoted stubs.
   carry the same label form under both review stages, so a submission with
   rounds in both shows two menu entries reading exactly
   "Review Round 1" — only their parent entry (and, once selected, the
-  content-pane heading) tells them apart. <sup>v4</sup>
+  content-pane heading, which substitutes the stage name into the base form:
+  "Workflow: Internal Review (Round 1)" vs "Workflow: External Review
+  (Round 1)") tells them apart. <sup>v4</sup>
 - "entry is itself selectable" — both review entries behave like the base
   Review entry: selectable, folding their round list on each click. The
   round-less misdescription deviation reproduces on both stages, and on
-  Internal Review the round-less view also loses its side column (Known
+  Internal Review any view with no selected round — the round-less parent
+  entry and the not-yet-initiated stage alike — loses its Participants side
+  column, the one exception to rule 8's un-reached-stage side column (Known
   deviations). <sup>v4</sup>
-- "has nothing to show yet" — on an un-reached Production stage the box is
-  not alone: a Participants side column and a schedule-for-publication action
-  render beside it (observed with the submission still in review); an
-  un-reached Copyediting stage shows the box alone, as the base rule says.
-  Whether the base app overstates "alone" for Production too is Open
-  questions. <sup>v18</sup>
 - "Below Workflow sits a Publication group" — a third group, Marketing
   (Audience, Representatives, Publication Dates), sits between Workflow and
   Publication in the editorial shell only and starts expanded; its screens
@@ -461,11 +472,13 @@ below are keyed to the base text by quoted stubs.
   "Monograph" or "Edited Volume" — whose dropdown offers exactly those two
   choices; switching the type relabels the button and changes nothing else
   in this shell. There is no payment dropdown. <sup>v7</sup>
-- "the current round's entry" — per review stage: a submission in either
-  review stage lands on that stage's current round. <sup>v8</sup>
-- "the four stage-named addresses" — five: an internal-review shape joins them
-  (verbatim form under Reference), with the same two-hop redirect and the same
-  stage-drop deviation. <sup>v9</sup>
+- "in Review, the current round's entry" — rule 9's landing, per review
+  stage: a submission in either review stage lands on that stage's current
+  round. <sup>v8</sup>
+- "the four stage-named addresses" — five: an internal-review shape joins
+  them — its last part reads internalReview (full form under Reference) —
+  with the same two-hop redirect and the same stage-drop deviation.
+  <sup>v9</sup>
 - "offer fewer screens" — the author's versions lack Identifiers, Catalog
   Entry and Permissions & Disclosure; Chapters, Publication Formats and Media
   appear in both dressings. <sup>v6</sup>
@@ -481,8 +494,9 @@ below are keyed to the base text by quoted stubs.
   was never finished also reads Production, so Incomplete never appears here.
   <sup>v10</sup>
 - "listing all four stages" — the Workflow group holds a single Production
-  entry: no round sub-entries, no Review entry, and only the Workflow and
-  Publication groups exist to start out expanded. Once a preprint is posted,
+  entry: no round sub-entries, no Review entry, and only two menu groups
+  exist and start out expanded — Workflow and the version group, whose
+  on-screen header the next override renames. Once a preprint is posted,
   no menu entry carries the current-stage stripe — the submission then sits
   on the internal marker no entry names. <sup>v11</sup>
 - "Below Workflow sits a Publication group" — the group's on-screen header
@@ -498,8 +512,9 @@ below are keyed to the base text by quoted stubs.
 - "the submission reaches Copyediting" — from the start: every unposted
   preprint already sits in the Production stage, so Preview is offered
   immediately — even on an unfinished or a declined preprint — and is
-  relabeled View once posted; a posted preprint's header also gains a fourth
-  button, "Return to Workflow". <sup>v13</sup>
+  relabeled View once posted; once posted the header also shows the base
+  row's decision-gated Return to Workflow button (a shared tool that becomes
+  available on posting, not an app extra). <sup>v13</sup>
 - "leads with a status box" — only one box can occur, on a posted preprint's
   Production entry — and it is the blank-stage passed-stage sentence of the
   base deviation, not "Submission published." (Known deviations); queued,
@@ -507,10 +522,10 @@ below are keyed to the base text by quoted stubs.
   <sup>v10</sup>
 - "shows a single sentence" — cannot occur inside the panel: with one stage
   there is no viewer who covers some stage but not the selected one, and a
-  viewer covering no stage gets no panel content at all (the same empty-husk
-  shape the base footnotes record for an unassigned editor). The sentence
-  remains reachable only as the full-page refusal on a legacy address.
-  <sup>v20</sup>
+  viewer covering no stage gets no panel content at all — the menu renders
+  empty and neither the submission's title nor its stage indicator loads,
+  only the ID number. The sentence remains reachable only as the full-page
+  refusal on a legacy address. <sup>v20</sup>
 - "the group's header still appears" — the zero-entry case cannot occur
   either: on a one-stage app, entitlement to version entries and to any panel
   content rise and fall together, so no viewer both opens the panel and is
@@ -521,17 +536,20 @@ below are keyed to the base text by quoted stubs.
   base declined-lands-where-declined sentence does not carry over here.
   <sup>v14</sup>
 - "funnel to the editorial dashboard" — only the entry-check and the
-  production-named shapes do; the submission-, review- and copyediting-named
-  shapes name stages the app does not have and are refused for every viewer,
-  in every role — managers and administrators included — on a refusal page
-  reading "A workflow stage was not specified." (a third denial wording,
-  distinct from both the base spec records; misleading as written, since the
-  address does name a stage — just not one this app has). <sup>v15</sup>
+  production-named shapes do; the other three (last parts submission,
+  externalReview and editorial — the base spec's Submission-, Review- and
+  Copyediting-named shapes) name stages the app does not have and are refused
+  for every signed-in viewer, in every role — managers and administrators
+  included — on a refusal page reading "A workflow stage was not specified."
+  (a third denial wording, distinct from both the base spec records;
+  misleading as written, since the address does name a stage — just not one
+  this app has). A logged-out visitor is first sent to login, as the base
+  rule says. <sup>v15</sup>
 - "authorize against the named stage" — for the three absent-stage shapes the
   refusal is therefore universal — not a permission asymmetry of the rule-12
   family but a flat refusal, the named stage being invalid for the app before
-  any role question arises: no one can use those addresses, while the
-  entry-check address works normally. <sup>v15</sup>
+  any role question arises: no signed-in viewer can use those addresses, while
+  the entry-check address works normally. <sup>v15</sup>
 - "has two dressings" — the author's tracking view drops the Workflow group
   entirely (Publication versions only); the author-dashboard delta owns that
   menu. <sup>v16</sup>
@@ -543,8 +561,9 @@ below are keyed to the base text by quoted stubs.
 - "assigned to an issue awaiting publication" — neither app has issues:
   Scheduled means a version of record is scheduled for publication, and what
   puts it there belongs to each app's publishing feature (on the preprint
-  side the version-of-record slot is filled by the Author Original version
-  stage). <sup>v17</sup>
+  side the version of record is the version the menu lists as
+  "Author Original" — on screen a posted preprint's version entry reads
+  "Author Original 1.0"). <sup>v17</sup>
 
 <sup>v1</sup> useWorkflowConfigOMP.js / useWorkflowConfigOPS.js deep-merge the OJS editorial and author configs as base (deepMerge(ConfigEditorialOJS, ConfigEditorialOMP/OPS)), so WorkflowConfig.common — the accessibleStages gate, the no-access sentence, WorkflowSubmissionStatus, WorkflowChangeSubmissionLanguage — and useWorkflowMenu.js / WorkflowPage.vue are the same objects in all three apps; classes/user/Repository::getAccessibleWorkflowStages() and the authorization policies are shared lib/pkp code ·
 <sup>v2</sup> omp-main classes/core/Application.php getApplicationStages() (5 stages); useWorkflowNavigationConfigOMP.js getWorkflowItems() (five items; getReviewItems() run for internal and external stages); lib/pkp WorkflowStageDAO stage-path map incl. internalReview; per-review-stage parity live-probed 2026-07-26 (pilot-1 batch A items 1 + 4: five stage entries with per-stage round nesting, all groups expanded on fresh open; stripes sit on the current stage's parent AND current round in that stage's palette; landings workflow_{stage}_{round} per review stage, incl. a declined-in-internal-round-1 landing; all four base rule-8 box shapes rendered on the internal stage with the OMP stage-name msgstrs — "The Internal Review stage has not yet been initiated.", "The submission is currently in the External Review stage.", the advanced/accepted pair — no internal-specific wording exists) ·
@@ -557,15 +576,14 @@ below are keyed to the base text by quoted stubs.
 <sup>v9</sup> omp-main pages/workflow/WorkflowHandler.php addRoleAssignment(..., ['access','index','submission','internalReview','externalReview','editorial','production']) + internalReview() → _redirectToIndex(); redirect chain and stage-drop are the shared PKPWorkflowHandler ops; live-probed 2026-07-26 (pilot-1 batch A item 6: workflow/internalReview/{id} → 302 workflow/index/{id}/2 → 302 dashboard/editorial?workflowSubmissionId={id}, hop 2 identical for all five stage names and carrying no workflowMenuKey — ledger-212 stage drop holds for the OMP-only shape) ·
 <sup>v10</sup> ops-main schemas/submission.json stageId (default 5, validation min:5 max:5 — every preprint is Production-stage at creation); ops-main classes/core/Application.php getApplicationStages() = [WORKFLOW_STAGE_ID_PRODUCTION]; useSubmission.js getExtendedStage() branches for stages 1/3/4 therefore unreachable — and so is Incomplete: INCOMPLETE is returned only inside the stage-1 branch (submissionProgress check), dead code on OPS, so an unfinished preprint (stage 5 + queued) falls through to PRODUCTION_QUEUED — live-probed 2026-07-26 (pilot-1 batch B item 10: five lifecycle states walked; the submissionProgress='start' preprint shows "Production" bg-stage-production); the "past-the-end marker" is the internal Done stage (id 6): the shared ApplyDoneWorkflowStage listener on PublicationPublished writes stageId directly, outside entity-schema validation, so a posted preprint's payload reports stage 6 active despite the schema pin; status boxes live-probed 2026-07-26 (batch B item 13: queued/scheduled/declined/incomplete → no box at all; posted → the passed-stage box with the blank stage token, ledger row 262 — "Submission published." never renders because hasSubmissionPassedStage() is evaluated first, see Known deviations) ·
 <sup>v11</sup> useWorkflowNavigationConfigOPS.js getWorkflowItems() (single production item, no getReviewItems import); WorkflowPageOPS.vue setExpandedKeys(['workflow','publication']); live-probed 2026-07-26 (pilot-1 batch B item 11: nav holds no Review / Round / Submission / Copyediting anchor in any state; heading "Workflow: Production"; both groups expanded on fresh open; stripe border-stage-production on queued, scheduled, declined and incomplete preprints, no border-stage-* class on any anchor once posted — the stage-6 side effect) ·
-<sup>v12</sup> useWorkflowNavigationConfigOPS.js getPublicationItemsEditorial() (no jats item; canAccessProduction → galleys, media, license, preprintEntry); ops locale preprint.entry msgstr "Preprint entry" (lowercase e, live-confirmed); roster live-probed 2026-07-26 (pilot-1 batch B items 16 + 20: verbatim Title & Abstract / Contributors / Metadata / References / Data / Galleys / Media / Permissions & Disclosure / Preprint entry + Create New Version; a non-manager section editor sees the same roster minus the create action — canPublish gates it as in the base spec); Identifiers unreachable: ops-main ships no plugins/pubIds category at all (OJS and OMP both ship pubIds/urn), and identifiersEnabled iterates PluginRegistry::getPlugins('pubIds'), so the flag is permanently false — a DOI-enabled scratch context still rendered no Identifiers entry ·
-<sup>v13</sup> workflowConfigEditorialOPS.js getHeaderItems() — same stage+status gate as OJS (stageId EDITING or PRODUCTION, common.preview → common.view when STATUS_PUBLISHED), but an OPS submission's stageId is PRODUCTION from creation, so the gate is always open pre-publication; live-probed 2026-07-26 (pilot-1 batch B item 12: queued/scheduled/declined/incomplete headers all carry Preview + Activity Log + Library; the posted header carries View + Activity Log + Library + a "Return to Workflow" button, for manager and section-editor viewers alike) ·
+<sup>v12</sup> useWorkflowNavigationConfigOPS.js getPublicationItemsEditorial() (no jats item; canAccessProduction → galleys, media, license, preprintEntry); ops locale preprint.entry msgstr "Preprint entry" (lowercase e, live-confirmed); roster live-probed 2026-07-26 (pilot-1 batch B items 16 + 20: verbatim Title & Abstract / Contributors / Metadata / References / Data / Galleys / Media / Permissions & Disclosure / Preprint entry + Create New Version — CONTEXT-DEPENDENT roster, not a baseline: the Data entry is settings-gated and the probe context had data availability switched on, while the bootstrapped test server leaves it off (no schema default), so the baseline fixture shows no Data entry — assert it only on a context with the setting enabled; a non-manager section editor sees the same roster minus the create action — canPublish gates it as in the base spec); Identifiers unreachable: ops-main ships no plugins/pubIds category at all (OJS and OMP both ship pubIds/urn), and identifiersEnabled iterates PluginRegistry::getPlugins('pubIds'), so the flag is permanently false — a DOI-enabled scratch context still rendered no Identifiers entry ·
+<sup>v13</sup> workflowConfigEditorialOPS.js getHeaderItems() — same stage+status gate as OJS (stageId EDITING or PRODUCTION, common.preview → common.view when STATUS_PUBLISHED), but an OPS submission's stageId is PRODUCTION from creation, so the gate is always open pre-publication; live-probed 2026-07-26 (pilot-1 batch B item 12: queued/scheduled/declined/incomplete headers all carry Preview + Activity Log + Library; the posted header carries View + Activity Log + Library + a "Return to Workflow" button — the shared decision-gated tool of the base header row, footnote d — for manager and section-editor viewers alike) ·
 <sup>v14</sup> useWorkflowNavigationConfigOPS.js getInitialSelectionItemKey() (no review branch; PRODUCTION + status ≠ QUEUED → publication_{latest}_titleAbstract; DONE branch as OJS; the extra MY_SUBMISSIONS always-publication branch is the author-dashboard delta's to document); landings live-probed 2026-07-26 (pilot-1 batch B: queued → workflow_5; posted and scheduled → publication_{latest}_titleAbstract; declined (status DECLINED, not QUEUED) also → publication_{latest}_titleAbstract via the same branch — the base declined-keeps-its-stage landing does not occur on OPS) ·
 <sup>v15</sup> ops-main pages/workflow/WorkflowHandler.php still registers the submission/externalReview/editorial ops, but WorkflowStageAccessPolicy composes WorkflowStageRequiredPolicy, whose effect() denies any stageId outside Application::getApplicationStages() — stages 1, 3, 4 are invalid in OPS, so denial precedes any redirect for every user; refusal live-probed 2026-07-26 (pilot-1 batch B item 14: the three absent-stage shapes 302 → user/authorizationDenied?message=user.authorization.workflowStageRequired for manager and section editor alike — rendered page reads verbatim "A workflow stage was not specified.", lib/pkp/locale/en/user.po — while zero-coverage and non-editorial roles get the same denial there and the accessibleWorkflowStage denial on the valid shapes; workflow/production/{id} two-hop with the stage dropped and workflow/access/{id} single-hop both reach the dashboard exactly as the base spec says; anonymous → login with the legacy URL in source, resume holds; the message's wording is itself misleading — the address names a stage, just an invalid one — noted as a cold candidate ledger item, not raised as a row by pilot 1) ·
 <sup>v16</sup> useWorkflowNavigationConfigOPS.js getMenuItems() (workflow group pushed only when dashboardPage is EDITORIAL_DASHBOARD; MY_SUBMISSIONS gets the publication group alone); live-probed 2026-07-26 (pilot-1 batch B item 15: author tracking view nav holds the "Preprint" group alone — no Workflow anchor, no Production stage anchor; header Library only; landing publication_{id}_titleAbstract; the roster ends with an author-only "Production Tasks & Discussions" entry and a posted version shows a posted-can-not-be-edited notice — details for the author-dashboard delta) ·
-<sup>v17</sup> lib/pkp classes/submission/Repository.php getStatusByPublications() — the version-of-record-only Scheduled/Published computation is base-class code shared by all three apps; only OJS ties scheduling to issue assignment (its publish flow), OMP/OPS schedule without issues — the trigger per app is owned by the respective publishing feature; OMP trigger live-probed 2026-07-26 (pilot-1 batch A item 8: Catalog Entry → Publication Timing → Date Published set to a future date, then Publication → Publish — the confirm dialog is titled "Schedule For Publication" and offers no date or container field — yields publication STATUS_SCHEDULED with no issue anywhere; the indicator shows "Scheduled" from Copyediting and from Production; the only date control's help text steers toward backdating, hence Open question 5); OPS Scheduled confirmed reachable (batch B seed, submission status SCHEDULED, future datePublished) with the in-app trigger left to the OPS publishing feature; OPS "version of record" = the Author Original stage (ops-main VersionStage::finalVersionStage(), posted version labeled "Author Original 1.0") ·
-<sup>v18</sup> live-probed 2026-07-26 (pilot-1 batch A item 4: on a monograph in external review, the un-reached Production entry rendered the not-yet-initiated box PLUS a Participants side column and a "Schedule For Publication" action, while the un-reached Copyediting entry rendered the box alone with no actions; the OJS probes of 2026-07-16 only walked un-reached Copyediting, so whether "alone" also overstates OJS's Production is unsettled — Open question 4) ·
+<sup>v17</sup> lib/pkp classes/submission/Repository.php getStatusByPublications() — the version-of-record-only Scheduled/Published computation is base-class code shared by all three apps; only OJS ties scheduling to issue assignment (its publish flow), OMP/OPS schedule without issues — the trigger per app is owned by the respective publishing feature; OMP trigger live-probed 2026-07-26 (pilot-1 batch A item 8: Catalog Entry → Publication Timing → Date Published set to a future date, then Publication → Publish — the confirm dialog is titled "Schedule For Publication" and offers no date or container field — yields publication STATUS_SCHEDULED with no issue anywhere; the indicator shows "Scheduled" from Copyediting and from Production; the only date control's help text steers toward backdating, hence Open question 4); OPS Scheduled confirmed reachable (batch B seed, submission status SCHEDULED, future datePublished) with the in-app trigger left to the OPS publishing feature; OPS "version of record" = the Author Original stage (ops-main VersionStage::finalVersionStage(), posted version labeled "Author Original 1.0") ·
 <sup>v19</sup> useWorkflowNavigationConfigOPS.js getPublicationTitle() uses t('submission.publication'), whose ops-main msgstr is "Preprint" (ojs-main: "Publication"); live-probed 2026-07-26 (pilot-1 batch B item 16: nav group header "Preprint"; content headings "Preprint: Title & Abstract" on OPS vs "Publication: Title & Abstract" on OJS, both observed) ·
-<sup>v20</sup> single-stage collapse, live-probed 2026-07-26 (pilot-1 batch B items 17 + 18): the in-panel gate (workflowConfigEditorialOJS.js common.getPrimaryItems) runs only after the submission payload loads, and useWorkflowPermissions.js computes canAccessPublication and canAccessProduction from the same intersection when the active stage IS the production stage — so a viewer either covers Production (full panels, full roster) or covers nothing (submission API answers 401, the shell renders the empty husk of base footnote a: no nav, no bubble, no content); probed with the zero-coverage assistant-role group ops-main registry/userGroups.xml installs (stages="") — assigned to the submission, still the husk — and a covering section editor as positive control; the no-access sentence therefore renders on OPS only as the full-page accessibleWorkflowStage denial of the legacy addresses (footnote v15), and canonical scenario 3's {OJS OMP} badge is correct
+<sup>v20</sup> single-stage collapse, live-probed 2026-07-26 (pilot-1 batch B items 17 + 18): the in-panel gate (workflowConfigEditorialOJS.js common.getPrimaryItems) runs only after the submission payload loads, and useWorkflowPermissions.js computes canAccessPublication and canAccessProduction from the same intersection when the active stage IS the production stage — so a viewer either covers Production (full panels, full roster) or covers nothing (submission API answers 401, the shell renders the empty husk of base footnote a: the nav landmark renders with zero menu entries, no bubble, no title, no content — only the submission ID); probed with the zero-coverage assistant-role group ops-main registry/userGroups.xml installs (stages="") — assigned to the submission, still the husk — and a covering section editor as positive control; the no-access sentence therefore renders on OPS only as the full-page accessibleWorkflowStage denial of the legacy addresses (footnote v15), and canonical scenario 3's {OJS OMP} badge is correct
 
 ---
 

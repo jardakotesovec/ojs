@@ -84,6 +84,21 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
 
 ## Log (newest first, one line per orchestrator iteration)
 
+- 2026-07-26 — iter 16: OPS verify chunk PASS (nothing refuted; 5 precision
+  nuances queued for the fix pass — notably Known-deviations bullets unbadged
+  yet impossible on OPS, and a v12 roster footnote that is context-specific).
+  Ledger 262 + 212 re-reproduced on OPS. Awaiting OMP verify + pilot-2 probes.
+- 2026-07-26 — iter 15: readability spot-read done — 28/28 overrides
+  restatable, 5 wording stumbles (+1 stale APP-GLOSSARY work-type cell) held
+  for a single fix pass after the two verify chunks land (no spec edits while
+  verifiers read).
+- 2026-07-26 — iter 14: Pilot-1 companions GREEN ×2 both apps (omp 35b498092c,
+  ops ac5b0ec1b3; zero spec conflicts, zero lib/pkp changes needed; OJS 14/14).
+  Launched the pilot-1 closeout trio: shrunk verify OMP + OPS (opus) and
+  readability spot-read (fable). Pilot-2 probes still running.
+- 2026-07-26 — iter 13: Pilot-1 spec FINALIZED + committed 2ce8a3efc0 (lint
+  re-verified); ledger rows 262/263 filed by the orchestrator. Pilot-1 test
+  author (opus, ≤3 companions per app) launched; Pilot-2 probes still running.
 - 2026-07-26 — iter 12: Pilot-1 probes batch A (OMP) done (8/9 confirmed with
   nuances; work-type labels contradicted; harness findings: OMP presses seed
   zero default reviewer recommendations → ledger 263 reserved, orphan
