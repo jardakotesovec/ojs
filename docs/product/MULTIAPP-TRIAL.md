@@ -124,6 +124,13 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   tests (opus), docs + atlas unclaim (fable), both fenced off from the files the
   pilot-2 fix pass and the OJS scope probe are touching. Suite green-run
   deferred until the OJS probe releases `ojs_test`.
+- 2026-07-26 — iter 25: pilot-2 fix pass folded and committed 69452640c8 (lint
+  0, corpus 13/13, density 3/5; companion tests unaffected in meaning, 2
+  cosmetic drifts noted). OPS absence now states its conclusion without
+  claiming impossibility. FOUR items still awaiting scope (OMP D-6/7/8/10) —
+  the OJS probe finishes them in a short second fold. Two one-line follow-ups
+  parked for that fold: APP-GLOSSARY's stale "confirm on first probe" footnote,
+  and a residual OQ that lives in the pilot-2 report rather than the spec.
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
