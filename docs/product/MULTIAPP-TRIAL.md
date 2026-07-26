@@ -94,6 +94,14 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   sentence uses developer/HTTP vocabulary a no-code reader can't check) + a
   stale Roles-footnote "confirm on first probe" now that OPS probes are done.
   Held for the single fix pass; both verify chunks still running.
+- 2026-07-26 — iter 22: OPS verify landed — absence CONCLUSION holds (no role
+  reached any surface this spec owns, every negative positive-controlled), but
+  the narrowed SHAPE is refuted in 3 places: a Server Manager can create a
+  Reviewer role on OPS (self-registration then fills it), so "impossible" must
+  become "none installed by default"; 10-item change list incl. a ledger
+  candidate (reviewer dashboard reachable on OPS, prints an untranslated
+  OJS-only key) and a refinement to draft row 266. Held for the fix pass;
+  OMP verify still running.
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
