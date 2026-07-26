@@ -131,6 +131,17 @@ time). Pilot 1's SPEC delta needs only G5; its TESTS need G1–G4.
   the OJS probe finishes them in a short second fold. Two one-line follow-ups
   parked for that fold: APP-GLOSSARY's stale "confirm on first probe" footnote,
   and a residual OQ that lives in the pilot-2 report rather than the spec.
+- 2026-07-26 — iter 26: reviewer-response removal COMPLETE across three commits
+  — docs 22daeeb4b6 (root), tests d14231f1db (lib/pkp: the spec lived in the
+  SHARED tree), ledger 41df1a63b7 (root, no submodule bump). Rows 237–253 gone
+  with no renumbering (gap is intentional); 16/76/77/78 reverted byte-for-byte
+  from `d6beaf4ecd^` — row 16's duplicate-click-handler diagnosis stands again.
+  Tonight's rows 254–267 byte-identical. Static checks clean (node --check on
+  all 13 surviving specs + POM; zero `reviewer-response` hits in either test
+  tree). OPEN for the maintainer: `ReviewerSubmissionPage.js` keeps ~18 dead
+  members the trial added AND four method bodies it rewrote that three
+  surviving specs are green against — left whole deliberately. lib/pkp NOT
+  pushed: no omp/ops re-pin is needed for a test deletion.
 - 2026-07-26 — iter 19 (SESSION HANDOFF POINT — maintainer restarting the
   session; no agents in flight): pilot-2 companions green×2 both apps,
   committed in app repos. Remaining units: pilot-2 closeout trio + fix pass;
