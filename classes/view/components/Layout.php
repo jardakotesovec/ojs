@@ -29,6 +29,7 @@ class Layout extends \PKP\view\components\Layout
 
         if ($context->getData('printIssn')) {
             $ids->add([
+                'id' => 'printIssn',
                 'name' => __('journal.issn'),
                 'value' => $context->getData('printIssn'),
             ]);
@@ -36,6 +37,7 @@ class Layout extends \PKP\view\components\Layout
 
         if ($context->getData('onlineIssn')) {
             $ids->add([
+                'id' => 'onlineIssn',
                 'name' => __('metadata.property.displayName.eissn'),
                 'value' => $context->getData('onlineIssn'),
             ]);
@@ -43,6 +45,7 @@ class Layout extends \PKP\view\components\Layout
 
         if ($context->getData(Context::SETTING_DOI_PREFIX)) {
             $ids->add([
+                'id' => Context::SETTING_DOI_PREFIX,
                 'name' => __('manager.dois.title'),
                 'value' => $context->getData(Context::SETTING_DOI_PREFIX),
             ]);
