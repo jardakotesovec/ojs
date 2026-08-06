@@ -66,10 +66,10 @@ class PaymentHandler extends Handler
         $queuedPayment = $queuedPaymentDao->getById($queuedPaymentId = array_shift($args));
         if (!$queuedPayment) {
             $templateMgr->assign([
-                'pageTitle' => 'common.payment',
-                'message' => 'payment.notFound',
+                'title' => __('common.payment'),
+                'message' => __('payment.notFound'),
             ]);
-            $templateMgr->display('frontend/pages/message.tpl');
+            $templateMgr->display('frontend/pages/system-message.tpl');
             return;
         }
 

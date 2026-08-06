@@ -74,8 +74,11 @@ class ArticleHandler extends Handler
                 $secret = Config::getVar('security', 'api_key_secret', '');
                 if (!$secret) {
                     $templateMgr = TemplateManager::getManager($request);
-                    $templateMgr->assign('message', 'api.500.apiSecretKeyMissing');
-                    return $templateMgr->display('frontend/pages/message.tpl');
+                    $templateMgr->assign([
+                        'title' => __('common.error'),
+                        'message' => __('api.500.apiSecretKeyMissing'),
+                    ]);
+                    return $templateMgr->display('frontend/pages/system-message.tpl');
                 }
                 try {
                     $headers = new stdClass();
@@ -88,8 +91,11 @@ class ArticleHandler extends Handler
                     $this->setApiToken($apiToken);
                 } catch (\Exception $e) {
                     $templateMgr = TemplateManager::getManager($request);
-                    $templateMgr->assign('message', 'api.400.invalidApiToken');
-                    return $templateMgr->display('frontend/pages/message.tpl');
+                    $templateMgr->assign([
+                        'title' => __('common.error'),
+                        'message' => __('api.500.invalidApiToken'),
+                    ]);
+                    return $templateMgr->display('frontend/pages/system-message.tpl');
                 }
             }
         }

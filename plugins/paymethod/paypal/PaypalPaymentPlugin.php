@@ -236,8 +236,11 @@ class PaypalPaymentPlugin extends PaymethodPlugin
         } catch (\Exception $e) {
             error_log('PayPal transaction exception: ' . $e->getMessage());
             $templateMgr = TemplateManager::getManager($request);
-            $templateMgr->assign('message', 'plugins.paymethod.paypal.error');
-            $templateMgr->display('frontend/pages/message.tpl');
+            $templateMgr->assign([
+                'title' => __('common.error'),
+                'message' => __('plugins.paymethod.paypal.error'),
+            ]);
+            $templateMgr->display('frontend/pages/system-message.tpl');
         }
     }
 }
