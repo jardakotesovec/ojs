@@ -135,7 +135,6 @@ class IndexHandler extends PKPIndexHandler
                 'about' => $site->getLocalizedAbout(),
                 'journalFilesPath' => $request->getBaseUrl() . '/' . Config::getVar('files', 'public_files_dir') . '/journals/',
                 'journals' => $journalDao->getAll(true)->toArray(),
-                'site' => $site,
             ]);
             $templateMgr->setCacheability(TemplateManager::CACHEABILITY_PUBLIC);
             $templateMgr->display('frontend/pages/indexSite.tpl');
