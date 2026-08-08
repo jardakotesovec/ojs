@@ -39,9 +39,14 @@ class PublicationEloquentBench extends CommandLineTool
         $this->settingNames = $settingNames;
         $this->multilingualNames = $model->getMultilingualProps();
 
-        $locales = DB::table('submissions')
+        $submissionRows = DB::table('submissions')
             ->orderBy('submission_id')
-            ->pluck('locale', 'submission_id')
+            ->get(['submission_id', 'locale', 'context_id']);
+        $locales = $submissionRows->pluck('locale', 'submission_id')->all();
+        // The eloquent path passes the submission's context id to the bridge,
+        // exactly as \APP\submission\DAO::fromRow() does
+        $contextIds = $submissionRows->pluck('context_id', 'submission_id')
+            ->map(fn ($contextId) => (int) $contextId)
             ->all();
         $submissionIds = array_keys($locales);
         echo count($submissionIds) . " submissions\n\n";
@@ -64,7 +69,7 @@ class PublicationEloquentBench extends CommandLineTool
         $eloquent = [];
         $eloquentCount = 0;
         foreach ($submissionIds as $submissionId) {
-            $eloquent[$submissionId] = $this->eloquentPublications($submissionId, $locales[$submissionId]);
+            $eloquent[$submissionId] = $this->eloquentPublications($submissionId, $locales[$submissionId], $contextIds[$submissionId]);
             $eloquentCount += count($eloquent[$submissionId]);
         }
         $eloquentMs = (hrtime(true) - $start) / 1e6;
@@ -76,7 +81,7 @@ class PublicationEloquentBench extends CommandLineTool
         $this->legacyPublications($proxyId);
         $legacyProxyQueries = count(DB::getQueryLog());
         DB::flushQueryLog();
-        $this->eloquentPublications($proxyId, $locales[$proxyId] ?? null);
+        $this->eloquentPublications($proxyId, $locales[$proxyId] ?? null, $contextIds[$proxyId] ?? null);
         $eloquentProxyQueries = count(DB::getQueryLog());
         DB::disableQueryLog();
 
@@ -122,7 +127,7 @@ class PublicationEloquentBench extends CommandLineTool
      * Hydrate and normalize a submission's publications through the read
      * model and bridge, exactly as wired in \APP\submission\DAO::fromRow()
      */
-    protected function eloquentPublications(int $submissionId, ?string $submissionLocale): array
+    protected function eloquentPublications(int $submissionId, ?string $submissionLocale, ?int $submissionContextId): array
     {
         $normalized = [];
         $models = PublicationModel::withSubmissionIds([$submissionId])
@@ -130,7 +135,7 @@ class PublicationEloquentBench extends CommandLineTool
             ->get()
             ->withRelationshipAutoloading();
         foreach ($models as $model) {
-            $normalized[] = [$model->publicationId, $this->normalize($model->toDataObject($submissionLocale))];
+            $normalized[] = [$model->publicationId, $this->normalize($model->toDataObject($submissionLocale, $submissionContextId))];
         }
         return $normalized;
     }

@@ -45,15 +45,19 @@ class DAO extends \PKP\submission\DAO
 
         $submissionId = $submission->getId();
         $submissionLocale = $submission->getData('locale');
+        // The context id lets the bridge build the unassigned-version string
+        // from a cached context instead of getVersionString()'s
+        // per-publication submission + context refetch
+        $submissionContextId = $submission->getData('contextId');
         $submission->setData(
             'publications',
-            LazyCollection::make(function () use ($submissionId, $submissionLocale) {
+            LazyCollection::make(function () use ($submissionId, $submissionLocale, $submissionContextId) {
                 $models = PublicationModel::withSubmissionIds([$submissionId])
                     ->orderByVersion()
                     ->get()
                     ->withRelationshipAutoloading();
                 foreach ($models as $model) {
-                    yield $model->publicationId => $model->toDataObject($submissionLocale);
+                    yield $model->publicationId => $model->toDataObject($submissionLocale, $submissionContextId);
                 }
             })->remember()
         );
