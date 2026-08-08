@@ -14,14 +14,15 @@
 
 namespace APP\publication;
 
-use APP\facades\Repo;
 use APP\plugins\PubObjectsExportPlugin;
 use APP\publication\enums\VersionStage;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\LazyCollection;
 use PKP\db\DAOResultFactory;
 use PKP\db\DBResultRange;
+use PKP\galley\models\Galley as GalleyModel;
 use PKP\identity\Identity;
 use PKP\publication\PKPPublication;
 
@@ -56,11 +57,21 @@ class DAO extends \PKP\publication\DAO
     {
         $publication = parent::fromRow($primaryRow);
 
+        // Galleys are hydrated through the Eloquent read model: one query for
+        // the rows plus one for all settings, instead of the per-galley
+        // settings queries of the collector path. remember() keeps repeated
+        // template/handler iterations from re-running the queries.
+        $publicationId = $publication->getId();
         $publication->setData(
             'galleys',
-            Repo::galley()->getCollector()
-                ->filterByPublicationIds([$publication->getId()])
-                ->getMany()
+            LazyCollection::make(function () use ($publicationId) {
+                $models = GalleyModel::withPublicationIds([$publicationId])
+                    ->orderBySequence()
+                    ->get();
+                foreach ($models as $model) {
+                    yield $model->toDataObject();
+                }
+            })->remember()
         );
 
         return $publication;
