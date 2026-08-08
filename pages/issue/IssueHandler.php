@@ -356,7 +356,7 @@ class IssueHandler extends Handler
         $issueGalleyDao = DAORegistry::getDAO('IssueGalleyDAO'); /** @var IssueGalleyDAO $issueGalleyDao */
 
         $genreDao = DAORegistry::getDAO('GenreDAO'); /** @var GenreDAO $genreDao */
-        $primaryGenres = $genreDao->getPrimaryByContextId($journal->getId())->toArray();
+        $primaryGenres = $genreDao->getPrimaryByContextIdCached($journal->getId());
         $primaryGenreIds = array_map(fn ($genre) => $genre->getId(), $primaryGenres);
 
         $sections = Repo::section()->getByIssueId($issue->getId());

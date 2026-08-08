@@ -31,6 +31,7 @@ use APP\security\authorization\OjsJournalMustPublishPolicy;
 use APP\submission\Submission;
 use APP\template\TemplateManager;
 use Firebase\JWT\Key;
+use Illuminate\Support\Facades\DB;
 use PKP\components\OpenReviewComponent;
 use PKP\components\UserCommentComponent;
 use PKP\config\Config;
@@ -295,24 +296,39 @@ class ArticleHandler extends Handler
         $supplementaryGalleys = [];
         if ($galleys) {
             $genreDao = DAORegistry::getDAO('GenreDAO'); /** @var GenreDAO $genreDao */
-            $primaryGenres = $genreDao->getPrimaryByContextId($context->getId())->toArray();
+            $primaryGenres = $genreDao->getPrimaryByContextIdCached($context->getId());
             $primaryGenreIds = array_map(function ($genre) {
                 return $genre->getId();
             }, $primaryGenres);
-            $supplementaryGenres = $genreDao->getBySupplementaryAndContextId(true, $context->getId())->toArray();
+            $supplementaryGenres = $genreDao->getBySupplementaryAndContextIdCached(true, $context->getId());
             $supplementaryGenreIds = array_map(function ($genre) {
                 return $genre->getId();
             }, $supplementaryGenres);
 
+            // Only the existence and genre of each galley's file are needed
+            // to classify the galleys; fetch them with a single query.
+            $submissionFileIds = [];
+            foreach ($galleys as $galley) {
+                if ($submissionFileId = (int) $galley->getData('submissionFileId')) {
+                    $submissionFileIds[] = $submissionFileId;
+                }
+            }
+            $genreIdsByFileId = $submissionFileIds
+                ? DB::table('submission_files')
+                    ->whereIn('submission_file_id', $submissionFileIds)
+                    ->pluck('genre_id', 'submission_file_id')
+                : collect();
+
             foreach ($galleys as $galley) {
                 $remoteUrl = $galley->getData('urlRemote');
-                $file = Repo::submissionFile()->get((int) $galley->getData('submissionFileId'));
-                if (!$remoteUrl && !$file) {
+                $submissionFileId = (int) $galley->getData('submissionFileId');
+                if (!$remoteUrl && !$genreIdsByFileId->has($submissionFileId)) {
                     continue;
                 }
-                if ($remoteUrl || in_array($file->getGenreId(), $primaryGenreIds)) {
+                $genreId = $genreIdsByFileId->get($submissionFileId);
+                if ($remoteUrl || in_array($genreId, $primaryGenreIds)) {
                     $primaryGalleys[] = $galley;
-                } elseif (in_array($file->getGenreId(), $supplementaryGenreIds)) {
+                } elseif (in_array($genreId, $supplementaryGenreIds)) {
                     $supplementaryGalleys[] = $galley;
                 }
             }
