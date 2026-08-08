@@ -16,10 +16,12 @@ namespace APP\submission;
 
 use APP\plugins\PubObjectsExportPlugin;
 use APP\publication\enums\VersionStage;
+use APP\publication\models\Publication as PublicationModel;
 use APP\publication\Publication;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\LazyCollection;
 use PKP\db\DAOResultFactory;
 use PKP\db\DBResultRange;
 use PKP\identity\Identity;
@@ -27,6 +29,38 @@ use PKP\observers\events\SubmissionDeleted;
 
 class DAO extends \PKP\submission\DAO
 {
+    /**
+     * @copydoc \PKP\submission\DAO::fromRow()
+     *
+     * Replaces the (still unexecuted) collector-backed publications
+     * collection set by the parent with the Eloquent read model path:
+     * batched hydration through SettingsBuilder plus relationship
+     * autoloading for authors/galleys and their nested relations. Keys,
+     * ordering and the bridged DataObjects match the legacy collector
+     * path exactly.
+     */
+    public function fromRow(object $row): Submission
+    {
+        $submission = parent::fromRow($row);
+
+        $submissionId = $submission->getId();
+        $submissionLocale = $submission->getData('locale');
+        $submission->setData(
+            'publications',
+            LazyCollection::make(function () use ($submissionId, $submissionLocale) {
+                $models = PublicationModel::withSubmissionIds([$submissionId])
+                    ->orderByVersion()
+                    ->get()
+                    ->withRelationshipAutoloading();
+                foreach ($models as $model) {
+                    yield $model->publicationId => $model->toDataObject($submissionLocale);
+                }
+            })->remember()
+        );
+
+        return $submission;
+    }
+
     /**
      * @copydoc \PKP\core\EntityDAO::deleteById()
      */
