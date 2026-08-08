@@ -165,12 +165,31 @@ class PublicationEloquentBench extends CommandLineTool
         $data['citationsCount'] = $citations->count();
         $data['firstCitationRaw'] = $citations->first()?->getRawCitation();
 
-        $data['dataCitationIds'] = array_map(
-            fn ($dataCitation) => $dataCitation->getKey(),
+        $data['dataCitations'] = array_map(
+            fn ($dataCitation) => [
+                'id' => $dataCitation->getKey(),
+                'publicationId' => $dataCitation->publicationId,
+                'seq' => $dataCitation->seq,
+                'title' => $dataCitation->title,
+                'identifierType' => $dataCitation->identifierType,
+                'identifier' => $dataCitation->identifier,
+                'relationshipType' => $dataCitation->relationshipType,
+                'repository' => $dataCitation->repository,
+                'year' => $dataCitation->year,
+                'authors' => $dataCitation->authors,
+                'url' => $dataCitation->url,
+            ],
             $publication->getData('dataCitations') ?? []
         );
-        $data['funderIds'] = array_map(
-            fn ($funder) => $funder->getKey(),
+        $data['funders'] = array_map(
+            fn ($funder) => [
+                'id' => $funder->getKey(),
+                'submissionId' => $funder->submissionId,
+                'ror' => $funder->ror,
+                'seq' => $funder->seq,
+                'name' => $this->sorted($funder->name),
+                'grants' => $funder->grants,
+            ],
             $publication->getData('funders') ?? []
         );
 
