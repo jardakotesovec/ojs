@@ -15,7 +15,6 @@
 namespace APP\plugins\generic\dublinCoreMeta;
 
 use APP\author\Author;
-use APP\facades\Repo;
 use APP\issue\Issue;
 use APP\journal\Journal;
 use APP\submission\Submission;
@@ -131,8 +130,8 @@ class DublinCoreMetaPlugin extends GenericPlugin
 
         $galleys = $publication->getData('galleys');
         foreach ($galleys as $i => $galley) {
-            $submissionFileId = $galley->getData('submissionFileId');
-            if ($submissionFileId && $submissionFile = Repo::submissionFile()->get($submissionFileId)) {
+            // getFile() reuses the galley's preloaded submission file when available
+            if ($submissionFile = $galley->getFile()) {
                 $templateMgr->addHeader('dublinCoreFormat' . $i, '<meta name="DC.Format" scheme="IMT" content="' . htmlspecialchars($submissionFile->getData('mimetype')) . '"/>');
             }
         }
