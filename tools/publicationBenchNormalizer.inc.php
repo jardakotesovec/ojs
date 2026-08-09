@@ -19,6 +19,10 @@ trait PublicationBenchNormalization
     private array $publicationPrimaryProps;
     private array $publicationSettingNames;
     private array $publicationMultilingualNames;
+    private array $doiPrimaryProps;
+    private array $doiSettingNames;
+    private array $citationPrimaryProps;
+    private array $citationSettingNames;
 
     protected function initPublicationNormalization(): void
     {
@@ -28,6 +32,16 @@ trait PublicationBenchNormalization
         sort($settingNames);
         $this->publicationSettingNames = $settingNames;
         $this->publicationMultilingualNames = $model->getMultilingualProps();
+
+        $this->doiPrimaryProps = array_keys(\APP\facades\Repo::doi()->dao->primaryTableColumns);
+        $doiSettingNames = (new \PKP\doi\models\Doi())->getSettings();
+        sort($doiSettingNames);
+        $this->doiSettingNames = $doiSettingNames;
+
+        $this->citationPrimaryProps = array_keys(\APP\facades\Repo::citation()->dao->primaryTableColumns);
+        $citationSettingNames = (new \PKP\citation\models\Citation())->getSettings();
+        sort($citationSettingNames);
+        $this->citationSettingNames = $citationSettingNames;
     }
 
     /**
@@ -49,11 +63,14 @@ trait PublicationBenchNormalization
         $data['locale'] = $publication->getData('locale');
         $data['versionString'] = $publication->getData('versionString');
         $data['categoryIds'] = $publication->getData('categoryIds');
-        $data['doiObjectId'] = $publication->getData('doiObject')?->getId();
+        $data['doiObject'] = $this->normalizeDoi($publication->getData('doiObject'));
 
-        $citations = $publication->getData('citations');
-        $data['citationsCount'] = $citations->count();
-        $data['firstCitationRaw'] = $citations->first()?->getRawCitation();
+        $citations = [];
+        foreach ($publication->getData('citations') as $citationId => $citation) {
+            $citations[] = [$citationId, $this->normalizeCitation($citation)];
+        }
+        $data['citations'] = $citations;
+        $data['citationsRaw'] = (string) $publication->getData('citationsRaw');
 
         $data['dataCitations'] = array_map(
             fn ($dataCitation) => [
@@ -159,8 +176,44 @@ trait PublicationBenchNormalization
             'urlPath' => $galley->getData('urlPath'),
             'publisherId' => $galley->getData('pub-id::publisher-id'),
             'doiId' => $galley->getData('doiId'),
-            'doiObjectId' => $galley->getData('doiObject')?->getId(),
+            'doiObject' => $this->normalizeDoi($galley->getData('doiObject')),
         ];
+    }
+
+    /**
+     * Reduce a Doi DataObject (from either path) to a comparable array:
+     * primary columns, settings and the attached resolvingUrl
+     */
+    protected function normalizeDoi(?\PKP\doi\Doi $doi): ?array
+    {
+        if ($doi === null) {
+            return null;
+        }
+        $data = [];
+        foreach ($this->doiPrimaryProps as $prop) {
+            $data[$prop] = $doi->getData($prop);
+        }
+        foreach ($this->doiSettingNames as $name) {
+            $data['setting:' . $name] = $doi->getData($name);
+        }
+        $data['resolvingUrl'] = $doi->getData('resolvingUrl');
+        return $data;
+    }
+
+    /**
+     * Reduce a Citation DataObject (from either path) to a comparable
+     * array: primary columns and settings
+     */
+    protected function normalizeCitation(\PKP\citation\Citation $citation): array
+    {
+        $data = [];
+        foreach ($this->citationPrimaryProps as $prop) {
+            $data[$prop] = $citation->getData($prop);
+        }
+        foreach ($this->citationSettingNames as $name) {
+            $data['setting:' . $name] = $citation->getData($name);
+        }
+        return $data;
     }
 
     protected function sorted(?array $value): ?array
