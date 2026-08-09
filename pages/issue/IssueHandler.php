@@ -43,6 +43,7 @@ use PKP\publication\PKPPublication;
 use PKP\security\authorization\ContextRequiredPolicy;
 use PKP\security\Validation;
 use PKP\submission\GenreDAO;
+use PKP\submission\models\Submission as SubmissionModel;
 
 class IssueHandler extends Handler
 {
@@ -369,11 +370,22 @@ class IssueHandler extends Handler
             ];
         }
 
-        $issueSubmissions = Repo::submission()->getCollector()
+        // The collector keeps its filtering + ordering job, but only ids are
+        // fetched; hydration is batched through the Eloquent read model (one
+        // submissions fetch + one settings fetch + one publications batch,
+        // with authors/galleys/files batching across the whole TOC through
+        // the shared relationship-autoload context) instead of getMany()'s
+        // per-submission fromRow(). getIds() runs the same query builder —
+        // same joins, same ORDER BY po.seq — as getMany(), so the id order
+        // matches, and hydrateMany() preserves it. The loop below only
+        // appends the values to sections, so the collection keying (ids on
+        // both paths anyway) is not observable downstream.
+        $issueSubmissionIds = Repo::submission()->getCollector()
             ->filterByContextIds([$issue->getJournalId()])
             ->filterByIssueIds([$issue->getId()])
             ->orderBy(\APP\submission\Collector::ORDERBY_SEQUENCE, \APP\submission\Collector::ORDER_DIR_ASC)
-            ->getMany();
+            ->getIds();
+        $issueSubmissions = SubmissionModel::hydrateMany($issueSubmissionIds->all());
 
         foreach ($issueSubmissions as $submission) {
             // Ensure that the publication is published, or the issue is being previewed, and that it has a section
