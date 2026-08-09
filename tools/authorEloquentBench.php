@@ -78,6 +78,7 @@ class AuthorEloquentBench extends CommandLineTool
             ->whereIn('contributor_id', $authorIds)
             ->withCreditRoles()
             ->select(['contributor_id', 'credit_role_identifier as role', 'credit_degree as degree'])
+            ->orderBy('credit_contributor_roles.credit_role_id')
             ->get()
             ->groupBy('contributorId');
 
