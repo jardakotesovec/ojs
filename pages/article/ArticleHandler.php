@@ -57,11 +57,52 @@ class ArticleHandler extends Handler
 {
     public Journal $context;
     public ?Issue $issue = null;
-    public Submission $article;
+    /**
+     * EXPERIMENTAL (PKP_MODEL_PAGE): the native `public Submission $article`
+     * property type is itself a DataObject type-hint wall — the Eloquent
+     * read model cannot be assigned to it, so the declarations are untyped
+     * while the experiment is wired. Restore the typed declarations with
+     * the legacy path.
+     *
+     * @var Submission|\PKP\submission\models\Submission
+     */
+    public $article;
     public $categories;
-    public Publication $publication;
-    public ?Galley $galley = null;
+    /** @var Publication|\APP\publication\models\Publication */
+    public $publication;
+    /** @var Galley|\PKP\galley\models\Galley|null */
+    public $galley = null;
     public ?int $submissionFileId = null;
+
+    /**
+     * EXPERIMENTAL: memoized toDataObject() bridge of the submission model,
+     * built lazily and ONLY for consumers that type-hint the DataObject
+     * classes and cannot take the model (see $article docblock). Each use
+     * is a documented type-hint wall.
+     */
+    protected ?Submission $articleDataObjectForWalls = null;
+
+    /**
+     * Whether the experimental model-backed page path is enabled
+     * (PKP_MODEL_PAGE=1 in the server environment)
+     */
+    protected static function useModelPath(): bool
+    {
+        return (bool) getenv('PKP_MODEL_PAGE');
+    }
+
+    /**
+     * The submission as a DataObject for boundaries that type-hint the
+     * DataObject classes (bridged once, memoized). On the legacy path this
+     * is the article itself.
+     */
+    protected function articleForWalls(): Submission
+    {
+        if ($this->article instanceof Submission) {
+            return $this->article;
+        }
+        return $this->articleDataObjectForWalls ??= $this->article->toDataObject();
+    }
 
     /**
      * @copydoc PKPHandler::authorize()
@@ -112,10 +153,35 @@ class ArticleHandler extends Handler
     {
         $urlPath = empty($args) ? 0 : array_shift($args);
 
-        // Get the submission that matches the requested urlPath
-        $submission = ctype_digit((string) $urlPath)
-            ? Repo::submission()->get((int) $urlPath, $request->getContext()->getId())
-            : Repo::submission()->getByUrlPath($urlPath, $request->getContext()->getId());
+        if (self::useModelPath()) {
+            // EXPERIMENTAL: fetch the submission as an Eloquent read model
+            // (with relationship autoloading over the whole relation chain)
+            // and let the templates/hooks consume it through the
+            // DataObjectReadCompat surface. Best-id resolution matches the
+            // legacy path: numeric paths resolve by id,
+            // non-numeric by any publication's urlPath
+            // (\APP\submission\DAO::getIdByUrlPath()).
+            $contextId = $request->getContext()->getId();
+            $submissionId = ctype_digit((string) $urlPath)
+                ? (int) $urlPath
+                : DB::table('publications as p')
+                    ->leftJoin('submissions as s', 's.submission_id', '=', 'p.submission_id')
+                    ->where('s.context_id', '=', $contextId)
+                    ->where('p.url_path', '=', $urlPath)
+                    ->value('p.submission_id');
+            $submission = $submissionId
+                ? \PKP\submission\models\Submission::withSubmissionIds([(int) $submissionId])
+                    ->where('context_id', $contextId)
+                    ->get()
+                    ->withRelationshipAutoloading()
+                    ->first()
+                : null;
+        } else {
+            // Get the submission that matches the requested urlPath
+            $submission = ctype_digit((string) $urlPath)
+                ? Repo::submission()->get((int) $urlPath, $request->getContext()->getId())
+                : Repo::submission()->getByUrlPath($urlPath, $request->getContext()->getId());
+        }
 
         $user = $request->getUser();
 
@@ -151,7 +217,7 @@ class ArticleHandler extends Handler
         }
 
         // Serve 404 if publication is unpublished and no user is logged in OR publication is unpublished and we have a user logged in but the user does not have access to preview
-        if ($this->publication->getData('status') !== PKPPublication::STATUS_PUBLISHED && (!$user || !Repo::submission()->canPreview($user, $submission))) {
+        if ($this->publication->getData('status') !== PKPPublication::STATUS_PUBLISHED && (!$user || !Repo::submission()->canPreview($user, $this->articleForWalls() /* type-hint wall: canPreview(?User, Submission) */))) {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
         }
 
@@ -219,7 +285,7 @@ class ArticleHandler extends Handler
         $enablePublicComments = $context->getData('enablePublicComments');
 
         if ($enablePublicComments) {
-            $userCommentComponent = new UserCommentComponent($article, $request);
+            $userCommentComponent = new UserCommentComponent($this->articleForWalls() /* type-hint wall: UserCommentComponent::__construct(Submission, Request) */, $request);
             $templateMgr->setLocaleKeys($userCommentComponent->getLocaleKeys());
             $templateMgr->addSvgIcons($userCommentComponent->getSvgIcons());
             $templateMgr->assign('userCommentsInitConfig', $userCommentComponent->getConfig());
@@ -240,7 +306,7 @@ class ArticleHandler extends Handler
             'metricsByType' => $metricsByType,
         ]);
 
-        $openReviewComponent = new OpenReviewComponent($article);
+        $openReviewComponent = new OpenReviewComponent($this->articleForWalls() /* type-hint wall: OpenReviewComponent::__construct(Submission) */);
         $templateMgr->setLocaleKeys($openReviewComponent->getLocaleKeys());
         $templateMgr->addSvgIcons($openReviewComponent->getSvgIcons());
         $templateMgr->assign('openReviewConfig', $openReviewComponent->getConfig());
@@ -253,7 +319,7 @@ class ArticleHandler extends Handler
         if (!$doiObject) {
             if ($context->getData(Context::SETTING_DOI_VERSIONING)) {
                 // get DOI from a sibling minor version
-                $doiObject = Repo::publication()->getMinorVersionsDoi($publication);
+                $doiObject = Repo::publication()->getMinorVersionsDoi($publication instanceof PKPPublication ? $publication : $publication->toDataObject() /* type-hint wall: getMinorVersionsDoi(Publication) */);
             } else {
                 if ($publication->getId() != $article->getData('currentPublicationId')) {
                     $doiObject = $article->getCurrentPublication()->getData('doiObject');
@@ -403,8 +469,8 @@ class ArticleHandler extends Handler
                 $subscriptionRequired = $issueAction->subscriptionRequired($issue, $context);
             }
 
-            $subscribedUser = $issueAction->subscribedUser($user, $context, isset($issue) ? $issue->getId() : null, $article);
-            $subscribedDomain = $issueAction->subscribedDomain($request, $context, isset($issue) ? $issue->getId() : null, $article);
+            $subscribedUser = $issueAction->subscribedUser($user, $context, isset($issue) ? $issue->getId() : null, $this->articleForWalls() /* type-hint wall: subscribedUser(..., ?PKPSubmission) */);
+            $subscribedDomain = $issueAction->subscribedDomain($request, $context, isset($issue) ? $issue->getId() : null, $this->articleForWalls() /* type-hint wall: subscribedDomain(..., ?PKPSubmission) */);
 
             $completedPaymentDao = DAORegistry::getDAO('OJSCompletedPaymentDAO'); /** @var OJSCompletedPaymentDAO $completedPaymentDao */
             $templateMgr->assign(
@@ -426,7 +492,7 @@ class ArticleHandler extends Handler
 
             if (!Hook::call('ArticleHandler::view', [&$request, &$issue, &$article, $publication])) {
                 $templateMgr->display('frontend/pages/article.tpl');
-                event(new UsageEvent(Application::ASSOC_TYPE_SUBMISSION, $context, $article, null, null, $this->issue));
+                event(new UsageEvent(Application::ASSOC_TYPE_SUBMISSION, $context, $this->articleForWalls() /* type-hint wall: UsageEvent::__construct(..., ?Submission, ...) */, null, null, $this->issue));
                 return;
             }
         } else {
@@ -584,7 +650,7 @@ class ArticleHandler extends Handler
                     if ($genre->getCategory() != Genre::GENRE_CATEGORY_DOCUMENT || $genre->getSupplementary() || $genre->getDependent()) {
                         $assocType = Application::ASSOC_TYPE_SUBMISSION_FILE_COUNTER_OTHER;
                     }
-                    event(new UsageEvent($assocType, $request->getContext(), $this->article, $this->galley, $submissionFile, $this->issue));
+                    event(new UsageEvent($assocType, $request->getContext(), $this->articleForWalls() /* type-hint wall: UsageEvent::__construct(..., ?Submission, ...) */, $this->galley, $submissionFile, $this->issue));
                 }
                 $returner = true;
                 Hook::call('FileManager::downloadFileFinished', [&$returner]);
@@ -616,7 +682,7 @@ class ArticleHandler extends Handler
 
         // If this is an editorial user who can view unpublished/unscheduled
         // articles, bypass further validation. Likewise for its author.
-        if ($submission && $user && Repo::submission()->canPreview($user, $submission)) {
+        if ($submission && $user && Repo::submission()->canPreview($user, $this->articleForWalls() /* type-hint wall: canPreview(?User, Submission) */)) {
             return true;
         }
 
@@ -628,7 +694,7 @@ class ArticleHandler extends Handler
             }
 
             $subscriptionRequired = $issueAction->subscriptionRequired($issue, $context);
-            $isSubscribedDomain = $issueAction->subscribedDomain($request, $context, $issue->getId(), $submission);
+            $isSubscribedDomain = $issueAction->subscribedDomain($request, $context, $issue->getId(), $this->articleForWalls() /* type-hint wall: subscribedDomain(..., ?PKPSubmission) */);
 
             // Check if login is required for viewing.
             if (!$isSubscribedDomain && !Validation::isLoggedIn() && $context->getData('restrictArticleAccess') && isset($galleyId) && $galleyId) {
@@ -639,7 +705,7 @@ class ArticleHandler extends Handler
             // or if the user is just requesting the abstract
             if ((!$isSubscribedDomain && $subscriptionRequired) && (isset($galleyId) && $galleyId)) {
                 // Subscription Access
-                $subscribedUser = $issueAction->subscribedUser($user, $context, $issue->getId(), $submission);
+                $subscribedUser = $issueAction->subscribedUser($user, $context, $issue->getId(), $this->articleForWalls() /* type-hint wall: subscribedUser(..., ?PKPSubmission) */);
 
                 $paymentManager = Application::get()->getPaymentManager($context);
 
