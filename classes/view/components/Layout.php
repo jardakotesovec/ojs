@@ -53,16 +53,4 @@ class Layout extends \PKP\view\components\Layout
 
         return $ids;
     }
-
-    /**
-     * Are we currently viewing the article, book or
-     * preprint landing page?
-     */
-    public function isPublicationPage(): bool
-    {
-        $request = Application::get()->getRequest();
-
-        return $request->getRequestedPage() === 'article'
-            && $request->getRequestedOp() === 'view';
-    }
 }

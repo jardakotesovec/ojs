@@ -409,6 +409,13 @@ class ArticleHandler extends Handler
             $templateMgr->assign('restrictOnlyPdf', (bool) $paymentManager->onlyPdfEnabled());
             $templateMgr->assign('purchaseArticleEnabled', (bool) $paymentManager->purchaseArticleEnabled());
 
+            // Load metadata blocks late so that they can re-use
+            // data already passed to the template
+            $metadataBlocks = $templateMgr->metadataBlocks->load($publication, $article);
+            $templateMgr->assign([
+                'metadataBlocks' => $metadataBlocks,
+            ]);
+
             if (!Hook::call('ArticleHandler::view', [&$request, &$issue, &$article, $publication])) {
                 $templateMgr->display('frontend/pages/article.tpl');
                 event(new UsageEvent(Application::ASSOC_TYPE_SUBMISSION, $context, $article, null, null, $this->issue));
