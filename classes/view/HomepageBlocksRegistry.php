@@ -26,12 +26,14 @@ class HomepageBlocksRegistry extends \PKP\view\HomepageBlocksRegistry
             new HomepageBlock(
                 component: 'homepage.issue-summary',
                 title: __('manager.homepageBlocks.issueSummary'),
+                forSite: false,
             )
         );
         $this->register(
             new HomepageBlock(
                 component: 'homepage.issue-toc',
                 title: __('manager.homepageBlocks.issueToc'),
+                forSite: false,
             )
         );
     }

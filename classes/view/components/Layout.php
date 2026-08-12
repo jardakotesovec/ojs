@@ -14,7 +14,7 @@ class Layout extends \PKP\view\components\Layout
     protected function addGlobalData(): void
     {
         parent::addGlobalData();
-        view()->share('publicationIds', [$this, 'getPublicationIds']);
+        view()->share('publicationIds', $this->getPublicationIds());
     }
 
     /**
@@ -27,7 +27,7 @@ class Layout extends \PKP\view\components\Layout
 
         $ids = collect([]);
 
-        if ($context->getData('printIssn')) {
+        if ($context?->getData('printIssn')) {
             $ids->add([
                 'id' => 'printIssn',
                 'name' => __('journal.issn'),
@@ -35,7 +35,7 @@ class Layout extends \PKP\view\components\Layout
             ]);
         }
 
-        if ($context->getData('onlineIssn')) {
+        if ($context?->getData('onlineIssn')) {
             $ids->add([
                 'id' => 'onlineIssn',
                 'name' => __('metadata.property.displayName.eissn'),
@@ -43,7 +43,7 @@ class Layout extends \PKP\view\components\Layout
             ]);
         }
 
-        if ($context->getData(Context::SETTING_DOI_PREFIX)) {
+        if ($context?->getData(Context::SETTING_DOI_PREFIX)) {
             $ids->add([
                 'id' => Context::SETTING_DOI_PREFIX,
                 'name' => __('manager.dois.title'),

@@ -119,9 +119,7 @@ class IndexHandler extends PKPIndexHandler
                 }
             }
 
-            $templateMgr->display('frontend/pages/indexJournal.tpl');
-            event(new UsageEvent(Application::ASSOC_TYPE_JOURNAL, $journal));
-            return;
+            $template = 'frontend/pages/indexJournal.tpl';
         } else {
             $journalDao = DAORegistry::getDAO('JournalDAO'); /** @var JournalDAO $journalDao */
             $site = $request->getSite();
@@ -137,7 +135,21 @@ class IndexHandler extends PKPIndexHandler
                 'journals' => $journalDao->getAll(true)->toArray(),
             ]);
             $templateMgr->setCacheability(TemplateManager::CACHEABILITY_PUBLIC);
-            $templateMgr->display('frontend/pages/indexSite.tpl');
+            $template = 'frontend/pages/indexSite.tpl';
+        }
+
+        // Load metadata blocks late so that they can re-use
+        // data already passed to the template
+        $homepageBlocks = $templateMgr->homepageBlocks->load($journal);
+        $templateMgr->assign([
+            'homepageBlocks' => $homepageBlocks,
+        ]);
+
+        $templateMgr->display($template);
+
+        if ($journal) {
+            event(new UsageEvent(Application::ASSOC_TYPE_JOURNAL, $journal));
+            return;
         }
     }
 }
