@@ -138,7 +138,7 @@ class IndexHandler extends PKPIndexHandler
             $template = 'frontend/pages/indexSite.tpl';
         }
 
-        // Load metadata blocks late so that they can re-use
+        // Load homepage blocks late so that they can re-use
         // data already passed to the template
         $homepageBlocks = $templateMgr->homepageBlocks->load($journal);
         $templateMgr->assign([
