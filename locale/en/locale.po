@@ -336,6 +336,12 @@ msgstr "Published"
 msgid "submissions.published.latest"
 msgstr "Latest Publications"
 
+msgid "submissions.published.latest.description"
+msgstr "Read our most recent articles or browse every article in our <a href='{$url}'>back issues</a>."
+
+msgid "submissions.published.latest.description.site"
+msgstr "Read recently published articles or <a href='{$url}'>search all published work</a>."
+
 msgid "submissions.initial"
 msgstr "Initial"
 

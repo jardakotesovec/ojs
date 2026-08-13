@@ -1,0 +1,40 @@
+@if($latestPublications && $latestPublications->count())
+    <x-homepage.default slug="latest-articles">
+        <div class="homepage-block-latest-articles-header">
+            <h2 class="homepage-block-latest-articles-title">
+                @php
+                    $title = $activeTheme->getLocalizedOption('latestArticlesTitle');
+                    if (!$title) {
+                        $title = __('submissions.published.latest');
+                    }
+                @endphp
+                {{ $latestPublicationsTitle }}
+            </h2>
+            @php
+                $description = $activeTheme->getLocalizedOption('latestArticlesDescription');
+                if (!$description) {
+                    $description = __(
+                        'submissions.published.latest.description',
+                        ['url' => ViewHelper::url(['page' => 'issue', 'op' =>  'archive'])]
+                    );
+                }
+            @endphp
+            @if ($description)
+                <p class="homepage-block-latest-articles-desc">
+                    {!! ViewHelper::sanitizeHtml($latestPublicationsDescription) !!}
+                </p>
+            @endif
+        </div>
+        <ul class="homepage-block-latest-articles-list">
+            @foreach ($latestPublications as $submission)
+                <li class="homepage-block-latest-articles-list-item">
+                    <x-eidostheme::article-summary
+                        heading="h3"
+                        :$submission
+                        :$sections
+                    />
+                </li>
+            @endforeach
+        </ul>
+    </x-homepage.default>
+@endif
