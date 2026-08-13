@@ -43,7 +43,7 @@ class HomepageBlocksRegistry extends \PKP\view\HomepageBlocksRegistry
         $this->register(
             new HomepageBlock(
                 component: 'homepage.latest-articles',
-                title: __('plugins.themes.eidos.option.homepageBlocks.latestArticles'),
+                title: __('submissions.published.latest'),
                 loader: function (?Context $context) {
                     $collector = Repo::submission()
                         ->getCollector()
