@@ -5,10 +5,14 @@
         >
             <x-slot:actions>
                 <a class="button button-highlight" href="{{ ViewHelper::url(['page' => 'issue', 'op' => 'current']) }}">
-                    {{ __('manager.homepageBlocks.issueSmmary.viewLatest') }}
+                    <span class="issue-summary-action">
+                        {{ __('manager.homepageBlocks.issueSmmary.viewLatest') }}
+                    </span>
                 </a>
                 <a class="button" href="{{ ViewHelper::url(['page' => 'issue', 'op' => 'archive']) }}">
-                    {{ __('journal.viewAllIssues') }}
+                    <span class="issue-summary-action">
+                        {{ __('journal.viewAllIssues') }}
+                    </span>
                 </a>
             </x-slot:actions>
         </x-issue-summary>
