@@ -342,6 +342,15 @@ msgstr "Read our most recent articles or browse every article in our <a href='{$
 msgid "submissions.published.latest.description.site"
 msgstr "Read recently published articles or <a href='{$url}'>search all published work</a>."
 
+msgid "submissions.browseByCategory"
+msgstr "Browse by Category"
+
+msgid "submissions.browseByCategory.description"
+msgstr "Find articles across our main areas of coverage or browse every article in our <a href='{$url}'>back issues</a>."
+
+msgid "submissions.browseByCategory.viewCategory"
+msgstr "View Category"
+
 msgid "submissions.initial"
 msgstr "Initial"
 
