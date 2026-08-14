@@ -1,7 +1,7 @@
 @if($categories && $categories->count())
     @php
         $layout = $categories->count() > $maxCategoriesAsBlocks ? 'list' : 'block';
-    @endphp;
+    @endphp
     <x-homepage.default
         slug="categories"
         class="homepage-block-categories-as-{{ $layout}}"
