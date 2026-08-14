@@ -78,5 +78,29 @@ class HomepageBlocksRegistry extends \PKP\view\HomepageBlocksRegistry
                 }
             )
         );
+        $this->register(
+            new HomepageBlock(
+                component: 'homepage.categories',
+                title: __('submissions.browseByCategory'),
+                forSite: false,
+                loader: function (Context $context) {
+                    $categories = Repo::category()
+                        ->getCollector()
+                        ->filterByContextIds([$context->getId()])
+                        ->filterByParentIds([null])
+                        ->getMany();
+
+                    $templateMgr = TemplateManager::getManager(Application::get()->getRequest());
+                    $templateMgr->assign([
+                        'categories' => $categories,
+                        'maxCategoriesAsBlocks' => 9,
+                        'browseByCategoryTitle' => __('submissions.browseByCategory'),
+                        'browseByCategoryDescription' => __('submissions.browseByCategory.description', [
+                            'url' => Application::get()->getRequest()->url(null, 'issue', 'archive'),
+                        ]),
+                    ]);
+                }
+            )
+        );
     }
 }
