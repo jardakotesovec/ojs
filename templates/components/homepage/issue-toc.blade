@@ -6,6 +6,8 @@
         @includeIf('components/issue-toc', [
             'issue' => $issue,
             'headingStart' => 3,
+            'showArticleGalleys' => $showArticleGalleysInToc,
+            'showArticleCovers' => $showArticleCoversInToc,
         ])
     </x-homepage.default>
 @endif
