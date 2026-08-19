@@ -25,6 +25,7 @@ use APP\pages\issue\IssueHandler;
 use APP\template\TemplateManager;
 use PKP\config\Config;
 use PKP\db\DAORegistry;
+use PKP\facades\Frontend;
 use PKP\pages\index\PKPIndexHandler;
 use PKP\security\Validation;
 
@@ -140,7 +141,7 @@ class IndexHandler extends PKPIndexHandler
 
         // Load homepage blocks late so that they can re-use
         // data already passed to the template
-        $homepageBlocks = $templateMgr->homepageBlocks->load($journal);
+        $homepageBlocks = Frontend::homepageBlocks()->load($journal);
         $templateMgr->assign([
             'homepageBlocks' => $homepageBlocks,
         ]);

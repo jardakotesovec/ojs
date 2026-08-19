@@ -39,6 +39,7 @@ use PKP\core\Core;
 use PKP\core\PKPApplication;
 use PKP\core\PKPJwt as JWT;
 use PKP\db\DAORegistry;
+use PKP\facades\Frontend;
 use PKP\galley\Galley;
 use PKP\orcid\OrcidManager;
 use PKP\plugins\Hook;
@@ -223,8 +224,8 @@ class ArticleHandler extends Handler
 
         if ($enablePublicComments) {
             $userCommentComponent = new UserCommentComponent($article, $request);
-            $templateMgr->setLocaleKeys($userCommentComponent->getLocaleKeys());
-            $templateMgr->addSvgIcons($userCommentComponent->getSvgIcons());
+            Frontend::addLocaleKeys($userCommentComponent->getLocaleKeys());
+            Frontend::addIcons($userCommentComponent->getSvgIcons());
             $templateMgr->assign('userCommentsInitConfig', $userCommentComponent->getConfig());
         }
 
@@ -245,10 +246,10 @@ class ArticleHandler extends Handler
         ]);
 
         $openReviewComponent = new OpenReviewComponent($article);
-        $templateMgr->setLocaleKeys($openReviewComponent->getLocaleKeys());
-        $templateMgr->addSvgIcons($openReviewComponent->getSvgIcons());
+        Frontend::addLocaleKeys($openReviewComponent->getLocaleKeys());
+        Frontend::addIcons($openReviewComponent->getSvgIcons());
         $templateMgr->assign('openReviewConfig', $openReviewComponent->getConfig());
-        $templateMgr->setConstants($openReviewComponent->getConstants());
+        Frontend::setJsConstants($openReviewComponent->getConstants());
 
 
         $this->setupTemplate($request);
@@ -411,7 +412,7 @@ class ArticleHandler extends Handler
 
             // Load metadata blocks late so that they can re-use
             // data already passed to the template
-            $metadataBlocks = $templateMgr->metadataBlocks->load($publication, $article);
+            $metadataBlocks = Frontend::metadataBlocks()->load($publication, $article);
             $templateMgr->assign([
                 'metadataBlocks' => $metadataBlocks,
             ]);

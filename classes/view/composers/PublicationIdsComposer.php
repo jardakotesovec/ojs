@@ -1,27 +1,39 @@
 <?php
 
-namespace APP\view\components;
+/**
+ * @file classes/view/composers/PublicationIdsComposer.php
+ *
+ * Copyright (c) 2014-2026 Simon Fraser University
+ * Copyright (c) 2003-2026 John Willinsky
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @class PublicationIdsComposer
+ *
+ * @brief Provides the journal's ISSNs and other publication identifiers
+ *  to the views displaying them.
+ */
+
+namespace APP\view\composers;
 
 use APP\core\Application;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 use PKP\context\Context;
 
-class Layout extends \PKP\view\components\Layout
+class PublicationIdsComposer
 {
-    /**
-     * Add global template data
-     */
-    protected function addGlobalData(): void
+    /** @var ?Collection Memoized for repeat renders within the same request */
+    protected ?Collection $publicationIds = null;
+
+    public function compose(View $view): void
     {
-        parent::addGlobalData();
-        view()->share('publicationIds', $this->getPublicationIds());
+        $view->with('publicationIds', $this->publicationIds ??= $this->getPublicationIds());
     }
 
     /**
      * Get an array of ISSNs and other publication IDs
-     *
      */
-    public function getPublicationIds(): Collection
+    protected function getPublicationIds(): Collection
     {
         $context = Application::get()->getRequest()->getContext();
 
