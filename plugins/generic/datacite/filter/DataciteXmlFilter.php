@@ -261,6 +261,11 @@ class DataciteXmlFilter extends \PKP\plugins\importexport\native\filter\NativeEx
         if ($relatedItemsNode) {
             $rootNode->appendChild($relatedItemsNode);
         }
+        // Funding references
+        $fundingReferencesNode = $this->createFundingReferencesNode($doc, $publication);
+        if ($fundingReferencesNode) {
+            $rootNode->appendChild($fundingReferencesNode);
+        }
 
         return $doc;
     }
@@ -340,6 +345,10 @@ class DataciteXmlFilter extends \PKP\plugins\importexport\native\filter\NativeEx
             if ($creator['affiliations']) {
                 // Currently affiliations are only there for Publication objects
                 foreach ($creator['affiliations'] as $affiliation) {
+                    $institutionName = $affiliation->getLocalizedName($publication->getData('locale'));
+                    if (trim($institutionName ?? '') === '') {
+                        continue;
+                    }
                     $node = $doc->createElementNS($deployment->getNamespace(), 'affiliation');
                     $ror = $affiliation->getRor();
                     if ($ror) {
@@ -347,7 +356,7 @@ class DataciteXmlFilter extends \PKP\plugins\importexport\native\filter\NativeEx
                         $node->setAttribute('affiliationIdentifierScheme', 'ROR');
                         $node->setAttribute('schemeURI', 'https://ror.org');
                     }
-                    $node->appendChild($doc->createTextNode($affiliation->getLocalizedName($publication->getData('locale'))));
+                    $node->appendChild($doc->createTextNode($institutionName));
                     $creatorNode->appendChild($node);
                 }
             }
@@ -634,6 +643,100 @@ class DataciteXmlFilter extends \PKP\plugins\importexport\native\filter\NativeEx
         } else {
             return null;
         }
+    }
+
+    /**
+     * Create funding references node.
+     */
+    public function createFundingReferencesNode(DOMDocument $doc, Publication $publication): ?DOMNode
+    {
+        /** @var DataciteExportDeployment $deployment */
+        $deployment = $this->getDeployment();
+
+        $funders = $publication->getData('funders');
+        if (empty($funders)) {
+            return null;
+        }
+
+        $locale = $publication->getData('locale');
+        $fundingReferencesNode = $doc->createElementNS($deployment->getNamespace(), 'fundingReferences');
+
+        foreach ($funders as $funder) {
+            $funderName = $funder->getLocalizedData('name', $locale);
+
+            // fundingReference requires a funderName
+            if (empty($funderName)) {
+                continue;
+            }
+
+            $grants = $funder->grants ?? [];
+
+            // Even with no grants we still want an entry for the funder
+            $grantEntries = !empty($grants) ? $grants : [null];
+
+            foreach ($grantEntries as $grant) {
+                $fundingReferenceNode = $doc->createElementNS(
+                    $deployment->getNamespace(),
+                    'fundingReference'
+                );
+
+                $fundingReferenceNode->appendChild(
+                    $doc->createElementNS(
+                        $deployment->getNamespace(),
+                        'funderName',
+                        htmlspecialchars($funderName, ENT_COMPAT, 'UTF-8')
+                    )
+                );
+
+                if (!empty($funder->ror)) {
+                    $funderIdentifierNode = $doc->createElementNS(
+                        $deployment->getNamespace(),
+                        'funderIdentifier',
+                        $funder->ror
+                    );
+                    $funderIdentifierNode->setAttribute('funderIdentifierType', 'ROR');
+                    $fundingReferenceNode->appendChild($funderIdentifierNode);
+                }
+
+                if (!empty($grant)) {
+
+                    // Create awardNumber when either a grant number or grant DOI exists.
+                    // This allows an empty awardNumber with just an awardURI
+                    // to support cases where only grantDOI is given.
+                    if (!empty($grant['grantNumber']) || !empty($grant['grantDoi'])) {
+
+                        $awardNumberNode = $doc->createElementNS(
+                            $deployment->getNamespace(),
+                            'awardNumber',
+                            htmlspecialchars($grant['grantNumber'] ?? '', ENT_COMPAT, 'UTF-8')
+                        );
+
+                        if (!empty($grant['grantDoi'])) {
+                            $awardNumberNode->setAttribute(
+                                'awardURI',
+                                htmlspecialchars($grant['grantDoi'], ENT_COMPAT, 'UTF-8')
+                            );
+                        }
+
+                        $fundingReferenceNode->appendChild($awardNumberNode);
+                    }
+
+                    if (!empty($grant['grantName'])) {
+                        $fundingReferenceNode->appendChild(
+                            $doc->createElementNS(
+                                $deployment->getNamespace(),
+                                'awardTitle',
+                                htmlspecialchars($grant['grantName'], ENT_COMPAT, 'UTF-8')
+                            )
+                        );
+                    }
+                }
+
+                $fundingReferencesNode->appendChild($fundingReferenceNode);
+            }
+        }
+
+        return $fundingReferencesNode->hasChildNodes() ? $fundingReferencesNode : null;
     }
 
     /**

@@ -49,9 +49,10 @@ session_cookie_name = OJSSID
 ; Session cookie path; if not specified, defaults to the detected base path
 ; session_cookie_path = /
 
-; Number of days to save login cookie for if user selects to remember
-; (set to 0 to force expiration at end of current session)
-session_lifetime = 30
+; Number of days a session remains valid while idle. Fractional days are allowed
+; (e.g. 0.5 = 12 hours, 0.0833 ~ 2 hours); the value is clamped to a minimum of 1 minute.
+; To expire sessions when the browser closes, use session_expire_on_close in [security]
+session_lifetime = 7
 
 ; SameSite configuration for the cookie, see possible values and explanations
 ; at https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
@@ -289,8 +290,16 @@ session_check_ip = On
 ; migration of old password hashes.
 encryption = sha1
 
-; When set to On, expire cookie-based sessions upon closing the browser window.
+; When set to On, the session cookie expires when the browser is closed.
+; The server-side session data still persists for session_lifetime days
+; and is cleaned up by garbage collection.
 session_expire_on_close = Off
+
+; Number of days the "remember me" persistent-login cookie remains valid. Fractional
+; days are allowed. Only applies when the user ticks "remember me" at login.
+; To extend login beyond the idle session, set this greater than session_lifetime in
+; [general]; it is an absolute window measured from login (not refreshed on activity).
+remember_me_lifetime = 30
 
 ; The unique salt to use for generating password reset hashes
 salt = "YouMustSetASecretKeyHere!!"
@@ -572,6 +581,49 @@ deprecation_warnings = Off
 
 ; Log web service request information for debugging
 log_web_service_info = Off
+
+
+;;;;;;;;;;;;;;;;
+; Log Settings ;
+;;;;;;;;;;;;;;;;
+
+[logs]
+
+; Default logging channel. Available channels:
+;   - stack: Combines multiple channels (configurable via log_stacks; defaults to daily)
+;   - single: Single log file ({files_dir}/logs/app.log)
+;   - daily: Daily rotating log files
+;   - stderr: Output to stderr
+;   - syslog: System log
+;   - errorlog: PHP error log
+;   - null: Discard all logs
+log_channel = daily
+
+; Minimum log level to record. Available levels (in order of severity):
+;   - debug: Detailed debug information
+;   - info: Interesting events
+;   - notice: Normal but significant events
+;   - warning: Exceptional occurrences that are not errors
+;   - error: Runtime errors that do not require immediate action
+;   - critical: Critical conditions
+;   - alert: Action must be taken immediately
+;   - emergency: System is unusable
+log_level = debug
+
+; Channels the 'stack' channel fans out to (comma-separated). Only used when
+; log_channel = stack. Each entry must be one of the channels listed above
+; (single, daily, stderr, syslog, errorlog). Defaults to single.
+log_stacks = daily
+
+; Number of daily log files to retain before rotation deletes the oldest
+; (only applies to the 'daily' channel). Defaults to 30.
+; log_daily_days = 30
+
+; Monolog formatter class for the file/stream channels (single, daily, stderr,
+; syslog). Leave unset for the default human-readable line format (stack traces
+; included). Has no effect on the errorlog or stack channels. See available formatters
+; at https://github.com/Seldaek/monolog/blob/main/doc/02-handlers-formatters-processors.md#formatters
+; log_formatter = Monolog\Formatter\JsonFormatter
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;

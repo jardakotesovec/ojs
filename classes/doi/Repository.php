@@ -68,23 +68,12 @@ class Repository extends \PKP\doi\Repository
         }
 
         // If not using default suffix, additional checks are required
-        $issueId = $publication->getData('issueId');
-        if ($issueId === null) {
-            throw new DoiException(
-                DoiException::PUBLICATION_MISSING_ISSUE,
-                $submission->getCurrentPublication()->getLocalizedFullTitle(),
-                $publication->getLocalizedFullTitle()
-            );
-        }
+        $suffixPattern = $this->getPubIdSuffixPattern($publication, $context);
+        $patternNeedsIssue = $suffixPattern ? PubIdPlugin::suffixHasIssuePattern($suffixPattern) : false;
+        // generateSuffixPattern only needs the issue when $patternNeedsIssue is true
+        $issue = $patternNeedsIssue && $publication->getData('issueId') ? Repo::issue()->get($publication->getData('issueId')) : null;
 
-        $issue = Repo::issue()->get($publication->getData('issueId'));
-        if ($issue === null) {
-            throw new DoiException(
-                DoiException::PUBLICATION_MISSING_ISSUE,
-                $submission->getCurrentPublication()->getLocalizedFullTitle(),
-                $publication->getLocalizedFullTitle()
-            );
-        } elseif ($issue && $context->getId() != $issue->getJournalId()) {
+        if ($patternNeedsIssue && ($issue === null || $context->getId() != $issue->getJournalId())) {
             throw new DoiException(
                 DoiException::PUBLICATION_MISSING_ISSUE,
                 $submission->getCurrentPublication()->getLocalizedFullTitle(),
@@ -110,15 +99,12 @@ class Repository extends \PKP\doi\Repository
         }
 
         // If not using default suffix, additional checks are required
-        $issue = Repo::issue()->getBySubmissionId($submission->getId());
+        $suffixPattern = $this->getPubIdSuffixPattern($galley, $context);
+        $patternNeedsIssue = $suffixPattern ? PubIdPlugin::suffixHasIssuePattern($suffixPattern) : false;
+        // generateSuffixPattern only needs the issue when $patternNeedsIssue is true
+        $issue = $patternNeedsIssue ? Repo::issue()->getBySubmissionId($submission->getId()) : null;
 
-        if ($issue === null) {
-            throw new DoiException(
-                DoiException::REPRESENTATION_MISSING_ISSUE,
-                $submission->getCurrentPublication()->getLocalizedFullTitle(),
-                $galley->getLabel()
-            );
-        } elseif ($issue && $context->getId() != $issue->getJournalId()) {
+        if ($patternNeedsIssue && ($issue === null || $context->getId() != $issue->getJournalId())) {
             throw new DoiException(
                 DoiException::REPRESENTATION_MISSING_ISSUE,
                 $submission->getCurrentPublication()->getLocalizedFullTitle(),
@@ -341,6 +327,37 @@ class Repository extends \PKP\doi\Repository
         if (!empty($issueDoiId)) {
             if ($enabledDoiTypesOnly == false || ($enabledDoiTypesOnly && $context->isDoiTypeEnabled(self::TYPE_ISSUE))) {
                 $doiIds[] = $issueDoiId;
+            }
+        }
+        return $doiIds;
+    }
+
+    /**
+     * Gets all DOIs associated with a Peer Review.
+     * NB: Assumes only enabled DOI types are allowed.
+     *
+     *
+     * @return array<int> DOI IDs
+     *
+     */
+    public function getDoisForReviewAssignment(int $reviewId, bool $enabledDoiTypesOnly = false): array
+    {
+        $doiIds = [];
+
+        $reviewAssignment = Repo::reviewAssignment()->get($reviewId);
+        $reviewDoiId = $reviewAssignment?->getData('doiId');
+
+        if (!empty($reviewDoiId)) {
+            $submission = Repo::submission()->get($reviewAssignment->getData('submissionId'));
+
+            /** @var JournalDAO $contextDao */
+            $contextDao = DAORegistry::getDAO('JournalDAO');
+
+            /** @var Journal $context */
+            $context = $contextDao->getById($submission->getData('contextId'));
+
+            if (!$enabledDoiTypesOnly || $context->isDoiTypeEnabled(self::TYPE_PEER_REVIEW)) {
+                $doiIds[] = $reviewDoiId;
             }
         }
         return $doiIds;

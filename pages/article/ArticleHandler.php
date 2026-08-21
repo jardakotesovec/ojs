@@ -18,11 +18,11 @@
 namespace APP\pages\article;
 
 use APP\core\Application;
-use APP\journal\Journal;
 use APP\facades\Repo;
 use APP\handler\Handler;
 use APP\issue\Issue;
 use APP\issue\IssueAction;
+use APP\journal\Journal;
 use APP\observers\events\UsageEvent;
 use APP\payment\ojs\OJSCompletedPaymentDAO;
 use APP\payment\ojs\OJSPaymentManager;
@@ -49,7 +49,6 @@ use PKP\security\Validation;
 use PKP\services\PKPStatsPublicationService;
 use PKP\submission\Genre;
 use PKP\submission\GenreDAO;
-use PKP\submission\PKPSubmission;
 use PKP\submissionFile\SubmissionFile;
 use stdClass;
 
@@ -185,7 +184,7 @@ class ArticleHandler extends Handler
 
             // Store the file id if it exists
             if (!empty($args)) {
-                $this->submissionFileId = array_shift($args);
+                $this->submissionFileId = (int) array_shift($args);
             }
         }
 
@@ -255,7 +254,7 @@ class ArticleHandler extends Handler
                 // get DOI from a sibling minor version
                 $doiObject = Repo::publication()->getMinorVersionsDoi($publication);
             } else {
-                if ($publication->getId() !== $article->getCurrentPublication()->getId()) {
+                if ($publication->getId() != $article->getData('currentPublicationId')) {
                     $doiObject = $article->getCurrentPublication()->getData('doiObject');
                 }
             }
@@ -330,7 +329,7 @@ class ArticleHandler extends Handler
                     $request,
                     PKPApplication::ROUTE_API,
                     $context->getPath(),
-                    "submissions/{$article->getBestId()}/publications/{$publication->getId()}/jats/download"
+                    "submissions/{$article->getId()}/publications/{$publication->getId()}/jats/download"
                 )
             ]);
         }
@@ -416,7 +415,7 @@ class ArticleHandler extends Handler
             }
         } else {
             // Ask robots not to index outdated versions
-            if ($publication->getId() !== $article->getCurrentPublication()->getId()) {
+            if ($publication->getId() != $article->getData('currentPublicationId')) {
                 $templateMgr->addHeader('noindex', '<meta name="robots" content="noindex">');
             }
 
@@ -480,7 +479,7 @@ class ArticleHandler extends Handler
         foreach ($submissionFiles as $submissionFile) {
             if ($submissionFile->getData('old-supp-id') == $suppId) {
                 $articleGalleys = Repo::galley()->getCollector()
-                    ->filterByPublicationIds([$article->getCurrentPublication()->getId()])
+                    ->filterByPublicationIds([$article->getData('currentPublicationId')])
                     ->getMany();
 
                 foreach ($articleGalleys as $articleGalley) {
@@ -521,7 +520,8 @@ class ArticleHandler extends Handler
                 throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
             }
 
-            // If the file ID is not the galley's file ID, ensure it is a dependent file, or else 404.
+            // If the file ID is not the galley's file ID, ensure it is a dependent file
+            // of the galley file or a media file attached to the galley's publication, or else 404.
             if ($this->submissionFileId != $this->galley->getData('submissionFileId')) {
                 $dependentFileIds = Repo::submissionFile()
                     ->getCollector()
@@ -534,7 +534,17 @@ class ArticleHandler extends Handler
                     ->getIds()
                     ->toArray();
 
-                if (!in_array($this->submissionFileId, $dependentFileIds)) {
+                $mediaFileIds = Repo::submissionFile()
+                    ->getCollector()
+                    ->filterByAssoc(
+                        Application::ASSOC_TYPE_PUBLICATION,
+                        [$this->galley->getData('publicationId')]
+                    )
+                    ->filterByFileStages([SubmissionFile::SUBMISSION_FILE_MEDIA])
+                    ->getIds()
+                    ->toArray();
+
+                if (!in_array($this->submissionFileId, [...$dependentFileIds, ...$mediaFileIds])) {
                     throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
                 }
             }
@@ -595,7 +605,7 @@ class ArticleHandler extends Handler
         }
 
         // Make sure the reader has rights to view the article/issue.
-        if ($submission->getData('status') == PKPSubmission::STATUS_PUBLISHED) {
+        if ($this->publication->getData('status') == PKPPublication::STATUS_PUBLISHED) {
 
             if (!$issue) {
                 return true;
@@ -623,7 +633,7 @@ class ArticleHandler extends Handler
                     $purchasedIssue = $completedPaymentDao->hasPaidPurchaseIssue($userId, $issue->getId());
                 }
 
-                if (!(!$subscriptionRequired || $submission->getCurrentPublication()->getData('accessStatus') == Submission::ARTICLE_ACCESS_OPEN || $subscribedUser || $purchasedIssue)) {
+                if (!(!$subscriptionRequired || $this->publication->getData('accessStatus') == Submission::ARTICLE_ACCESS_OPEN || $subscribedUser || $purchasedIssue)) {
                     if ($paymentManager->purchaseArticleEnabled() || $paymentManager->membershipEnabled()) {
                         /* if only pdf files are being restricted, then approve all non-pdf galleys
                          * and continue checking if it is a pdf galley */
